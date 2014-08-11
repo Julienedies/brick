@@ -1,5 +1,5 @@
 /**
- * Created by julien.zhang on 2014/6/30.
+ * Created by julien on 2014/6/30.
  *
  * 定义模型对象，UI组件，控制器对象的原型；
  *
@@ -177,6 +177,9 @@
                 for(var i in ctrls){
                     ctrl = ctrls[i];
                     depend = services.get(ctrl.depend) || [];
+                    if(depend.constructor !== Array){
+                        depend = [depend];
+                    }
                     depend.unshift(ctrl.scope);
                     ctrl.fn.apply(null, depend);
                 }
@@ -194,6 +197,9 @@
         var registry = {};
 
         var o = {
+            look: function(){
+                console.log(registry);
+            },
             /*
              * 向管理器注册服务
              */
@@ -204,13 +210,11 @@
              * 实例化一个服务
              */
             create: function(name){
+                var that = this;
                 var info = registry[name];
                 var depend = info.depend;
                 if(depend){
-                    depend = depend.slice();
-                    _.each(depend,function(v, i, list){
-                        list[i] = this.get(v);
-                    });
+                    depend = that.get(depend);
                 }
                 return info.serve.apply(null, depend || []);
             },
@@ -221,11 +225,18 @@
                 var that = this;
                 if(!name) return;
 
+                if(typeof name === 'string') {
+                    return services[name] = services[name] || that.create(name);
+                }
+
                 if(name.slice && name.length){
+
                     name = name.slice();
-                    _.each(name,function(v, i, list){
-                        list[i] = services[v] = services[v] || that.create(v);
-                    });
+
+                    for(var i = 0, v, len = name.length; i<len; i++){
+                        v = name[i];
+                        name[i] = services[v] = services[v] || that.create(v);
+                    }
 
                     return name;
                 }
@@ -265,11 +276,14 @@
      */
     var isDevelop = 1;
     var _cc = (isDevelop && window.console && (function(){
-        try{
-            return _.bind(console.log, console);
-        }catch(e){
-            return function(){};
+
+        return function () {
+            try {
+                console.log.apply(console, arguments);
+            } catch (e) {
+            }
         }
+
     })()) || function(){};
 
 
