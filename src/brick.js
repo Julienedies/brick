@@ -1,6 +1,8 @@
 /**
  * Created by julien.zhang on 2014/6/30.
  *
+ * 借鉴angularJs的开发思想，通过模块化开发，依赖注入，消息传递系统等，帮助组织，分层，结构化js代码。
+ *
  * 定义模型对象，UI组件，控制器对象的原型；
  *
  * 定义管理器对象，用于管理模型对象，UI组件，控制器对象；
@@ -17,7 +19,7 @@
 
 
     /*
-     * 管理器原型
+     * 记录管理器原型
      */
     var manager = function(){
         var fn = {
@@ -69,6 +71,12 @@
 
         return {
 
+            /**
+             * 订阅一个事件监听
+             * @param e {String} 事件名
+             * @param f {Function} 回调函数
+             * @param context {Object} 调用watch方法的scope
+             */
             bind: function(e, f, context){
 
                 var handle = {f:f};
@@ -84,6 +92,11 @@
                 callback.push(handle);
             },
 
+            /**
+             * 取消一个事件监听
+             * @param e {String} 事件名
+             * @param f {Function} 回调函数，可选，如果没有传递，则取消该事件下的所有监听
+             */
             unbind: function(e, f){
 
                 var event = this._getNamespace(e);
@@ -111,6 +124,12 @@
 
             },
 
+            /**
+             *
+             * @param e {String} 事件名
+             * @param msg  {*}   任意想要传递的数据对象
+             * @param flag {bool} 内部用，标记外部调用还是内部调用
+             */
             fire: function(e, msg, flag){
 
                 var namespace = e.split('.');
@@ -179,7 +198,7 @@
 
 
     /*
-     * 管理控制器
+     * 控制器管理器
      */
     var controllers = (function(){
 
@@ -198,6 +217,7 @@
         function _F(){}
 
         extend(_F.prototype, {
+
             _bind: function(name){
                 if(typeof name === 'string'){
                     name = [name];
@@ -245,12 +265,22 @@
 
             },
 
+            /**
+             * 用于触发事件
+             * @param e {String} 事件名
+             * @param msg {*}    任意要传递的数据
+             */
             fire: function(e, msg){
 
                 eventManager.fire(e, msg);
 
             },
 
+            /**
+             * 用于订阅事件
+             * @param e  {String}   事件名
+             * @param f  {Function} 回调函数，接受两个参数e(事件对象，由框架封装提供），msg(用户自定义数据)
+             */
             watch: function(e, f){
 
                 var that = this;
@@ -259,9 +289,17 @@
 
             },
 
+            /**
+             * 取消事件监听
+             * @param e {String}   事件名
+             * @param f {Function} 回调函数
+             */
             unbind: function(e, f){
                 eventManager.unbind(e, f);
-            }
+            },
+
+            // watch方法的简写方式
+            on: this.watch
 
         });
 
@@ -275,15 +313,25 @@
 
 
         return {
+
+            /**
+             * 旧的事件接口，废弃
+             */
             bind: _bind,
-            /*
+
+            /**
              * 获取一个控制器的对外接口对象
+             * @param name {String} 控制器ID
              */
             get: function(name){
                 return _ctrls[name].scope;
             },
-            /*
-             * 向管理器添加控制器
+
+            /**
+             * 注册控制器
+             * @param name {String}   控制器ID
+             * @param ctrl {Function} 控制器的工厂函数
+             * @param conf {Object}   可选，控制器config (可以定义依赖，是否注册为global变量，是否做为service)
              */
             add: function(name, ctrl, conf){
                 conf = conf || {};
@@ -296,6 +344,7 @@
                 }
                 _ctrls[name] = {fn:ctrl, scope:scope, depend:depend, service:conf.service};
             },
+
             /*
              * 初始化控制器
              */
@@ -324,18 +373,22 @@
     })();
 
     /*
-     * 管理服务；（模型对象，UI组件都可以做为服务存在；通常是单例对象）
+     * 服务管理器 （任意类型的数据，模型对象，UI组件都可以做为服务存在；通常是单例对象）
      */
     var services = (function(){
+
         var services = {};
         var registry = {};
 
         return {
-            look: function(){
+            _look: function(){
                 console.log(registry);
             },
-            /*
-             * 向管理器注册服务
+            /**
+             * 注册服务
+             * @param name {String}    服务ID
+             * @param serve {Function} 服务的工厂函数
+             * @param depend {Array}   可选，依赖的其它服务
              */
             add: function(name, serve, depend){
                 registry[name] = {depend:depend, serve: serve};
@@ -355,11 +408,20 @@
                 }
                 return info.serve.apply(null, depend || []);
             },
+
+            /**
+             * 直接注册一个已经实例化的服务
+             * @param name {String} 服务ID
+             * @param service {*}   任意数据对象
+             */
             fill: function(name, service){
                 services[name] = service;
             },
-            /*
+
+            /**
              * 获取一个服务实例
+             * @param name {String} 服务器ID
+             * @return 服务 {*}  任意类型，取决于当初注册时的服务对象
              */
             get: function(name){
                 var that = this;
@@ -389,6 +451,7 @@
 
     /*
      * 封装工具函数
+     *
      */
     var utils = {
         /*
@@ -461,7 +524,7 @@
 
 
     ////////////////////////////////////////////////
-    // 对外接口
+    // 对外接口 && 命名空间
     ////////////////////////////////////////////////
 
     root.brick = {
