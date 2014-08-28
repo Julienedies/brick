@@ -4,9 +4,9 @@
  *
  * 记录管理器
  *
- * var serv = new recordManager({scope:scope, eventPrefix:'holdModel'});
+ * var serv = new recordManager({scope:scope, eventPrefix:'holdModel',k:'hold.id', beforeSave:function(record,index){});
  *
- * serv.add({});
+ *
  */
 
 function recordManager() {
@@ -27,12 +27,16 @@ function recordManager() {
 
     var proto = {
 
-        _look: function () {
-            console.log(this._pool);
-        },
-
+        /**
+         * 默认每条记录的主键为id；
+         */
         k: 'id',
 
+        /**
+         *
+         * @param data {Array or Object}
+         * @return {this}
+         */
         init: function (data) {
 
             if (typeof data !== 'object') throw 'must be Array or Object on init';
@@ -45,7 +49,7 @@ function recordManager() {
 
                 this.beforeSave(record, i);
 
-                var id = this._getValueByKey(record);
+                var id = this._queryKeyValue(record);
 
                 pool[id] = record;
 
@@ -53,8 +57,23 @@ function recordManager() {
 
             this.fire('init');
 
+            return this;
+
         },
 
+        /**
+         * 获取查询结果
+         * @param value  {*}            要查询的key值
+         * @param query  {String}       要查询的key
+         * @returns      {Array}        根据查询结果返回数组
+         * @example
+         *
+         * new recordManager().init([{id:1,y:2},{id:2,x:3}]).get();          // return [{id:1,y:2},{id:2,x:3}];
+         * new recordManager().init([{id:1,y:2}]).get(1);                    // return [{id:1,y:2}];
+         * new recordManager({k:'x'}).init([{x:1,y:2}]).get(1);              // return [{x:1,y:2}];
+         * new recordManager({k:'x'}).init([{x:1,y:{z:3}}]).get(3,'y.z');    // return [{x:1,y:{z:3}}];
+         * new recordManager().init([{id:1,y:2}]).get(2);                    // return [];
+         */
         get: function (value, query) {
 
             var pool = this._pool;
@@ -65,7 +84,7 @@ function recordManager() {
 
                 for (var i in pool) {
 
-                    r.push(pool[i]);
+                    r.push( $.extend(true, {}, pool[i]) );
 
                 }
 
@@ -76,15 +95,27 @@ function recordManager() {
 
                 var record = pool[j];
 
-                if (value === this._getValueByKey(record, query)) {
+                if (value === this._queryKeyValue(record, query)) {
+
                     r.push( $.extend(true, {}, record) );
+
                 }
             }
 
-            return r.length > 1 ? r : r.length == 1 ? r[0] : void(0);
+            return r;
 
         },
 
+        /**
+         * 对查询结果记录进行修改
+         * @param data      {Object}            要更新的数据
+         * @param query     {String}            对key进行限定，只有对应的key变化，才修改
+         * @returns         {Array or false}    返回修改过的记录数组，如果没有修改任何记录，返回false
+         * @example
+         *
+         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').set({y:3});     // result [{x:1,y:3},{x:1,y:3}]
+         * new recoredManager().init([{x:1,y:2}]).find(2,'x').set({y:3});               // result false
+         */
         set: function (data, query) {
 
             var pool = this._pool;
@@ -95,9 +126,9 @@ function recordManager() {
 
             for (var i in find) {
 
-                if (query && this._getValueByKey(find[i], query) === this._getValueByKey(data, query))  continue;
+                if (query && this._queryKeyValue(find[i], query) === this._queryKeyValue(data, query))  continue;
 
-                var id = this._getValueByKey(find[i]);
+                var id = this._queryKeyValue(find[i]);
 
                 var record = pool[id];
 
@@ -113,9 +144,13 @@ function recordManager() {
             return result.length ? result : false;
         },
 
+        /**
+         * 添加一条记录
+         * @param record
+         */
         add: function (record) {
 
-            var id = this._getValueByKey(record);
+            var id = this._queryKeyValue(record);
 
             this.beforeSave(record);
 
@@ -125,6 +160,13 @@ function recordManager() {
 
         },
 
+        /**
+         * 删除一条记录
+         * @return   {Array}   被删除的记录集合
+         * @example
+         *
+         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').remove();  // result this._pool == {}; return [{x:1,y:2},{x:1,y:5}];
+         */
         remove: function () {
 
             var pool = this._pool;
@@ -133,18 +175,24 @@ function recordManager() {
 
             for (var i in find) {
 
-                var id = this._getValueByKey(find[i]);
+                var id = this._queryKeyValue(find[i]);
 
                 delete pool[id];
 
-                this.fire('remove:' + id, {remove: find[i]});
+                this.fire('remove.' + id, {remove: find[i]});
 
             }
 
             this.end();
 
+            return find;
+
         },
 
+        /**
+         * 清空所有记录
+         * @returns {proto}
+         */
         clear: function () {
 
             this._pool = {};
@@ -157,16 +205,31 @@ function recordManager() {
 
         },
 
-        find: function (value, query) {
+        /**
+         * 根据key value查找记录
+         * @param value  {*}            要查询的key值
+         * @param key  {String}         要查询的key
+         * @returns {this}
+         * @example
+         *
+         * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(1,'x')  // result this._find == [{x:1,y:2},{x:1,y:5}];
+         * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(7,'y.z')  // result this._find == [{x:1,y:{z:7}}];
+         */
+        find: function (value, key) {
 
-            var r = this._find = this.get(value, query);
-
-            this._find = r && r.constructor === Object ? [r] : r;
+            this._find = this.get(value, key);
 
             return this;
 
         },
 
+        /**
+         * 获取查询结果记录集合
+         * @returns {Array or undefined}
+         * @example
+         *
+         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x')  // return [{x:1,y:2},{x:1,y:5}];
+         */
         result: function(){
             return this._find;
         },
@@ -175,7 +238,29 @@ function recordManager() {
             this._find = void(0);
         },
 
-        _getValueByKey: function (record, k) {
+        fire: function (e, msg) {
+
+            var scope = this.scope;
+            var pool = this.get();
+            var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
+
+            msg = $.extend({pool: pool}, msg || {});
+
+            scope && scope.fire && scope.fire(prefix + e, msg);
+
+        },
+
+        /**
+         * 插入或修改一条记录时的回调函数
+         * @param record
+         * @param index
+         */
+        beforeSave: function(record, index){
+
+
+        },
+
+        _queryKeyValue: function (record, k) {
 
             return this._get(record, k).v;
         },
@@ -201,22 +286,10 @@ function recordManager() {
 
         },
 
-        fire: function (e, msg) {
-
-            var scope = this.scope;
-            var pool = this.get();
-            var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
-
-            msg = $.extend({pool: pool}, msg || {});
-
-            scope && scope.fire && scope.fire(prefix + e, msg);
-
-        },
-
-        beforeSave: function(record, index){
-
-
+        _look: function () {
+            console.log(this._pool);
         }
+
 
 
     };
