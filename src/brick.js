@@ -1,7 +1,7 @@
 /**
  * Created by julien.zhang on 2014/6/30.
  *
- * 借鉴angularJs的开发思想，通过模块化开发，依赖注入，消息传递系统等，帮助组织，分层，结构化js代码。
+ * 借鉴angularJs的开发思想，通过模块化开发，依赖注入，事件系统，帮助组织，分层，结构化js代码。
  *
  * 定义模型对象，UI组件，控制器对象的原型；
  *
@@ -17,50 +17,6 @@
 
 (function(root){
 
-
-    /*
-     * 记录管理器原型
-     */
-    var manager = function(){
-        var fn = {
-            get: function(){
-
-            },
-            set: function(){
-
-            },
-            add: function(){
-
-            },
-            remove: function(){
-
-            },
-            clear: function(){
-
-            },
-            on: function(){
-
-            },
-            trigger: function(){
-
-            },
-            off: function(){
-
-            }
-        }
-
-        function f(){
-            var _list = {};
-
-        }
-
-        return f;
-    };
-
-
-    function inherit(){
-
-    }
 
     /*
      * 事件管理器
@@ -106,7 +62,7 @@
                 if(callback){
 
                     if(!f){
-                        callback = [];
+                        delete event._callback;
                         return;
                     }
 
@@ -114,8 +70,8 @@
 
                         handle = callback[i];
 
-                        if(f.toString() === handle.f.toString()){
-                            event.splice(i,1);
+                        if(f === handle.f || f.toString() === handle.f.toString()){
+                            callback.splice(i,1);
                             return;
                         }
 
@@ -128,13 +84,48 @@
              *
              * @param e {String} 事件名
              * @param msg  {*}   任意想要传递的数据对象
-             * @param flag {bool} 内部用，标记外部调用还是内部调用
+             * @example
+             * e = 'a.b.c';   会触发 ["a.b.c", "a.*.c", "a.*", "a.b.*"]
              */
-            fire: function(e, msg, flag){
+            fire: function(e, msg, that){
 
-                var namespace = e.split('.');
+                var namespace = e.split(/\.|\:/);
 
-                var args;
+                var prefix = namespace.shift();
+
+                var events = [e];
+
+                (function(arr, pre){
+
+                    if(!arr.length) return;
+
+                    pre = pre ? pre +   '.' : '';
+
+                    for(var i = 0, len = arr.length; i < len; i++){
+
+                        var arr1 = arr.slice();
+                        arr1.splice(0,i+1);
+                        var event = pre + '*' + (arr1.length ? '.' + arr1.join('.') : '');
+                        events.push(event);
+
+                    }
+
+                    pre += arr.shift();
+
+                    arguments.callee(arr, pre);
+
+                })(namespace.slice(), prefix);
+
+
+                for(var _e; _e = events.shift() ; ){
+
+                    this._fire(_e, msg, that);
+
+                }
+
+            },
+
+            _fire: function(e, msg, that){
 
                 var event = this._getNamespace(e);
                 var callback = event && event._callback;
@@ -144,29 +135,21 @@
 
                 if(callback){
 
-                   // _cc('fire=> ', e, msg);
+                    // _cc('fire=> ', e, msg);
 
                     for(var i= 0, len = callback.length; i<len; i++){
 
-                         handle = callback[i];
-                         context = handle.context || {};
-                         f = handle.f;
+                        handle = callback[i];
+                        context = handle.context || {};
+                        f = handle.f;
 
-                         args = Array.prototype.slice.call(arguments, 1);
-
-                         args.unshift({eventName:e});
-
-                         f.apply(context, args);
+                        if(f.constructor === Function){
+                            f.apply(context, [{eventName:e, source:that}, msg]);
+                        }
 
                     }
 
                 }
-
-                if(flag || namespace.length<2) return;
-
-                namespace.pop();
-                e = namespace.join('.') + '.*';
-                this.fire(e, msg, 1);
 
             },
 
@@ -272,7 +255,8 @@
              */
             fire: function(e, msg){
 
-                eventManager.fire(e, msg);
+                var that = this;
+                eventManager.fire(e, msg, that);
 
             },
 
@@ -284,7 +268,6 @@
             watch: function(e, f){
 
                 var that = this;
-
                 eventManager.bind(e, f, that);
 
             },
@@ -471,38 +454,8 @@
                     return this;
                 }
             };
-        },
-        /*
-         * 数字格式化
-         */
-        dFormat: function (d, opt) {
-            opt = opt || {};
-
-            var dg,
-                l,
-                r,
-                point,
-                reg,
-                ro;
-
-            dg = opt.dg * 1 || 0;
-            l = Math.pow(10, dg);
-            d = Math.round(d * l) / l;
-            r = (d + '').split('.');
-            point = r[1] || '';
-
-            reg = new RegExp('0{' + point.length + '}');
-
-            ro = _.range(dg);
-            _.each(ro, function (v, i, list) {
-                list[i] = 0;
-            });
-            ro = ro.join('');
-            point = ro.replace(reg, point);
-            d = r[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
-            d = d + (point ? '.' + point : '');
-            return /^-/.test(d) ? d.replace(/\-(.+)$/, '($1)') : d;
         }
+
 
     };
 
@@ -511,7 +464,7 @@
      */
     var isDevelop = location.hostname == 'dev.com';
 
-    var _cc = (isDevelop && window.console && (function(){
+    var _cc = ( window.isDeving && window.console && (function(){
 
         return function () {
             try {
