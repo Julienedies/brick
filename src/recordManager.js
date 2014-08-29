@@ -49,11 +49,9 @@ function recordManager() {
 
                 this.beforeSave(record, i);
 
-                var id = this._queryKeyValue(record);
-
-                pool[id] = record;
-
             }
+
+            this._pool = data;
 
             this.fire('init');
 
@@ -126,11 +124,15 @@ function recordManager() {
 
             for (var i in find) {
 
-                if (query && this._queryKeyValue(find[i], query) === this._queryKeyValue(data, query))  continue;
+                var record = find[i];
 
-                var id = this._queryKeyValue(find[i]);
+                if (query && this._queryKeyValue(record, query) === this._queryKeyValue(data, query))  continue;
 
-                var record = pool[id];
+                var id = this._queryKeyValue(record);
+
+                var index = this._getIndex(id);
+
+                record = pool[index];
 
                 result.push( $.extend(true, record, data) );
 
@@ -150,13 +152,17 @@ function recordManager() {
          */
         add: function (record) {
 
+            var pool = this._pool;
+
             var id = this._queryKeyValue(record);
 
             this.beforeSave(record);
 
-            this._pool[id] = record;
+            pool.push ? pool.push(record) : (pool[id] = record);
 
             this.fire('add', {add: record});
+
+            return this;
 
         },
 
@@ -175,11 +181,13 @@ function recordManager() {
 
             for (var i in find) {
 
-                var id = this._queryKeyValue(find[i]);
+                var record = find[i];
+                var id = this._queryKeyValue(record);
+                var index = this._getIndex(id);
 
-                delete pool[id];
+                (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
 
-                this.fire('remove.' + id, {remove: find[i]});
+                this.fire('remove.' + id, {remove: record});
 
             }
 
@@ -284,6 +292,19 @@ function recordManager() {
 
             return {r: record, v: value};
 
+        },
+
+        _getIndex: function(record, query){
+
+            var pool = this._pool;
+
+            var v = typeof record === 'object' ? this._queryKeyValue(record, query) : record;
+
+            for(var i in pool){
+
+                if(this._queryKeyValue(pool[i], query) === v) return i;
+
+            }
         },
 
         _look: function () {
