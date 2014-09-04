@@ -1,5 +1,7 @@
 /**
  * Created by julien.zhang on 2014/6/30.
+ * 
+ * https://github.com/Julienedies/brick.git
  *
  * 借鉴angularJs的开发思想，通过模块化开发，依赖注入，事件系统，帮助组织，分层，结构化js代码。
  *
