@@ -2,10 +2,17 @@
  * Created by julien.zhang on 2014/9/5.
  */
 
-function f(){
+function scope(){
 
-    function _f(){
 
+    function _scope(){
+
+    }
+
+    var proto = {
+        inherit: function(){
+
+        }
     }
 
 }

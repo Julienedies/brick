@@ -13,7 +13,7 @@ function recordManager() {
 
     function fn(conf) {
 
-        if (conf.constructor === Object) {
+        if (conf && conf.constructor === Object) {
 
             for (var i in conf) {
                 this[i] = conf[i];

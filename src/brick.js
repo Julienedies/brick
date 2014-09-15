@@ -1,5 +1,7 @@
 /**
- * Created by julien.zhang on 2014/6/30.
+ * Created by Julien on 2014/6/30.
+ *
+ * https://github.com/Julienedies/brick.git
  *
  * 借鉴angularJs的开发思想，通过模块化开发，依赖注入，事件系统，帮助组织，分层，结构化js代码。
  *
@@ -307,7 +309,7 @@
              * @param name {String} 控制器ID
              */
             get: function(name){
-                return _ctrls[name].scope;
+                return _ctrls[name] && _ctrls[name].scope;
             },
 
             /**
@@ -462,9 +464,9 @@
     /*
      * 开发时的debug函数
      */
-    var isDevelop = location.hostname == 'dev.com';
+    var isDevelop = window.deving || 1;
 
-    var _cc = ( window.isDeving && window.console && (function(){
+    var _cc = ( isDevelop && window.console && (function(){
 
         return function () {
             try {
