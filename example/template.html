@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../libs/underscore-1.6.0.min.js"></script>
+    <script src="../libs/jquery-1.8.1.min.js"></script>
+    <script src="../src/brick.js"></script>
+    <script src="../src/parser.js"></script>
+    <script src="../src/createRender.js"></script>
+    <script src="../src/recordManager.js"></script>
+</head>
+<body>
+
+<div ic-ctrl="listCtrl">
+
+    <ul ic-init="var list = data.list;">
+        <li ic-for="var i in list" ic-init="var item = list[i];">
+              <p ic-if="typeof item==='object'">
+                    <b ic-for="var j in item">{{j}}:{{item[j]}}</b>
+              </p>
+            <p ic-if="typeof item!=='object'">
+                我们的索引：{{i}} => {{item+1}}
+            </p>
+
+        </li>
+    </ul>
+
+</div>
+
+<script>
+
+    $(function ($) {
+
+        brick.services.add('recordManager', recordManager);
+        brick.controllers.add('listCtrl', function (scope, recordManager) {
+
+            $.extend(scope, new recordManager);
+
+            scope.list = [0,1,2,3,4,5,{a:'xxxxxx',b:'yyyyy'}];
+
+        }, {depend: ['recordManager'], global:1});
+
+
+        brick.controllers.init();
+
+        /////////////////////////////////////////////////////////////////////
+
+        $('[ic-ctrl]').each(function (i, e) {
+
+            var root = $(e);
+
+            var name = root.attr('ic-ctrl');
+            var scope = brick.controllers.get(name);
+
+            _cc()
+
+            var tmplFn = createRender(e);
+
+            root.html( tmplFn( {data:scope}) );
+
+        });
+
+
+    });
+
+</script>
+</body>
+</html>
