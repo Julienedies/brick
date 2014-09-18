@@ -6,40 +6,50 @@
     <script src="../libs/underscore-1.6.0.min.js"></script>
     <script src="../libs/jquery-1.8.1.min.js"></script>
     <script src="../dist/brick.js"></script>
+    <script src="../src/str2dom.js"></script>
 </head>
 <body>
 
 <div ic-ctrl="listCtrl">
 
-    <ul ic-init="var list = data.list;">
-        <li ic-for="var i in list">
+    <ul ic-init="var list = data.list;" ic-if="list">
+        <li ic-for="var i in list" ic-for-init="var item = list[i]" ic-if="typeof item === 'object' ">
 
-            <p>
-                我们的索引：{{i}} = {{list[i]}}
-            </p>
+            <i ic-for="var j in item" ic-style="color:{{j}}">
+                {{i+'-'+j}} = {{item[j]}}<br/>
+            </i>
 
         </li>
     </ul>
+    <p ic-if="!list">loading...</p>
 
 </div>
 
+<p>
+    xxx <span>yyy<i>zzzz</i><i>aaaaaa</i></span>qqqqq
+</p>
+
 <script>
 
-    $(function ($) {
 
-        brick.controllers.add('listCtrl', function (scope, recordManager) {
+    brick.controllers.add('listCtrl', function (scope, recordManager) {
 
-            $.extend(scope, new recordManager);
+        var list = [
+            {"ticker": "000001.SZ", "price": 10.26, "change_in_percent": -0.48},
+            {"ticker": "000002.SZ", "price": 9.22, "change_in_percent": -0.32},
+            {"ticker": "000024.SZ", "price": 11.84, "change_in_percent": -1.09},
+            {"ticker": "000402.SZ", "price": 6.46, "change_in_percent": -2.86}
+        ];
 
-            scope.list = [0,1,2,3,4,5,{a:'xxxxxx',b:'yyyyy'}];
+        setTimeout(function () {
+            scope.set('list', list);
+        }, 2000);
 
-        }, {depend: ['recordManager'], global:1});
+    }, {depend: ['recordManager'], global: 1});
 
 
-        brick.init();
+    brick.init();
 
-
-    });
 
 </script>
 </body>

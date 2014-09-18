@@ -1,11 +1,28 @@
 /** 
  * brick - v0.1.0 
- * modified: 2014-09-15 18:13:20
+ * modified: 2014-09-18 10:18:24
  */
 
 ;(function( root, undefined ){ 
 
- function _eventManager() {
+ var config = (function (){
+
+    var conf = {
+        directive_prefix: 'ic'
+    };
+
+    return {
+        get: function(key){
+            return conf[key];
+        },
+        set: function(key, val){
+            conf[key] = val;
+        }
+    };
+
+
+})();
+var eventManager = (function() {
 
     var _events = {};
 
@@ -164,8 +181,8 @@
 
     };
 
-}
-function _controllers(){
+})();
+var controllers = (function (){
 
     // 存储控制器
     var _ctrls = {};
@@ -182,6 +199,15 @@ function _controllers(){
     function _F(){}
 
     extend(_F.prototype, {
+
+        set: function(key, val){
+            this[key] = val;
+            this.render();
+        },
+
+        get: function(key){
+            return this[key];
+        },
 
         _bind: function(name){
             if(typeof name === 'string'){
@@ -337,8 +363,8 @@ function _controllers(){
         }
     };
 
-}
-function _services() {
+})();
+var services = (function() {
 
     var services = {};
     var registry = {};
@@ -410,7 +436,20 @@ function _services() {
         }
     };
 
-}
+})();
+var directives = (function(){
+
+    var _store = {};
+
+    return {
+
+        add: function(name, definition){
+
+        }
+
+    };
+
+})();
 function recordManager() {
 
     function fn(conf) {
@@ -736,38 +775,77 @@ function parser(node) {
 
         var elm = $(node);
         var attrs = node.attributes;
-        //var attrs = [];
-        var attr;
+
+        var directives = [];
+
+        var priority = {
+            'init': -10,
+            'for': 0,
+            'for-init': 10,
+            'if': 100,
+            'if-init': 110,
+            'else': 100,
+            'bind': 1000
+        };
 
 
-
-        for (var i = 0, l = attrs.length; i < l; i++) {
+        for (var i = 0, attr, name, value, l = attrs.length; i < l; i++) {
 
             attr = attrs[i];
 
-            //elm.attr(attr.name, attr.value && attr.value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+            name = attr.name;
+            value = attr.value;
 
-
-            if (/-init$/.test(attr.name)) {
-                elm.before('\r\n<% ' + attr.value + ' %>\r\n');
-                return;
+            if (/^ic-(init|for|if|else|bind)/.test(name)) {
+                directives.push([name, value]);
+                continue;
             }
 
-            if (/-for$/.test(attr.name)) {
-                elm.before('<% for(' + attr.value + '){ %>\r\n');
+            try{
+                //typeof value === 'string' && elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+            }catch(e){
+                _cc(e);
+            }
+
+        }
+
+        //对指令按优先级排序
+        directives.sort(function(a, b){
+            return priority[a[0].replace(/^ic-/,'')] - priority[b[0].replace(/^ic-/,'')];
+        });
+
+        //处理每一个指令
+        while (attr = directives.shift()) {
+
+            name = attr[0];
+            value = attr[1];
+
+            if (/-init$/.test(name)) {
+                elm.before('\r\n<% ' + value + ' %>\r\n');
+                continue;
+            }
+
+            if (/-for$/.test(name)) {
+                elm.before('<% for(' + value + '){ %>\r\n');
                 elm.after('\r\n<% } %>');
-                return;
+                continue;
             }
 
-            if (/-if$/.test(attr.name)) {
-                elm.before('<% if(' + attr.value + '){ %>\r\n');
+            if (/-if$/.test(name)) {
+                elm.before('<% if(' + value + '){ %>\r\n');
                 elm.after('\r\n<% } %>');
-                return;
+                continue;
             }
 
-            if (/-bind$/.test(attr.name)) {
-                elm.html('\r\n<%= ' + attr.value + ' %>\r\n');
-                return;
+            if (/-else$/.test(name)) {
+                elm.before('<% else{ %>\r\n');
+                elm.after('\r\n<% } %>');
+                continue;
+            }
+
+            if (/-bind$/.test(name)) {
+                elm.html('\r\n<%= ' + value + ' %>\r\n');
+                continue;
             }
 
         }
@@ -803,28 +881,26 @@ function createRender(root) {
 
     })(root);
 
-    var tmpl = $(root).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    var tmpl = $(root).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\b(ic-)(?=href|src|style)/g,'');
 
-    _cc(tmpl);
+    //_cc(tmpl);
+
+    window.console && console.log(tmpl);
 
     return _.template(tmpl);
 
 }
-var eventManager = _eventManager();
-
-var controllers = _controllers();
-
-var services = _services();
-
 //内置服务
 services.add('recordManager', recordManager);
 
 //对外接口
 root.brick = {
+    config: config,
     eventManager: eventManager,
     controllers: controllers,
     services: services,
-    init: function(){
+    directives: directives,
+    init: function () {
 
         this.controllers.init();
 
@@ -836,11 +912,10 @@ root.brick = {
 
             var name = root.attr('ic-ctrl');
 
-                var scope = brick.controllers.get(name);
+            var scope = brick.controllers.get(name);
 
 
-
-            if(!scope) throw 'not find controller ' + name;
+            if (!scope) throw 'not find controller ' + name;
 
 
             scope.domNode = root;
@@ -857,16 +932,15 @@ root.brick = {
 };
 
 
-root._cc = ( window.console && (function () {
+root._cc = ( window.console && function () {
 
-    return function () {
         try {
             console.log.apply(console, arguments);
         } catch (e) {
         }
-    }
 
-})()) || function () {};
+} ) || function () {
+};
 
 
 

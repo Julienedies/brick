@@ -5,7 +5,7 @@
  */
 
 
-function _eventManager() {
+var eventManager = (function() {
 
     var _events = {};
 
@@ -164,4 +164,4 @@ function _eventManager() {
 
     };
 
-}
+})();

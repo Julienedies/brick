@@ -5,7 +5,7 @@
  */
 
 
-function _controllers(){
+var controllers = (function (){
 
     // 存储控制器
     var _ctrls = {};
@@ -22,6 +22,15 @@ function _controllers(){
     function _F(){}
 
     extend(_F.prototype, {
+
+        set: function(key, val){
+            this[key] = val;
+            this.render();
+        },
+
+        get: function(key){
+            return this[key];
+        },
 
         _bind: function(name){
             if(typeof name === 'string'){
@@ -177,4 +186,4 @@ function _controllers(){
         }
     };
 
-}
+})();

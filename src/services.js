@@ -4,7 +4,7 @@
  * 服务管理器 （任意类型的数据，模型对象，UI组件都可以做为服务存在；通常是单例对象）
  */
 
-function _services() {
+var services = (function() {
 
     var services = {};
     var registry = {};
@@ -76,4 +76,4 @@ function _services() {
         }
     };
 
-}
+})();

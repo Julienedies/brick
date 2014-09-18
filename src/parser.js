@@ -12,38 +12,77 @@ function parser(node) {
 
         var elm = $(node);
         var attrs = node.attributes;
-        //var attrs = [];
-        var attr;
+
+        var directives = [];
+
+        var priority = {
+            'init': -10,
+            'for': 0,
+            'for-init': 10,
+            'if': 100,
+            'if-init': 110,
+            'else': 100,
+            'bind': 1000
+        };
 
 
-
-        for (var i = 0, l = attrs.length; i < l; i++) {
+        for (var i = 0, attr, name, value, l = attrs.length; i < l; i++) {
 
             attr = attrs[i];
 
-            //elm.attr(attr.name, attr.value && attr.value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+            name = attr.name;
+            value = attr.value;
 
-
-            if (/-init$/.test(attr.name)) {
-                elm.before('\r\n<% ' + attr.value + ' %>\r\n');
-                return;
+            if (/^ic-(init|for|if|else|bind)/.test(name)) {
+                directives.push([name, value]);
+                continue;
             }
 
-            if (/-for$/.test(attr.name)) {
-                elm.before('<% for(' + attr.value + '){ %>\r\n');
+            try{
+                //typeof value === 'string' && elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+            }catch(e){
+                _cc(e);
+            }
+
+        }
+
+        //对指令按优先级排序
+        directives.sort(function(a, b){
+            return priority[a[0].replace(/^ic-/,'')] - priority[b[0].replace(/^ic-/,'')];
+        });
+
+        //处理每一个指令
+        while (attr = directives.shift()) {
+
+            name = attr[0];
+            value = attr[1];
+
+            if (/-init$/.test(name)) {
+                elm.before('\r\n<% ' + value + ' %>\r\n');
+                continue;
+            }
+
+            if (/-for$/.test(name)) {
+                elm.before('<% for(' + value + '){ %>\r\n');
                 elm.after('\r\n<% } %>');
-                return;
+                continue;
             }
 
-            if (/-if$/.test(attr.name)) {
-                elm.before('<% if(' + attr.value + '){ %>\r\n');
+            if (/-if$/.test(name)) {
+                elm.before('<% if(' + value + '){ %>\r\n');
                 elm.after('\r\n<% } %>');
-                return;
+                continue;
             }
 
-            if (/-bind$/.test(attr.name)) {
-                elm.html('\r\n<%= ' + attr.value + ' %>\r\n');
-                return;
+            if (/-else$/.test(name)) {
+                elm.before('<% else{ %>\r\n');
+                elm.after('\r\n<% } %>');
+                continue;
+            }
+
+            if (/-bind$/.test(name)) {
+                elm.html('\r\n<%= ' + value + ' %>\r\n');
+                continue;
             }
 
         }

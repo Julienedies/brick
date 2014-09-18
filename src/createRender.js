@@ -5,7 +5,6 @@
  *
  */
 
-
 function createRender(root) {
 
     //遍历dom节点，解析指令
@@ -23,9 +22,11 @@ function createRender(root) {
 
     })(root);
 
-    var tmpl = $(root).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    var tmpl = $(root).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\b(ic-)(?=href|src|style)/g,'');
 
-    _cc(tmpl);
+    //_cc(tmpl);
+
+    window.console && console.log(tmpl);
 
     return _.template(tmpl);
 

@@ -3,21 +3,17 @@
  */
 
 
-var eventManager = _eventManager();
-
-var controllers = _controllers();
-
-var services = _services();
-
 //内置服务
 services.add('recordManager', recordManager);
 
 //对外接口
 root.brick = {
+    config: config,
     eventManager: eventManager,
     controllers: controllers,
     services: services,
-    init: function(){
+    directives: directives,
+    init: function () {
 
         this.controllers.init();
 
@@ -29,11 +25,10 @@ root.brick = {
 
             var name = root.attr('ic-ctrl');
 
-                var scope = brick.controllers.get(name);
+            var scope = brick.controllers.get(name);
 
 
-
-            if(!scope) throw 'not find controller ' + name;
+            if (!scope) throw 'not find controller ' + name;
 
 
             scope.domNode = root;
@@ -50,16 +45,15 @@ root.brick = {
 };
 
 
-root._cc = ( window.console && (function () {
+root._cc = ( window.console && function () {
 
-    return function () {
         try {
             console.log.apply(console, arguments);
         } catch (e) {
         }
-    }
 
-})()) || function () {};
+} ) || function () {
+};
 
 
 
