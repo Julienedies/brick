@@ -18,6 +18,12 @@ var eventManager = (function() {
          * @param context {Object} 调用watch方法的scope
          */
         bind: function (e, f, context) {
+            e = e.split(',');
+            for(var i in e){
+                this._bind(e[i], f, context);
+            }
+        },
+        _bind: function(e, f, context){
 
             var handle = {f: f};
 
@@ -38,7 +44,12 @@ var eventManager = (function() {
          * @param f {Function} 回调函数，可选，如果没有传递，则取消该事件下的所有监听
          */
         unbind: function (e, f) {
-
+            e = e.split(',');
+            for(var i in e){
+                this._unbind(e[i], f);
+            }
+        },
+        _unbind: function(e, f){
             var event = this._getNamespace(e);
             var callback = event && event._callback;
             var handle;
@@ -61,7 +72,6 @@ var eventManager = (function() {
 
                 }
             }
-
         },
 
         /**
@@ -159,6 +169,10 @@ var eventManager = (function() {
 
             })(namespace, _events);
 
+        },
+
+        _look: function () {
+            console.log(_events);
         }
 
 

@@ -22,6 +22,9 @@ var services = (function() {
         add: function (name, serve, depend) {
             registry[name] = {depend: depend, serve: serve};
         },
+        reg: function (name, factory, conf){
+
+        },
         /*
          * 实例化一个服务
          */

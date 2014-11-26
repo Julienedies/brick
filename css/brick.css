@@ -1,0 +1,72 @@
+/*
+==========================================
+ */
+[ic-role-loading]{
+    display: none;
+}
+[ic-role-drag-handle]{
+    cursor:  move;
+}
+[ic-slider]{
+    position: relative;
+    overflow: hidden;
+}
+[ic-role-tab]{
+    cursor: pointer;
+}
+[ic-role-con]{
+    display: none;
+}
+
+[ic-dropdown]{
+    position: relative;
+}
+[ic-role-dropdown-menu]{
+    position: absolute;
+    left:0;
+    z-index: 10;
+    display: none;
+}
+[ic-role-dropdown-con]{
+    overflow: hidden;
+}
+
+[ic-scene]{
+    display: none;
+}
+[ic-scene-active]{
+    display: inherit;
+}
+/*输入提示列表*/
+[ic-role-list]{
+    display: none;
+    position: absolute;
+    z-index: 100;
+}
+/* 对话框 */
+[ic-dialog]{
+    position: absolute;
+    top:10%;
+    left:50%;
+    display: none;
+    z-index: 100;
+}
+[ic-rold-dialog-close]{
+    position: absolute;
+    right:10px;
+    top:10px;
+}
+/*.transparent{*/
+    /*background:rgba(0,0,0,0.6);*/
+    /*background: transparent\9;*/
+    /*zoom:1\8; *//* required for the filters */
+    /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)"; *//* IE8 */
+    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000); *//* IE5.5-7 */
+/*}*/
+
+/*.transparent2{*/
+    /**background:#f00; *filter:alpha(opacity=50);*/
+/*}*/
+
+.t{background:rgba(0,34,89,0.2);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33002259,endColorstr=#33002259);zoom:1;}
+:root .t{filter:none\9;}/*for IE9*/

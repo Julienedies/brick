@@ -123,8 +123,30 @@ var controllers = (function (){
         updateDom: function(patch){
 
         },
+        render: function(tplName, model, call){
+            var that = this;
+            setTimeout(function(){
+                var tple = that._render_(tplName, model);
+                call && tple && call.apply(tple, []);
+            },30);
+        },
+        _render_: function(tplName, model){
+            var $elm = this.$elm;
+            var tplf = brick._tplfs[tplName];  //模板函数
+            var tple; //dom元素
+            var html;
+            if($elm && tplf){
+                tple = $elm.filter('[ic-tpl=?]'.replace('?', tplName));
+                tple = tple.length ? tple : $elm.find('[ic-tpl=?]'.replace('?', tplName));
+                html = tplf(model ? {model:model} : this);
+                //console.log(html)
+                if(tple.length){
+                    return tple.html(html);
+                }
+            }
+        },
 
-        render: function(){
+        _render: function(){
             var html = this.tmplFn({data: this});
 
             if(this.htmlList){
@@ -133,7 +155,6 @@ var controllers = (function (){
                 this.htmlList = html;
                 return this.updateDom(patch);
             }
-
 
             //this.htmlList = html;
             this.domNode && this.domNode.html(html);
@@ -180,10 +201,50 @@ var controllers = (function (){
             if(conf.global){
                 window[name] = scope;
             }
-            _ctrls[name] = {fn:ctrl, scope:scope, depend:depend, service:conf.service};
+            _ctrls[name] = {fn:ctrl, scope:scope, depend:depend, service:conf.service, conf:conf};
         },
 
-        /*
+        /**
+         * 注册控制器
+         * @param name {String}   控制器ID
+         * @param ctrl {Function} 控制器的工厂函数
+         * @param conf {Object}   可选，控制器config (可以定义依赖，是否注册为global变量，是否做为service)
+         */
+        reg: function(name, ctrl, conf){
+            conf = conf || {};
+            var depend = conf.depend || [];
+            _ctrls[name] = {fn:ctrl, conf: conf, depend:depend, service:conf.service, scope:f(name)};
+        },
+
+        /**
+         * 运行控制器
+         * @param name
+         */
+        exec: function(name, parent){
+            var ctrl = _ctrls[name];
+
+            if (!ctrl) return console.log('not find controller ' + name);
+
+            var conf = ctrl.conf;
+            var scope;
+            var depend = conf.depend || [];
+
+            scope = parent ? f(name, parent) : f(name);
+            scope._parent = parent && parent._name;
+            ctrl.scope = scope;
+
+            depend = services.get(depend) || [];
+            depend = depend.constructor !== Array ? [depend] : depend;
+            depend.unshift(scope);
+
+            ctrl.fn.apply(null, depend);
+            ctrl.fn = function(){};
+
+            if(conf.global) window[name] = scope;
+            return scope;
+        },
+
+        /**
          * 初始化控制器
          */
         init: function(name){
@@ -199,12 +260,17 @@ var controllers = (function (){
                 }
                 depend.unshift(ctrl.scope);
                 service = ctrl.fn.apply(null, depend);
+                ctrl.fn = function(){};
 
                 if(ctrl.service){
                     services.fill(i, service);
                 }
 
             }
+        },
+
+        _look: function(){
+            return _ctrls;
         }
     };
 

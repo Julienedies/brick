@@ -22,12 +22,16 @@ function createRender(root) {
 
     })(root);
 
-    var tmpl = $(root).html().replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\b(ic-)(?=href|src|style)/g,'');
+    var tpl = $(root).html()
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        .replace(/&amp;&amp;/g,'&&');
 
-    //_cc(tmpl);
+    //console.log(tpl)
 
-    window.console && console.log(tmpl);
-
-    return _.template(tmpl);
+    var tplf = _.template(tpl);
+    tplf._tpl_ = tpl;
+    return tplf;
 
 }

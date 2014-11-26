@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>brick: ajax指令使用demo</title>
+    <link rel="stylesheet" href="example.css">
+    <link rel="stylesheet" href="../brick.css">
+</head>
+<body>
+<pre>
+    ic-ajax 标志该元素绑定ajax请求，此属性是必须项，以下属性皆为可选项；
+    ic-ajax-disabled 用于定义ajax行为是否被禁用，true,false两个值可用；
+    ic-submit-action 定义ajax请求地址
+    ic-submit-action 定义ajax请求地址
+    ic-submit-method 定义ajax请求方式，post, get, put, delete，默认post；
+    ic-submit-data-type 定义接受数据类型,json,html,xml，script,默认json；
+    ic-submit-data 定义ajax请求数据；
+    ic-submit-before 定义ajax请求发起前调用函数，通常用于设定提交数据；返回false，则取消ajax请求
+    ic-submit-on-done 定义ajax请求成功回调函数
+    ic-submit-on-failed 定义ajax失败回调函数
+    ic-submit-on-always 定义ajax请求完成总是执行的回调函数
+
+    几个回调函数执行时，this关键字总是指向ic-ajax元素dom
+    可以自定义loading元素，通过ic-role-loading属性标识，值需要和ic-ajax属性值相同；
+
+    ic-ajax 指令同时定义了一个jQuery扩展 icAjax，
+    $(this).icAjax({data:{x:1,y:2}})可以用于设置ajax提交数据，在before里使用；
+    $(this).icAjax({disabled:true})可以用于是否禁用ajax,true禁用，false启用；
+
+</pre>
+<br/>
+<br/>
+<div>
+    <button
+            ic-ajax
+            ic-submit-method="post"
+            ic-submit-action="/post"
+            ic-submit-before="before"
+            ic-submit-on-done="done"
+            ic-submit-on-failed="fail"
+            ic-submit-on-always="always"
+            >ajax demo1</button>
+</div>
+<br/>
+<br/>
+<div ic-ctrl="ajaxCtrl">
+    <button
+            ic-ajax="demo2"
+            ic-submit-method="post"
+            ic-submit-action="/post"
+            ic-submit-before="ajax.before"
+            ic-submit-on-done="ajax.done"
+            >ajax demo2</button>
+    <div ic-role-loading="demo2">loading...</div>
+
+</div>
+<br/>
+<br/>
+<button
+        ic-ajax
+        ic-ajax-disabled="false"
+        ic-submit-method="post"
+        ic-submit-action="/post"
+        ic-submit-before="demo3.before"
+        ic-submit-on-done="demo3.done"
+        >ajax demo3</button>
+<script src="../../vendor/underscore-1.6.0.min.js"></script>
+<script src="../../vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../brick.js"></script>
+<script>
+    function before(){
+        $.tips('demo1 before')
+    }
+    function done(data) {
+        $.tips('demo1 done');
+    }
+
+    function fail(msg) {
+        $.tips('demo1 failed');
+    }
+
+    function always() {
+        $.tips('demo1 always');
+    }
+
+    brick.controllers.reg('ajaxCtrl', function(scope){
+        scope.ajax = {
+            done:function(data){
+                $.tips('demo2 done')
+            },
+            before:function(){
+                $(this).icAjax({data:{code:+new Date}});
+                $.tips('demo2 before')
+            }
+        }
+    });
+
+    demo3 = {
+        done:function(data){
+            $.tips('demo3 done');
+        },
+        before:function(){
+            if(Math.round(Math.random())) {
+                $(this).icAjax({disabled:true});
+                $.tips('demo3 可用');
+            }else{
+                $(this).icAjax({disabled:false});
+                $.tips('demo3 不可用');
+            }
+        }
+    };
+</script>
+</body>
+</html>

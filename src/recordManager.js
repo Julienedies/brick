@@ -4,7 +4,7 @@
  *
  * 记录管理器
  *
- * var serv = new recordManager({scope:scope, eventPrefix:'holdModel',k:'hold.id', beforeSave:function(record,index){});
+ * var serv = new recordManager({scope:scope, eventPrefix:'holdModel',key:'hold.id', beforeSave:function(record,index){});
  *
  *
  */
@@ -30,7 +30,7 @@ function recordManager() {
         /**
          * 默认每条记录的主键为id；
          */
-        k: 'id',
+        key: 'id',
 
         /**
          *
@@ -275,7 +275,7 @@ function recordManager() {
 
         _get: function (record, k) {
 
-            var chain = (k || this.k).split('.');
+            var chain = (k || this.key).split('.');
 
             var value = (function (chain, record) {
 
