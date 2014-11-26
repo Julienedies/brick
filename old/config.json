@@ -1,0 +1,13 @@
+{
+    "dist/brick.js": [
+        "src/config.js",
+        "src/eventManager.js",
+        "src/controllers.js",
+        "src/services.js",
+        "src/directives.js",
+        "src/recordManager.js",
+        "src/parser.js",
+        "src/createRender.js",
+        "src/init.js"
+    ]
+}
