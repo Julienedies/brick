@@ -155,7 +155,7 @@ directives.add('ic-form', function () {
 
         var submitType = (function () {
             //函数调用
-            if(/[\w_]+\(\)\;?$/i.test(action)){
+            if(/[\w_.]+\(\)\;?$/i.test(action)){
                 action = $submit.icParseProperty(action.replace(/[();]/g,''));
                 return 1;
             }
@@ -184,6 +184,12 @@ directives.add('ic-form', function () {
 
             if(!$submit.icVerify()) return;
 
+
+            //函数调用
+            if(submitType === 1){
+                return action.apply($submit, []);
+            }
+
             var data = before(fields);
 
             if( $loading.size()){
@@ -193,10 +199,6 @@ directives.add('ic-form', function () {
                 $submit.setLoading();
             }
 
-            //函数调用
-            if(submitType === 1){
-                return action.apply($submit, []);
-            }
 
             //同域提交
             if(submitType === 3){
