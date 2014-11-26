@@ -111,9 +111,31 @@ var controllers = (function (){
         tmplFn: function(){
 
         },
+        /**
+         * 比较htmlList，生成dom补丁对象，用于更新dom
+         */
+        diff: function(){
+
+        },
+
+        htmlList: null,
+
+        updateDom: function(patch){
+
+        },
 
         render: function(){
             var html = this.tmplFn({data: this});
+
+            if(this.htmlList){
+                var patch = this.diff(html);
+                if(!patch) return;
+                this.htmlList = html;
+                return this.updateDom(patch);
+            }
+
+
+            //this.htmlList = html;
             this.domNode && this.domNode.html(html);
         }
 

@@ -16,6 +16,7 @@ function parser(node) {
         var directives = [];
 
         var priority = {
+            'skip': -100,
             'init': -10,
             'for': 0,
             'for-init': 10,
@@ -33,7 +34,7 @@ function parser(node) {
             name = attr.name;
             value = attr.value;
 
-            if (/^ic-(init|for|if|else|bind)/.test(name)) {
+            if (/^ic-(init|for|if|else|bind|skip)/.test(name)) {
                 directives.push([name, value]);
                 continue;
             }
@@ -56,6 +57,11 @@ function parser(node) {
 
             name = attr[0];
             value = attr[1];
+
+            if (/-skip$/.test(name)) {
+                elm.remove();
+                return;
+            }
 
             if (/-init$/.test(name)) {
                 elm.before('\r\n<% ' + value + ' %>\r\n');

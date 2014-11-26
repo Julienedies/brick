@@ -1,6 +1,6 @@
 /** 
  * brick - v0.1.0 
- * modified: 2014-09-18 10:18:24
+ * modified: 2014-10-11 13:49:14
  */
 
 ;(function( root, undefined ){ 
@@ -288,9 +288,31 @@ var controllers = (function (){
         tmplFn: function(){
 
         },
+        /**
+         * 比较htmlList，生成dom补丁对象，用于更新dom
+         */
+        diff: function(){
+
+        },
+
+        htmlList: null,
+
+        updateDom: function(patch){
+
+        },
 
         render: function(){
             var html = this.tmplFn({data: this});
+
+            if(this.htmlList){
+                var patch = this.diff(html);
+                if(!patch) return;
+                this.htmlList = html;
+                return this.updateDom(patch);
+            }
+
+
+            //this.htmlList = html;
             this.domNode && this.domNode.html(html);
         }
 
@@ -779,6 +801,7 @@ function parser(node) {
         var directives = [];
 
         var priority = {
+            'skip': -100,
             'init': -10,
             'for': 0,
             'for-init': 10,
@@ -796,7 +819,7 @@ function parser(node) {
             name = attr.name;
             value = attr.value;
 
-            if (/^ic-(init|for|if|else|bind)/.test(name)) {
+            if (/^ic-(init|for|if|else|bind|skip)/.test(name)) {
                 directives.push([name, value]);
                 continue;
             }
@@ -819,6 +842,11 @@ function parser(node) {
 
             name = attr[0];
             value = attr[1];
+
+            if (/-skip$/.test(name)) {
+                elm.remove();
+                return;
+            }
 
             if (/-init$/.test(name)) {
                 elm.before('\r\n<% ' + value + ' %>\r\n');
