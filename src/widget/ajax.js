@@ -9,8 +9,11 @@ directives.add('ic-ajax', function () {
     if (arguments.callee.run) return;
     arguments.callee.run = 1;
 
+    var $doc = $(document);
+    $doc.on('click', '[ic-ajax]', _call);
+    $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-    $(document).on('click', '[ic-ajax]', function (e) {
+    function _call(e) {
 
         var that = this;
         var $elm = $(this);
@@ -63,8 +66,7 @@ directives.add('ic-ajax', function () {
                 always.apply(that);
                 $elm.removeData('ic-submit-data');
             });
-
-    });
+    }
 
 
 });

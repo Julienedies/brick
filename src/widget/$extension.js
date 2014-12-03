@@ -40,6 +40,7 @@
     };
 
     $.fn.icAjax = function (options) {
+        if(options === void(0)) return this.trigger('ic-ajax');
         options.data && this.data('ic-submit-data', options.data);
 
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', options.disabled);

@@ -145,7 +145,7 @@ directives.add('ic-form', function () {
 
 
         //提交
-        var method = $submit.attr('ic-submit-method');
+        var method = $submit.attr('ic-submit-method') || 'post';
         var action = $submit.attr('ic-submit-action');
         var done = $submit.attr('ic-submit-on-done');
         var always = $submit.attr('ic-submit-on-always');
