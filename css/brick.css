@@ -1,6 +1,11 @@
 /*
 ==========================================
  */
+[ic-drag-view]{
+    position: relative;
+}
+[ic-role-drag-handle]{
+}
 [ic-role-loading]{
     display: none;
 }
