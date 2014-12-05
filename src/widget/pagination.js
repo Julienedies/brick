@@ -11,10 +11,10 @@ directives.add('pagination', function (elm) {
         var namespace = th.attr('ic-pagination');
         var rows = $elm.attr('ic-pagination-rows') * 1 || 10;
         var onChangeCall = th.attr('ic-pagination-on-change');
-        var total = th.attr('ic-pagination-total') * 1;
-        var step = th.attr('ic-pagination-step') * 1 || 10;
-        var current = th.attr('ic-pagination-current') || 1;
-        var ellipsis = th.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
+        var total = $elm.attr('ic-pagination-total') * 1;
+        var step = $elm.attr('ic-pagination-step') * 1 || 10;
+        var current = $elm.attr('ic-pagination-current') || 1;
+        var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
         var placeholder = /\{\{\}\}/g;
         var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
         var tplf;
@@ -37,9 +37,14 @@ directives.add('pagination', function (elm) {
                 total = Math.ceil(pool.length / rows);
                 onchange = function (page) {
                     --page;
-                    var start = page * rows - 1 < 0 ? 0 : page * rows - 1;
+                    var start = page * rows - 1 < 0 ? 0 : page * rows;
                     var end = start + rows;
-                    var list = pool.slice(start, end);
+                    var _list = pool.slice(start, end);
+                    var list = [];
+                    var item;
+                    for(; item = _list.shift(); start++){
+                        list[start+1] = item;
+                    }
                     var html = brick._tplfs[namespace]({model: list});
                     $tpl.html(html);
                 };
