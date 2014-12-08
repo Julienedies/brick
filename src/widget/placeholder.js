@@ -15,7 +15,7 @@ directives.add('placeholder', function () {
     //如果非ie浏览器或大于ie9,返回
     if(!window.ActiveXObject || !ltIe(10)) return;
 
-    //密码输入框处理
+
     $('[placeholder]').each(function(){
 
         var $th = $(this);
@@ -25,9 +25,12 @@ directives.add('placeholder', function () {
 
         var type = $th.attr('type');
 
+        //密码输入框处理
         if( type === 'password'){
 
-            var clone = $th[0].outerHTML.replace('"password"','"text"');
+            var cla = $th.attr('class');
+            var style = $th.attr('style');
+            var clone = '<input type="text" class="?" style="%">'.replace('?', cla).replace('%', style);
             clone = $(clone).insertBefore($th.hide()).val(placeholder).css({color:'#CDCDCD'});
 
             clone.on('focus', function(e){
