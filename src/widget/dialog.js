@@ -33,7 +33,7 @@ directives.add('ic-dialog', function () {
         });
 
 
-        $elm.on('click', '[ic-role-dialog-cancel], [ic-rold-dialog-close]', function (e) {
+        $elm.on('click', '[ic-role-dialog-cancel], [ic-role-dialog-close]', function (e) {
             onClose(e, 'cancel');
         });
 

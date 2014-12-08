@@ -43,7 +43,7 @@ directives.add('pagination', function (elm) {
                     var list = [];
                     var item;
                     for(; item = _list.shift(); start++){
-                        list[start+1] = item;
+                        list[start] = item;
                     }
                     var html = brick._tplfs[namespace]({model: list});
                     $tpl.html(html);
