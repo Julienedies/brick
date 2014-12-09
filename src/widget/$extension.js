@@ -144,23 +144,27 @@
     };
 
 //监听enter键
-    $.fn.enterPress = function (call) {
-        call = $.proxy(call, this);
+    $.fn.icEnterPress = function (call) {
 
-        var fn = function (e) {
-            if (e.which == 13) {
-                call(e);
-            }
-        };
+        return this.each(function(i){
 
-        this.focus(function () {
-            $(this).keypress(fn);
+            call = $.proxy(call, this);
+
+            var fn = function (e) {
+                if (e.which == 13) {
+                    call(e);
+                }
+            };
+
+            $(this)
+                .on('focus', function () {
+                    $(this).keypress(fn);
+                })
+                .on('blur', function () {
+                    $(this).unbind('keypress', fn);
+                });
         });
-        this.blur(function () {
-            $(this).unbind('keypress', fn);
-        });
 
-        return this;
     };
 
 //设置loading

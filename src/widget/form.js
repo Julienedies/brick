@@ -229,6 +229,10 @@ directives.add('ic-form', function () {
         });
 
 
+        $fields.icEnterPress(function(){
+            $submit.trigger('focus');
+        });
+
         $fields.each(function(i){
 
             var $th = $(this);
