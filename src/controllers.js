@@ -220,7 +220,7 @@ var controllers = (function (){
          * 运行控制器
          * @param name
          */
-        exec: function(name, parent){
+        exec: function(name, parent, $elm){
             var ctrl = _ctrls[name];
 
             if (!ctrl) return console.log('not find controller ' + name);
@@ -231,6 +231,7 @@ var controllers = (function (){
 
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
+            scope.$elm = $elm;
             ctrl.scope = scope;
 
             depend = services.get(depend) || [];

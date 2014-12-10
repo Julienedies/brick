@@ -4,6 +4,12 @@
 
 directives.add('ic-tpl', function (elm) {
 
+    //只执行一次绑定
+    if (arguments.callee._run) return;
+    arguments.callee._run = 1;
+
+
+
     $(elm || '[ic-tpl]').each(function (i) {
 
         var that = this.cloneNode(true);

@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-event', function (elm) {
+directives.add('ic-event', function () {
 
 
     var events = 'click';

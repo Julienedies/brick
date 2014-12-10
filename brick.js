@@ -5,6 +5,7 @@
 ;(function(root, undefined){
 
         __inline('src/config.js');
+        __inline('src/compile.js');
         __inline('src/eventManager.js');
         __inline('src/controllers.js');
         __inline('src/services.js');
@@ -13,10 +14,12 @@
         __inline('src/parser.js');
         __inline('src/createRender.js');
         __inline('src/init.js');
+        __inline('src/$extension.js');
 
-        __inline('src/widget/$extension.js');
-        __inline('src/widget/placeholder.js');
+        __inline('src/directives/ctrl.js');
         __inline('src/directives/event.js');
+
+        __inline('src/widget/placeholder.js');
         __inline('src/widget/slider.js');
         __inline('src/widget/tabs.js');
         __inline('src/widget/dropdown.js');
@@ -31,7 +34,7 @@
         __inline('src/widget/typeAhead.js');
 
 
-        ;$(function(){
+        /*$(function(){
 
             setTimeout(function(){
 
@@ -66,7 +69,38 @@
 
             }, 30);
 
-        });
+        });*/
 
+
+    $(function(){
+
+        setTimeout(function(){
+
+            //优先解析模板
+            directives.exec('ic-tpl');
+
+            directives.exec('ic-event');
+
+            (function (node) {
+
+                var $elm = $(node);
+
+                compile(node);
+
+                var children = $elm.children();
+                var child;
+                var i = 0;
+                while (child = children.eq(i)[0]) {
+                    i++;
+                    arguments.callee(child);
+                }
+
+            })(document.body);
+
+            controllers.init();
+
+        }, 30);
+
+    });
 
 })(window);

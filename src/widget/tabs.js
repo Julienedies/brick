@@ -2,12 +2,9 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tabs', function () {
+directives.add('ic-tabs', function ($elm, attrs) {
 
-    $('[ic-tabs]').each(function (i) {
-
-        var th = $(this);
-        var $elm = th;
+        var th = $elm;
         var name = th.attr('ic-tabs');
         var disabled = th.attr('ic-tab-disabled');
         var tabSelect = th.attr('ic-tab-select');
@@ -71,8 +68,6 @@ directives.add('ic-tabs', function () {
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 
         //activeCon = tabc.length && tabc.find('[ic-role-con]').hide().filter('[ic-role-con=' + activeCon + ']').show();
-
-    });
 
 
 });

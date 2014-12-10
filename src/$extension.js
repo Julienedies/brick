@@ -174,7 +174,7 @@
 
         if (window.ActiveXObject) {
 
-            loading = __inline('../../img/loading_.gif');
+            loading = __inline('../img/loading_.gif');
             loading = '<span style="margin:0.2em; auto;display:inline-block;text-align:center;" role="_loading_"><img src="?"></span>'.replace('?', loading);
 
         }
@@ -189,7 +189,7 @@
             var left = offset.left;
             var $loading = $(loading).css({width: w, height: h, position: 'absolute', 'margin-left': -w});
 
-            this.css({visibility: 'hidden'}).after($loading);
+            this.css({opacity: '0.5'}).after($loading);
 
             this.data('_ic-role-loading', $loading);
 
@@ -204,7 +204,7 @@
         var $loading = this.data('_ic-role-loading');
         $loading && $loading.remove();
         this.removeData('_ic-role-loading');
-        this.css({visibility: 'visible'});
+        this.css({opacity: '1'});
         return this;
     };
 

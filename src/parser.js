@@ -44,12 +44,6 @@ function parser(node) {
                 continue;
             }
 
-            try{
-                //typeof value === 'string' && elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
-            }catch(e){
-                console.log(e);
-            }
-
         }
 
         //对指令按优先级排序

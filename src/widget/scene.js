@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/28.
  */
 
-directives.add('ic-scene', function () {
+directives.add('ic-scene', function ($elm, attr) {
 
     var scenes = $('[ic-scene]');
     var active = $('[ic-scene-active]');
