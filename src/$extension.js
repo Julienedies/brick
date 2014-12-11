@@ -179,7 +179,7 @@
 
         }
 
-        $.fn.setLoading = function () {
+        $.fn.icSetLoading = $.fn.setLoading = function () {
 
             //this.parent().css({position:'relative'});
             var w = this.outerWidth();
@@ -200,7 +200,7 @@
 
 
 //清除loading
-    $.fn.clearLoading = function () {
+    $.fn.icClearLoading = $.fn.clearLoading = function () {
         var $loading = this.data('_ic-role-loading');
         $loading && $loading.remove();
         this.removeData('_ic-role-loading');

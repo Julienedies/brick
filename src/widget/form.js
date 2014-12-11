@@ -83,6 +83,36 @@ directives.add('ic-form', function ($elm, attrs) {
 
     }
 
+
+
+    //只执行一次绑定
+    if (!arguments.callee._run) {
+
+        arguments.callee._run = 1;
+        /**
+         * 对外js调用接口
+         */
+        $.fn.icVerify = function () {
+
+            var isSubmit = this.attr('ic-role-submit');
+
+            if (isSubmit) {
+                this.trigger('ic-form.' + isSubmit);
+                return this.attr('ic-verification');
+            }
+
+            var isField = this.attr('ic-role-field');
+
+            if (isField) {
+                this.trigger('change');
+                return this.attr('ic-verification');
+            }
+
+            return false;
+        };
+    }
+
+
     // 执行指令
     var namespace = $elm.attr('ic-form');
     var $fields = $elm.find('[ic-role-field]');
@@ -259,35 +289,7 @@ directives.add('ic-form', function ($elm, attrs) {
             $errTip.text(foucsTip);
         });
 
-
     });
-
-
-    //只执行一次绑定
-    if (arguments.callee._run) return;
-    arguments.callee._run = 1;
-
-    /**
-     * 对外js调用接口
-     */
-    $.fn.icVerify = function () {
-
-        var isSubmit = this.attr('ic-role-submit');
-
-        if (isSubmit) {
-            this.trigger('ic-form.' + isSubmit);
-            return this.attr('ic-verification');
-        }
-
-        var isField = this.attr('ic-role-field');
-
-        if (isField) {
-            this.trigger('change');
-            return this.attr('ic-verification');
-        }
-
-        return false;
-    };
 
 
 });
