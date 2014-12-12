@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../libs/underscore-1.6.0.min.js"></script>
+    <script src="../libs/jquery-1.8.1.min.js"></script>
+    <script src="../src/brick.js"></script>
+    <script src="../src/recordManager.js"></script>
+</head>
+<body>
+<ul brick-ctrl="listCtrl">
+    <li brick-for="list" brick-bind="i"></li>
+</ul>
+
+<script>
+
+    $(function ($) {
+
+        brick.services.add('recordManager', recordManager);
+        brick.controllers.add('listCtrl', function (scope, recordManager) {
+
+            $.extend(scope, new recordManager);
+
+            scope.list = [1,2,3,4];
+
+        }, {depend: ['recordManager'], global:1});
+
+
+        brick.controllers.init();
+
+        /////////////////////////////////////////////////////////////////////
+
+        $('[brick-ctrl]').each(function (i, e) {
+
+            var root = $(e);
+
+            var name = root.attr('brick-ctrl');
+            var scope = brick.controllers.get(name);
+
+            (function (root, scope) {
+
+                //取得一个dom节点上绑定的操作
+                var handle = (function(elm){
+                    var result = [];
+                    var map = elm[0].attributes;
+                    for(var i = 0, l = map.length; i < l; i++){
+                        result.push( map[i] );
+                    }
+
+                    return result;
+                })(root);
+
+
+                var _handle = (function(handle){
+
+                    var r = {};
+
+                    //包含或线性
+                    for(var i in handle){
+
+                        var commd = handle[i];
+
+                        if(/-for$/.test(commd.name)){
+
+                        }
+
+                        if(/-if$/.test(commd.name)){
+
+                        }
+
+                    }
+
+                })(handle);
+
+
+//                var repeat = elm.attr('brick-for');
+//
+//                _.each(scope._queryKeyValue(scope, repeat), function(v, k, list){
+//
+//
+//
+//                });
+
+
+
+//                var p = elm.attr('brick-bind');
+//
+//                if (!p) return;
+//
+//                var val = scope._queryKeyValue(scope, p);
+//
+//                elm.html(val);
+
+
+                /////////////////////////////////////////////////////////////////
+                var _scope;
+                var children = root.children();
+                var elm;
+                var i = 0;
+                while (elm = children.eq(i)[0]) {
+                    i++;
+                    arguments.callee($(elm), _scope||{});
+                }
+
+
+
+            })(root, scope);
+
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>
