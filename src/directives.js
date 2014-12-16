@@ -10,6 +10,10 @@ var directives = {
         this._pool[name] = definition;
     },
 
+    reg: function(name, definition){
+        this._pool[name] = definition;
+    },
+
     get: function (name) {
         return name ? this._pool[name] : this._pool;
     },

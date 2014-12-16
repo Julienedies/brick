@@ -191,7 +191,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var _form;
 
 
-    $submit.on('focus', function () {
+    $submit.on('mousedown', function (e) {
 
         if (!$submit.icVerify()) return;
 
@@ -242,7 +242,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     $fields.icEnterPress(function () {
-        $submit.trigger('focus');
+        $submit.trigger('mousedown');
     });
 
     $fields.each(function (i) {

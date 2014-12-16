@@ -34,9 +34,9 @@
     };
 
 
-    $.fn.icTabActive = function(options){
+    $.fn.icTabActive = $.fn.icTabs = function(options){
         var active = options.active;
-        active && this.attr('ic-tab-active', active)
+        active && this.attr('ic-tab-active', active);
     };
 
     $.fn.icAjax = function (options) {

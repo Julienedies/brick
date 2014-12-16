@@ -16,6 +16,9 @@
     position: relative;
     overflow: hidden;
 }
+[ic-role-slider-pagination]{
+    cursor: pointer;
+}
 [ic-role-tab]{
     cursor: pointer;
 }

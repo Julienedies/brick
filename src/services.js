@@ -23,7 +23,8 @@ var services = (function() {
             registry[name] = {depend: depend, serve: serve};
         },
         reg: function (name, factory, conf){
-
+            var depend = conf && conf.constructor === Array ? conf : conf.depend;
+            registry[name] = {depend: depend, serve: factory, conf: conf};
         },
         /*
          * 实例化一个服务
