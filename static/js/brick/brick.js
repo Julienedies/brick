@@ -565,7 +565,8 @@ var services = (function() {
             registry[name] = {depend: depend, serve: serve};
         },
         reg: function (name, factory, conf){
-
+            var depend = conf && conf.constructor === Array ? conf : conf.depend;
+            registry[name] = {depend: depend, serve: factory, conf: conf};
         },
         /*
          * 实例化一个服务
@@ -631,6 +632,10 @@ var directives = {
     _pool: {},
 
     add: function (name, definition) {
+        this._pool[name] = definition;
+    },
+
+    reg: function(name, definition){
         this._pool[name] = definition;
     },
 
@@ -1300,9 +1305,9 @@ root._cc = ( window.console && function () {
     };
 
 
-    $.fn.icTabActive = function(options){
+    $.fn.icTabActive = $.fn.icTabs = function(options){
         var active = options.active;
-        active && this.attr('ic-tab-active', active)
+        active && this.attr('ic-tab-active', active);
     };
 
     $.fn.icAjax = function (options) {
@@ -1454,6 +1459,8 @@ root._cc = ( window.console && function () {
             var top = offset.top;
             var left = offset.left;
             var $loading = $(loading).css({width: w, height: h, position: 'absolute', 'margin-left': -w});
+
+            $loading.find('svg').css({'margin-top':(this.height()-16)/2});
 
             this.css({opacity: '0.5'}).after($loading);
 
@@ -1882,7 +1889,7 @@ directives.add('ic-dropdown', function ($elm, attrs) {
  * Created by julien.zhang on 2014/10/20.
  */
 
-directives.add('ic-pagination', function ($elm, attrs) {
+directives.add('ic-pagination', function ($elm, attrs) { 
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -1893,7 +1900,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
     var current = $elm.attr('ic-pagination-current') || 1;
     var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
     var placeholder = /\{\{\}\}/g;
-    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
+    var $tpl = $('[ic-tpl=?]'.replace('?', namespace));
     var tplf;
 
     var pool;
@@ -1925,6 +1932,18 @@ directives.add('ic-pagination', function ($elm, attrs) {
                 var html = brick._tplfs[namespace]({model: list});
                 $tpl.html(html);
             };
+        }else{
+            pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
+            if (pool.length) {
+                total = Math.ceil(pool.length / rows);
+                onchange = function (page) {
+                    --page;
+                    var start = page * rows - 1 < 0 ? 0 : page * rows;
+                    var end = start + rows;
+                    pool.hide();
+                    pool.slice(start, end).show();
+                };
+            }
         }
     }
 
@@ -2397,7 +2416,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var _form;
 
 
-    $submit.on('focus', function () {
+    $submit.on('mousedown', function (e) {
 
         if (!$submit.icVerify()) return;
 
@@ -2448,7 +2467,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     $fields.icEnterPress(function () {
-        $submit.trigger('focus');
+        $submit.trigger('mousedown');
     });
 
     $fields.each(function (i) {

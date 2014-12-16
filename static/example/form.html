@@ -8,18 +8,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-form指令使用示例</title>
     <meta name="description" content="">
-    <link rel="stylesheet" href="../../css/vendor/normalize.css">
-    <link rel="stylesheet" href="../../css/vendor/main.css">
-    <link rel="stylesheet" href="../../css/common/common.css">
+    <link rel="stylesheet" href="/static/css/vendor/normalize.css">
+    <link rel="stylesheet" href="/static/css/vendor/main.css">
+    <link rel="stylesheet" href="/static/css/common/common.css">
     <!--[if lt IE 8]>
-    <link rel="stylesheet" href="../../css/common/ie-hack.css">
+    <link rel="stylesheet" href="/static/css/common/ie-hack.css">
     <![endif]-->
-    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <script src="/static/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
 <div id="wraper">
 
-    <link rel="import" href="../include/header.html?__inline">
+    <header>
+
+</header>
 
     <main>
         <section ic-ctrl="loginCtrl">
@@ -91,16 +93,22 @@
 
     </main>
 
-    <link rel="import" href="../include/footer.html?__inline">
+    <footer>
+
+
+</footer>
+
+
+
 
 </div>
 
 
 
-<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../js/vendor/plugins.js"></script>
-<script src="../../../src/brick.js"></script>
+<script src="/static/js/vendor/underscore-1.6.0.min.js"></script>
+<script src="/static/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="/static/js/vendor/plugins.js"></script>
+<script src="/static/js/brick/brick.js"></script>
 <script>
 brick.controllers.reg('loginCtrl', function(scope){
 

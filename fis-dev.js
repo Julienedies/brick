@@ -17,10 +17,8 @@ fis.config.set('modules.postpackager', 'simple');
 //        '/js/vender/plugins.js']
 //});
 
-//开启simple对零散资源的自动合并
-//fis.config.set('settings.postpackager.simple.autoCombine', true);
 
-fis.config.set('project.include', /^\/(?:html|js|css|img)\/.*$/i);
+fis.config.set('project.include', /^\/(?:homepage|src|css)\/.*$/i);
 
 
 //静态资源文件域名设置
@@ -33,28 +31,42 @@ fis.config.merge({
 
 fis.config.set('roadmap.path', [
     {
-        reg: /^\/css\/.+\.css/i,
-        release: '$&',
-        url: '/static$&',
-        useSprite: true,
-        useHash: true
-    },
-    {
-        reg: /^\/img\/.+/i,
-        release: '$&',
-        url: '/static$&'
-    },
-    {
-        reg: /^\/js\/.+\.js/i,
-        release: '$&',
-        url: '/static$&',
+        reg: /^\/src\/(.+\.js)/i,
+        release: '/js/brick/$1',
+        url: '/static/js/brick/$1',
         isJsLike: true,
         useHash: true
     },
     {
-        reg: /^\/html\/(.+\.html)/i,
-        release: '$&',
-        url: '/static$&',
+        reg: /^\/css\/(brick\.css)/i,
+        release: '/css/$1',
+        url: '/static/css/$1',
+        isJsLike: true,
+        useHash: true
+    },
+    {
+        reg: /^\/homepage\/(css\/.+\.css)$/i,
+        release: '/$1',
+        url: '/static/$1',
+        useSprite: true,
+        useHash: true
+    },
+    {
+        reg: /^\/homepage\/(img\/.+)/i,
+        release: '/$1',
+        url: '/static/$1'
+    },
+    {
+        reg: /^\/homepage\/(js\/.+\.js)/i,
+        release: '/$1',
+        url: '/static/$1',
+        isJsLike: true,
+        useHash: true
+    },
+    {
+        reg: /^\/homepage\/html\/(.+\.html)/i,
+        release: '/$1',
+        url: '/static/$1',
         useSprite: true,
         isHtmlLike: true
     }
@@ -74,8 +86,7 @@ fis.config.set('settings.spriter.csssprites.styleReg', /(<style(?:(?=\s)[\s\S]*?
 fis.config.merge({
     deploy : {
         local : {
-            to : '../static',
-            exclude : /(?:\/(?:include|src|data|test)\/.+\.(?:html|js|css))|(?:\/_[-_\w\d]+\.html)|(?:\/.+\.md)/i
+            to : './static'
         }
     }
 });

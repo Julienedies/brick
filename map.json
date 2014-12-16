@@ -1,90 +1,206 @@
 {
     "res": {
-        "css/common/common.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/common.css",
-            "type": "css"
-        },
-        "css/common/ie-hack.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/ie-hack.css",
-            "type": "css"
-        },
-        "css/common/include/base.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/base.css",
-            "type": "css"
-        },
-        "css/common/include/components.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/components.css",
-            "type": "css"
-        },
-        "css/common/include/font.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/font.css",
-            "type": "css"
-        },
-        "css/common/include/icons.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/icons.css",
-            "type": "css"
-        },
-        "css/common/include/layout.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/layout.css",
-            "type": "css"
-        },
-        "css/common/include/reset.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/common/include/reset.css",
-            "type": "css"
-        },
-        "css/vendor/animations.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/vendor/animations.css",
-            "type": "css"
-        },
-        "css/vendor/main.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/vendor/main.css",
-            "type": "css"
-        },
-        "css/vendor/normalize.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/vendor/normalize.css",
-            "type": "css"
-        },
-        "css/vendor/pure-min.css": {
-            "uri": "http://julienedies.github.io/brick/assets/css/vendor/pure-min.css",
-            "type": "css"
-        },
-        "js/common/common.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/common/common.js",
-            "type": "js"
-        },
-        "js/vendor/html5shiv.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/html5shiv.js",
-            "type": "js"
-        },
-        "js/vendor/jquery/jquery-1.10.2.min.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-1.10.2.min.js",
-            "type": "js"
-        },
-        "js/vendor/jquery/jquery-ui-1.10.4.custom.min.css": {
-            "uri": "http://julienedies.github.io/brick/js/vendor/jquery/jquery-ui-1.10.4.custom.min.css",
-            "type": "css"
-        },
-        "js/vendor/jquery/jquery-ui-1.10.4.custom.min.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-ui-1.10.4.custom.min.js",
-            "type": "js",
+        "css/brick.css": {
+            "uri": "/static/css/brick.css",
+            "type": "css",
             "deps": [
-                "js/vendor/jquery/jquery-ui-1.10.4.custom.min.css"
+                "css/brick.css"
             ]
         },
-        "js/vendor/jquery/jquery-ui-datepicker.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-ui-datepicker.js",
+        "homepage/css/common/common.css": {
+            "uri": "/static/css/common/common.css",
+            "type": "css"
+        },
+        "homepage/css/common/ie-hack.css": {
+            "uri": "/static/css/common/ie-hack.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/base.css": {
+            "uri": "/static/css/common/include/base.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/brick.css": {
+            "uri": "/static/css/common/include/brick.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/components.css": {
+            "uri": "/static/css/common/include/components.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/font.css": {
+            "uri": "/static/css/common/include/font.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/icons.css": {
+            "uri": "/static/css/common/include/icons.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/layout.css": {
+            "uri": "/static/css/common/include/layout.css",
+            "type": "css"
+        },
+        "homepage/css/common/include/reset.css": {
+            "uri": "/static/css/common/include/reset.css",
+            "type": "css"
+        },
+        "homepage/css/vendor/animations.css": {
+            "uri": "/static/css/vendor/animations.css",
+            "type": "css"
+        },
+        "homepage/css/vendor/main.css": {
+            "uri": "/static/css/vendor/main.css",
+            "type": "css"
+        },
+        "homepage/css/vendor/normalize.css": {
+            "uri": "/static/css/vendor/normalize.css",
+            "type": "css"
+        },
+        "homepage/css/vendor/pure-min.css": {
+            "uri": "/static/css/vendor/pure-min.css",
+            "type": "css"
+        },
+        "homepage/html/example/example.css": {
+            "uri": "/homepage/html/example/example.css",
+            "type": "css"
+        },
+        "homepage/js/common/common.js": {
+            "uri": "/static/js/common/common.js",
             "type": "js"
         },
-        "js/vendor/modernizr-2.6.2.min.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/modernizr-2.6.2.min.js",
+        "homepage/js/vendor/html5shiv.js": {
+            "uri": "/static/js/vendor/html5shiv.js",
             "type": "js"
         },
-        "js/vendor/plugins.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/plugins.js",
+        "homepage/js/vendor/jquery/jquery-1.10.2.min.js": {
+            "uri": "/static/js/vendor/jquery/jquery-1.10.2.min.js",
             "type": "js"
         },
-        "js/vendor/underscore-1.6.0.min.js": {
-            "uri": "http://julienedies.github.io/brick/assets/js/vendor/underscore-1.6.0.min.js",
+        "homepage/js/vendor/modernizr-2.6.2.min.js": {
+            "uri": "/static/js/vendor/modernizr-2.6.2.min.js",
+            "type": "js"
+        },
+        "homepage/js/vendor/plugins.js": {
+            "uri": "/static/js/vendor/plugins.js",
+            "type": "js"
+        },
+        "homepage/js/vendor/underscore-1.6.0.min.js": {
+            "uri": "/static/js/vendor/underscore-1.6.0.min.js",
+            "type": "js"
+        },
+        "src/$extension.js": {
+            "uri": "/static/js/brick/$extension.js",
+            "type": "js"
+        },
+        "src/brick.js": {
+            "uri": "/static/js/brick/brick.js",
+            "type": "js"
+        },
+        "src/compile.js": {
+            "uri": "/static/js/brick/compile.js",
+            "type": "js"
+        },
+        "src/config.js": {
+            "uri": "/static/js/brick/config.js",
+            "type": "js"
+        },
+        "src/controllers.js": {
+            "uri": "/static/js/brick/controllers.js",
+            "type": "js"
+        },
+        "src/createRender.js": {
+            "uri": "/static/js/brick/createRender.js",
+            "type": "js"
+        },
+        "src/directives.js": {
+            "uri": "/static/js/brick/directives.js",
+            "type": "js"
+        },
+        "src/directives/ctrl.js": {
+            "uri": "/static/js/brick/directives/ctrl.js",
+            "type": "js"
+        },
+        "src/directives/event.js": {
+            "uri": "/static/js/brick/directives/event.js",
+            "type": "js"
+        },
+        "src/eventManager.js": {
+            "uri": "/static/js/brick/eventManager.js",
+            "type": "js"
+        },
+        "src/init.js": {
+            "uri": "/static/js/brick/init.js",
+            "type": "js"
+        },
+        "src/parser.js": {
+            "uri": "/static/js/brick/parser.js",
+            "type": "js"
+        },
+        "src/recordManager.js": {
+            "uri": "/static/js/brick/recordManager.js",
+            "type": "js"
+        },
+        "src/scope.js": {
+            "uri": "/static/js/brick/scope.js",
+            "type": "js"
+        },
+        "src/services.js": {
+            "uri": "/static/js/brick/services.js",
+            "type": "js"
+        },
+        "src/str2dom.js": {
+            "uri": "/static/js/brick/str2dom.js",
+            "type": "js"
+        },
+        "src/widget/ajax.js": {
+            "uri": "/static/js/brick/widget/ajax.js",
+            "type": "js"
+        },
+        "src/widget/dialog.js": {
+            "uri": "/static/js/brick/widget/dialog.js",
+            "type": "js"
+        },
+        "src/widget/drag.js": {
+            "uri": "/static/js/brick/widget/drag.js",
+            "type": "js"
+        },
+        "src/widget/dropdown.js": {
+            "uri": "/static/js/brick/widget/dropdown.js",
+            "type": "js"
+        },
+        "src/widget/form.js": {
+            "uri": "/static/js/brick/widget/form.js",
+            "type": "js"
+        },
+        "src/widget/pagination.js": {
+            "uri": "/static/js/brick/widget/pagination.js",
+            "type": "js"
+        },
+        "src/widget/placeholder.js": {
+            "uri": "/static/js/brick/widget/placeholder.js",
+            "type": "js"
+        },
+        "src/widget/scene.js": {
+            "uri": "/static/js/brick/widget/scene.js",
+            "type": "js"
+        },
+        "src/widget/slider.js": {
+            "uri": "/static/js/brick/widget/slider.js",
+            "type": "js"
+        },
+        "src/widget/tabs.js": {
+            "uri": "/static/js/brick/widget/tabs.js",
+            "type": "js"
+        },
+        "src/widget/timer.js": {
+            "uri": "/static/js/brick/widget/timer.js",
+            "type": "js"
+        },
+        "src/widget/tpl.js": {
+            "uri": "/static/js/brick/widget/tpl.js",
+            "type": "js"
+        },
+        "src/widget/typeAhead.js": {
+            "uri": "/static/js/brick/widget/typeAhead.js",
             "type": "js"
         }
     },
