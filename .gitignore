@@ -1,0 +1,13 @@
+Thumbs.db
+.DS_Store
+
+#ide create
+.idea/
+.settings/
+.project
+express/
+
+#front bulid tool creates
+bower_components/
+node_modules/
+npm-debug.log

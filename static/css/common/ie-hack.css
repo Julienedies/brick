@@ -1,0 +1,8 @@
+/* fix ie6,7 inline-block bug */
+.icon,
+.btn,
+.btn-group,
+.inline, .inline-list, .inline-list > li, .inline-list-1, .inline-list-1 > li{
+    *display: inline;
+}
+

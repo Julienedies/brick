@@ -1,0 +1,92 @@
+{
+    "res": {
+        "css/common/common.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/common.css",
+            "type": "css"
+        },
+        "css/common/ie-hack.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/ie-hack.css",
+            "type": "css"
+        },
+        "css/common/include/base.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/base.css",
+            "type": "css"
+        },
+        "css/common/include/components.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/components.css",
+            "type": "css"
+        },
+        "css/common/include/font.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/font.css",
+            "type": "css"
+        },
+        "css/common/include/icons.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/icons.css",
+            "type": "css"
+        },
+        "css/common/include/layout.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/layout.css",
+            "type": "css"
+        },
+        "css/common/include/reset.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/common/include/reset.css",
+            "type": "css"
+        },
+        "css/vendor/animations.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/vendor/animations.css",
+            "type": "css"
+        },
+        "css/vendor/main.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/vendor/main.css",
+            "type": "css"
+        },
+        "css/vendor/normalize.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/vendor/normalize.css",
+            "type": "css"
+        },
+        "css/vendor/pure-min.css": {
+            "uri": "http://julienedies.github.io/brick/assets/css/vendor/pure-min.css",
+            "type": "css"
+        },
+        "js/common/common.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/common/common.js",
+            "type": "js"
+        },
+        "js/vendor/html5shiv.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/html5shiv.js",
+            "type": "js"
+        },
+        "js/vendor/jquery/jquery-1.10.2.min.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-1.10.2.min.js",
+            "type": "js"
+        },
+        "js/vendor/jquery/jquery-ui-1.10.4.custom.min.css": {
+            "uri": "http://julienedies.github.io/brick/js/vendor/jquery/jquery-ui-1.10.4.custom.min.css",
+            "type": "css"
+        },
+        "js/vendor/jquery/jquery-ui-1.10.4.custom.min.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-ui-1.10.4.custom.min.js",
+            "type": "js",
+            "deps": [
+                "js/vendor/jquery/jquery-ui-1.10.4.custom.min.css"
+            ]
+        },
+        "js/vendor/jquery/jquery-ui-datepicker.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/jquery/jquery-ui-datepicker.js",
+            "type": "js"
+        },
+        "js/vendor/modernizr-2.6.2.min.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/modernizr-2.6.2.min.js",
+            "type": "js"
+        },
+        "js/vendor/plugins.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/plugins.js",
+            "type": "js"
+        },
+        "js/vendor/underscore-1.6.0.min.js": {
+            "uri": "http://julienedies.github.io/brick/assets/js/vendor/underscore-1.6.0.min.js",
+            "type": "js"
+        }
+    },
+    "pkg": {}
+}
