@@ -24,7 +24,7 @@ fis.config.set('project.include', /^\/(?:homepage|src|css)\/.*$/i);
 //静态资源文件域名设置
 fis.config.merge({
     roadmap : {
-        domain : ''//'http://julienedies.github.io/brick'
+        domain : 'http://julienedies.github.io/brick'
     }
 });
 

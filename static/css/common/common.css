@@ -617,7 +617,7 @@ t    为前缀；
 =========================================================
  */
 .chart, .loading{
-    background: url(/static/img/loading_.gif) no-repeat 50% 50%;
+    background: url(http://julienedies.github.io/brick/static/img/loading_.gif) no-repeat 50% 50%;
 }
 .loading{
     display: inline-block;
