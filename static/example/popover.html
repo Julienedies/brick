@@ -117,33 +117,33 @@
 <script src="http://julienedies.github.io/brick/static/js/vendor/plugins.js"></script>
 <script src="http://julienedies.github.io/brick/static/js/brick/brick.js"></script>
 <script>
-brick.controllers.reg('loginCtrl', function(scope){
+    brick.controllers.reg('loginCtrl', function(scope){
 
-    scope.action = function(){
-        alert('表单验证通过，执行action();')
-    };
+        scope.action = function(){
+            alert('表单验证通过，执行action();')
+        };
 
-    //登录请求发起前
-    scope.before = function(f){
+        //登录请求发起前
+        scope.before = function(f){
 
-        alert('发起登录请求前');
+            alert('发起登录请求前');
 
-    };
+        };
 
-    //登录完成
-    scope.done = function (data) {
+        //登录完成
+        scope.done = function (data) {
 
-        alert('登录成功');
-    };
+            alert('登录成功');
+        };
 
-    //登录请求失败
-    scope.failed = function(msg){
+        //登录请求失败
+        scope.failed = function(msg){
 
-        alert('请求失败');
+            alert('请求失败');
 
-    }
+        }
 
-})
+    })
 </script>
 </body>
 </html>

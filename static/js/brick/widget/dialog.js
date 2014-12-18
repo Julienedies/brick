@@ -30,17 +30,18 @@ directives.add('ic-dialog', function ($elm, attrs) {
     //处理js调用
     $elm.on('ic-dialog.call', function (e, param) {
 
-        if (param === 'hide') return onClose(e);
+        if(param === void(0)) return onShow(e);
+        if (param === 'hide' || param == false) return onClose(e);
         onShow(e);
     });
 
     $elm.on('click', '[ic-role-dialog-confirm]', function (e) {
-        onClose(e, 'confirm');
+        onClose(e, 1);
     });
 
 
     $elm.on('click', '[ic-role-dialog-cancel], [ic-role-dialog-close]', function (e) {
-        onClose(e, 'cancel');
+        onClose(e, 0);
     });
 
 
@@ -49,13 +50,13 @@ directives.add('ic-dialog', function ($elm, attrs) {
         var width = $elm.width();
         $elm.css('margin-left', -width / 2);
         $elm.show();
-        $elm.trigger('ic-dialog.' + id + '.show');
+        $elm.trigger('ic-dialog.show');
     }
 
     function onClose(e, type) {
         $dialogContainer.hide();
         $elm.hide();
-        $elm.trigger('ic-dialog.' + id + '.' + type);
+        $elm.trigger('ic-dialog.close', type);
     }
 
 

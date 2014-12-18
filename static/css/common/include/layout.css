@@ -8,7 +8,9 @@
 }
 
 main {
-    padding: 0 0 30px 0;
+    max-width: 1000px;
+    margin:0 auto;
+    padding: 20px 0 30px 0;
 }
 
 /* 定义宽/高/外间距/内间距/行高 */

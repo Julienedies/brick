@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>ic-dialog指令使用示例</title>
     <meta name="description" content="">
     <link rel="stylesheet" href="../../css/vendor/normalize.css">
     <link rel="stylesheet" href="../../css/vendor/main.css">
@@ -17,25 +17,25 @@
     <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
-
 <div id="wraper">
 
     <link rel="import" href="../include/header.html?__inline">
 
     <main>
-        <h3>内置指令</h3>
-        <ul>
-            <li><a href="tabs.html">ic-pagination</a> </li>
-            <li><a href="tpl.html">ic-tpl</a> </li>
-            <li><a href="ajax.html">ic-ajax</a> </li>
-            <li><a href="form.html">ic-form</a> </li>
-            <li><a href="pagination.html">ic-pagination</a> </li>
-            <li><a href="dragView.html">ic-drag-view</a> </li>
-            <li><a href="dropdown.html">ic-dropdown</a> </li>
-            <li><a href="dialog.html">ic-dialog</a> </li>
-            <li><a href="slider.html">ic-slider</a> </li>
-            <li><a href="typeAhead.html">ic-type-ahead</a> </li>
-        </ul>
+
+        <button class="btn btn-md" ic-dialog-href="a">点击弹出对话框</button>
+        <div class="dialog hc" ic-dialog="a" style="width:480px;overflow: hidden;">
+            <button class="btn btn-close icon icon-x-black" ic-role-dialog-close>X</button>
+            <br/>
+            <br/>
+            <p>内容</p>
+            <br/>
+            <br/>
+            <div class="p-20-0">
+                <button class="btn btn-1" ic-role-dialog-confirm>确定</button>
+                <button class="btn btn-1" ic-role-dialog-cancel>取消</button>
+            </div>
+        </div>
 
     </main>
 
@@ -43,9 +43,17 @@
 
 </div>
 
+
+
 <script src="../../js/vendor/underscore-1.6.0.min.js"></script>
 <script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
 <script src="../../js/vendor/plugins.js"></script>
 <script src="../../../src/brick.js"></script>
+<script>
+    $('[ic-dialog=a]').on('ic-dialog.close',function(e, msg){
+        //msg对应关闭方式，1=>confirm  0=>cancel
+        alert(msg? '确认' : '取消');
+    });
+</script>
 </body>
 </html>

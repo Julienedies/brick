@@ -32,3 +32,9 @@ Tue Dec 16 2014 16:57:44 GMT+0800 (中国标准时间): Create a new worker 8612
 Tue Dec 16 2014 16:57:44 GMT+0800 (中国标准时间): Listening on http://localhost:3000
 Tue Dec 16 2014 17:46:13 GMT+0800 (中国标准时间): Create a new worker 2560.
 Tue Dec 16 2014 17:46:14 GMT+0800 (中国标准时间): Listening on http://localhost:3000
+Thu Dec 18 2014 10:50:13 GMT+0800 (中国标准时间): Create a new worker 6240.
+Thu Dec 18 2014 10:50:14 GMT+0800 (中国标准时间): Listening on http://localhost:3000
+Thu Dec 18 2014 18:04:00 GMT+0800 (中国标准时间): Create a new worker 7340.
+Thu Dec 18 2014 18:04:00 GMT+0800 (中国标准时间): Listening on http://localhost:3000
+Thu Dec 18 2014 18:08:24 GMT+0800 (中国标准时间): Create a new worker 7364.
+Thu Dec 18 2014 18:08:24 GMT+0800 (中国标准时间): Listening on http://localhost:3000

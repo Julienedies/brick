@@ -30,7 +30,7 @@ directives.add('ic-slider', function ($elm, attr) {
     var currentPagination = th.find('[ic-role-slider-pagination]').first().addClass('active');
 
     var broadcast = function () {
-        th.trigger('ic-slider-pagination', items.eq(current - 1));
+        th.trigger('ic-slider.change', items.eq(current - 1));
     }
 
     broadcast();

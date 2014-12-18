@@ -3,18 +3,21 @@
  */
 [ic-drag-view]{
     position: relative;
-}
-[ic-role-drag-handle]{
-}
-[ic-role-loading]{
-    display: none;
+    overflow: hidden;
 }
 [ic-role-drag-handle]{
     cursor:  move;
 }
+[ic-role-loading]{
+    display: none;
+}
+
 [ic-slider]{
     position: relative;
     overflow: hidden;
+}
+[ic-role-slider-pagination]{
+    cursor: pointer;
 }
 [ic-role-tab]{
     cursor: pointer;
