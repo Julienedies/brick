@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ic-type-ahead指令使用示例</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="../../css/vendor/normalize.css">
+    <link rel="stylesheet" href="../../css/vendor/main.css">
+    <link rel="stylesheet" href="../../css/common/common.css">
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="../../css/common/ie-hack.css">
+    <![endif]-->
+    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+<div id="wraper">
+
+    <link rel="import" href="../include/header.html?__inline">
+
+    <main ic-ctrl="mainCtrl">
+        <div class="inline search">
+            <div class="lgp-2" style="line-height: 1.5;">
+                <i class="btn icon icon-search"></i>
+                <input type="text"
+                       placeholder="公司搜索"
+                       class="input-text"
+                       ic-type-ahead="search"
+                       ic-on-type-complete="search.complete"
+                       ic-source="source"
+                       ic-submit-method="post"/>  <span> 选择： <b role="selected"></b></span>
+
+                <!-- 输入提示列表 -->
+                <div ic-role-list="search" ic-tpl="search">
+                    <ul class="select-list" ic-init="list=model" ic-if="list">
+                        <li ic-for="i,v in list" ic-class="{{i==0?'active':''}}" ic-role-type-item="{{v.code+' '+v.name}}">
+                            <a class="inline wp-100 fc-k1" ic-href="#{{v.code}}">
+                                <span class="inline search-code" ic-bind="v.code"></span>
+                                <span class="inline" ic-bind="v.name"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <h1>数据源</h1>
+        <div role="showSource"></div>
+
+    </main>
+
+    <link rel="import" href="../include/footer.html?__inline">
+
+</div>
+
+
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../src/brick.js"></script>
+<script>
+    brick.controllers.reg('mainCtrl', function (scope) {
+        var $elm = scope.$elm;
+
+        scope.source = [
+            {"code": "600153_SH_EQ", "name": "\u5efa\u53d1\u80a1\u4efd"},
+            {"code": "DDD_NY_EQ", "name": "3D SYSTEMS"},
+            {"code": "1180150_IB_BD", "name": "\u53a6\u95e8\u5efa\u53d1\u96c6\u56e2"},
+            {"code": "08078_HK_EQ", "name": "\u4e2d\u56fd\uff13D\u6570\u7801"},
+            {"code": "098025_IB_BD", "name": "\u5efa\u53d1\u623f\u5730\u4ea7\u96c6\u56e2"},
+            {"code": "600119_SH_EQ", "name": "\u957f\u6c5f\u6295\u8d44"},
+            {"code": "FDX_NY_EQ", "name": "\u8054\u90a6\u5feb\u9012"},
+            {"code": "MDT_NY_EQ", "name": "\u7f8e\u6566\u529b"},
+            {"code": "041253007_IB_BD", "name": "\u6df1\u5733\u8302\u4e1a\u5546\u53a6"},
+            {"code": "000593_SZ_EQ", "name": "\u5927\u901a\u71c3\u6c14"},
+            {"code": "600865_SH_EQ", "name": "\u767e\u5927\u96c6\u56e2"},
+            {"code": "002156_SZ_EQ", "name": "\u901a\u5bcc\u5fae\u7535"},
+            {"code": "600537_SH_EQ", "name": "\u4ebf\u6676\u5149\u7535"},
+            {"code": "DQ_NY_EQ", "name": "\u5927\u5168\u65b0\u80fd\u6e90"},
+            {"code": "00139_HK_EQ", "name": "\u4e2d\u56fd\u5fae\u7535\u5b50"},
+            {"code": "ADI_NQ_EQ", "name": "\u7f8e\u56fd\u6a21\u62df\u5668\u4ef6"},
+            {"code": "00712_HK_EQ", "name": "\u5361\u59c6\u4e39\u514b\u592a\u9633\u80fd"},
+            {"code": "SNDK_NQ_EQ", "name": "\u95ea\u8fea"},
+            {"code": "1082180_IB_BD", "name": "\u4fdd\u5b9a\u5929\u5a01\u82f1\u5229\u65b0\u80fd\u6e90"},
+            {"code": "01385_HK_EQ", "name": "\u4e0a\u6d77\u590d\u65e6"}
+        ];
+
+
+        scope.search = {
+            complete: function (e, msg) {
+                $elm.find('[role=selected]').text(typeof msg === 'object' ? JSON.stringify(msg) : msg);
+            }
+        }
+
+
+        $elm.find('[role=showSource]').text(JSON.stringify(scope.source));
+    });
+</script>
+</body>
+</html>

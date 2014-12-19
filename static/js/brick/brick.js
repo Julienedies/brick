@@ -2143,8 +2143,8 @@ directives.add('ic-drag-view', function ($elm, attrs) {
     var $document = $(document);
 
     var startX = 0, startY = 0, x = 0, y = 0;
-    var vw;
-    var w;
+    var vw, vh;
+    var w, h;
 
     $document.on('click', '[ic-role-drag-key]', function (e) {
 
@@ -2154,7 +2154,9 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         var m = 140;
         $elm = $('[ic-role-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
         w = $elm.width();
+        h = $elm.height();
         vw = $elm.closest('[ic-drag-view]').css({position: 'relative'}).width();
+        vh = $elm.closest('[ic-drag-view]').width();
         var position = $elm.position();
         x = position.left;
         y = position.top;
@@ -2184,15 +2186,19 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         $elm = $(this).css({position: 'relative'});
 
         vw = $elm.closest('[ic-drag-view]').width();
+        vh = $elm.closest('[ic-drag-view]').height();
 
         var position = $elm.position();
         x = position.left;
         y = position.top;
 
         w = $elm.width();
+        h = $elm.height();
 
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
+
+        return false;
 
     });
 
@@ -2211,10 +2217,15 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         x = x < -(w - vw) ? -(w - vw) : x;
         x = x >= 0 ? 0 : x;
 
+        y = y < -(h - vh) ? -(h - vh) : y;
+        y = y >= 0 ? 0 : y;
+
         $elm.css({
-            //top: y + 'px',
+            top: y + 'px',
             left: x + 'px'
         });
+
+        return false;
     }
 
     function mouseup() {
@@ -2648,6 +2659,8 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
     var $doc = $('body');
 
     var namespace = $elm.attr('ic-type-ahead');
+    var onTypeComplete = $elm.attr('ic-on-type-complete');
+    onTypeComplete = $elm.icParseProperty(onTypeComplete);
     var source = $elm.attr('ic-source-ajax');
 
     var offset = $elm.offset();
@@ -2661,6 +2674,7 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
 
     $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
 
+    var _pool;
     var pool;
     var ajax;
     var queryStr;
@@ -2687,10 +2701,10 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
         }
     } else {
         source = $elm.attr('ic-source');
-        pool = $elm.icParseProperty(source);
+        _pool = $elm.icParseProperty(source);
         query = function (queryStr) {
             var reg = new RegExp(queryStr, 'img');
-            return _.filter(pool, function (item) {
+            var result = _.filter(_pool, function (item, i, list) {
                 if (_.isObject(item)) {
                     var result = _.filter(item, function (item) {
                         return reg.test(item);
@@ -2699,8 +2713,10 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
                 } else {
                     return reg.test(item);
                 }
-            })
-        }
+            });
+
+            done(result);
+        };
 
     }
 
@@ -2740,8 +2756,6 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
         if (!list.length) return;
         var max = list.length - 1;
 
-        //var $current = list.eq(keydownActive).addClass('active');
-
         if (e.keyCode == 38) {
             keydownActive = --keydownActive < 0 ? max : keydownActive;
             list.eq(keydownActive).addClass('active').siblings().removeClass('active');
@@ -2771,7 +2785,10 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
         var item = pool[index];
         var val = $(this).attr('ic-role-type-item');
         $elm.val(val);
-        $elm.trigger('type.complete', item);
+        onTypeComplete ?
+            onTypeComplete.apply($elm[0], [e,item]) :
+            $elm.trigger('type.complete', item);
+
     });
 
 

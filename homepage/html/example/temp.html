@@ -1,5 +1,22 @@
-<div style="width:300px;height: 200px; border:solid 1px gray;" ic-drag-view>
-    <div ic-role-drag-handle="a" style="width:1000px;height: 750px;">
-        <img src="../../img/pic/map.png">
+<div class="lgp-2" style="line-height: 1.5;">
+    <i class="btn icon icon-search"></i>
+    <input type="text"
+           placeholder="公司搜索"
+           class="input-text"
+           ic-type-ahead="search"
+           ic-on-type-complete="search.complete"
+           ic-source="source"
+           ic-submit-method="post"/> <span> 选择： <b role="selected"></b></span>
+
+    <!-- 输入提示列表 -->
+    <div ic-role-list="search" ic-tpl="search">
+        <ul class="select-list" ic-init="list=model" ic-if="list">
+            <li ic-for="i,v in list" ic-class="{{i==0?'active':''}}" ic-role-type-item="{{v.code+' '+v.name}}">
+                <a class="inline wp-100 fc-k1" ic-href="#{{v.code}}">
+                    <span class="inline search-code" ic-bind="v.code"></span>
+                    <span class="inline" ic-bind="v.name"></span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>

@@ -7,8 +7,8 @@ directives.add('ic-drag-view', function ($elm, attrs) {
     var $document = $(document);
 
     var startX = 0, startY = 0, x = 0, y = 0;
-    var vw;
-    var w;
+    var vw, vh;
+    var w, h;
 
     $document.on('click', '[ic-role-drag-key]', function (e) {
 
@@ -18,7 +18,9 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         var m = 140;
         $elm = $('[ic-role-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
         w = $elm.width();
+        h = $elm.height();
         vw = $elm.closest('[ic-drag-view]').css({position: 'relative'}).width();
+        vh = $elm.closest('[ic-drag-view]').width();
         var position = $elm.position();
         x = position.left;
         y = position.top;
@@ -48,15 +50,19 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         $elm = $(this).css({position: 'relative'});
 
         vw = $elm.closest('[ic-drag-view]').width();
+        vh = $elm.closest('[ic-drag-view]').height();
 
         var position = $elm.position();
         x = position.left;
         y = position.top;
 
         w = $elm.width();
+        h = $elm.height();
 
         $document.on('mousemove', mousemove);
         $document.on('mouseup', mouseup);
+
+        return false;
 
     });
 
@@ -75,10 +81,15 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         x = x < -(w - vw) ? -(w - vw) : x;
         x = x >= 0 ? 0 : x;
 
+        y = y < -(h - vh) ? -(h - vh) : y;
+        y = y >= 0 ? 0 : y;
+
         $elm.css({
-            //top: y + 'px',
+            top: y + 'px',
             left: x + 'px'
         });
+
+        return false;
     }
 
     function mouseup() {
