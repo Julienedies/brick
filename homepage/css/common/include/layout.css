@@ -1,0 +1,233 @@
+/*
+布局相关样式定义
+=====================================================
+ */
+
+#wraper {
+
+}
+
+main {
+    max-width: 1000px;
+    margin:0 auto;
+    padding: 20px 0 30px 0;
+}
+
+/* 定义宽/高/外间距/内间距/行高 */
+.wrap-1000 {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* width / height */
+.hp-100 {
+    height: 100%;
+}
+.hf-1{
+    height: 1em;
+}
+.wp-49 {
+    width: 49%;
+}
+
+.wp-100 {
+    width: 100%;
+}
+
+.w-32 {
+    width: 32px;
+}
+
+.w-36 {
+    width: 36px;
+}
+
+.w-56 {
+    width: 56px;
+}
+
+.w-42 {
+    width: 42px;
+}
+
+.w_64 {
+    width: 64px;
+}
+
+.w-92 {
+    width: 92px;
+}
+
+.w-72 {
+    width: 72px;
+}
+.w-150{
+    width:150px;
+}
+
+.w-300 {
+    width: 300px;
+}
+
+.w-480 {
+    width: 480px;
+}
+.w-490{
+    width:490px;
+}
+.w-500{
+    width:500px;
+}
+.w-680 {
+    width: 680px;
+}
+.w-840{
+    width:840px;
+}
+.w-980{
+    width:980px;
+}
+.w-440{
+    width:440px;
+}
+
+.mh-400 {
+    min-height: 400px;
+}
+.mh-600{
+    min-height: 600px;
+}
+
+/*内间距*/
+.pl-15 {
+    padding-left: 15px;
+}
+
+.pr-15 {
+    padding-right: 15px;
+}
+.pt-25{
+    padding-top:25px!important;
+}
+.pt-40{
+    padding-top:40px;!important;
+}
+.p-0 {
+    padding: 0;
+}
+.p-0-10{
+    padding:0 10px;
+}
+.p-10-15{
+    padding: 10px 15px;
+}
+.p-10-0{
+    padding:10px 0;
+}
+.p-20-0 {
+    padding: 20px 0;
+}
+.p-10-20{
+    padding:10px 20px;
+}
+.p-40-0-20-0 {
+    padding: 40px 0 20px 0;
+}
+
+/*外间距*/
+.m-10-0 {
+    margin: 10px 0;
+}
+.mt-5{
+    margin-top:5px;
+}
+.mt-10 {
+    margin-top: 10px;
+}
+.mt-15 {
+    margin-top: 15px;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+.mb-30{
+    margin-bottom: 30px;
+}
+.ml-15 {
+    margin-left: 15px;
+}
+
+.ml-240 {
+    margin-left: 240px;
+}
+.mr-10{
+    margin-right:10px;
+}
+.mr-15 {
+    margin-right: 15px;
+}
+.mr-20{
+    margin-right:20px;
+}
+.mr-24 {
+    margin-right: 24px;
+}
+
+.ml-30 {
+    margin-left: 30px;
+}
+
+.mr-30 {
+    margin-right: 30px;
+}
+
+.mr-35 {
+    margin-right: 35px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+/* 行高定义 */
+.lgp-2 {
+    line-height: 2;
+}
+
+.lg-24 {
+    line-height: 24px;
+}
+
+.lg-26 {
+    line-height: 26px;
+}
+.lg-28 {
+    line-height: 28px;
+}
+.lg-32 {
+    line-height: 32px;
+}
+
+.lg-36 {
+    line-height: 36px;
+}
+
+.lg-42 {
+    line-height: 42px;
+}
+
+.lg-48 {
+    line-height: 48px;
+}
+
+.lg-56 {
+    line-height: 56px;
+}
+
+.lg-60 {
+    line-height: 60px;
+}

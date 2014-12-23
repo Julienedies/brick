@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ic-slider指令使用示例</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="../../css/vendor/normalize.css">
+    <link rel="stylesheet" href="../../css/vendor/main.css">
+    <link rel="stylesheet" href="../../css/common/common.css">
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="../../css/common/ie-hack.css">
+    <![endif]-->
+    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <style>
+        [ic-role-slider-prev],[ic-role-slider-next]{
+            position: absolute;
+            z-index: 20;
+            font-size: 32px;
+            top:30%;
+            background: #000000;
+            opacity: 0.5;
+            font-family: sans-serif;
+            border-radius: 0;
+        }
+        [ic-role-slider-pagination]{
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin: 0 6px;
+            border-radius: 7px;
+            background: #fff
+        }
+        [ic-role-slider-pagination].active{
+            background: #ff9915;
+        }
+    </style>
+</head>
+<body>
+<div id="wraper">
+
+    <link rel="import" href="../include/header.html?__inline">
+
+    <main>
+
+        <div style="width:560px;height: 350px;" class="inline v-top" ic-slider="a" ic-slider-interval="4000">
+            <ul ic-role-slider-view>
+                <li ic-role-slider-item>
+                    <a href="#3">
+                        <img src="https://assets.shukugang.com/vcn/img/banner/b_1.jpg"/>
+                    </a>
+                </li>
+                <li ic-role-slider-item>
+                    <a href="#4">
+                        <img src="https://assets.shukugang.com/vcn/img/banner/b_2.jpg"/>
+                    </a>
+                </li>
+                <li ic-role-slider-item>
+                    <a href="#2">
+                        <img src="https://assets.shukugang.com/vcn/img/banner/b_3.jpg"/>
+                    </a>
+                </li>
+                <li ic-role-slider-item>
+                    <a href="#1">
+                        <img src="https://assets.shukugang.com/vcn/img/banner/b_4.jpg"/>
+                    </a>
+                </li>
+                <li ic-role-slider-item>
+                    <a href="#">
+                        <img src="https://assets.shukugang.com/vcn/img/banner/b_5.jpg"/>
+                    </a>
+                </li>
+            </ul>
+
+            <span class="btn btn-0" style="left:0;" ic-role-slider-prev>&lt;</span>
+
+            <span class="btn btn-0" style="right:0;" ic-role-slider-next>&gt;</span>
+
+            <ol class="inline-list-1 hc" style="position: absolute; bottom: 10px;width:100%">
+                <li ic-role-slider-pagination="1"></li>
+                <li ic-role-slider-pagination="2"></li>
+                <li ic-role-slider-pagination="3"></li>
+                <li ic-role-slider-pagination="4"></li>
+                <li ic-role-slider-pagination="5"></li>
+            </ol>
+        </div>
+
+
+    </main>
+
+    <link rel="import" href="../include/footer.html?__inline">
+
+</div>
+
+
+
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../src/brick.js"></script>
+<script>
+    $('[ic-slider]').on('ic-slider.change', function(e, msg){
+        console.log(msg);
+    })
+</script>
+</body>
+</html>

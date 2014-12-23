@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../libs/underscore-1.6.0.min.js"></script>
+    <script src="../libs/jquery-1.8.1.min.js"></script>
+    <script src="../dist/brick.js"></script>
+    <script src="../src/str2dom.js"></script>
+    <script src="../libs/htmlparser.js"></script>
+</head>
+<body>
+
+<div ic-ctrl="listCtrl">
+
+    <ul ic-init="var list = data.list;" ic-if="list">
+        <li ic-for="var i in list" ic-for-init="var item = list[i]" ic-if="typeof item === 'object' ">
+
+            <i ic-skip ic-bind="i">----------</i>
+            <span ic-for="var j in item" ic-style="color:{{j}}">
+                {{i+'-'+j}} = {{item[j]}}<br/>
+            </span>
+
+        </li>
+    </ul>
+    <span ic-if="!list">loading...</span>
+
+</div>
+
+<p>
+    xxx <span id="123">yyy<i>zzzz</i><i>aaaaaa</i></span>qqqqq
+</p>
+
+<script>
+
+
+    brick.controllers.add('listCtrl', function (scope, recordManager) {
+
+        var list = [
+            {"ticker": "000001.SZ", "price": 10.26, "change_in_percent": -0.48},
+            {"ticker": "000002.SZ", "price": 9.22, "change_in_percent": -0.32},
+            {"ticker": "000024.SZ", "price": 11.84, "change_in_percent": -1.09},
+            {"ticker": "000402.SZ", "price": 6.46, "change_in_percent": -2.86}
+        ];
+
+        setTimeout(function () {
+            scope.set('list', list);
+        }, 10);
+
+    }, {depend: ['recordManager'], global: 1});
+
+
+    brick.init();
+
+
+</script>
+</body>
+</html>

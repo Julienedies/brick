@@ -5,6 +5,7 @@ Thumbs.db
 .idea/
 .settings/
 .project
+express/
 
 #front bulid tool creates
 bower_components/

@@ -1,0 +1,402 @@
+.icon{
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.icon-logo{
+    width:130px;
+    height: 60px;
+    background: url(../../../img/icons/icon-logo.png?__sprite) no-repeat 0 0;
+}
+
+.icon-search{
+    width: 20px;
+    height: 21px;
+    background: url(../../../img/icons/icon-search.png?__sprite) no-repeat 0 0;
+}
+.icon-enter{
+    width: 20px;
+    height: 20px;
+    background: url(../../../img/icons/icon-enter.png?__sprite) no-repeat 0 0;
+}
+
+.icon-msg{
+    width:20px;
+    height: 14px;
+    background: url(../../../img/icons/icon-msg.png?__sprite) no-repeat 0 0;
+}
+
+.icon-triangle-01{
+    width:27px;
+    height: 18px;
+    background: url(../../../img/icons/icon-triangle-01.png?__sprite) no-repeat 0 0;
+}
+.icon-triangle-02{
+    width:27px;
+    height: 18px;
+    background: url(../../../img/icons/icon-triangle-02.png?__sprite) no-repeat 0 0;
+}
+
+.icon-phone{
+    width: 14px;
+    height: 22px;
+    background: url(../../../img/icons/icon-phone.png?__sprite) no-repeat 0 0;
+}
+
+.icon-circle-yellow{
+    width: 17px;
+    height: 17px;
+    background: url(../../../img/icons/icon-circle-yellow.png?__sprite) no-repeat 0 0;
+}
+.icon-circle-write{
+    width: 17px;
+    height: 17px;
+    background: url(../../../img/icons/icon-circle-write.png?__sprite) no-repeat 0 0;
+}
+
+.icon-arrows-left{
+    width: 28px;
+    height: 49px;
+    background: url(../../../img/icons/icon-arrows-left.png?__sprite) no-repeat 0 0;
+}
+
+.icon-arrows-right{
+    width: 28px;
+    height: 49px;
+    background: url(../../../img/icons/icon-arrows-right.png?__sprite) no-repeat 0 0;
+}
+.icon-arrows-4-up{
+    width: 18px;
+    height: 17px;
+    background: url(../../../img/icons/icon-arrows-4-up.png?__sprite) no-repeat 0 0;
+}
+
+.icon-arrows-4-down{
+    width: 18px;
+    height: 17px;
+    background: url(../../../img/icons/icon-arrows-4-down.png?__sprite) no-repeat 0 0;
+}
+.icon-up{
+    width: 16px;
+    height: 16px;
+    background: url(../../../img/icons/icon-up.png?__sprite) no-repeat 0 0;
+}
+.icon-down{
+    width: 16px;
+    height: 16px;
+    background: url(../../../img/icons/icon-down.png?__sprite) no-repeat 0 0;
+}
+.icon-fire{
+    width: 27px;
+    height: 26px;
+    background: url(../../../img/icons/icon-fire.png?__sprite) no-repeat 0 0;
+}
+.icon-ok{
+    width: 18px;
+    height: 14px;
+    background: url(../../../img/icons/icon-ok.png?) no-repeat 0 0;
+}
+.icon-ok-2{
+    width: 25px;
+    height: 20px;
+    background: url(../../../img/icons/icon-ok-2.png?) no-repeat 0 0;
+}
+.icon-ok-3{
+    width: 18px;
+    height: 14px;
+    background: url(../../../img/icons/icon-ok-3.png?) no-repeat 0 0;
+}
+.icon-add, .icon-add-3{
+    width:17px;
+    height: 19px;
+    background: url(../../../img/icons/icon-add.png?) no-repeat 0 0;
+}
+.btn.active .icon-add, .btn.active .icon-add-3, .btn:hover .icon-add, .btn:hover .icon-add-3{
+    background: url(../../../img/icons/icon-add-white.png?) no-repeat 0 0;
+}
+.icon-add-2{
+    width:23px;
+    height: 22px;
+    background: url(../../../img/icons/icon-add-2.png?) no-repeat 0 0;
+}
+.icon-up-1{
+    width:14px;
+    height: 14px;
+    background: url(../../../img/icons/icon-up-1.png?__sprite) no-repeat 0 0;
+}
+.icon-down-1{
+    width:14px;
+    height: 14px;
+    background: url(../../../img/icons/icon-down-1.png?__sprite) no-repeat 0 0;
+}
+.icon-up-2{
+    width:42px;
+    height: 52px;
+    background: url(../../../img/icons/icon-up-2.png?__sprite) no-repeat 0 0;
+}
+.icon-down-2{
+    width:42px;
+    height: 52px;
+    background: url(../../../img/icons/icon-down-2.png?__sprite) no-repeat 0 0;
+}
+.icon-up-3{
+    width:16px;
+    height: 20px;
+    background: url(../../../img/icons/icon-up-3.png?__sprite) no-repeat 0 0;
+}
+.icon-md-up, .icon-md-down{
+    width: 23px;
+    height: 22px;
+}
+.icon-md-up{
+    background: url(../../../img/icons/icon-md-up.png?__sprite) no-repeat 0 0;
+}
+.icon-md-down{
+    background: url(../../../img/icons/icon-md-down.png?__sprite) no-repeat 0 0;
+}
+.icon-circle-1-up{
+    width: 12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-circle-1-up.png?__sprite) no-repeat 0 0;
+}
+.icon-circle-1-down{
+    width: 12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-circle-1-down.png?__sprite) no-repeat 0 0;
+}
+.icon-circle-1-md{
+    width: 12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-circle-1-md.png?__sprite) no-repeat 0 0;
+}
+.icon-chart{
+    width: 18px;
+    height: 18px;
+    background: url(../../../img/icons/icon-chart.png?__sprite) no-repeat 0 0;
+}
+.icon-clear{
+    width:24px;
+    height: 24px;
+    background: url(../../../img/icons/icon-clear.png?__sprite) no-repeat 0 0;
+}
+.icon-search-1{
+    width:44px;
+    height: 40px;
+    background: url(../../../img/icons/icon-search-1.png?__sprite) no-repeat 50% 50%;
+}
+.icon-search-2{
+    width:32px;
+    height: 32px;
+    background: url(../../../img/icons/icon-search-1.png?__sprite) no-repeat 0 0;
+}
+.icon-pdf{
+    width:43px;
+    height: 43px;
+    background: url(../../../img/icons/icon-pdf.png?__sprite) no-repeat 0 0;
+}
+.icon-x-white, .icon-x-red{
+    width:12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-x-white.png?__sprite) no-repeat 0 0;
+}
+.icon-x-red{
+    background: url(../../../img/icons/icon-x-red.png?__sprite) no-repeat 0 0;
+}
+.icon-x-gray{
+    width:12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-x-gray.png?__sprite) no-repeat 0 0;
+}
+.icon-x-black{
+    width:12px;
+    height: 12px;
+    background: url(../../../img/icons/icon-x-black.png?__sprite) no-repeat 0 0;
+}
+/* dialog 相关 */
+.icon-dialog-ok{
+    width:73px;
+    height: 73px;
+    background: url(../../../img/icons/icon-dialog-ok.png?__sprite) no-repeat 0 0;
+}
+.icon-dialog-success{
+    width:73px;
+    height: 73px;
+    background: url(../../../img/icons/icon-dialog-success.png?__sprite) no-repeat 0 0;
+}
+.icon-dialog-warning{
+    width:77px;
+    height: 65px;
+    background: url(../../../img/icons/icon-dialog-warning.png?__sprite) no-repeat 0 0;
+}
+
+.icon-dialog-disabled{
+    width:72px;
+    height: 63px;
+    background: url(../../../img/icons/icon-dialog-disabled.png?__sprite) no-repeat 0 0;
+}
+.icon-dialog-error{
+    width:76px;
+    height: 63px;
+    background: url(../../../img/icons/icon-dialog-error.png?__sprite) no-repeat 0 0;
+}
+.icon-dialog-file-error{
+    width:72px;
+    height: 62px;
+    background: url(../../../img/icons/icon-dialog-file-error.png?__sprite) no-repeat 0 0;
+}
+
+/* 登录注册 帐户相关*/
+.icon-phone-type,
+.icon-email-type
+{
+    width:104px;
+    height: 104px;
+    background: url(../../../img/icons/icon-phone-type.png?__sprite) no-repeat 0 0;
+}
+.icon-phone-type.active{
+    background: url(../../../img/icons/icon-phone-type-active.png?__sprite) no-repeat 0 0;
+}
+.icon-email-type{
+    background: url(../../../img/icons/icon-email-type.png?__sprite) no-repeat 0 0;
+}
+.icon-email-type.active{
+    background: url(../../../img/icons/icon-email-type-active.png?__sprite) no-repeat 0 0;
+}
+
+.icon-phone-type.disabled{
+    background: url(../../../img/icons/icon-phone-type-disabled.png?__sprite) no-repeat 0 0;
+}
+.icon-email-type.disabled{
+    background: url(../../../img/icons/icon-email-type-disabled.png?__sprite) no-repeat 0 0;
+}
+
+.icon-email-type b,.icon-phone-type b{
+    margin-top:62px;
+    color:#48cfad;
+    font-weight: normal;
+    font-style:normal;
+}
+.icon-email-type.active b,.icon-phone-type.active b{
+    color: #fff;
+}
+.icon-email-type.disabled b,.icon-phone-type.disabled b{
+    color: #ccd1d9;
+}
+
+/* 我的股票相关 */
+
+.icon-view{
+    width:28px;
+    height: 28px;
+    background: url(../../../img/icons/icon-view.png?__sprite) no-repeat 0 0;
+}
+.icon-parse{
+    width:28px;
+    height: 28px;
+    background: url(../../../img/icons/icon-parse.png?__sprite) no-repeat 0 0;
+}
+.icon-del{
+    width:28px;
+    height: 28px;
+    background: url(../../../img/icons/icon-del.png?__sprite) no-repeat 0 0;
+}
+.icon-return{
+    width:26px;
+    height: 25px;
+    background: url(../../../img/icons/icon-return.png?__sprite) no-repeat 0 0;
+}
+.icon-lkey{
+    width:16px;
+    height: 15px;
+    background: url(../../../img/icons/icon-lkey.png?__sprite) no-repeat 0 0;
+}
+.icon-rkey{
+    width:16px;
+    height: 15px;
+    background: url(../../../img/icons/icon-rkey.png?__sprite) no-repeat 0 0;
+}
+/* footer part */
+.icon-wx{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-wx.png?__sprite) no-repeat 0 0;
+}
+.icon-wb{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-wb.png?__sprite) no-repeat 0 0;
+}
+.icon-tt{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-tt.png?__sprite) no-repeat 0 0;
+}
+.icon-f{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-f.png?__sprite) no-repeat 0 0;
+}
+.icon-g{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-g.png?__sprite) no-repeat 0 0;
+}
+.icon-i{
+    width:47px;
+    height: 49px;
+    background: url(../../../img/icons/icon-i.png?__sprite) no-repeat 0 0;
+}
+
+.icon-et{
+    width: 72px;
+    height: 72px;
+    background: url(../../../img/icons/icon-et.png?__sprite) no-repeat 0 0;
+}
+.icon-sky{
+    width:198px;
+    height: 59px;
+    background: url(../../../img/footer/icon-sky.png?__sprite) no-repeat 0 0;
+}
+.icon-xl{
+    width: 71px;
+    height: 67px;
+    background: url(../../../img/icons/icon-xl.png?__sprite) no-repeat 0 0;
+}
+.icon-th{
+    width: 71px;
+    height: 67px;
+    background: url(../../../img/icons/icon-th.png?__sprite) no-repeat 0 0;
+}
+.icon-m{
+    width: 103px;
+    height: 67px;
+    background: url(../../../img/icons/icon-m.png?__sprite) no-repeat 0 0;
+}
+
+.icon-xlcj{
+    width:133px;
+    height: 40px;
+    background: url(../../../img/footer/icon-xlcj.png?__sprite) no-repeat 0 0;
+}
+.icon-xlcj{
+    width:133px;
+    height: 40px;
+    background: url(../../../img/footer/icon-xlcj.png?__sprite) no-repeat 0 0;
+}
+.icon-pfyh{
+    width:124px;
+    height: 40px;
+    background: url(../../../img/footer/icon-pfyh.png?__sprite) no-repeat 0 0;
+}
+.icon-jjgcb{
+    width:102px;
+    height: 40px;
+    background: url(../../../img/footer/icon-jjgcb.png?__sprite) no-repeat 0 0;
+}
+
+.icon-csf{
+    width:170px;
+    height: 62px;
+    background: url(../../../img/footer/icon-csf.png?__sprite) no-repeat 0 0;
+}

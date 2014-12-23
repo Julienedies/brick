@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ic-pagination指令示例</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/static/css/vendor/normalize.css">
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/static/css/vendor/main.css">
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/static/css/common/common.css">
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/static/css/common/ie-hack.css">
+    <![endif]-->
+    <script src="http://julienedies.github.io/brick/static/js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+<div id="wraper">
+
+    <header>
+
+</header>
+
+    <main>
+        <section ic-ctrl="demo-1">
+            <h1>基本使用</h1>
+
+            <div class="pagination"
+                 ic-pagination="a"
+                 ic-pagination-total="32"
+                 ic-pagination-step="5"
+                 ic-pagination-current="10">
+                <span class="prev" ic-role-pagination-prev>&lt;</span>
+                <span class="ellipsis" ic-role-pagination-ellipsis>...</span>
+                <a href="#{{}}" class="num" ic-role-pagination-num="{{}}">{{}}</a>
+                <span class="next" ic-role-pagination-next>&gt;</span>
+            </div>
+
+            <div class="hc" id="show"></div>
+        </section>
+
+        <hr>
+
+
+        <section ic-ctrl="demo-2">
+            <h1>配合ic-tpl使用</h1>
+
+            <table>
+                <thead class="lg-36">
+                    <tr class="t-12-0-a1">
+                        <th class="hc">公司名称</th>
+                        <th class="hc">公司代码</th>
+                        <th class="hc">最新股价</th>
+                        <th class="hc">最新涨跌幅</th>
+                        <th class="hc">七天涨跌幅</th>
+                        <th class="hc">同业排名</th>
+                    </tr>
+                </thead>
+
+                <tbody class="lg-42" ic-tpl="companies">
+                    <tr ic-for="i, v in model" ic-for-init="company=v.company">
+                        <td class="hc">
+                            <a ic-href="/stock/profile/{{company.code}}" target="_blank" ic-bind="company.abbrSzh"></a>
+                        </td>
+                        <td class="hc">
+                            <a ic-href="/stock/profile/{{company.code}}" target="_blank" ic-bind="company.code"></a>
+                        </td>
+                        <td class="hc fc-y1" ic-bind="v.closePrice">37.40</td>
+
+                        <td class="hc fc-up" ic-class="hc fc-{{v.changeRatio<0?'down':'up'}}">
+                            <span ic-bind="v.changeRatio.toFixed(2)">+0.01</span>%
+                        </td>
+                        <td class="hc fc-up" ic-class="hc fc-{{v.changeRatio7<0?'down':'up'}}">
+                            <span ic-bind="v.changeRatio7.toFixed(2)">+0.01</span>%
+                        </td>
+                        <td class="hc" ic-bind="++i">2,349,345M</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination"
+                 ic-pagination="companies"
+                 ic-source="companies"
+                 ic-pagination-total="32"
+                 ic-pagination-step="5"
+                 ic-pagination-current="1">
+                <span class="prev" ic-role-pagination-prev>&lt;</span>
+                <span class="ellipsis" ic-role-pagination-ellipsis>...</span>
+                <a href="#{{}}" class="num" ic-role-pagination-num="{{}}">{{}}</a>
+                <span class="next" ic-role-pagination-next>&gt;</span>
+            </div>
+
+        </section>
+
+        <hr>
+
+
+
+        <section>
+            <h1>配合ic-role-pagination-page指令使用，对dom进行分页</h1>
+            <table class="table-2">
+                <thead>
+                    <tr class="t-12-0-a1">
+                        <th>研究员</th>
+                        <th>研报标题</th>
+                        <th>评级</th>
+                        <th class="hc">预测准确率</th>
+                        <th>研报来源</th>
+                        <th class="hr">研报日期</th>
+                    </tr>
+                </thead>
+                <tbody class="oe-bg-s1" ic-role-pagination-page="report">
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">王一川</td>
+                        <td><a href="/stock/report/548a765b036a72313375a9a2/601398_SH_EQ" target="_blank"><b>工行转债有望进入“转债转股”模式，建议关注投资机会</b></a></td>
+                        <td class=" t-14-1-up">增持</td>
+                        <td class="t-14-1-b0 hc">42.86%</td>
+                        <td class="t-14-1-a2">长江证券</td>
+                        <td class="t-12-0-a0 hr">2014-12-12</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">徐冰玉</td>
+                        <td><a href="/stock/report/54520cdc11c0d210542cac6a/601398_SH_EQ" target="_blank"><b>经营风格稳健，资产质量可控，维持“增持”评级</b></a></td>
+                        <td class=" t-14-1-up">增持</td>
+                        <td class="t-14-1-b0 hc">50.0%</td>
+                        <td class="t-14-1-a2">申银万国证券</td>
+                        <td class="t-12-0-a0 hr">2014-10-30</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">肖立强</td>
+                        <td><a href="/stock/report/5451e229e1382314005c177e/601398_SH_EQ" target="_blank"><b>充足资本实力下不良率破1%并不足惧</b></a></td>
+                        <td class=" t-14-1-up">买入</td>
+                        <td class="t-14-1-b0 hc">44.23%</td>
+                        <td class="t-14-1-a2">招商证券</td>
+                        <td class="t-12-0-a0 hr">2014-10-30</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">黄耀锋</td>
+                        <td><a href="/stock/report/5451e318e1382314005c17d5/601398_SH_EQ" target="_blank"><b>业绩符合预期，资产质量仍然承压</b></a></td>
+                        <td class=" t-14-1-up">增持</td>
+                        <td class="t-14-1-b0 hc">38.57%</td>
+                        <td class="t-14-1-a2">平安证券</td>
+                        <td class="t-12-0-a0 hr">2014-10-30</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">吴畏</td>
+                        <td><a href="/stock/report/5451afd911c0d210542ca38d/601398_SH_EQ" target="_blank"><b>资产负债表收缩，不良压力仍在</b></a></td>
+                        <td class=" t-14-1-md">中性</td>
+                        <td class="t-14-1-b0 hc">63.83%</td>
+                        <td class="t-14-1-a2">兴业证券</td>
+                        <td class="t-12-0-a0 hr">2014-10-30</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">李南</td>
+                        <td><a href="/stock/report/54178bab525f06087c0f3b4a/601398_SH_EQ" target="_blank"><b>业绩符合预期；净息差/净利息收入好于预期；资产质量相对稳定</b></a></td>
+                        <td class=" t-14-1-up">买入</td>
+                        <td class="t-14-1-b0 hc">51.72%</td>
+                        <td class="t-14-1-a2">北京高华证券</td>
+                        <td class="t-12-0-a0 hr">2014-09-16</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">王一川</td>
+                        <td><a href="/stock/report/5434ead811c0d20f04b6d58d/601398_SH_EQ" target="_blank"><b>主营业务稳健，存款增长放缓</b></a></td>
+                        <td class=" t-14-1-md">中性</td>
+                        <td class="t-14-1-b0 hc">42.86%</td>
+                        <td class="t-14-1-a2">长江证券</td>
+                        <td class="t-12-0-a0 hr">2014-08-31</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">黄耀锋</td>
+                        <td><a href="/stock/report/53ffe926f11950111086e932/601398_SH_EQ" target="_blank"><b>境外发行将有助于降低优先股融资成本</b></a></td>
+                        <td class=" t-14-1-up">增持</td>
+                        <td class="t-14-1-b0 hc">38.57%</td>
+                        <td class="t-14-1-a2">平安证券</td>
+                        <td class="t-12-0-a0 hr">2014-07-28</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">邱冠华</td>
+                        <td><a href="/stock/report/53ffe926f11950111086e936/601398_SH_EQ" target="_blank"><b>非公开发行优先股预案点评：发行优先股，先境外再境内</b></a></td>
+                        <td class=" t-14-1-up">买入</td>
+                        <td class="t-14-1-b0 hc">44.12%</td>
+                        <td class="t-14-1-a2">国泰君安证券</td>
+                        <td class="t-12-0-a0 hr">2014-07-28</td>
+                    </tr>
+                    <tr style="display: table-row;">
+                        <td class="t-14-1-a2">李南</td>
+                        <td><a href="/stock/report/53ffe926f11950111086e934/601398_SH_EQ" target="_blank"><b>发行优先股：一级资本充足率将上升0.5个百分点；对每股股息影响有限</b></a></td>
+                        <td class=" t-14-1-up">买入</td>
+                        <td class="t-14-1-b0 hc">51.72%</td>
+                        <td class="t-14-1-a2">北京高华证券</td>
+                        <td class="t-12-0-a0 hr">2014-07-28</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination"
+                 ic-pagination="report"
+                 ic-pagination-rows="5"
+                 ic-pagination-step="5" >
+                <span class="prev" ic-role-pagination-prev>&lt;</span>
+                <span class="ellipsis" ic-role-pagination-ellipsis>...</span>
+                <span class="num" ic-role-pagination-num="{{}}">{{}}</span>
+                <span class="next" ic-role-pagination-next>&gt;</span>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+</footer>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-57525559-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+
+
+</div>
+
+
+
+<script src="http://julienedies.github.io/brick/static/js/vendor/underscore-1.6.0.min.js"></script>
+<script src="http://julienedies.github.io/brick/static/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="http://julienedies.github.io/brick/static/js/vendor/plugins.js"></script>
+<script src="http://julienedies.github.io/brick/static/js/brick/brick.js"></script>
+<script>
+    brick.controllers.reg('demo-1', function(scope){
+        var $show = scope.$elm.find('#show');
+        $('[ic-pagination="a"]').on('ic-pagination.change', function (e, param) {
+            $show.text('当前显示第?页.'.replace('?',param));
+        });
+    });
+
+    brick.controllers.reg('demo-2', function(scope){
+
+        scope.companies = [{"company":{"code":"600352_SH_EQ","abbrEn":"ZHEJIANG LONGSHENG","abbrSzh":"\u6d59\u6c5f\u9f99\u76db","sam":null},"closePrice":17.19,"changeRatio":6.11,"changeRatio7":8.73,"totalMarketValue":26300114336.7,"volume":100741598,"time":1418342400000},{"company":{"code":"002440_SZ_EQ","abbrEn":"RUNTU","abbrSzh":"\u95f0\u571f\u80a1\u4efd","sam":null},"closePrice":18.5,"changeRatio":2.89,"changeRatio7":4.46,"totalMarketValue":14189500000,"volume":44396937,"time":1418342400000},{"company":{"code":"300067_SZ_EQ","abbrEn":"Anoky","abbrSzh":"\u5b89\u8bfa\u5176","sam":null},"closePrice":10.41,"changeRatio":4,"changeRatio7":-2.25,"totalMarketValue":3405444120,"volume":7294354,"time":1418342400000}];
+
+    });
+
+</script>
+</body>
+</html>

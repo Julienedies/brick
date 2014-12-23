@@ -1,0 +1,380 @@
+/*
+字体样式定义
+=========================================================
+ */
+
+.t-1 {
+    font-family: microsoft yahei, Simsun;
+    font-size: 24px;
+}
+
+.t-2 {
+    font-size: 20px;
+    color: #fff;
+}
+
+.t-3 {
+    color: #3f6aa0;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.t-4 {
+    font-family: microsoft yahei, Simsun;
+}
+
+.t-5 {
+    font-size: 16px;
+    color: #1a1c39;
+    font-weight: bold;
+}
+
+.t-6 {
+    color: #afb7c1;
+    font-size: 12px;
+}
+
+.t-7, .t-71, .t-7-1 {
+    color: #ff9915;
+    font-size: 12px;
+}
+
+.t-71, .t-7-1 {
+    font-size: 14px;
+}
+
+.t-8 {
+    font-size: 12px;
+    color: #fff;
+    font-family: sans-serif;
+}
+
+.t-9 {
+    font-size: 16px;
+    color: #da4453;
+    font-weight: bold;
+}
+
+.t-10, .t-101 {
+    font-size: 16px;
+    color: #434a54;
+    font-weight: bold;
+}
+
+.t-16-0-b4, .t-16-1-b4,
+.t-101 {
+    color: #494d80;
+}
+
+.t-12 {
+    font-size: 28px;
+    color: #434a54;
+    font-weight: bold;
+}
+
+.t-13 {
+    font-size: 14px;
+    color: #4a7cbc;
+    font-weight: bold;
+}
+
+.t-14 {
+    font-size: 20px;
+    color: #494f57;
+    font-weight: bold;
+}
+
+.t-16, .t-16-1 {
+    color: #434a54;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.t-16-1 {
+    color: #4a89dc;
+}
+
+.prev, .next {
+    font-family: sans-serif !important;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+/*
+t    为前缀；
+-18  字体大小
+-0   字体样式   0 ： normal； 1： bold;
+-r1 字体颜色   r: red; b: blue; y: yellow; g: green; w: white; k: black; a: gray;
+*/
+.t-12-0-a0,
+.t-12-0-a1,
+.t-12-1-a2 {
+    font-size: 12px;
+}
+
+.t-12-0-a0 {
+    color: #aab2bd;
+}
+
+.t-12-0-a1,
+.t-14-0-a1, .t-14-1-a1,
+{
+    color: #898a8b;
+}
+
+.t-12-1-a2, .t-14-1-a2 {
+    color: #656d78;
+}
+
+.t-14-1-a2, .t-14-1-b0, .t-14-1-a3,
+.t-14-1-up, .t-14-1-md, .t-14-1-down,
+.t-14-0-k1, .t-14-1-k1,
+.t-14-0-a1, .t-14-1-a1,
+.t-14-0-y1, .t-14-1-y1,
+.t-14-0-r1, .t-14-1-r1, .t-14-0-up, .t-14-1-up {
+    font-size: 14px;
+}
+
+.t-14-0-y1, .t-14-1-y1
+.t-24-0-y1, .t-24-1-y1 {
+    color: #ff9915;
+}
+
+.t-14-1-md,
+.t-16-0-a3, .t-16-1-a3 {
+    color: #aab2bd;
+}
+
+.t-14-0-down,.t-14-1-down,
+.t-16-0-down, .t-16-1-down,
+.t-18-0-down, .t-18-1-down {
+    color: #37bc9b;
+}
+
+.t-14-0-k1, .t-14-1-k1,
+.t-16-0-k1, .t-16-1-k1,
+.t-18-0-k1, .t-18-1-k1,
+.t-24-0-k1, .t-24-1-k1 {
+    color: #434a54;
+}
+
+.t-14-1-b0 {
+    color: #5d9cec;
+}
+
+.t-14-1-a3 {
+    color: #434a54;
+}
+
+.t-14-0-b1, .t-14-1-b1,
+{
+    font-size: 14px;
+    color: #4a89dc;
+}
+.t-16-0-b6, .t-16-1-b6{
+    color:#3c6eb1;
+}
+.t-18-0-b4,.t-18-1-b4{
+    color: #4b88db;
+}
+.t-14-0-r1, .t-14-1-r1, .t-14-0-up, .t-14-1-up,
+.t-16-0-up, .t-16-1-up,
+.t-16-0-r1, .t-16-1-r1,
+.t-18-0-r1, .t-18-1-r1,
+.t-18-0-up, .t-18-1-up {
+    color: #da4453;
+}
+
+.t-24-0-a1, .t-24-1-a1 {
+    color: #8e959e;
+}
+.t-24-0-w, .t-24-1-w{
+    color:#fff;
+}
+.t-16-0-b4, .t-16-1-b4
+{
+    color: #494d80;
+}
+.fy-1,
+.t-12-1-a2, .t-14-1-a2, .t-14-1-a3,
+.t-14-1-g1, .t-14-1-b0,
+.t-14-1-r1, .t-14-1-b1, .t-14-1-g1, .t-14-1-a1, .t-14-1-up, .t-14-1-md, .t-14-1-down, .t-14-1-k1, .t-18-1-a1,
+.t-14-1-y1,
+.t-16-1-b1,
+.t-16-1-a3,
+.t-16-1-k1,
+.t-16-1-r1,
+.t-16-1-b4,
+.t-16-1-b6,
+.t-16-1-up, .t-16-1-down,
+.t-18-1-up, .t-18-1-down,
+.t-18-1-r1,
+.t-18-1-k1,
+.t-18-1-b1,
+.t-18-1-b4,
+.t-24-1-a1,
+.t-24-1-k1,
+.t-24-1-y1,
+.t-24-1-g1,
+.t-24-1-w
+{
+    font-weight: bold;
+}
+
+.t-16-0-up, .t-16-0-down, .t-16-1-up, .t-16-1-down,
+.t-16-0-a3, .t-16-1-a3,
+.t-16-0-k1, .t-16-1-k1,
+.t-16-0-r1, .t-16-1-r1,
+.t-16-0-b1, .t-16-1-b1,
+.t-16-0-b4, .t-16-1-b4,
+.t-16-0-b6, .t-16-1-b6
+{
+    font-size: 16px;
+}
+
+.fc-a1,
+.t-18-0-a1, .t-18-1-a1,
+.t-18-0-up, .t-18-1-up, .t-18-0-down, .t-18-1-down {
+    color: #656d78;
+}
+.t-18-0-r1, .t-18-1-r1,
+.t-18-0-b1, .t-18-1-b1,
+.t-18-0-b4, .t-18-1-b4,
+.t-18-0-k1, .t-18-1-k1,
+.t-18-0-a1, .t-18-1-a1, .t-18-0-up, .t-18-1-up, .t-18-0-down, .t-18-1-down {
+    font-size: 18px;
+}
+
+.t-24-0-w, .t-24-1-w,
+.t-24-0-g1, .t-24-1-g1,
+.t-24-0-a1, .t-24-1-a1,
+.t-24-0-y1, .t-24-1-y1,
+.t-24-0-k1, .t-24-1-k1 {
+    font-size: 24px;
+}
+
+/*定义字体颜色*/
+.fc-1, .fc-w {
+    color: #fff;
+}
+
+.fc-2, .fc-y1 {
+    color: #ff9915;
+}
+
+.fc-3, .fc-k4 {
+    color: #1a1c39;
+}
+
+.fc-a3, .fc-k1 {
+    color: #434a54;
+}
+
+.fc-5, .fc-b3 {
+    color: #3bafda;
+}
+.bg-b3{
+    background-color: #3bafda;
+}
+.fc-b6{
+    color:#3c6eb1;
+}
+.fc-6, .fc-r1 {
+    color: #ed5565;
+}
+.fc-r2{
+    color: #fc6e51;
+}
+.bg-r2{
+    background-color: #fc6e51;
+}
+
+.fc-7, .fc-a0, .fc-md {
+    color: #aab2bd;
+}
+.bg-a0{
+   background-color: #edf1f7;
+}
+.fc-8, .fc-b1,
+.t-16-0-b1, .t-16-1-b1,
+.t-18-0-b1, .t-18-1-b1
+{
+    color: #4a7cbc;
+}
+
+.fc-11 {
+    color: #d071ca;
+}
+
+.fc-down {
+    color: #37bc9b;
+}
+
+.fc-up {
+    color: #ed5565;
+}
+
+.fc-inherit {
+    color: inherit;
+}
+
+.fc-b1 {
+    color: #405daf;
+}
+.fc-b4{
+    color:#000f3f;
+}
+.fc-g1, .t-24-0-g1, .t-24-1-g1{
+    color: #5db348;
+}
+/*定义字体大小*/
+.fz-12 {
+    font-size: 12px;
+}
+
+.fz-16 {
+    font-size: 16px;
+}
+
+.fz-18 {
+    font-size: 18px;
+}
+
+.fz-20, .fz-24, .fz-28, .fz-32 {
+}
+
+.fz-20 {
+    font-size: 20px;
+}
+
+.fz-24 {
+    font-size: 24px;
+}
+
+.fz-28 {
+    font-size: 28px;
+}
+.fz-30{
+    font-size:30px;
+}
+.f-32 {
+    font-size: 32px;
+}
+
+.fz-small {
+    font-size: 0.6em;
+}
+
+.fz-normal {
+    font-size: 1em;
+}
+
+.fz-large {
+    font-size: 1.4em;
+}
+
+/**/
+
+.fc-a-inherit a {
+    color: inherit;
+}
