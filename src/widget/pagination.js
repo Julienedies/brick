@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/20.
  */
 
-directives.add('ic-pagination', function ($elm, attrs) { console.log(attrs);
+directives.add('ic-pagination', function ($elm, attrs) {
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -47,16 +47,16 @@ directives.add('ic-pagination', function ($elm, attrs) { console.log(attrs);
             };
         }else{
             pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            console.log(pool)
-            //if(!pool.length) return;
-            total = Math.ceil(pool.length / rows);
-            onchange = function (page) {
-                --page;
-                var start = page * rows - 1 < 0 ? 0 : page * rows;
-                var end = start + rows;
-                pool.hide();
-                pool.slice(start, end).show();
-            };
+            if(pool.length){
+                total = Math.ceil(pool.length / rows);
+                onchange = function (page) {
+                    --page;
+                    var start = page * rows - 1 < 0 ? 0 : page * rows;
+                    var end = start + rows;
+                    pool.hide();
+                    pool.slice(start, end).show();
+                };
+            }
         }
     }
 
