@@ -43,7 +43,7 @@
         if(options === void(0)) return this.trigger('ic-ajax');
         options.data && this.data('ic-submit-data', options.data);
 
-        options.disabled !== void(0) && this.attr('ic-ajax-disabled', options.disabled);
+        options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
     };
 
     $.fn.icDialog = function (options) {
@@ -181,21 +181,23 @@
 
         $.fn.icSetLoading = $.fn.setLoading = function () {
 
-            //this.parent().css({position:'relative'});
-            var w = this.outerWidth();
-            var h = this.outerHeight();
-            var offset = this.offset();
-            var top = offset.top;
-            var left = offset.left;
-            var $loading = $(loading).css({width: w, height: h, position: 'absolute', 'margin-left': -w});
+            return this.each(function(){
+                //this.parent().css({position:'relative'});
+                var $th = $(this);
+                var w = $th.outerWidth();
+                var h = $th.outerHeight();
+                var offset = $th.offset();
+                var top = offset.top;
+                var left = offset.left;
+                var $loading = $(loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
 
-            $loading.find('svg').css({'margin-top':(this.height()-16)/2});
+                //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 
-            this.css({opacity: '0.5'}).after($loading);
+                $th.css({opacity: '0.5'});
 
-            this.data('_ic-role-loading', $loading);
+                $th.data('_ic-role-loading', $loading);
+            });
 
-            return this;
         };
 
     })(jQuery);
@@ -203,11 +205,15 @@
 
 //清除loading
     $.fn.icClearLoading = $.fn.clearLoading = function () {
-        var $loading = this.data('_ic-role-loading');
-        $loading && $loading.remove();
-        this.removeData('_ic-role-loading');
-        this.css({opacity: '1'});
-        return this;
+
+        return this.each(function(){
+            var $th = $(this);
+            var $loading = $th.data('_ic-role-loading');
+            $loading && $loading.remove();
+            $th.removeData('_ic-role-loading');
+            $th.css({opacity: '1'});
+        });
+
     };
 
 

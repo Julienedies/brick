@@ -81,6 +81,8 @@
 
             directives.exec('ic-event');
 
+            directives.exec('ic-ajax');
+
             (function (node) {
 
                 var $elm = $(node);

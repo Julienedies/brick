@@ -5,9 +5,9 @@
 
 directives.add('ic-ajax', function () {
 
-    //只执行一次绑定，绑定后即销毁
-    if (arguments.callee._run) return;
-    arguments.callee._run = 1;
+    //只执行一次绑定
+    if (arguments.callee._run_) return;
+    arguments.callee._run_ = 1;
 
     var $doc = $(document);
     $doc.on('click', '[ic-ajax]', _call);
