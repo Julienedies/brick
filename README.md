@@ -1,7 +1,8 @@
 brick
 =====
+https://github.com/Julienedies/brick/wiki
 
-brick是一个轻量级前端开发框架，主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
+brick是一个轻量级前端开发框架，基于jQuery和underscore。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
 
 其设计及实现主要借鉴并且反映了angular的前端开发思想及解决方案。
 
