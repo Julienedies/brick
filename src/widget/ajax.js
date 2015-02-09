@@ -19,7 +19,7 @@ directives.add('ic-ajax', function () {
         var $elm = $(this);
         var namespace = $elm.attr('ic-ajax');
 
-        var $loading = $('[ic-role-loading=?]'.replace('?', namespace));
+        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||+(new Date)));
 
         //提交
         var url = $elm.attr('ic-submit-action');
