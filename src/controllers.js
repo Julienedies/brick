@@ -141,6 +141,7 @@ var controllers = (function (){
                 html = tplf(model ? {model:model} : this);
                 //console.log(html)
                 if(tple.length){
+                    tple.show();
                     return tple.html(html);
                 }
             }

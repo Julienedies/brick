@@ -1,12 +1,16 @@
 /*
 ==========================================
  */
+[ic-tpl]{
+    display: none;
+}
 [ic-drag-view]{
     position: relative;
     overflow: hidden;
 }
 [ic-role-drag-handle]{
     cursor:  move;
+    cursor: url(http://webmap0.map.bdimg.com/image/api/openhand.cur) 8 8,default;
 }
 [ic-role-loading]{
     display: none;

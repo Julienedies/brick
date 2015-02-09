@@ -179,7 +179,11 @@
 
         }
 
-        $.fn.icSetLoading = $.fn.setLoading = function () {
+        $.fn.icSetLoading = $.fn.setLoading = function (option) {
+
+            var _loading = option && option.loading;
+
+            this.icClearLoading();
 
             return this.each(function(){
                 //this.parent().css({position:'relative'});
@@ -189,7 +193,7 @@
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 

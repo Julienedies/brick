@@ -43,7 +43,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
                     list[start] = item;
                 }
                 var html = brick._tplfs[namespace]({model: list});
-                $tpl.html(html);
+                $tpl.html(html).show();
             };
         }else{
             pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();

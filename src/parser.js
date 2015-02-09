@@ -41,7 +41,7 @@ function parser(node) {
 
             if (/^ic-(skip|init|for|if|else|bind)/.test(name) || /\{\{.+?\}\}/.test(value)) {
                 directives.push([name, value]);
-                continue;
+                //continue;
             }
 
         }
