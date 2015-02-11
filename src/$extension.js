@@ -37,6 +37,7 @@
     $.fn.icTabActive = $.fn.icTabs = function(options){
         var active = options.active;
         active && this.attr('ic-tab-active', active);
+        return this;
     };
 
     $.fn.icAjax = function (options) {
@@ -44,6 +45,8 @@
         options.data && this.data('ic-submit-data', options.data);
 
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
+
+        return this;//链式调用
     };
 
     $.fn.icDialog = function (options) {
@@ -76,7 +79,7 @@
 
         return this;
     }
-//切换场景
+    //切换场景
     $.icNextScene = function () {
         var current = $('[ic-scene]').filter('[ic-scene-active=1]');
 
