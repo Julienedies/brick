@@ -31,16 +31,16 @@ directives.add('ic-ajax', function () {
         var before = $elm.attr('ic-submit-before');
 
         always = $elm.icParseProperty(always) || function () {
-            console.log('always is undefined;')
+            //console.log('always is undefined;')
         };
         done = $elm.icParseProperty(done) || function () {
-            console.info('done is undefined;')
+            //console.info('done is undefined;')
         };
         failed = $elm.icParseProperty(failed) || function (msg) {
-            console.info('failed is undefined;')
+            //console.info('failed is undefined;')
         };
         before = $elm.icParseProperty(before) || function () {
-            console.info('before is undefined;')
+            //console.info('before is undefined;')
         };
 
         if (before.apply(that) === false) return;
@@ -56,9 +56,11 @@ directives.add('ic-ajax', function () {
             dataType: dataType,
             data: data
         }).done(function (data) {
+                $elm.clearLoading() && $loading.hide() && $elm.show();
                 done.apply(that, [data]);
             }
         ).fail(function (msg) {
+                $elm.clearLoading() && $loading.hide() && $elm.show();
                 failed.apply(that, [msg]);
             }
         ).always(function () {
