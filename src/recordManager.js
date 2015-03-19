@@ -78,7 +78,7 @@ function recordManager() {
 
             var r = [];
 
-            if (!arguments.length) {
+            if (value === void(0)) {
 
                 for (var i in pool) {
 
@@ -87,6 +87,11 @@ function recordManager() {
                 }
 
                 return r;
+            }
+
+            if(typeof value === 'object'){
+                query = this.key;
+                value = value[query];
             }
 
             for (var j in pool) {
