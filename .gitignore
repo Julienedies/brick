@@ -1,12 +1,12 @@
 Thumbs.db
 .DS_Store
-
+.log
 #ide create
 .idea/
 .settings/
 .project
 express/
-
+*map.json
 #front bulid tool creates
 bower_components/
 node_modules/
