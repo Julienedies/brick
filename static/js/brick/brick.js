@@ -405,6 +405,7 @@ var controllers = (function (){
                 html = tplf(model ? {model:model} : this);
                 //console.log(html)
                 if(tple.length){
+                    tple.show();
                     return tple.html(html);
                 }
             }
@@ -565,7 +566,7 @@ var services = (function() {
             registry[name] = {depend: depend, serve: serve};
         },
         reg: function (name, factory, conf){
-            var depend = conf && conf.constructor === Array ? conf : conf.depend;
+            var depend = conf && (conf.constructor === Array ? conf : conf.depend);
             registry[name] = {depend: depend, serve: factory, conf: conf};
         },
         /*
@@ -750,7 +751,7 @@ function recordManager() {
 
             var r = [];
 
-            if (!arguments.length) {
+            if (value === void(0)) {
 
                 for (var i in pool) {
 
@@ -759,6 +760,11 @@ function recordManager() {
                 }
 
                 return r;
+            }
+
+            if(typeof value === 'object'){
+                query = this.key;
+                value = value[query];
             }
 
             for (var j in pool) {
@@ -1042,7 +1048,7 @@ function parser(node) {
 
             if (/^ic-(skip|init|for|if|else|bind)/.test(name) || /\{\{.+?\}\}/.test(value)) {
                 directives.push([name, value]);
-                continue;
+                //continue;
             }
 
         }
@@ -1308,13 +1314,16 @@ root._cc = ( window.console && function () {
     $.fn.icTabActive = $.fn.icTabs = function(options){
         var active = options.active;
         active && this.attr('ic-tab-active', active);
+        return this;
     };
 
     $.fn.icAjax = function (options) {
         if(options === void(0)) return this.trigger('ic-ajax');
         options.data && this.data('ic-submit-data', options.data);
 
-        options.disabled !== void(0) && this.attr('ic-ajax-disabled', options.disabled);
+        options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
+
+        return this;//链式调用
     };
 
     $.fn.icDialog = function (options) {
@@ -1347,7 +1356,7 @@ root._cc = ( window.console && function () {
 
         return this;
     }
-//切换场景
+    //切换场景
     $.icNextScene = function () {
         var current = $('[ic-scene]').filter('[ic-scene-active=1]');
 
@@ -1450,23 +1459,29 @@ root._cc = ( window.console && function () {
 
         }
 
-        $.fn.icSetLoading = $.fn.setLoading = function () {
+        $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
-            //this.parent().css({position:'relative'});
-            var w = this.outerWidth();
-            var h = this.outerHeight();
-            var offset = this.offset();
-            var top = offset.top;
-            var left = offset.left;
-            var $loading = $(loading).css({width: w, height: h, position: 'absolute', 'margin-left': -w});
+            var _loading = option && option.loading;
 
-            $loading.find('svg').css({'margin-top':(this.height()-16)/2});
+            this.icClearLoading();
 
-            this.css({opacity: '0.5'}).after($loading);
+            return this.each(function(){
+                //this.parent().css({position:'relative'});
+                var $th = $(this);
+                var w = $th.outerWidth();
+                var h = $th.outerHeight();
+                var offset = $th.offset();
+                var top = offset.top;
+                var left = offset.left;
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
 
-            this.data('_ic-role-loading', $loading);
+                //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 
-            return this;
+                $th.css({opacity: '0.5'});
+
+                $th.data('_ic-role-loading', $loading);
+            });
+
         };
 
     })(jQuery);
@@ -1474,11 +1489,15 @@ root._cc = ( window.console && function () {
 
 //清除loading
     $.fn.icClearLoading = $.fn.clearLoading = function () {
-        var $loading = this.data('_ic-role-loading');
-        $loading && $loading.remove();
-        this.removeData('_ic-role-loading');
-        this.css({opacity: '1'});
-        return this;
+
+        return this.each(function(){
+            var $th = $(this);
+            var $loading = $th.data('_ic-role-loading');
+            $loading && $loading.remove();
+            $th.removeData('_ic-role-loading');
+            $th.css({opacity: '1'});
+        });
+
     };
 
 
@@ -1889,7 +1908,7 @@ directives.add('ic-dropdown', function ($elm, attrs) {
  * Created by julien.zhang on 2014/10/20.
  */
 
-directives.add('ic-pagination', function ($elm, attrs) { 
+directives.add('ic-pagination', function ($elm, attrs) {
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -1900,7 +1919,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
     var current = $elm.attr('ic-pagination-current') || 1;
     var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
     var placeholder = /\{\{\}\}/g;
-    var $tpl = $('[ic-tpl=?]'.replace('?', namespace));
+    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
     var tplf;
 
     var pool;
@@ -1930,11 +1949,11 @@ directives.add('ic-pagination', function ($elm, attrs) {
                     list[start] = item;
                 }
                 var html = brick._tplfs[namespace]({model: list});
-                $tpl.html(html);
+                $tpl.html(html).show();
             };
         }else{
             pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            if (pool.length) {
+            if(pool.length){
                 total = Math.ceil(pool.length / rows);
                 onchange = function (page) {
                     --page;
@@ -2074,7 +2093,7 @@ directives.add('ic-timer', function ($elm, attr) {
 
 directives.add('ic-dialog', function ($elm, attrs) {
 
-    var html = "<div class=\"t\" style=\"position:fixed; z-index: 1000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
+    var html = "<div class=\"t\" style=\"position:fixed; z-index: 100000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
 
     //只执行一次绑定
     if (!arguments.callee._run) {
@@ -2539,9 +2558,9 @@ directives.add('ic-form', function ($elm, attrs) {
 
 directives.add('ic-ajax', function () {
 
-    //只执行一次绑定，绑定后即销毁
-    if (arguments.callee._run) return;
-    arguments.callee._run = 1;
+    //只执行一次绑定
+    if (arguments.callee._run_) return;
+    arguments.callee._run_ = 1;
 
     var $doc = $(document);
     $doc.on('click', '[ic-ajax]', _call);
@@ -2553,7 +2572,7 @@ directives.add('ic-ajax', function () {
         var $elm = $(this);
         var namespace = $elm.attr('ic-ajax');
 
-        var $loading = $('[ic-role-loading=?]'.replace('?', namespace));
+        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||+(new Date)));
 
         //提交
         var url = $elm.attr('ic-submit-action');
@@ -2565,16 +2584,16 @@ directives.add('ic-ajax', function () {
         var before = $elm.attr('ic-submit-before');
 
         always = $elm.icParseProperty(always) || function () {
-            console.log('always is undefined;')
+            //console.log('always is undefined;')
         };
         done = $elm.icParseProperty(done) || function () {
-            console.info('done is undefined;')
+            //console.info('done is undefined;')
         };
         failed = $elm.icParseProperty(failed) || function (msg) {
-            console.info('failed is undefined;')
+            //console.info('failed is undefined;')
         };
         before = $elm.icParseProperty(before) || function () {
-            console.info('before is undefined;')
+            //console.info('before is undefined;')
         };
 
         if (before.apply(that) === false) return;
@@ -2590,9 +2609,11 @@ directives.add('ic-ajax', function () {
             dataType: dataType,
             data: data
         }).done(function (data) {
+                $elm.clearLoading() && $loading.hide() && $elm.show();
                 done.apply(that, [data]);
             }
         ).fail(function (msg) {
+                $elm.clearLoading() && $loading.hide() && $elm.show();
                 failed.apply(that, [msg]);
             }
         ).always(function () {
@@ -2785,10 +2806,8 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
         var item = pool[index];
         var val = $(this).attr('ic-role-type-item');
         $elm.val(val);
-        onTypeComplete ?
-            onTypeComplete.apply($elm[0], [e,item]) :
-            $elm.trigger('type.complete', item);
-
+        $elm.trigger('type.complete', item);
+        onTypeComplete && onTypeComplete.apply($elm[0], [e,item])
     });
 
 
@@ -2841,6 +2860,8 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
             directives.exec('ic-tpl');
 
             directives.exec('ic-event');
+
+            directives.exec('ic-ajax');
 
             (function (node) {
 

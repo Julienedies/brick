@@ -5,7 +5,7 @@
 
 directives.add('ic-dialog', function ($elm, attrs) {
 
-    var html = "<div class=\"t\" style=\"position:fixed; z-index: 1000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
+    var html = "<div class=\"t\" style=\"position:fixed; z-index: 100000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
 
     //只执行一次绑定
     if (!arguments.callee._run) {

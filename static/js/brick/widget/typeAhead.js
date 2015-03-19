@@ -137,10 +137,8 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
         var item = pool[index];
         var val = $(this).attr('ic-role-type-item');
         $elm.val(val);
-        onTypeComplete ?
-            onTypeComplete.apply($elm[0], [e,item]) :
-            $elm.trigger('type.complete', item);
-
+        $elm.trigger('type.complete', item);
+        onTypeComplete && onTypeComplete.apply($elm[0], [e,item])
     });
 
 

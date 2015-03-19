@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/20.
  */
 
-directives.add('ic-pagination', function ($elm, attrs) { 
+directives.add('ic-pagination', function ($elm, attrs) {
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -13,7 +13,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
     var current = $elm.attr('ic-pagination-current') || 1;
     var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
     var placeholder = /\{\{\}\}/g;
-    var $tpl = $('[ic-tpl=?]'.replace('?', namespace));
+    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
     var tplf;
 
     var pool;
@@ -43,11 +43,11 @@ directives.add('ic-pagination', function ($elm, attrs) {
                     list[start] = item;
                 }
                 var html = brick._tplfs[namespace]({model: list});
-                $tpl.html(html);
+                $tpl.html(html).show();
             };
         }else{
             pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            if (pool.length) {
+            if(pool.length){
                 total = Math.ceil(pool.length / rows);
                 onchange = function (page) {
                     --page;
