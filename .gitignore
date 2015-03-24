@@ -3,10 +3,12 @@ Thumbs.db
 .log
 #ide create
 .idea/
+*\.log
 .settings/
 .project
 express/
-*map.json
+map.json
+*/map.json
 #front bulid tool creates
 bower_components/
 node_modules/
