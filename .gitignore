@@ -1,15 +1,17 @@
+#系统创建文件
 Thumbs.db
 .DS_Store
-.log
+
+#IDE创建
 #ide create
 .idea/
-*\.log
 .settings/
 .project
-express/
-map.json
-*/map.json
-#front bulid tool creates
+
+#外部类库
 bower_components/
 node_modules/
-npm-debug.log
+
+#其它
+*.log
+*map.json
