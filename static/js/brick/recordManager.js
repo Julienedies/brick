@@ -143,7 +143,7 @@ function recordManager() {
 
                 this.beforeSave(record);
 
-                this.fire('change.' + id, {change: record});
+                this.fire('change', {change: record});
             }
 
             this.end();
@@ -192,7 +192,7 @@ function recordManager() {
 
                 (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
 
-                this.fire('remove.' + id, {remove: record});
+                this.fire('remove', {remove: record});
 
             }
 
@@ -254,11 +254,13 @@ function recordManager() {
         fire: function (e, msg) {
 
             var scope = this.scope;
+            var broadcast = this.broadcast;
             var pool = this.get();
             var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
 
             msg = $.extend({pool: pool}, msg || {});
 
+            broadcast && brick.broadcast(prefix + e, msg);
             scope && scope.fire && scope.fire(prefix + e, msg);
 
         },
