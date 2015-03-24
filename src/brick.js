@@ -19,6 +19,7 @@
         __inline('directives/ctrl.js');
         __inline('directives/event.js');
 
+        __inline('widget/enterPress.js');
         __inline('widget/placeholder.js');
         __inline('widget/slider.js');
         __inline('widget/tabs.js');

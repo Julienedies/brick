@@ -816,7 +816,7 @@ function recordManager() {
 
                 this.beforeSave(record);
 
-                this.fire('change.' + id, {change: record});
+                this.fire('change', {change: record});
             }
 
             this.end();
@@ -865,7 +865,7 @@ function recordManager() {
 
                 (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
 
-                this.fire('remove.' + id, {remove: record});
+                this.fire('remove', {remove: record});
 
             }
 
@@ -927,11 +927,13 @@ function recordManager() {
         fire: function (e, msg) {
 
             var scope = this.scope;
+            var broadcast = this.broadcast;
             var pool = this.get();
             var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
 
             msg = $.extend({pool: pool}, msg || {});
 
+            broadcast && brick.broadcast(prefix + e, msg);
             scope && scope.fire && scope.fire(prefix + e, msg);
 
         },
@@ -1188,6 +1190,10 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        .replace(/\bic-(checked|disabled)\s*=\s*(\S*)\s+/g,function(m, $1, $2){
+            $2 = $2.replace(/^(?:"|')|(?:"|')$/g,'');
+            return ' <% if(?2){ %> ?1 <% } %> '.replace('?2',$2).replace('?1',$1);
+        })
         .replace(/&amp;&amp;/g,'&&');
 
     //console.log(tpl)
@@ -1528,30 +1534,62 @@ directives.add('ic-ctrl', function ($elm, attrs) {
 
 directives.add('ic-event', function () {
 
+    var events = 'click,change';
 
-    var events = 'click';
-
-    var target = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
+    var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
         var s = '[ic-?]'.replace('?', $1);
         return m.replace($1, s);
     });
 
+    var $doc = $('body');
 
-    $('body').on(events, target, function (e) {
+    events = events.split(',');
+    targets = targets.split(',');
 
+    _.forEach(events, function(event, i, list){
+        var target = targets[i];
+        $doc.on(event, target, _call);
+    });
+
+
+    function _call(e){
         var th = $(this);
         var type = e.type;
         var fn = th.attr('ic-' + type);
         fn = th.icParseProperty(fn);
 
         return fn.apply(this, [e]);
-
-    });
-
+    }
 
 });
 ;
 
+        /**
+ * 回车键按下监听指令
+ * Created by julien.zhang on 2015/3/23.
+ */
+
+directives.add('ic-enter-press', function ($elm, attrs) {
+
+    $('body').on('focus', '[type="text"][ic-enter-press]', function(e){
+
+        var $elm = $(this);
+        var call = $elm.attr('ic-enter-press');
+        call = $elm.icParseProperty(call);
+        call = $.proxy(call, this);
+        var fn = function(e){
+            e.which == 13  && call(e);
+        };
+
+        $elm.keypress(fn);
+
+        $elm.on('blur', function(e){
+            $elm.unbind('keypress', fn);
+        });
+
+    });
+
+});;
         /**
  * Created by julien.zhang on 2014/11/11.
  *
