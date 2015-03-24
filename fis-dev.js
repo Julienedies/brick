@@ -1,5 +1,6 @@
 /**
  * Created by julien.zhang on 2014/10/10.
+ * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
 //开启simple插件，注意需要先进行插件安装 npm install -g fis-postpackager-simple
@@ -18,10 +19,11 @@ fis.config.set('modules.postpackager', 'simple');
 //});
 
 
-fis.config.set('project.include', /^\/(?:homepage|src|css)\/.*$/i);
+fis.config.set('project.include', /^\/(?:page|src|css)\/.*$/i);
 
 
-//静态资源文件域名设置
+//静态资源文件域名设置;
+//线上部署前domain设为http://julienedies.github.io/brick;
 fis.config.merge({
     roadmap : {
         domain : 'http://julienedies.github.io/brick'
@@ -30,43 +32,46 @@ fis.config.merge({
 
 
 fis.config.set('roadmap.path', [
+
+    //brick源码
     {
         reg: /^\/src\/(.+\.js)/i,
         release: '/js/brick/$1',
-        url: '/static/js/brick/$1',
+        url: '/public/js/brick/$1',
         isJsLike: true,
         useHash: true
     },
     {
         reg: /^\/css\/(brick\.css)/i,
         release: '/css/$1',
-        url: '/static/css/$1',
+        url: '/public/css/$1',
         isJsLike: true,
         useHash: true
     },
+
     {
-        reg: /^\/homepage\/(css\/.+\.css)$/i,
+        reg: /^\/page\/(css\/.+\.css)$/i,
         release: '/$1',
-        url: '/static/$1',
+        url: '/public/$1',
         useSprite: true,
         useHash: true
     },
     {
-        reg: /^\/homepage\/(img\/.+)/i,
+        reg: /^\/page\/(img\/.+)/i,
         release: '/$1',
-        url: '/static/$1'
+        url: '/public/$1'
     },
     {
-        reg: /^\/homepage\/(js\/.+\.js)/i,
+        reg: /^\/page\/(js\/.+\.js)/i,
         release: '/$1',
-        url: '/static/$1',
+        url: '/public/$1',
         isJsLike: true,
         useHash: true
     },
     {
-        reg: /^\/homepage\/html\/(.+\.html)/i,
+        reg: /^\/page\/html\/(.+\.html)/i,
         release: '/$1',
-        url: '/static/$1',
+        url: '/public/$1',
         useSprite: true,
         isHtmlLike: true
     }
@@ -86,7 +91,7 @@ fis.config.set('settings.spriter.csssprites.styleReg', /(<style(?:(?=\s)[\s\S]*?
 fis.config.merge({
     deploy : {
         local : {
-            to : './static'
+            to : './public'
         }
     }
 });
