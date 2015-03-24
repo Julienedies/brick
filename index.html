@@ -8,12 +8,53 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="css/brick.css" media="screen">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
     <title>Brick by Julienedies</title>
+    <style>
+        .complete{
+            text-decoration: line-through;
+        }
+        [ic-ctrl=tasksCtrl] li {
+            position: relative;
+            list-style: none;;
+            border-bottom: 1px solid #ededed;
+        }
+
+        [ic-ctrl=tasksCtrl] [type=text] {
+            width: 76%;
+            padding: 0.5em 2%;
+            border: none;
+            background: transparent;
+            min-width: 20em;
+            padding: 0 .5em;
+            border-radius: .2em;
+            height: 36px;
+            line-height: 36px;
+            border: solid 1px #ccd1d9;
+        }
+
+        [ic-ctrl=tasksCtrl] li [type=text]{
+            border:solid 1px transparent;
+        }
+        [ic-ctrl=tasksCtrl] li [type=text]:focus {
+            border: solid 1px #ccd1d9;
+        }
+
+        [ic-ctrl=tasksCtrl] button {
+            background: none;
+            border: none;;
+            margin-left: 0.5em;
+            position: absolute;
+            top:6px;
+            right:0;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -32,28 +73,166 @@
     <div class="inner clearfix">
         <section id="main-content">
             <h3>简介</h3>
+
             <p>
-            brick是一个轻量级前端开发框架，基于jQuery和underscore。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。 其设计及实现主要借鉴并且反映了angular的前端开发思想及解决方案。
+                brick是一个轻量级前端开发框架，基于jQuery和underscore。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
+                其设计及实现主要借鉴并且反映了angular的前端开发思想及解决方案。
             </p>
+
             <p>
-            其主要思想包含两点：<br>
+                其主要思想包含两点：<br>
             </p>
             对代码类型进行划分，隔离。 因为前端开发通常同时涉及html、css、js，通过对代码类型进行划分，以提高代码复用性及维护性。 通常分为以下几种类型的代码：
             </p>
             <p>
-            ctrl（控制器）类型代码，主要用于衔接dom操作及：
+                ctrl（控制器）类型代码，主要用于衔接dom操作及：
             </p>
+
             <p>
-            service（服务）类型代码：主要用于封装纯js操作类型代码，会比较接近于mvc里m的概念。复用程度高；
+                service（服务）类型代码：主要用于封装纯js操作类型代码，会比较接近于mvc里m的概念。复用程度高；
             </p>
+
             <p>
-            directive（指令）类型代码，通常封装操作dom的代码，譬如一个典型的标签页功能。复用程度高;
+                directive（指令）类型代码，通常封装操作dom的代码，譬如一个典型的标签页功能。复用程度高;
             </p>
+
             <p>
-            尽量解耦js行为与css样式。 虽然已经存在众多的UI组件，但是其使用便捷性及移植性并不好。 譬如虽然jQuery提供了jQuery UI，但实际项目开发中，很少有人会直接使用jQuery UI的样式，很多时间精力花费在样式的修改上。 brick一开始就考虑到这点，通过指令的形式（自定义html属性）提供基本的js行为，用户可以随意定义模板及样式；
+                尽量解耦js行为与css样式。 虽然已经存在众多的UI组件，但是其使用便捷性及移植性并不好。 譬如虽然jQuery提供了jQuery UI，但实际项目开发中，很少有人会直接使用jQuery
+                UI的样式，很多时间精力花费在样式的修改上。 brick一开始就考虑到这点，通过指令的形式（自定义html属性）提供基本的js行为，用户可以随意定义模板及样式；
             </p>
+
+            <h3>example: ToDo</h3>
+
+            <div ic-ctrl="tasksCtrl">
+                <div>
+                    <input type="text" placeholder="What needs to be done?" ic-enter-press="add"/>
+                </div>
+                <div>
+                    <ul ic-tpl="task-list">
+                        <li ic-for="i,v in model" data-id="{{v.id}}">
+                            <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
+                            <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" disabled ic-enter-press="change"/>
+                            <button ic-click="remove" data-id="{{v.id}}">X</button>
+                            <button ic-click="edit" style="right: 2em;">edit</button>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h4 ic-tabs="a" ic-tab-select="span" ic-con-select=">div">
+                <span>html</span>&nbsp;&nbsp;
+                <span>js</span>&nbsp;&nbsp;
+                <span>css</span>&nbsp;&nbsp;
+            </h4>
+
+            <div ic-role-tabc="a">
+                <div>
+                <pre class="brush: xml;">
+            &lt;div ic-ctrl=&quot;tasksCtrl&quot;&gt;
+                &lt;div&gt;
+                    &lt;input type=&quot;text&quot; placeholder=&quot;What needs to be done?&quot; ic-enter-press=&quot;add&quot;/&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    &lt;ul ic-tpl=&quot;task-list&quot;&gt;
+                        &lt;li ic-for=&quot;i,v in model&quot; data-id=&quot;{{v.id}}&quot;&gt;
+                            &lt;input type=&quot;checkbox&quot; data-id=&quot;{{v.id}}&quot; ic-checked=&quot;v.complete&quot; ic-change=&quot;change&quot;&gt;
+                            &lt;input type=&quot;text&quot; value=&quot;{{v.name}}&quot; ic-class=&quot;{{v.complete &amp;&amp; &#39;complete&#39;}}&quot; disabled ic-enter-press=&quot;change&quot;/&gt;
+                            &lt;button ic-click=&quot;remove&quot; data-id=&quot;{{v.id}}&quot;&gt;X&lt;/button&gt;
+                            &lt;button ic-click=&quot;edit&quot; style=&quot;right: 2em;&quot;&gt;edit&lt;/button&gt;
+
+                        &lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+                </pre>
+                </div>
+                <div>
+                <pre class="brush: jscript;">
+    // model
+    brick.services.reg('tasksModel', function (recordManager) {
+
+        var local = window.localStorage && localStorage.getItem('tasksModel');
+
+        return new recordManager({key: 'id', eventPrefix: 'tasksModel', broadcast: true}).init(local && JSON.parse(local) || []);
+
+    }, ['recordManager']);
+
+    //controller
+    brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+        var render = function (e, msg) {
+            var model = tasksModel.get();
+            window.localStorage && localStorage.setItem('tasksModel', JSON.stringify(model));
+            scope.render('task-list', model);
+        };
+
+        scope.watch('tasksModel.*', render);
+
+        render();
+
+        scope.add = function (e) {
+            var val = this.value;
+            val && tasksModel.add({name: val, id: +new Date});
+            console.log(tasksModel.get());
+            this.value = '';
+        };
+
+        scope.edit = function (e) {
+            $(this).parent().find(':text').attr('disabled', false).focus();
+        };
+
+        scope.change = function (e) {
+            var parent = $(this).parent();
+            var id = parent.data('id');
+            var complete = parent.find(':checkbox').prop('checked');
+            var name = parent.find(':text').attr('disabled', true).val();
+            tasksModel.find(id).set({complete: complete, name: name});
+        };
+
+        scope.remove = function (e) {
+            tasksModel.find($(this).data('id')).remove();
+        };
+
+    }, {depend: ['tasksModel']});
+                </pre>
+                </div>
+                <div>
+                <pre class="brush: css;">
+        [ic-ctrl=tasksCtrl] li{
+            position: relative;
+            list-style: none;;
+            border-bottom: 1px solid #ededed;
+        }
+        [ic-ctrl=tasksCtrl] [type=text]{
+            width:80%;
+            padding: 0.5em 0.5em;
+            border:none;
+            background: transparent;
+        }
+        [ic-ctrl=tasksCtrl] [type=text]:hover,[ic-ctrl=tasksCtrl] [type=text]:focus{
+            background: blue;;
+            color: #fff;
+        }
+
+        [ic-ctrl=tasksCtrl] button{
+            background: none;
+            border: none;;
+            margin-left:0.5em;
+            float:right;
+        }
+                </pre>
+                </div>
+            </div>
+
+            <h3>doc</h3>
+
+            <p><a href="https://github.com/Julienedies/brick/wiki">文档</a></p>
+
+
             <h3>使用</h3>
-            <p><a href="/brick/static/example/index.html">示例</a> </p>
+
+            <p><a href="/brick/static/example/index.html">示例</a></p>
+
 
         </section>
 
@@ -75,6 +254,75 @@
         </aside>
     </div>
 </div>
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet" type="text/css"/>
+
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
+      rel="stylesheet" type="text/css"/>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushCss.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+<script src="http://julienedies.github.io/brick/static/js/vendor/underscore-1.6.0.min.js"></script>
+<script src="http://julienedies.github.io/brick/static/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="http://julienedies.github.io/brick/static/js/vendor/plugins.js"></script>
+<script src="static/js/brick/brick.js"></script>
+<script>
+    // model
+    brick.services.reg('tasksModel', function (recordManager) {
+
+        var local = window.localStorage && localStorage.getItem('tasksModel');
+
+        return new recordManager({key: 'id', eventPrefix: 'tasksModel', broadcast: true}).init(local && JSON.parse(local) || []);
+
+    }, ['recordManager']);
+
+    //controller
+    brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+        var render = function (e, msg) {
+            var model = tasksModel.get();
+            window.localStorage && localStorage.setItem('tasksModel', JSON.stringify(model));
+            scope.render('task-list', model);
+        };
+
+        scope.watch('tasksModel.*', render);
+
+        render();
+
+        scope.add = function (e) {
+            var val = this.value;
+            val && tasksModel.add({name: val, id: +new Date});
+            console.log(tasksModel.get());
+            this.value = '';
+        };
+
+        scope.edit = function (e) {
+            var $th = $(this).parent().find(':text');
+            $th.prop('disabled', false);
+            $th.focus();
+            $th.text($th.text());
+            $th.focus();
+        };
+
+        scope.change = function (e) {
+            var parent = $(this).parent();
+            var id = parent.data('id');
+            var complete = parent.find(':checkbox').prop('checked');
+            var name = parent.find(':text').attr('disabled', true).val();
+            tasksModel.find(id).set({complete: complete, name: name});
+        };
+
+        scope.remove = function (e) {
+            tasksModel.find($(this).data('id')).remove();
+        };
+
+    }, {depend: ['tasksModel']});
+</script>
+
 
 <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -87,6 +335,5 @@
     } catch (err) {
     }
 </script>
-
 </body>
 </html>
