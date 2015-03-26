@@ -82,30 +82,8 @@ html, body {
     font-size: 14px;
     font-family: microsoft yahei, Simsun;
 }
-body{
-    -moz-user-select: none; /*火狐*/
-    -webkit-user-select: none;  /*webkit浏览器*/
-    -ms-user-select: none;   /*IE10*/
-    -khtml-user-select: none; /*早期浏览器*/
-    user-select: none;
-}
 a {
-    color: #4a7cbc;
     text-decoration: none;
-}
-
-p {
-
-}
-
-article {
-    width: 720px;
-    margin:0 auto;
-}
-
-article p {
-    margin-bottom: 1.8em;
-    text-indent: 2em;
 }
 
 table {
@@ -133,12 +111,7 @@ i, b {
     font-weight: normal;
 }
 
-thead.hc th{
-   text-align:center;
-}
-thead th.hl{
-    text-align:left;
-}
+
 /*
 交互样式定义
 ========================================================
@@ -1982,15 +1955,6 @@ t    为前缀；
 =====================================================
  */
 
-#wraper {
-
-}
-
-main {
-    max-width: 1000px;
-    margin:0 auto;
-    padding: 20px 0 30px 0;
-}
 
 /* 定义宽/高/外间距/内间距/行高 */
 .wrap-1000 {

@@ -6,15 +6,12 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>ic-tabs指令示例</title>
     <meta name="description" content="">
     <link rel="stylesheet" href="../../css/vendor/normalize.css">
     <link rel="stylesheet" href="../../css/vendor/main.css">
     <link rel="stylesheet" href="../../css/vendor/pure-min.css">
     <link rel="stylesheet" href="../../css/common/common.css">
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="../../css/common/ie-hack.css">
-    <![endif]-->
     <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
@@ -58,10 +55,11 @@
 <script src="../../js/vendor/plugins.js"></script>
 <script src="../../../src/brick.js"></script>
 <script>
-    //
+    //事件处理
     $('[ic-tabs=a]').on('ic-tabs.change', function(e, msg){
-        console.log('ic-tabs.change', msg);
+        console.log('ic-tabs.change');
     });
 </script>
+<link rel="import" href="../include/other.html?__inline">
 </body>
 </html>

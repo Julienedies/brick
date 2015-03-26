@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>brick example todo</title>
+    <link rel="stylesheet" type="text/css" href="../../css/common/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/brick.css" media="screen">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style>
+        body {
+            padding: 1.5em;
+        }
+
+        [ic-tabs=a] {
+            border-bottom: solid 1px #D6D6D6;
+        }
+
+        [ic-tabs=a] span {
+            display: inline-block;
+            padding: 0.5em 2em;
+            margin: 0 3px;
+            border-radius: 0.3em 0.3em 0 0;
+            border: solid 1px #D6D6D6;
+            margin-bottom: -1px;
+        }
+
+        [ic-tabs=a] span.active {
+            border-bottom: solid 1px #fff;
+        }
+
+        [ic-tabs=b] {
+            padding: 15px 0;
+        }
+
+        [ic-tabs=b] .active {
+            color: red;
+        }
+
+        .complete {
+            text-decoration: line-through;
+        }
+
+        [ic-ctrl=tasksCtrl] li {
+            position: relative;
+            list-style: none;;
+            border-bottom: 1px solid #ededed;
+        }
+
+        [ic-ctrl=tasksCtrl] [type=text] {
+            width: 76%;
+            padding: 0.5em 2%;
+            border: none;
+            background: transparent;
+            min-width: 20em;
+            padding: 0 0.5em;
+            border-radius: .2em;
+            height: 36px;
+            line-height: 36px;
+            border: solid 1px #ccd1d9;
+        }
+
+        [ic-ctrl=tasksCtrl] li [type=text] {
+            border: solid 1px transparent;
+        }
+
+        [ic-ctrl=tasksCtrl] li [type=text]:focus {
+            border: solid 1px #ccd1d9;
+        }
+
+        [ic-ctrl=tasksCtrl] button {
+            margin-left: 0.5em;
+            position: absolute;
+            top: 6px;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+<div>
+</div>
+<h3>ToDo</h3>
+
+<div ic-ctrl="tasksCtrl">
+    <div>
+        <input type="text" placeholder="What needs to be done?" ic-enter-press="add"/>
+    </div>
+    <div>
+        <ul ic-tpl="task-list">
+            <li ic-for="i,v in model" data-id="{{v.id}}">
+                <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
+                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" disabled
+                       ic-enter-press="change"/>
+                <button class="btn" ic-click="remove" data-id="{{v.id}}">X</button>
+                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+            </li>
+        </ul>
+        <div class="inline hr" ic-tabs="b" ic-tab-select="span">
+            <span>All</span>&nbsp;&nbsp;
+            <span>Active</span>&nbsp;&nbsp;
+            <span>Completed</span>&nbsp;&nbsp;
+            <a href="javascript:void(0)" ic-click="clear">Clear completed</a>
+        </div>
+    </div>
+</div>
+
+<h4 ic-tabs="a" ic-tab-select="span" ic-con-select=">div">
+    <span>html</span><span>js</span><span>css</span>
+</h4>
+
+<div ic-role-tabc="a">
+    <div>
+                <pre class="brush: xml;">
+                        &lt;div ic-ctrl=&quot;tasksCtrl&quot;&gt;
+                            &lt;div&gt;
+                                &lt;input type=&quot;text&quot; placeholder=&quot;What needs to be done?&quot; ic-enter-press=&quot;add&quot;/&gt;
+                            &lt;/div&gt;
+                            &lt;div&gt;
+                                &lt;ul ic-tpl=&quot;task-list&quot;&gt;
+                                    &lt;li ic-for=&quot;i,v in model&quot; data-id=&quot;{{v.id}}&quot;&gt;
+                                        &lt;input type=&quot;checkbox&quot; data-id=&quot;{{v.id}}&quot; ic-checked=&quot;v.complete&quot; ic-change=&quot;change&quot;&gt;
+                                        &lt;input type=&quot;text&quot; value=&quot;{{v.name}}&quot; ic-class=&quot;{{v.complete &amp;&amp; &#39;complete&#39;}}&quot; disabled
+                                               ic-enter-press=&quot;change&quot;/&gt;
+                                        &lt;button ic-click=&quot;remove&quot; data-id=&quot;{{v.id}}&quot;&gt;X&lt;/button&gt;
+                                        &lt;button ic-click=&quot;edit&quot; style=&quot;right: 2em;&quot;&gt;edit&lt;/button&gt;
+                                    &lt;/li&gt;
+                                &lt;/ul&gt;
+                                &lt;div class=&quot;inline hr&quot; ic-tabs=&quot;b&quot; ic-tab-select=&quot;span&quot;&gt;
+                                    &lt;span&gt;All&lt;/span&gt;
+                                    &lt;span&gt;Active&lt;/span&gt;
+                                    &lt;span&gt;Completed&lt;/span&gt;
+                                    &lt;a href=&quot;javascript:void(0)&quot; ic-click=&quot;clear&quot;&gt;Clear completed&lt;/a&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                </pre>
+    </div>
+    <div>
+                <pre class="brush: jscript;">
+                        // model
+                        brick.services.reg('tasksModel', function (recordManager) {
+
+                            var local = window.localStorage && localStorage.getItem('tasksModel');
+
+                            return new recordManager({key: 'id', eventPrefix: 'tasksModel', broadcast: true}).init(local && JSON.parse(local) || []);
+
+                        }, ['recordManager']);
+
+                        //controller
+                        brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+                            var type = 0;
+
+                            var render = function (e, msg) {
+                                var model = type ? type==1 ? tasksModel.get(false,'complete'):tasksModel.get(true,'complete'):tasksModel.get();
+                                type===0 && window.localStorage && localStorage.setItem('tasksModel', JSON.stringify(model));
+                                scope.render('task-list', model);
+                            };
+
+                            scope.watch('tasksModel.*', render);
+
+                            render();
+
+                            scope.add = function (e) {
+                                var val = this.value;
+                                val && tasksModel.add({name: val, id: +new Date, complete:false});
+                                this.value = '';
+                            };
+
+                            scope.edit = function (e) {
+                                $(this).parent().find(':text').prop('disabled', false).focus();
+                            };
+
+                            scope.change = function (e) {
+                                var parent = $(this).parent();
+                                var id = parent.data('id');
+                                var complete = parent.find(':checkbox').prop('checked');
+                                var name = parent.find(':text').attr('disabled', true).val();
+                                tasksModel.find(id).set({complete: !!complete, name: name});
+                            };
+
+                            scope.remove = function (e) {
+                                tasksModel.find($(this).data('id')).remove();
+                            };
+
+                            scope.clear = function(e){
+                                tasksModel.find(true,'complete').remove();
+                            }
+
+
+                            scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function(e, msg){
+                                type = msg.activeTab.index() * 1;
+                                render();
+                            });
+
+                        }, {depend: ['tasksModel']});
+                </pre>
+    </div>
+    <div>
+                <pre class="brush: css;">
+                    [ic-tabs=b] {
+                        padding:15px 0;
+                    }
+                    [ic-tabs=b] .active{
+                        color:red;
+                    }
+                    .complete {
+                        text-decoration: line-through;
+                    }
+
+                    [ic-ctrl=tasksCtrl] li {
+                        position: relative;
+                        list-style: none;;
+                        border-bottom: 1px solid #ededed;
+                    }
+
+                    [ic-ctrl=tasksCtrl] [type=text] {
+                        width: 76%;
+                        padding: 0.5em 2%;
+                        border: none;
+                        background: transparent;
+                        min-width: 20em;
+                        padding: 0 .5em;
+                        border-radius: .2em;
+                        height: 36px;
+                        line-height: 36px;
+                        border: solid 1px #ccd1d9;
+                    }
+
+                    [ic-ctrl=tasksCtrl] li [type=text] {
+                        border: solid 1px transparent;
+                    }
+
+                    [ic-ctrl=tasksCtrl] li [type=text]:focus {
+                        border: solid 1px #ccd1d9;
+                    }
+
+                    [ic-ctrl=tasksCtrl] button {
+                        background: none;
+                        border: none;;
+                        margin-left: 0.5em;
+                        position: absolute;
+                        top: 6px;
+                        right: 0;
+                    }
+                </pre>
+    </div>
+</div>
+
+
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet"
+      type="text/css"/>
+
+<!--<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
+      rel="stylesheet" type="text/css"/>-->
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushCss.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+
+</section>
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../src/brick.js"></script>
+<script>
+    // model
+    brick.services.reg('tasksModel', function (recordManager) {
+
+        var local = window.localStorage && localStorage.getItem('tasksModel');
+
+        return new recordManager({key: 'id', eventPrefix: 'tasksModel', broadcast: true}).init(local && JSON.parse(local) || []);
+
+    }, ['recordManager']);
+
+    //controller
+    brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+        var type = 0;
+
+        var render = function (e, msg) {
+            var model = type ? type == 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
+            type === 0 && window.localStorage && localStorage.setItem('tasksModel', JSON.stringify(model));
+            scope.render('task-list', model);
+        };
+
+        scope.watch('tasksModel.*', render);
+
+        render();
+
+        scope.add = function (e) {
+            var val = this.value;
+            val && tasksModel.add({name: val, id: +new Date, complete: false});
+            this.value = '';
+        };
+
+        scope.edit = function (e) {
+            $(this).parent().find(':text').prop('disabled', false).focus();
+        };
+
+        scope.change = function (e) {
+            var parent = $(this).parent();
+            var id = parent.data('id');
+            var complete = parent.find(':checkbox').prop('checked');
+            var name = parent.find(':text').attr('disabled', true).val();
+            tasksModel.find(id).set({complete: !!complete, name: name});
+        };
+
+        scope.remove = function (e) {
+            tasksModel.find($(this).data('id')).remove();
+        };
+
+        scope.clear = function (e) {
+            tasksModel.find(true, 'complete').remove();
+        }
+
+
+        scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function (e, msg) {
+            type = msg.activeTab.index() * 1;
+            render();
+        });
+
+    }, {depend: ['tasksModel']});
+</script>
+
+
+<link rel="import" href="../include/analytics.html?__inline"/>
+</body>
+</html>

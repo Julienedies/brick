@@ -132,7 +132,7 @@
 
             <p><a href="https://github.com/Julienedies/brick/wiki">https://github.com/Julienedies/brick/wiki</a></p>
 
-            <h3>example: ToDo</h3>
+            <h3>example: ToDo&nbsp;&nbsp;<a href="public/example/todo.html" target="_blank" class="fz-small">单独页面打开</a> </h3>
 
             <div ic-ctrl="tasksCtrl">
                 <div>
@@ -179,9 +179,9 @@
                         &lt;/li&gt;
                     &lt;/ul&gt;
                     &lt;div class=&quot;inline hr&quot; ic-tabs=&quot;b&quot; ic-tab-select=&quot;span&quot;&gt;
-                        &lt;span&gt;All&lt;/span&gt;&amp;nbsp;&amp;nbsp;
-                        &lt;span&gt;Active&lt;/span&gt;&amp;nbsp;&amp;nbsp;
-                        &lt;span&gt;Completed&lt;/span&gt;&amp;nbsp;&amp;nbsp;
+                        &lt;span&gt;All&lt;/span&gt;
+                        &lt;span&gt;Active&lt;/span&gt;
+                        &lt;span&gt;Completed&lt;/span&gt;
                         &lt;a href=&quot;javascript:void(0)&quot; ic-click=&quot;clear&quot;&gt;Clear completed&lt;/a&gt;
                     &lt;/div&gt;
                 &lt;/div&gt;
@@ -252,28 +252,10 @@
                 <div>
                 <pre class="brush: css;">
         [ic-tabs=b] {
-            padding:15px 0;
+            padding:18px 0;
         }
         [ic-tabs=b] .active{
             color:red;
-        }
-        [ic-tabs=a] {
-            position: relative;
-            top: 7px;
-        }
-
-        [ic-tabs=a] span {
-            padding: 0.5em 2em;
-            margin: 0 3px;
-            border-radius: 0.3em 0.3em 0 0;
-            border: solid 1px #D6D6D6;
-            border-bottom: none;
-        }
-
-        [ic-tabs=a] span.active {
-            color: #fff;
-            border-color: #2e7bcf;
-            background: #2e7bcf;
         }
         .complete {
             text-decoration: line-through;
@@ -291,7 +273,7 @@
             border: none;
             background: transparent;
             min-width: 20em;
-            padding: 0 .5em;
+            padding: 0 0.5em;
             border-radius: .2em;
             height: 36px;
             line-height: 36px;
@@ -340,11 +322,9 @@
         </aside>
     </div>
 </div>
-<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet"
-      type="text/css"/>
-
-<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
-      rel="stylesheet" type="text/css"/>
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet"  type="text/css"/>
+<!--<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
+      rel="stylesheet" type="text/css"/>-->
 <script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
 
 <script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
