@@ -9,6 +9,9 @@ html, body {
     font-size: 14px;
     font-family: microsoft yahei, Simsun;
 }
+body{
+    padding:1.5em;
+}
 a {
     text-decoration: none;
 }

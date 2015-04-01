@@ -1567,73 +1567,6 @@ directives.add('ic-event', function () {
 ;
 
     /**
- * Created by julien.zhang on 2014/11/11.
- *
- * 使ie9及以下版本支持placeholder功能
- */
-
-directives.add('placeholder', function ($elm, attrs) {
-
-    function ltIe(ver) {
-        var b = document.createElement('b');
-        b.innerHTML = '<!--[if lt IE ' + ver + ']><i></i><![endif]-->';
-        return b.getElementsByTagName('i').length === 1
-    }
-
-    //如果非ie浏览器或大于ie9,返回
-    if (!window.ActiveXObject || !ltIe(10)) return;
-
-
-    var $th = $elm;
-    var placeholder = $th.attr('placeholder');
-
-    if (!placeholder) return;
-
-    var type = $th.attr('type');
-
-    //密码输入框处理
-    if (type === 'password') {
-
-        var cla = $th.attr('class');
-        var style = $th.attr('style');
-        var clone = '<input type="text" class="?" style="%">'.replace('?', cla).replace('%', style);
-        clone = $(clone).insertBefore($th.hide()).val(placeholder).css({color: '#CDCDCD'});
-
-        clone.on('focus', function (e) {
-            clone.hide();
-            $th.show().focus();
-        });
-
-        $th.on('blur', function (e) {
-            if ($th.val() == '') {
-                clone.show();
-                $th.hide();
-            }
-        });
-
-        return;
-    }
-
-    //普通文本框处理
-    if (type === 'text') {
-
-        $th.val(placeholder).css({color: '#CDCDCD'});
-
-        $th.on('focus', function () {
-            $th.val() === placeholder && $th.val('').css({color: ''});
-        });
-
-        $th.on('blur', function () {
-            if ($th.val() === '') {
-                $th.val(placeholder).css({color: '#CDCDCD'});
-            }
-        });
-
-    }
-
-
-});;
-    /**
  * Created by julien.zhang on 2014/10/11.
  */
 
@@ -2045,61 +1978,6 @@ directives.add('ic-pagination', function ($elm, attrs) {
 
 
 });;
-    /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-scene', function ($elm, attr) {
-
-    var scenes = $('[ic-scene]');
-    var active = $('[ic-scene-active]');
-    active = active.size() ? active : scenes.first();
-
-    active.show();
-    scenes.not(active).hide();
-
-    scenes.each(function (i) {
-
-        var th = $(this);
-
-        th.on('click', '[ic-role-scene-next]', function(e){
-            var next = $(this).attr('ic-role-scene-next');
-            active && active.hide();
-            active = $('[ic-scene=' + next + ']').show();
-
-        });
-
-
-    });
-
-
-});
-
-;
-    /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-timer', function ($elm, attr) {
-
-    return;
-
-    var th = $elm;
-    var count = th.attr('ic-timer-count') * 1;
-
-    var timer = setInterval(function () {
-        if (count--) {
-            th.text(count);
-        } else {
-            clearInterval(timer);
-            th.trigger('ic-timer.' + 'end');
-        }
-    }, 1000);
-
-
-});
-
-;
     /**
  * Created by julien.zhang on 2014/10/29.
  */

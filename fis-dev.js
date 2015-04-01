@@ -19,7 +19,7 @@ fis.config.set('modules.postpackager', 'simple');
 //});
 
 
-fis.config.set('project.include', /^\/(?:page|src|css)\/.*$/i);
+fis.config.set('project.include', /^\/(?:(?:page|src|css)\/.*|brick(?:\.mobile)?\.js)$/i);
 
 
 //静态资源文件域名设置;
@@ -32,6 +32,12 @@ fis.config.merge({
 
 
 fis.config.set('roadmap.path', [
+
+    {
+        reg: /^\/brick(?:\.mobile)?\.js/i,
+        release: '../dist/$&',
+        isJsLike: true
+    },
 
     //brick源码
     {
