@@ -677,7 +677,15 @@ var directives = {
  *
  * 记录管理器
  *
- * var serv = new recordManager({scope:scope, eventPrefix:'holdModel',key:'hold.id', beforeSave:function(record,index){});
+ * var serv = new recordManager(
+ *                              {
+ *                                  scope:scope,
+ *                                  broadcast:true, //是否广播事件
+ *                                  eventPrefix:'holdModel', //广播事件前缀
+ *                                  key:'hold.id',  //记录id
+ *                                  beforeSave:function(record,index){}
+ *                              }
+ *                              );
  *
  *
  */

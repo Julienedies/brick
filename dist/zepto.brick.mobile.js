@@ -3,6 +3,9 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  */
+
+;
+window.jQuery = window.jQuery || $;
 ;
 (function (root, undefined) {
 
@@ -674,348 +677,341 @@ var directives = {
 
 ;
     /**
- * Created by Julien on 2014/8/13.
- *
- *
- * 记录管理器
- *
- * var serv = new recordManager(
- *                              {
- *                                  scope:scope,
- *                                  broadcast:true, //是否广播事件
- *                                  eventPrefix:'holdModel', //广播事件前缀
- *                                  key:'hold.id',  //记录id
- *                                  beforeSave:function(record,index){}
- *                              }
- *                              );
+     * Created by Julien on 2014/8/13.
+     *
+     *
+     * 记录管理器
+     *
+     * var serv = new recordManager({scope:scope, eventPrefix:'holdModel',key:'hold.id', beforeSave:function(record,index){});
  *
  *
  */
 
-function recordManager() {
+    function recordManager() {
 
-    function fn(conf) {
+        function fn(conf) {
 
-        if (conf && conf.constructor === Object) {
+            if (conf && conf.constructor === Object) {
 
-            for (var i in conf) {
-                this[i] = conf[i];
-            }
-
-        }
-
-        this._pool = {};
-
-    }
-
-    var proto = {
-
-        /**
-         * 默认每条记录的主键为id；
-         */
-        key: 'id',
-
-        /**
-         *
-         * @param data {Array or Object}
-         * @return {this}
-         */
-        init: function (data) {
-
-            if (typeof data !== 'object') throw 'must be Array or Object on init';
-
-            var pool = this._pool;
-
-            for (var i in data) {
-
-                var record = data[i];
-
-                this.beforeSave(record, i);
-
-            }
-
-            this._pool = data;
-
-            this.fire('init');
-
-            return this;
-
-        },
-
-        /**
-         * 获取查询结果
-         * @param value  {*}            要查询的key值
-         * @param query  {String}       要查询的key
-         * @returns      {Array}        根据查询结果返回数组
-         * @example
-         *
-         * new recordManager().init([{id:1,y:2},{id:2,x:3}]).get();          // return [{id:1,y:2},{id:2,x:3}];
-         * new recordManager().init([{id:1,y:2}]).get(1);                    // return [{id:1,y:2}];
-         * new recordManager({k:'x'}).init([{x:1,y:2}]).get(1);              // return [{x:1,y:2}];
-         * new recordManager({k:'x'}).init([{x:1,y:{z:3}}]).get(3,'y.z');    // return [{x:1,y:{z:3}}];
-         * new recordManager().init([{id:1,y:2}]).get(2);                    // return [];
-         */
-        get: function (value, query) {
-
-            var pool = this._pool;
-
-            var r = [];
-
-            if (value === void(0)) {
-
-                for (var i in pool) {
-
-                    r.push( $.extend(true, {}, pool[i]) );
-
+                for (var i in conf) {
+                    this[i] = conf[i];
                 }
 
-                return r;
             }
-
-            if(typeof value === 'object'){
-                query = this.key;
-                value = value[query];
-            }
-
-            for (var j in pool) {
-
-                var record = pool[j];
-
-                if (value === this._queryKeyValue(record, query)) {
-
-                    r.push( $.extend(true, {}, record) );
-
-                }
-            }
-
-            return r;
-
-        },
-
-        /**
-         * 对查询结果记录进行修改
-         * @param data      {Object}            要更新的数据
-         * @param query     {String}            对key进行限定，只有对应的key变化，才修改
-         * @returns         {Array or false}    返回修改过的记录数组，如果没有修改任何记录，返回false
-         * @example
-         *
-         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').set({y:3});     // result [{x:1,y:3},{x:1,y:3}]
-         * new recoredManager().init([{x:1,y:2}]).find(2,'x').set({y:3});               // result false
-         */
-        set: function (data, query) {
-
-            var pool = this._pool;
-
-            var find = this._find || [];
-
-            var result = [];
-
-            for (var i in find) {
-
-                var record = find[i];
-
-                if (query && this._queryKeyValue(record, query) === this._queryKeyValue(data, query))  continue;
-
-                var id = this._queryKeyValue(record);
-
-                var index = this._getIndex(id);
-
-                record = pool[index];
-
-                result.push( $.extend(true, record, data) );
-
-                this.beforeSave(record);
-
-                this.fire('change', {change: record});
-            }
-
-            this.end();
-
-            return result.length ? result : false;
-        },
-
-        /**
-         * 添加一条记录
-         * @param record
-         */
-        add: function (record) {
-
-            var pool = this._pool;
-
-            var id = this._queryKeyValue(record);
-
-            this.beforeSave(record);
-
-            pool.push ? pool.push(record) : (pool[id] = record);
-
-            this.fire('add', {add: record});
-
-            return this;
-
-        },
-
-        /**
-         * 删除一条记录
-         * @return   {Array}   被删除的记录集合
-         * @example
-         *
-         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').remove();  // result this._pool == {}; return [{x:1,y:2},{x:1,y:5}];
-         */
-        remove: function () {
-
-            var pool = this._pool;
-
-            var find = this._find || [];
-
-            for (var i in find) {
-
-                var record = find[i];
-                var id = this._queryKeyValue(record);
-                var index = this._getIndex(id);
-
-                (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
-
-                this.fire('remove', {remove: record});
-
-            }
-
-            this.end();
-
-            return find;
-
-        },
-
-        /**
-         * 清空所有记录
-         * @returns {proto}
-         */
-        clear: function () {
 
             this._pool = {};
 
-            this.end();
+        }
 
-            this.fire('clear');
+        var proto = {
 
-            return this;
+            /**
+             * 默认每条记录的主键为id；
+             */
+            key: 'id',
 
-        },
+            /**
+             *
+             * @param data {Array or Object}
+             * @return {this}
+             */
+            init: function (data) {
 
-        /**
-         * 根据key value查找记录
-         * @param value  {*}            要查询的key值
-         * @param key  {String}         要查询的key
-         * @returns {this}
-         * @example
-         *
-         * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(1,'x')  // result this._find == [{x:1,y:2},{x:1,y:5}];
-         * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(7,'y.z')  // result this._find == [{x:1,y:{z:7}}];
-         */
-        find: function (value, key) {
+                if (typeof data !== 'object') throw 'must be Array or Object on init';
 
-            this._find = this.get(value, key);
+                var pool = this._pool;
 
-            return this;
+                for (var i in data) {
 
-        },
+                    var record = data[i];
 
-        /**
-         * 获取查询结果记录集合
-         * @returns {Array or undefined}
-         * @example
-         *
-         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x')  // return [{x:1,y:2},{x:1,y:5}];
-         */
-        result: function(){
-            return this._find;
-        },
+                    this.beforeSave(record, i);
 
-        end: function () {
-            this._find = void(0);
-        },
-
-        fire: function (e, msg) {
-
-            var scope = this.scope;
-            var broadcast = this.broadcast;
-            var pool = this.get();
-            var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
-
-            msg = $.extend({pool: pool}, msg || {});
-
-            broadcast && brick.broadcast(prefix + e, msg);
-            scope && scope.fire && scope.fire(prefix + e, msg);
-
-        },
-
-        /**
-         * 插入或修改一条记录时的回调函数
-         * @param record
-         * @param index
-         */
-        beforeSave: function(record, index){
-
-
-        },
-
-        _queryKeyValue: function (record, k) {
-
-            return this._get(record, k).v;
-        },
-
-        _get: function (record, k) {
-
-            var chain = (k || this.key).split('.');
-
-            var value = (function (chain, record) {
-
-                var k = chain.shift();
-                var v = record[k];
-
-                if (chain.length) {
-                    return arguments.callee(chain, v);
                 }
 
-                return v;
+                this._pool = data;
 
-            })(chain, record);
+                this.fire('init');
 
-            return {r: record, v: value};
+                return this;
 
-        },
+            },
 
-        _getIndex: function(record, query){
+            /**
+             * 获取查询结果
+             * @param value  {*}            要查询的key值
+             * @param query  {String}       要查询的key
+             * @returns      {Array}        根据查询结果返回数组
+             * @example
+             *
+             * new recordManager().init([{id:1,y:2},{id:2,x:3}]).get();          // return [{id:1,y:2},{id:2,x:3}];
+             * new recordManager().init([{id:1,y:2}]).get(1);                    // return [{id:1,y:2}];
+             * new recordManager({k:'x'}).init([{x:1,y:2}]).get(1);              // return [{x:1,y:2}];
+             * new recordManager({k:'x'}).init([{x:1,y:{z:3}}]).get(3,'y.z');    // return [{x:1,y:{z:3}}];
+             * new recordManager().init([{id:1,y:2}]).get(2);                    // return [];
+             */
+            get: function (value, query) {
 
-            var pool = this._pool;
+                var pool = this._pool;
 
-            var v = typeof record === 'object' ? this._queryKeyValue(record, query) : record;
+                var r = [];
 
-            for(var i in pool){
+                if (value === void(0)) {
 
-                if(this._queryKeyValue(pool[i], query) === v) return i;
+                    for (var i in pool) {
 
+                        r.push( $.extend(true, {}, pool[i]) );
+
+                    }
+
+                    return r;
+                }
+
+                if(typeof value === 'object'){
+                    query = this.key;
+                    value = value[query];
+                }
+
+                for (var j in pool) {
+
+                    var record = pool[j];
+
+                    if (value === this._queryKeyValue(record, query)) {
+
+                        r.push( $.extend(true, {}, record) );
+
+                    }
+                }
+
+                return r;
+
+            },
+
+            /**
+             * 对查询结果记录进行修改
+             * @param data      {Object}            要更新的数据
+             * @param query     {String}            对key进行限定，只有对应的key变化，才修改
+             * @returns         {Array or false}    返回修改过的记录数组，如果没有修改任何记录，返回false
+             * @example
+             *
+             * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').set({y:3});     // result [{x:1,y:3},{x:1,y:3}]
+             * new recoredManager().init([{x:1,y:2}]).find(2,'x').set({y:3});               // result false
+             */
+            set: function (data, query) {
+
+                var pool = this._pool;
+
+                var find = this._find || [];
+
+                var result = [];
+
+                for (var i in find) {
+
+                    var record = find[i];
+
+                    if (query && this._queryKeyValue(record, query) === this._queryKeyValue(data, query))  continue;
+
+                    var id = this._queryKeyValue(record);
+
+                    var index = this._getIndex(id);
+
+                    record = pool[index];
+
+                    result.push( $.extend(true, record, data) );
+
+                    this.beforeSave(record);
+
+                    this.fire('change', {change: record});
+                }
+
+                this.end();
+
+                return result.length ? result : false;
+            },
+
+            /**
+             * 添加一条记录
+             * @param record
+             */
+            add: function (record) {
+
+                var pool = this._pool;
+
+                var id = this._queryKeyValue(record);
+
+                this.beforeSave(record);
+
+                pool.push ? pool.push(record) : (pool[id] = record);
+
+                this.fire('add', {add: record});
+
+                return this;
+
+            },
+
+            /**
+             * 删除一条记录
+             * @return   {Array}   被删除的记录集合
+             * @example
+             *
+             * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').remove();  // result this._pool == {}; return [{x:1,y:2},{x:1,y:5}];
+             */
+            remove: function () {
+
+                var pool = this._pool;
+
+                var find = this._find || [];
+
+                for (var i in find) {
+
+                    var record = find[i];
+                    var id = this._queryKeyValue(record);
+                    var index = this._getIndex(id);
+
+                    (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
+
+                    this.fire('remove', {remove: record});
+
+                }
+
+                this.end();
+
+                return find;
+
+            },
+
+            /**
+             * 清空所有记录
+             * @returns {proto}
+             */
+            clear: function () {
+
+                this._pool = {};
+
+                this.end();
+
+                this.fire('clear');
+
+                return this;
+
+            },
+
+            /**
+             * 根据key value查找记录
+             * @param value  {*}            要查询的key值
+             * @param key  {String}         要查询的key
+             * @returns {this}
+             * @example
+             *
+             * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(1,'x')  // result this._find == [{x:1,y:2},{x:1,y:5}];
+             * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(7,'y.z')  // result this._find == [{x:1,y:{z:7}}];
+             */
+            find: function (value, key) {
+
+                this._find = this.get(value, key);
+
+                return this;
+
+            },
+
+            /**
+             * 获取查询结果记录集合
+             * @returns {Array or undefined}
+             * @example
+             *
+             * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x')  // return [{x:1,y:2},{x:1,y:5}];
+             */
+            result: function(){
+                return this._find;
+            },
+
+            end: function () {
+                this._find = void(0);
+            },
+
+            fire: function (e, msg) {
+
+                var scope = this.scope;
+                var broadcast = this.broadcast;
+                var pool = this.get();
+                var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
+
+                msg = $.extend({pool: pool}, msg || {});
+
+                broadcast && brick.broadcast(prefix + e, msg);
+                scope && scope.fire && scope.fire(prefix + e, msg);
+
+            },
+
+            /**
+             * 插入或修改一条记录时的回调函数
+             * @param record
+             * @param index
+             */
+            beforeSave: function(record, index){
+
+
+            },
+
+            _queryKeyValue: function (record, k) {
+
+                return this._get(record, k).v;
+            },
+
+            _get: function (record, k) {
+
+                var chain = (k || this.key).split('.');
+
+                var value = (function (chain, record) {
+
+                    var k = chain.shift();
+                    var v = record[k];
+
+                    if (chain.length) {
+                        return arguments.callee(chain, v);
+                    }
+
+                    return v;
+
+                })(chain, record);
+
+                return {r: record, v: value};
+
+            },
+
+            _getIndex: function(record, query){
+
+                var pool = this._pool;
+
+                var v = typeof record === 'object' ? this._queryKeyValue(record, query) : record;
+
+                for(var i in pool){
+
+                    if(this._queryKeyValue(pool[i], query) === v) return i;
+
+                }
+            },
+
+            _look: function () {
+                console.log(this._pool);
             }
-        },
 
-        _look: function () {
-            console.log(this._pool);
+
+
+        };
+
+
+        for (var i in proto) {
+
+            fn.prototype[i] = proto[i];
+
         }
 
 
-
-    };
-
-
-    for (var i in proto) {
-
-        fn.prototype[i] = proto[i];
+        return fn;
 
     }
 
-
-    return fn;
-
-}
 ;
     /**
  * Created by julien.zhang on 2014/9/12.
@@ -1200,10 +1196,6 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
-        .replace(/\bic-(checked|disabled)\s*=\s*(\S*)\s+/g,function(m, $1, $2){
-            $2 = $2.replace(/^(?:"|')|(?:"|')$/g,'');
-            return ' <% if(?2){ %> ?1 <% } %> '.replace('?2',$2).replace('?1',$1);
-        })
         .replace(/&amp;&amp;/g,'&&');
 
     //console.log(tpl)
@@ -1299,9 +1291,11 @@ root._cc = ( window.console && function () {
 
     $.fn.icParseProperty = function (name) {
 
-        if (name === void(0)) return void(0);
+        if (typeof name !== 'string' || !name.length) return void(0);
         var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
         var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+
+        //console.log(ctrl, name);
 
         return (function (root, key) {
 
@@ -1323,6 +1317,7 @@ root._cc = ( window.console && function () {
             })(root, chain);
 
         })(namespace, name);
+
 
     };
 
@@ -1484,8 +1479,8 @@ root._cc = ( window.console && function () {
             return this.each(function(){
                 //this.parent().css({position:'relative'});
                 var $th = $(this);
-                var w = $th.outerWidth();
-                var h = $th.outerHeight();
+                var w = $th.outerWidth ? $th.outerWidth() : $th.width();
+                var h = $th.outerHeight ? $th.outerHeight() : $th.height();
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
@@ -1544,103 +1539,30 @@ directives.add('ic-ctrl', function ($elm, attrs) {
 
 directives.add('ic-event', function () {
 
-    var events = 'click,change';
 
-    var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
+    var events = 'click';
+
+    var target = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
         var s = '[ic-?]'.replace('?', $1);
         return m.replace($1, s);
     });
 
-    var $doc = $('body');
 
-    events = events.split(',');
-    targets = targets.split(',');
+    $('body').on(events, target, function (e) {
 
-    _.forEach(events, function(event, i, list){
-        var target = targets[i];
-        $doc.on(event, target, _call);
-    });
-
-
-    function _call(e){
         var th = $(this);
         var type = e.type;
         var fn = th.attr('ic-' + type);
         fn = th.icParseProperty(fn);
 
         return fn.apply(this, [e]);
-    }
+
+    });
+
 
 });
 ;
 
-    /**
- * Created by julien.zhang on 2014/11/11.
- *
- * 使ie9及以下版本支持placeholder功能
- */
-
-directives.add('placeholder', function ($elm, attrs) {
-
-    function ltIe(ver) {
-        var b = document.createElement('b');
-        b.innerHTML = '<!--[if lt IE ' + ver + ']><i></i><![endif]-->';
-        return b.getElementsByTagName('i').length === 1
-    }
-
-    //如果非ie浏览器或大于ie9,返回
-    if (!window.ActiveXObject || !ltIe(10)) return;
-
-
-    var $th = $elm;
-    var placeholder = $th.attr('placeholder');
-
-    if (!placeholder) return;
-
-    var type = $th.attr('type');
-
-    //密码输入框处理
-    if (type === 'password') {
-
-        var cla = $th.attr('class');
-        var style = $th.attr('style');
-        var clone = '<input type="text" class="?" style="%">'.replace('?', cla).replace('%', style);
-        clone = $(clone).insertBefore($th.hide()).val(placeholder).css({color: '#CDCDCD'});
-
-        clone.on('focus', function (e) {
-            clone.hide();
-            $th.show().focus();
-        });
-
-        $th.on('blur', function (e) {
-            if ($th.val() == '') {
-                clone.show();
-                $th.hide();
-            }
-        });
-
-        return;
-    }
-
-    //普通文本框处理
-    if (type === 'text') {
-
-        $th.val(placeholder).css({color: '#CDCDCD'});
-
-        $th.on('focus', function () {
-            $th.val() === placeholder && $th.val('').css({color: ''});
-        });
-
-        $th.on('blur', function () {
-            if ($th.val() === '') {
-                $th.val(placeholder).css({color: '#CDCDCD'});
-            }
-        });
-
-    }
-
-
-});;
     /**
  * Created by julien.zhang on 2014/10/11.
  */
@@ -2054,61 +1976,6 @@ directives.add('ic-pagination', function ($elm, attrs) {
 
 });;
     /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-scene', function ($elm, attr) {
-
-    var scenes = $('[ic-scene]');
-    var active = $('[ic-scene-active]');
-    active = active.size() ? active : scenes.first();
-
-    active.show();
-    scenes.not(active).hide();
-
-    scenes.each(function (i) {
-
-        var th = $(this);
-
-        th.on('click', '[ic-role-scene-next]', function(e){
-            var next = $(this).attr('ic-role-scene-next');
-            active && active.hide();
-            active = $('[ic-scene=' + next + ']').show();
-
-        });
-
-
-    });
-
-
-});
-
-;
-    /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-timer', function ($elm, attr) {
-
-    return;
-
-    var th = $elm;
-    var count = th.attr('ic-timer-count') * 1;
-
-    var timer = setInterval(function () {
-        if (count--) {
-            th.text(count);
-        } else {
-            clearInterval(timer);
-            th.trigger('ic-timer.' + 'end');
-        }
-    }, 1000);
-
-
-});
-
-;
-    /**
  * Created by julien.zhang on 2014/10/29.
  */
 
@@ -2496,18 +2363,18 @@ directives.add('ic-form', function ($elm, attrs) {
                 url: action,
                 type: method,
                 dataType: dataType,
-                data: data || fields
-            }).done(
-                function (data) {
+                data: data || fields,
+                success:function(data){
                     done(data);
-                }
-            ).fail(failed)
-                .always(function () {
+                },
+                fail:failed,
+                always:function () {
                     $submit.show();
                     $loading.hide();
                     $submit.clearLoading();
                     always();
-                });
+                }
+            });
         }
 
         //跨域提交
@@ -2594,7 +2461,7 @@ directives.add('ic-ajax', function () {
         var $elm = $(this);
         var namespace = $elm.attr('ic-ajax');
 
-        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||+(new Date)));
+        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||'a'+(+new Date)));
 
         //提交
         var url = $elm.attr('ic-submit-action');
@@ -2606,16 +2473,16 @@ directives.add('ic-ajax', function () {
         var before = $elm.attr('ic-submit-before');
 
         always = $elm.icParseProperty(always) || function () {
-            //console.log('always is undefined;')
+            console.log('always is undefined;')
         };
         done = $elm.icParseProperty(done) || function () {
-            //console.info('done is undefined;')
+            console.info('done is undefined;')
         };
         failed = $elm.icParseProperty(failed) || function (msg) {
-            //console.info('failed is undefined;')
+            console.info('failed is undefined;')
         };
         before = $elm.icParseProperty(before) || function () {
-            //console.info('before is undefined;')
+            console.info('before is undefined;')
         };
 
         if (before.apply(that) === false) return;
@@ -2629,20 +2496,21 @@ directives.add('ic-ajax', function () {
             url: url,
             type: method,
             dataType: dataType,
-            data: data
-        }).done(function (data) {
+            data: data,
+            success:function(data){
                 $elm.clearLoading() && $loading.hide() && $elm.show();
                 done.apply(that, [data]);
-            }
-        ).fail(function (msg) {
+            },
+            fail:function (msg) {
                 $elm.clearLoading() && $loading.hide() && $elm.show();
                 failed.apply(that, [msg]);
-            }
-        ).always(function () {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                always.apply(that);
-                $elm.removeData('ic-submit-data');
-            });
+            },
+                always:function(){
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    always.apply(that);
+                    $elm.removeData('ic-submit-data');
+             }
+        });
     }
 
 
@@ -2709,13 +2577,13 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
     var offset = $elm.offset();
     var left = offset.left;
     var top = offset.top;
-    var w = $elm.outerWidth();
-    var h = $elm.outerHeight();
+    var w = $elm.outerWidth ? $elm.outerWidth() : $elm.width();
+    var h = $elm.outerHeight ? $elm.outerHeight() : $elm.height();
 
     var $selectList = $('[ic-role-list=?]'.replace('?', namespace));
     var tplf = brick.getTpl($selectList.attr('ic-tpl'));
 
-    $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
+    //$selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
 
     var _pool;
     var pool;
@@ -2739,8 +2607,9 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
                 dataType: 'json',
                 type: 'post',
                 url: source,
-                data: {query: queryStr}
-            }).done(done);
+                data: {query: queryStr},
+                success:done
+            });
         }
     } else {
         source = $elm.attr('ic-source');
@@ -2816,11 +2685,11 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
             $elm.blur();
         }
 
-    }).on('blur', function (e) {
+    })/*.on('blur', function (e) {
         $selectList.fadeOut(function () {
             $selectList.hide();
         });
-    });
+    });*/
 
 
     $selectList.on('mousedown', '[ic-role-type-item]', function (e) {

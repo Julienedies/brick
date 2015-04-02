@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>brick控制器、服务之间通信</title>
+</head>
+<body>
+<div>
+    尝试在浏览器控制台逐次输入以下代码，观察输出效果。
+    <pre>
+    // 取得服务aModel
+    var aModel = brick.services.get('aModel');
+
+    // 调用aModel.add方法
+    aModel.add(1);
+
+    //调用aModel.remove方法
+    aModel.remove(0);
+
+    //广播aCtrl事件
+    brick.broadcast('aCtrl', '要发送到消息');
+
+    //通过控制器的fire方法触发一个事件,底层也是调用brick.broadcast方法
+    var aCtrl = brick.controllers.get('aCtrl');
+    aCtrl.fire('aCtrl', 'msg');
+
+    //移除事件绑定
+    var bCtrl = brick.controllers.get('bCtrl');
+    bCtrl.unbind('aCtrl');
+    </pre>
+</div>
+<div id="console" style="background: blue;color:#fff;min-height: 4em;">
+    输出：
+    <ol></ol>
+</div>
+
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../src/brick.js"></script>
+<script>
+    //重写console.log方法
+    console.log = function () {
+        $('#console ol').append('<li>?</li>'.replace('?', JSON.stringify(arguments)));
+    };
+
+
+    //注册aModel服务
+    brick.services.reg('aModel', function () {
+
+        return {
+            pool: [],
+            get: function (index) {
+                return index !== void(0) ? this.pool[index] : this.pool;
+            },
+            add: function (item) {
+                this.pool.push(item);
+                //广播aModel.add事件
+                brick.broadcast('aModel.add', item);
+            },
+            remove: function (index) {
+                var item = this.pool.splice(index, 1);
+                //广播aModel.remove事件
+                brick.broadcast('aModel.remove', item);
+            }
+        };
+
+    });
+
+    //注册a控制器
+    brick.controllers.reg('aCtrl', function (scope) {
+        //观察aModel.add事件
+        scope.watch('aModel.add', function (e, msg) {
+            console.log('aModel.add callback', e, msg);
+        });
+        //观察aModel.remove事件
+        scope.watch('aModel.remove', function (e, msg) {
+            console.log('aModel.remove callback.');
+        });
+
+        //观察aModel.add 和 aModel.remove事件，aModel.add 和 aModel.remove任一事件发生都会触发
+        //优先级最低，总是最后执行
+        scope.watch('aModel.*', function (e, msg) {
+            console.log('aModel.* callback', e, msg);
+        });
+
+        //观察aModle.add 和 aModel.remove事件的另一种写法
+        scope.watch('aModel.add,aModel.remove', function (e, msg) {
+            console.log('另一种写法.');
+            //广播一个事件
+            brick.broadcast('aCtrl','aCtrl 广播了一个事件.');
+        });
+
+    });
+
+    //注册b控制器
+    brick.controllers.reg('bCtrl', function (scope) {
+        //观察aCtrl事件
+        scope.watch('aCtrl', function (e, msg) {
+            console.log('aCtrl event callback.', msg);
+        })
+    });
+</script>
+</body>
+</html>

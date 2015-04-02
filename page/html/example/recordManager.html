@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>brick内置服务recordManager</title>
+</head>
+<body>
+<div>尝试在浏览器控制台逐次输入以下代码，查看效果</div>
+<pre class="brush: jscript;">
+
+    var recordManager = brick.services.get('recordManager');
+
+    new recordManager(
+            {
+                broadcast: true,  //是否广播事件
+                eventPrefix: 'x', //广播事件前缀，如调用add方法，会触发x.add事件
+                key: 'x',  //记录id
+                beforeSave: function (record, index) {
+                } //可选，调用add方法是调用
+            }
+    );
+
+    new recordManager().init([
+        {id: 1, y: 2},
+        {id: 2, x: 3}
+    ]).get();          // return [{id:1,y:2},{id:2,x:3}];
+
+    new recordManager().init([
+        {id: 1, y: 2}
+    ]).get(1);                    // return [{id:1,y:2}];
+
+    new recordManager({k: 'x'}).init([
+        {x: 1, y: 2}
+    ]).get(1);              // return [{x:1,y:2}];
+
+    new recordManager({k: 'x'}).init([
+        {x: 1, y: {z: 3}}
+    ]).get(3, 'y.z');    // return [{x:1,y:{z:3}}];
+
+    new recordManager().init([
+        {id: 1, y: 2}
+    ]).get(2);                    // return [];
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').set({y: 3});     // result [{x:1,y:3},{x:1,y:3}]
+
+    new recoredManager().init([
+        {x: 1, y: 2}
+    ]).find(2, 'x').set({y: 3});               // result false
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).add({x:2, y:4});  //  return [{x:1,y:2},{x:1,y:5},{x:2, y:4}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').remove();  // result this._pool == {}; return [{x:1,y:2},{x:1,y:5}];
+
+    //clear
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).clear().get();  //  return [];
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').set({y: 3});     // result [{x:1,y:3},{x:1,y:3}]
+
+    new recoredManager().init([
+        {x: 1, y: 2}
+    ]).find(2, 'x').set({y: 3});               // result false
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: {z: 7}}
+    ]).find(1, 'x')  // result this._find == [{x:1,y:2},{x:1,y:5}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: {z: 7}}
+    ]).find(7, 'y.z')  // result this._find == [{x:1,y:{z:7}}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x')  // return [{x:1,y:2},{x:1,y:5}];
+</pre>
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet"
+      type="text/css"/>
+
+<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
+      rel="stylesheet" type="text/css"/>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushCss.js"></script>
+<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../src/brick.js"></script>
+<script>
+    var recordManager = brick.services.get('recordManager');
+    new recordManager(
+            {
+                broadcast: true,  //是否广播事件
+                eventPrefix: 'x', //广播事件前缀，如调用add方法，会触发x.add事件
+                key: 'x',  //记录id
+                beforeSave: function (record, index) {
+                } //可选，调用add方法是调用
+            }
+    );
+
+    new recordManager().init([
+        {id: 1, y: 2},
+        {id: 2, x: 3}
+    ]).get();          // return [{id:1,y:2},{id:2,x:3}];
+
+    new recordManager().init([
+        {id: 1, y: 2}
+    ]).get(1);                    // return [{id:1,y:2}];
+
+    new recordManager({k: 'x'}).init([
+        {x: 1, y: 2}
+    ]).get(1);              // return [{x:1,y:2}];
+
+    new recordManager({k: 'x'}).init([
+        {x: 1, y: {z: 3}}
+    ]).get(3, 'y.z');    // return [{x:1,y:{z:3}}];
+
+    new recordManager().init([
+        {id: 1, y: 2}
+    ]).get(2);                    // return [];
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').set({y: 3});     // result [{x:1,y:3},{x:1,y:3}]
+
+    new recoredManager().init([
+        {x: 1, y: 2}
+    ]).find(2, 'x').set({y: 3});               // result false
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).add({x:2, y:4});  //  return [{x:1,y:2},{x:1,y:5},{x:2, y:4}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').remove();  // result this._pool == {}; return [{x:1,y:2},{x:1,y:5}];
+
+    //clear
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).clear().get();  //  return [];
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x').set({y: 3});     // result [{x:1,y:3},{x:1,y:3}]
+
+    new recoredManager().init([
+        {x: 1, y: 2}
+    ]).find(2, 'x').set({y: 3});               // result false
+
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: {z: 7}}
+    ]).find(1, 'x')  // result this._find == [{x:1,y:2},{x:1,y:5}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: {z: 7}}
+    ]).find(7, 'y.z')  // result this._find == [{x:1,y:{z:7}}];
+
+    new recoredManager().init([
+        {x: 1, y: 2},
+        {x: 1, y: 5}
+    ]).find(1, 'x')  // return [{x:1,y:2},{x:1,y:5}];
+
+</script>
+</body>
+</html>
