@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node){
+function compile(node, debug){
 
     var $elm = $(node);
     var attrs = node.attributes;
@@ -47,6 +47,7 @@ function compile(node){
 
     //处理每一个指令
     while (name = _directives.shift()) {
+        debug && console.log(name, $elm, attrs);
         directives.exec(name, $elm, attrs);
     }
 

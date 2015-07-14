@@ -15,11 +15,12 @@ root.brick = {
         this.eventManager.fire(e, msg);
     },
     on: function(e, fn){
-      this.eventManager.watch(e, fn);
+      this.eventManager.bind(e, fn);
     },
     controllers: controllers,
     services: services,
     directives: directives,
+    compile:compile,
     getTpl: function(name){
         return this._tplfs[name];
     },

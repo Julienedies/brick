@@ -33,7 +33,7 @@ var config = (function (){
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node){
+function compile(node, debug){
 
     var $elm = $(node);
     var attrs = node.attributes;
@@ -78,6 +78,7 @@ function compile(node){
 
     //处理每一个指令
     while (name = _directives.shift()) {
+        debug && console.log(name, $elm, attrs);
         directives.exec(name, $elm, attrs);
     }
 
@@ -657,7 +658,24 @@ var directives = {
         }
     },
 
-    init: function (name) {
+    init: function(){
+        var _pool = this._pool;
+        for(var i in _pool){
+
+            var definition = _pool[i];
+
+            if(definition.selfExec){
+                definition.fn && definition.fn();
+            }
+
+            if(definition.once){
+                delete _pool[i];
+            }
+        }
+
+    },
+
+    _init: function (name) {
         var _pool = this._pool;
         for (var i in _pool) {
             var definition = _pool[i];
@@ -1230,11 +1248,12 @@ root.brick = {
         this.eventManager.fire(e, msg);
     },
     on: function(e, fn){
-      this.eventManager.watch(e, fn);
+      this.eventManager.bind(e, fn);
     },
     controllers: controllers,
     services: services,
     directives: directives,
+    compile:compile,
     getTpl: function(name){
         return this._tplfs[name];
     },
@@ -1296,6 +1315,15 @@ root._cc = ( window.console && function () {
  * 扩展 jquery
  */
 (function ($) {
+
+    $.fn.icCompile = function(){
+
+        return this.each(function(i){
+
+            brick.compile(this);
+
+        });
+    };
 
     $.fn.icParseProperty = function (name) {
 
@@ -1542,35 +1570,39 @@ directives.add('ic-ctrl', function ($elm, attrs) {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-event', function () {
+directives.add('ic-event', {
+    selfExec: true,
+    once: true,
+    fn: function () {
 
-    var events = 'click,change';
+        var events = 'click,change';
 
-    var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
-        var s = '[ic-?]'.replace('?', $1);
-        return m.replace($1, s);
-    });
+        var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
+            var s = '[ic-?]'.replace('?', $1);
+            return m.replace($1, s);
+        });
 
-    var $doc = $('body');
+        var $doc = $('body');
 
-    events = events.split(',');
-    targets = targets.split(',');
+        events = events.split(',');
+        targets = targets.split(',');
 
-    _.forEach(events, function(event, i, list){
-        var target = targets[i];
-        $doc.on(event, target, _call);
-    });
+        _.forEach(events, function (event, i, list) {
+            var target = targets[i];
+            $doc.on(event, target, _call);
+        });
 
 
-    function _call(e){
-        var th = $(this);
-        var type = e.type;
-        var fn = th.attr('ic-' + type);
-        fn = th.icParseProperty(fn);
+        function _call(e) {
+            var th = $(this);
+            var type = e.type;
+            var fn = th.attr('ic-' + type);
+            fn = th.icParseProperty(fn);
 
-        return fn.apply(this, [e]);
+            return fn.apply(this, [e]);
+        }
+
     }
-
 });
 ;
 
@@ -2578,115 +2610,123 @@ directives.add('ic-form', function ($elm, attrs) {
  */
 
 
-directives.add('ic-ajax', function () {
+directives.add('ic-ajax', {
+        selfExec: true,
+        once: true,
+        fn: function () {
 
-    //只执行一次绑定
-    if (arguments.callee._run_) return;
-    arguments.callee._run_ = 1;
+            //只执行一次绑定
+            if (arguments.callee._run_) return;
+            arguments.callee._run_ = 1;
 
-    var $doc = $(document);
-    $doc.on('click', '[ic-ajax]', _call);
-    $doc.on('ic-ajax', '[ic-ajax]', _call);
+            var $doc = $(document);
+            $doc.on('click', '[ic-ajax]', _call);
+            $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-    function _call(e) {
+            function _call(e) {
 
-        var that = this;
-        var $elm = $(this);
-        var namespace = $elm.attr('ic-ajax');
+                var that = this;
+                var $elm = $(this);
+                var namespace = $elm.attr('ic-ajax');
 
-        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||+(new Date)));
+                var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-        //提交
-        var url = $elm.attr('ic-submit-action');
-        var dataType = $elm.attr('ic-submit-data-type') || 'json';
-        var method = $elm.attr('ic-submit-method') || 'post';
-        var done = $elm.attr('ic-submit-on-done');
-        var always = $elm.attr('ic-submit-on-always');
-        var failed = $elm.attr('ic-submit-on-failed');
-        var before = $elm.attr('ic-submit-before');
+                //提交
+                var url = $elm.attr('ic-submit-action');
+                var dataType = $elm.attr('ic-submit-data-type') || 'json';
+                var method = $elm.attr('ic-submit-method') || 'post';
+                var done = $elm.attr('ic-submit-on-done');
+                var always = $elm.attr('ic-submit-on-always');
+                var failed = $elm.attr('ic-submit-on-failed');
+                var before = $elm.attr('ic-submit-before');
 
-        always = $elm.icParseProperty(always) || function () {
-            //console.log('always is undefined;')
-        };
-        done = $elm.icParseProperty(done) || function () {
-            //console.info('done is undefined;')
-        };
-        failed = $elm.icParseProperty(failed) || function (msg) {
-            //console.info('failed is undefined;')
-        };
-        before = $elm.icParseProperty(before) || function () {
-            //console.info('before is undefined;')
-        };
+                always = $elm.icParseProperty(always) || function () {
+                    //console.log('always is undefined;')
+                };
+                done = $elm.icParseProperty(done) || function () {
+                    //console.info('done is undefined;')
+                };
+                failed = $elm.icParseProperty(failed) || function (msg) {
+                    //console.info('failed is undefined;')
+                };
+                before = $elm.icParseProperty(before) || function () {
+                    //console.info('before is undefined;')
+                };
 
-        if (before.apply(that) === false) return;
-        if ($elm.attr('ic-ajax-disabled') === 'true') return;
+                if (before.apply(that) === false) return;
+                if ($elm.attr('ic-ajax-disabled') === 'true') return;
 
-        var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+                var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
-        $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+                $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
 
-        $.ajax({
-            url: url,
-            type: method,
-            dataType: dataType,
-            data: data
-        }).done(function (data) {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                done.apply(that, [data]);
+                $.ajax({
+                    url: url,
+                    type: method,
+                    dataType: dataType,
+                    data: data
+                }).done(function (data) {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        done.apply(that, [data]);
+                    }
+                ).fail(function (msg) {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        failed.apply(that, [msg]);
+                    }
+                ).always(function () {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        always.apply(that);
+                        $elm.removeData('ic-submit-data');
+                    });
             }
-        ).fail(function (msg) {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                failed.apply(that, [msg]);
-            }
-        ).always(function () {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                always.apply(that);
-                $elm.removeData('ic-submit-data');
-            });
+
+
+        }
     }
-
-
-});
+);
 
 ;
     /**
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tpl', function ($elm) {
+directives.add('ic-tpl', {
+    selfExec: true,
+    once: true,
+    fn:function ($elm) {
 
-    //只执行一次
-    if (!arguments.callee._run || $elm) {
+        //只执行一次
+        if (!arguments.callee._run || $elm) {
 
-        arguments.callee._run = 1;
+            arguments.callee._run = 1;
 
-        ($elm || $('[ic-tpl]')).each(function (i) {
+            ($elm || $('[ic-tpl]')).each(function (i) {
 
-            var that = this.cloneNode(true);
-            var th = $(this);
+                var that = this.cloneNode(true);
+                var th = $(this);
 
-            var name = th.attr('ic-tpl');
+                var name = th.attr('ic-tpl');
 
 //        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
 //        var scope = brick.controllers.get(ctrl);
 
-            //console.log(ctrl, scope);
+                //console.log(ctrl, scope);
 
-            //ie7下模板渲染会报错，有时间fix;
-            //try {
-            var compiled = createRender(that);
+                //ie7下模板渲染会报错，有时间fix;
+                //try {
+                var compiled = createRender(that);
 //        } catch (e) {
 //            console.log('+_+ :)', e);
 //        }
 
-            var tplfs = brick._tplfs = brick._tplfs || {};
-            tplfs[name] = compiled;
+                var tplfs = brick._tplfs = brick._tplfs || {};
+                tplfs[name] = compiled;
 
-        });
+            });
+
+        }
 
     }
-
-
 });
 ;
     /**
@@ -2842,12 +2882,13 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
 
             console.log('brick start');
 
+            //
+            directives.init();
+
             //优先解析模板
-            directives.exec('ic-tpl');
-
-            directives.exec('ic-event');
-
-            directives.exec('ic-ajax');
+            //directives.exec('ic-tpl');
+            //directives.exec('ic-event');
+            //directives.exec('ic-ajax');
 
             (function (node) {
 

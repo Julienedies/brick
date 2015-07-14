@@ -33,7 +33,7 @@ var config = (function (){
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node){
+function compile(node, debug){
 
     var $elm = $(node);
     var attrs = node.attributes;
@@ -78,6 +78,7 @@ function compile(node){
 
     //处理每一个指令
     while (name = _directives.shift()) {
+        debug && console.log(name, $elm, attrs);
         directives.exec(name, $elm, attrs);
     }
 
@@ -657,7 +658,24 @@ var directives = {
         }
     },
 
-    init: function (name) {
+    init: function(){
+        var _pool = this._pool;
+        for(var i in _pool){
+
+            var definition = _pool[i];
+
+            if(definition.selfExec){
+                definition.fn && definition.fn();
+            }
+
+            if(definition.once){
+                delete _pool[i];
+            }
+        }
+
+    },
+
+    _init: function (name) {
         var _pool = this._pool;
         for (var i in _pool) {
             var definition = _pool[i];
@@ -1230,11 +1248,12 @@ root.brick = {
         this.eventManager.fire(e, msg);
     },
     on: function(e, fn){
-      this.eventManager.watch(e, fn);
+      this.eventManager.bind(e, fn);
     },
     controllers: controllers,
     services: services,
     directives: directives,
+    compile:compile,
     getTpl: function(name){
         return this._tplfs[name];
     },
@@ -1296,6 +1315,15 @@ root._cc = ( window.console && function () {
  * 扩展 jquery
  */
 (function ($) {
+
+    $.fn.icCompile = function(){
+
+        return this.each(function(i){
+
+            brick.compile(this);
+
+        });
+    };
 
     $.fn.icParseProperty = function (name) {
 
@@ -1542,194 +1570,42 @@ directives.add('ic-ctrl', function ($elm, attrs) {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-event', function () {
+directives.add('ic-event', {
+    selfExec: true,
+    once: true,
+    fn: function () {
 
-    var events = 'click,change';
+        var events = 'click,change';
 
-    var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
-        var s = '[ic-?]'.replace('?', $1);
-        return m.replace($1, s);
-    });
-
-    var $doc = $('body');
-
-    events = events.split(',');
-    targets = targets.split(',');
-
-    _.forEach(events, function(event, i, list){
-        var target = targets[i];
-        $doc.on(event, target, _call);
-    });
-
-
-    function _call(e){
-        var th = $(this);
-        var type = e.type;
-        var fn = th.attr('ic-' + type);
-        fn = th.icParseProperty(fn);
-
-        return fn.apply(this, [e]);
-    }
-
-});
-;
-
-    /**
- * Created by julien.zhang on 2014/10/11.
- */
-
-directives.add('ic-slider', function ($elm, attr) {
-
-    var th = $elm;
-
-    var direction = th.attr('ic-slider-direction');
-
-    var vw = th.width();
-    var vh = th.height();
-
-    th.css({position: 'relative', overflow: 'hidden'});
-
-    var style1 = {width: vw + 'px', height: vh + 'px'};
-    if (!direction) {
-        style1.float = 'left';
-    }
-
-    var items = th.find('[ic-role-slider-item]').css(style1);
-    var len = items.size();
-
-    var style2 = direction ? {height: len * vh + 'px'} : { width: len * vw + 'px'};
-    style2.position = 'absolute';
-    var view = th.find('[ic-role-slider-view]').css(style2);
-
-    var current = 1;
-
-    var currentPagination = th.find('[ic-role-slider-pagination]').first().addClass('active');
-
-    var broadcast = function () {
-        th.trigger('ic-slider.change', items.eq(current - 1));
-    }
-
-    broadcast();
-
-    var onPagination = function () {
-        broadcast();
-    };
-
-    if (currentPagination) {
-        onPagination = function () {
-            currentPagination && currentPagination.removeClass('active');
-            currentPagination = th.find('[ic-role-slider-pagination=' + current + ']').addClass('active');
-            broadcast();
-        }
-    }
-
-
-    var prev = direction ?
-        function (e) {
-
-            if (current <= 1) {
-                current = len;
-                view.animate({
-                    top: (-len + 1) * vh
-                }, 300, onPagination);
-            } else {
-                view.animate({
-                    top: (2 - current) * vh
-                }, 300, function () {
-                    current -= 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        } :
-        function (e) {
-
-            if (current <= 1) {
-                current = len;
-                view.animate({
-                    left: (-len + 1) * vw
-                }, 500, onPagination);
-            } else {
-                view.animate({
-                    left: (2 - current) * vw
-                }, 500, function () {
-                    current -= 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        };
-
-    var next = direction ?
-        function (e) {
-
-            if (current >= len) {
-                current = 1;
-                view.animate({
-                    top: 0
-                }, 300, onPagination);
-            } else {
-                view.animate({
-                    top: -current * vh
-                }, 300, function () {
-                    current += 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        } :
-        function (e) {
-
-            if (current >= len) {
-                current = 1;
-                view.animate({
-                    left: 0
-                }, 500, onPagination);
-            } else {
-                view.animate({
-                    left: -current * vw
-                }, 500, function () {
-                    current += 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        }
-
-    var interval = th.attr('ic-slider-interval');
-    var timer;
-
-    if (interval) {
-
-        timer = setInterval(next, interval);
-
-        th.hover(function (e) {
-            clearInterval(timer);
-        }, function (e) {
-            timer = setInterval(next, interval);
+        var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
+            var s = '[ic-?]'.replace('?', $1);
+            return m.replace($1, s);
         });
+
+        var $doc = $('body');
+
+        events = events.split(',');
+        targets = targets.split(',');
+
+        _.forEach(events, function (event, i, list) {
+            var target = targets[i];
+            $doc.on(event, target, _call);
+        });
+
+
+        function _call(e) {
+            var th = $(this);
+            var type = e.type;
+            var fn = th.attr('ic-' + type);
+            fn = th.icParseProperty(fn);
+
+            return fn.apply(this, [e]);
+        }
+
     }
-
-    /* event */
-    th.delegate('[ic-role-slider-prev]', 'click', prev);
-
-    th.delegate('[ic-role-slider-next]', 'click', next);
-
-    th.delegate('[ic-role-slider-pagination]', 'click', function (e) {
-        currentPagination && currentPagination.removeClass('active');
-        var th = $(this).addClass('active');
-        var pagination = th.attr('ic-role-slider-pagination');
-        current = pagination - 1;
-        next();
-    });
-
-
 });
 ;
+
     /**
  * Created by julien.zhang on 2014/10/11.
  */
@@ -1805,355 +1681,6 @@ directives.add('ic-tabs', function ($elm, attrs) {
 });
 
 ;
-    /**
- * Created by julien.zhang on 2014/10/15.
- */
-
-directives.add('ic-dropdown', function ($elm, attrs) {
-
-
-    var th = $elm;
-
-    th.css({position: 'relative'});
-
-    var h = th.height();
-
-    var menu = th.find('[ic-role-dropdown-menu]').css({position: 'absolute', top: h + 'px'});
-
-    var timer;
-    if (menu.size()) {
-        th.hover(function (e) {
-            timer = setTimeout(function () {
-                menu.show(300);
-            }, 200);
-        }, function () {
-            clearTimeout(timer);
-            menu.slideUp(200);
-        });
-    }
-
-    var con = th.find('[ic-role-dropdown-con]').css({position: 'absolute', overflow: 'hidden'});
-
-    if (con.size()) {
-
-        var ch = con.height();
-
-        //th.css({overflow:'hidden',height:h+'px'});
-
-        var flag = 1;
-
-        th.find('[ic-role-dropdown-toggle]').click(function (e) {
-            if (flag) {
-                //con.slideDown();
-                con.css({height: 'auto'});
-                flag = 0;
-            } else {
-                con.css({height: ch + 'px'});
-                flag = 1;
-            }
-        });
-
-
-    }
-
-
-});
-;
-    /**
- * Created by julien.zhang on 2014/10/20.
- */
-
-directives.add('ic-pagination', function ($elm, attrs) {
-
-    var th = $elm;
-    var namespace = th.attr('ic-pagination');
-    var rows = $elm.attr('ic-pagination-rows') * 1 || 10;
-    var onChangeCall = th.attr('ic-pagination-on-change');
-    var total = $elm.attr('ic-pagination-total') * 1;
-    var step = $elm.attr('ic-pagination-step') * 1 || 10;
-    var current = $elm.attr('ic-pagination-current') || 1;
-    var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
-    var placeholder = /\{\{\}\}/g;
-    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
-    var tplf;
-
-    var pool;
-    var onchange;
-    var source = $elm.attr('ic-source-ajax');
-
-    if (source) {
-        /*$.ajax({
-         url:source
-         }).done(function(data){
-         var html = brick._tplfs[namespace]({model:data});
-         $tpl.html(html);
-         });*/
-    } else {
-        source = $elm.attr('ic-source');
-        if (source) {
-            pool = $elm.icParseProperty(source);
-            total = Math.ceil(pool.length / rows);
-            onchange = function (page) {
-                --page;
-                var start = page * rows - 1 < 0 ? 0 : page * rows;
-                var end = start + rows;
-                var _list = pool.slice(start, end);
-                var list = [];
-                var item;
-                for (; item = _list.shift(); start++) {
-                    list[start] = item;
-                }
-                var html = brick._tplfs[namespace]({model: list});
-                $tpl.html(html).show();
-            };
-        }else{
-            pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            if(pool.length){
-                total = Math.ceil(pool.length / rows);
-                onchange = function (page) {
-                    --page;
-                    var start = page * rows - 1 < 0 ? 0 : page * rows;
-                    var end = start + rows;
-                    pool.hide();
-                    pool.slice(start, end).show();
-                };
-            }
-        }
-    }
-
-    var prev = th.find('[ic-role-pagination-prev]').on('click', function (e) {
-        if (current < 2) return;
-        --current;
-        createNums();
-    });
-    var next = th.find('[ic-role-pagination-next]').on('click', function (e) {
-        if (current >= total) return;
-        ++current;
-        createNums();
-    });
-    var num = th.find('[ic-role-pagination-num]');
-    var html = num[0].outerHTML;
-
-    function createNums() {
-
-        var j = Math.floor(step / 2);
-        var k;
-        var r = [];
-
-        j = current - j;
-
-        var i = j = j < 1 ? 1 : j;
-        k = j + step - 1;
-        k = k >= total ? total : k;
-        i = j = k + step >= total ? k - step < 1 ? 1 : k - step : i;
-
-        for (; j <= k; j++) {
-            r.push(html.replace(placeholder, j));
-        }
-
-        if (i > 1) {
-            r.unshift(ellipsis);
-            r.unshift(html.replace(placeholder, 1));
-        }
-
-        if (total - k > 2) {
-            r.push(ellipsis);
-            r.push(html.replace(placeholder, total));
-        }
-
-        current == 1 ? prev.addClass('disabled') : prev.removeClass('disabled');
-        current == total ? next.addClass('disabled') : next.removeClass('disabled');
-        prev.siblings().not(next).remove();
-
-        $(r.join('')).insertAfter(prev).filter('[ic-role-pagination-num=' + current + ']').addClass('active');
-
-        onchange && onchange(current);
-        $elm.trigger('ic-pagination.change', current);
-
-    }
-
-
-    setTimeout(createNums, 30);
-
-    th.on('click', '[ic-role-pagination-num]', function (e) {
-
-        var num = $(this).attr('ic-role-pagination-num') * 1;
-        if (current == num) return;
-        current = num * 1;
-        createNums();
-
-    });
-
-
-});;
-    /**
- * Created by julien.zhang on 2014/10/29.
- */
-
-
-directives.add('ic-dialog', function ($elm, attrs) {
-
-    var html = "<div class=\"t\" style=\"position:fixed; z-index: 100000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
-
-    //只执行一次绑定
-    if (!arguments.callee._run) {
-
-        arguments.callee._run = 1;
-
-        $(document).on('click', '[ic-dialog-href]', function (e) {
-            var target = $(this).attr('ic-dialog-href');
-            $('[ic-dialog=?]'.replace('?', target)).icDialog();
-            return false;
-        });
-
-    }
-
-
-    var $dialogContainer = $(html).appendTo('body').hide();
-
-    var id = $elm.attr('ic-dialog');
-
-    $elm.appendTo($dialogContainer);
-
-    //处理js调用
-    $elm.on('ic-dialog.call', function (e, param) {
-
-        if(param === void(0)) return onShow(e);
-        if (param === 'hide' || param == false) return onClose(e);
-        onShow(e);
-    });
-
-    $elm.on('click', '[ic-role-dialog-confirm]', function (e) {
-        onClose(e, 1);
-    });
-
-
-    $elm.on('click', '[ic-role-dialog-cancel], [ic-role-dialog-close]', function (e) {
-        onClose(e, 0);
-    });
-
-
-    function onShow(e) {
-        $dialogContainer.show();
-        var width = $elm.width();
-        $elm.css('margin-left', -width / 2);
-        $elm.show();
-        $elm.trigger('ic-dialog.show');
-    }
-
-    function onClose(e, type) {
-        $dialogContainer.hide();
-        $elm.hide();
-        $elm.trigger('ic-dialog.close', type);
-    }
-
-
-
-
-});
-
-;
-    /**
- * Created by julien.zhang on 2014/11/5.
- */
-
-directives.add('ic-drag-view', function ($elm, attrs) {
-
-    var $document = $(document);
-
-    var startX = 0, startY = 0, x = 0, y = 0;
-    var vw, vh;
-    var w, h;
-
-    $document.on('click', '[ic-role-drag-key]', function (e) {
-
-        var th = $(this);
-        var drag = th.attr('ic-role-drag-key');
-        var d = th.attr('ic-drag-direction');
-        var m = 140;
-        $elm = $('[ic-role-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
-        w = $elm.width();
-        h = $elm.height();
-        vw = $elm.closest('[ic-drag-view]').css({position: 'relative'}).width();
-        vh = $elm.closest('[ic-drag-view]').width();
-        var position = $elm.position();
-        x = position.left;
-        y = position.top;
-
-        if (d === 'left') {
-            x -= m;
-            x = x < -(w - vw) ? -(w - vw) : x;
-            $elm.animate({left: x}, 500);
-        }
-
-        if (d === 'right') {
-            x += m;
-            x = x >= 0 ? 0 : x;
-            $elm.animate({left: x}, 500);
-        }
-
-    });
-
-
-    $document.on('mousedown', '[ic-role-drag-handle]', function (e) {
-
-        e.preventDefault();
-
-        startX = e.pageX;
-        startY = e.pageY;
-
-        $elm = $(this).css({position: 'relative'});
-
-        vw = $elm.closest('[ic-drag-view]').width();
-        vh = $elm.closest('[ic-drag-view]').height();
-
-        var position = $elm.position();
-        x = position.left;
-        y = position.top;
-
-        w = $elm.width();
-        h = $elm.height();
-
-        $document.on('mousemove', mousemove);
-        $document.on('mouseup', mouseup);
-
-        return false;
-
-    });
-
-
-    function mousemove(e) {
-
-        var moveX = e.pageX - startX;
-        var moveY = e.pageY - startY;
-
-        startX = e.pageX;
-        startY = e.pageY;
-
-        x += moveX;
-        y += moveY;
-
-        x = x < -(w - vw) ? -(w - vw) : x;
-        x = x >= 0 ? 0 : x;
-
-        y = y < -(h - vh) ? -(h - vh) : y;
-        y = y >= 0 ? 0 : y;
-
-        $elm.css({
-            top: y + 'px',
-            left: x + 'px'
-        });
-
-        return false;
-    }
-
-    function mouseup() {
-        $document.unbind('mousemove', mousemove);
-        $document.unbind('mouseup', mouseup);
-    }
-
-
-});;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
@@ -2456,263 +1983,297 @@ directives.add('ic-form', function ($elm, attrs) {
  */
 
 
-directives.add('ic-ajax', function () {
+directives.add('ic-ajax', {
+        selfExec: true,
+        once: true,
+        fn: function () {
 
-    //只执行一次绑定
-    if (arguments.callee._run_) return;
-    arguments.callee._run_ = 1;
+            //只执行一次绑定
+            if (arguments.callee._run_) return;
+            arguments.callee._run_ = 1;
 
-    var $doc = $(document);
-    $doc.on('click', '[ic-ajax]', _call);
-    $doc.on('ic-ajax', '[ic-ajax]', _call);
+            var $doc = $(document);
+            $doc.on('click', '[ic-ajax]', _call);
+            $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-    function _call(e) {
+            function _call(e) {
 
-        var that = this;
-        var $elm = $(this);
-        var namespace = $elm.attr('ic-ajax');
+                var that = this;
+                var $elm = $(this);
+                var namespace = $elm.attr('ic-ajax');
 
-        var $loading = $('[ic-role-loading=?]'.replace('?', namespace||+(new Date)));
+                var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-        //提交
-        var url = $elm.attr('ic-submit-action');
-        var dataType = $elm.attr('ic-submit-data-type') || 'json';
-        var method = $elm.attr('ic-submit-method') || 'post';
-        var done = $elm.attr('ic-submit-on-done');
-        var always = $elm.attr('ic-submit-on-always');
-        var failed = $elm.attr('ic-submit-on-failed');
-        var before = $elm.attr('ic-submit-before');
+                //提交
+                var url = $elm.attr('ic-submit-action');
+                var dataType = $elm.attr('ic-submit-data-type') || 'json';
+                var method = $elm.attr('ic-submit-method') || 'post';
+                var done = $elm.attr('ic-submit-on-done');
+                var always = $elm.attr('ic-submit-on-always');
+                var failed = $elm.attr('ic-submit-on-failed');
+                var before = $elm.attr('ic-submit-before');
 
-        always = $elm.icParseProperty(always) || function () {
-            //console.log('always is undefined;')
-        };
-        done = $elm.icParseProperty(done) || function () {
-            //console.info('done is undefined;')
-        };
-        failed = $elm.icParseProperty(failed) || function (msg) {
-            //console.info('failed is undefined;')
-        };
-        before = $elm.icParseProperty(before) || function () {
-            //console.info('before is undefined;')
-        };
+                always = $elm.icParseProperty(always) || function () {
+                    //console.log('always is undefined;')
+                };
+                done = $elm.icParseProperty(done) || function () {
+                    //console.info('done is undefined;')
+                };
+                failed = $elm.icParseProperty(failed) || function (msg) {
+                    //console.info('failed is undefined;')
+                };
+                before = $elm.icParseProperty(before) || function () {
+                    //console.info('before is undefined;')
+                };
 
-        if (before.apply(that) === false) return;
-        if ($elm.attr('ic-ajax-disabled') === 'true') return;
+                if (before.apply(that) === false) return;
+                if ($elm.attr('ic-ajax-disabled') === 'true') return;
 
-        var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+                var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
-        $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+                $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
 
-        $.ajax({
-            url: url,
-            type: method,
-            dataType: dataType,
-            data: data
-        }).done(function (data) {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                done.apply(that, [data]);
+                $.ajax({
+                    url: url,
+                    type: method,
+                    dataType: dataType,
+                    data: data
+                }).done(function (data) {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        done.apply(that, [data]);
+                    }
+                ).fail(function (msg) {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        failed.apply(that, [msg]);
+                    }
+                ).always(function () {
+                        $elm.clearLoading() && $loading.hide() && $elm.show();
+                        always.apply(that);
+                        $elm.removeData('ic-submit-data');
+                    });
             }
-        ).fail(function (msg) {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                failed.apply(that, [msg]);
-            }
-        ).always(function () {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
-                always.apply(that);
-                $elm.removeData('ic-submit-data');
-            });
+
+
+        }
     }
-
-
-});
+);
 
 ;
     /**
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tpl', function ($elm) {
+directives.add('ic-tpl', {
+    selfExec: true,
+    once: true,
+    fn:function ($elm) {
 
-    //只执行一次
-    if (!arguments.callee._run || $elm) {
+        //只执行一次
+        if (!arguments.callee._run || $elm) {
 
-        arguments.callee._run = 1;
+            arguments.callee._run = 1;
 
-        ($elm || $('[ic-tpl]')).each(function (i) {
+            ($elm || $('[ic-tpl]')).each(function (i) {
 
-            var that = this.cloneNode(true);
-            var th = $(this);
+                var that = this.cloneNode(true);
+                var th = $(this);
 
-            var name = th.attr('ic-tpl');
+                var name = th.attr('ic-tpl');
 
 //        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
 //        var scope = brick.controllers.get(ctrl);
 
-            //console.log(ctrl, scope);
+                //console.log(ctrl, scope);
 
-            //ie7下模板渲染会报错，有时间fix;
-            //try {
-            var compiled = createRender(that);
+                //ie7下模板渲染会报错，有时间fix;
+                //try {
+                var compiled = createRender(that);
 //        } catch (e) {
 //            console.log('+_+ :)', e);
 //        }
 
-            var tplfs = brick._tplfs = brick._tplfs || {};
-            tplfs[name] = compiled;
+                var tplfs = brick._tplfs = brick._tplfs || {};
+                tplfs[name] = compiled;
 
-        });
+            });
+
+        }
 
     }
-
-
 });
 ;
     /**
- *
- * Created by julien.zhang on 2014/11/13.
- *
- * 定义输入提示指令
- *
+ * Created by julien on 2015/7/13.
  */
 
-directives.add('ic-type-ahead', function ($elm, attrs) {
+//ic-select-list
 
-    var $doc = $('body');
+directives.add('ic-select-list', function ($elm, attrs) {
 
-    var namespace = $elm.attr('ic-type-ahead');
-    var onTypeComplete = $elm.attr('ic-on-type-complete');
-    onTypeComplete = $elm.icParseProperty(onTypeComplete);
-    var source = $elm.attr('ic-source-ajax');
+    /*
+     ic-select-list
+     ic-select-item
+     ic-select-all
+     ic-select-more
+     */
 
-    var offset = $elm.offset();
-    var left = offset.left;
-    var top = offset.top;
-    var w = $elm.outerWidth();
-    var h = $elm.outerHeight();
+    var cla = 'selected';
+    var list = 'ic-select-list';
+    var item = '[ic-select-item]';
+    var all = '[ic-select-all]';
+    var more = '[ic-select-more]';
+    var shirk = '[ic-select-shirk]';
+    var box = '[ic-select-more-box]';
+    var val = 'ic-select-val';
+    var eventSpace = list + '.';
 
-    var $selectList = $('[ic-role-list=?]'.replace('?', namespace));
-    var tplf = brick.getTpl($selectList.attr('ic-tpl'));
+    if (!$.fn.icSelectList) {
 
-    $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
+        $.fn.icSelectList = function (action, msg) {
 
-    var _pool;
-    var pool;
-    var ajax;
-    var queryStr;
-    var query;
-    var keydownActive = 0;
-    var keydownList;
+            console.log(eventSpace + action);
 
-    var done = function (data) {
-        if (!data) return;
-        if (!data.length) return $selectList.hide();
-        pool = data;
-        var html = tplf({model: data}); //ie7模板函数会报错，有时间fix;
-        $selectList.show().html(html);
-    };
-
-    if (source) {
-        query = function (queryStr) {
-            ajax = $.ajax({
-                dataType: 'json',
-                type: 'post',
-                url: source,
-                data: {query: queryStr}
-            }).done(done);
-        }
-    } else {
-        source = $elm.attr('ic-source');
-        _pool = $elm.icParseProperty(source);
-        query = function (queryStr) {
-            var reg = new RegExp(queryStr, 'img');
-            var result = _.filter(_pool, function (item, i, list) {
-                if (_.isObject(item)) {
-                    var result = _.filter(item, function (item) {
-                        return reg.test(item);
-                    });
-                    return result.length;
-                } else {
-                    return reg.test(item);
-                }
+            return this.each(function(i){
+                $(this).trigger(eventSpace + action, msg);
             });
 
-            done(result);
+            //this.trigger(eventSpace + action, msg);
+
         };
 
     }
 
-//////////////////////////////////
-    //event
-    ////////////////////////////////////
 
-    $elm.on('focus', function (e) {
-        var offset = $elm.offset();
-        var left = offset.left;
-        var top = offset.top;
-        $selectList.css({top: top + h + 1, left: left});
+    // $('[ic-select-list]').each(function (i) {
 
-    }).on('keyup', function (e) {
+    var model = {
+        name: '',
+        isAll: false,
+        length: 0,
+        selectedLength: 0,
+        add: function (val, selected) {
+            this.items[val] = selected;
+            this.length++;
+            if (selected) this.selectedLength++;
+        },
+        set: function (val, selected) {
+            this.items[val] = selected;
+            if (selected) {
+                this.selectedLength++;
+            } else {
+                this.selectedLength--;
+            }
 
-        var val = $elm.val();
-        if (!val) return $selectList.hide();
-        if (val == queryStr) return;
+            if (this.selectedLength === this.length) {
+                console.log('isall is true');
+            }
+            if (this.selectedLength === 0) {
+                console.log('not selected');
+            }
 
-        queryStr = val;
+            var name = this.name;
+            return $elm.trigger(eventSpace + 'change', {name: name, val: val, selected: selected, target:$elm.find('[ic-select-val='+val+']')[0]});
+        },
+        toggle: function (val) {
+            var isSelected = this.items[val];
+            console.log(isSelected);
+            this.set(val, !isSelected);
+        },
+        clear: function () {
+            var items = this.items;
+            var name = this.name;
+            for (var i in items) {
+                if (items[i] === true) {
+                    items[i] = false;
+                    this.selectedLength--;
+                    $elm.trigger(eventSpace + 'change', {name: name, val: i, selected: false, target:$elm.find('[ic-select-val='+i+']')[0]});
+                }
+            }
+        },
+        all: function () {
 
-        //取消上个请求
-        ajax && ajax.abort();
+        },
+        items: {}
+    };
 
-        //新请求
-        query(queryStr);
+    $elm = $elm || $(this);
+    var name = $elm.attr(list);
+    var isMultiple = $elm.attr('ic-select-multiple');
+    var isAll = $elm.find('ic-select-all');
+    var $more = $elm.find(more);
+    var $all = $elm.find(all);
 
-    }).on('keydown', function (e) {
+    var expandHeight = $elm.height();
+    $more.nextAll().hide();
+    var shirkHeight = $elm.height();
 
-        var keyCode = e.keyCode;
-        if (!(keyCode == 38 || keyCode == 40 || keyCode == 13)) {
-            keydownActive = 0;
-            return
-        }
+    model.name = name;
+    window.xx = model;
 
-        var list = $selectList.find('[ic-role-type-item]');
-        if (!list.length) return;
-        var max = list.length - 1;
+    var $items = $elm.find(item).each(function (i) {
 
-        if (e.keyCode == 38) {
-            keydownActive = --keydownActive < 0 ? max : keydownActive;
-            list.eq(keydownActive).addClass('active').siblings().removeClass('active');
-            return;
-        }
+        model.add(this.getAttribute(val), this.getAttribute('ic-selected') != void(0));
 
-        if (e.keyCode == 40) {
-            keydownActive = ++keydownActive > max ? 0 : keydownActive;
-            list.eq(keydownActive).addClass('active').siblings().removeClass('active');
-            return;
-        }
-
-        if (e.keyCode == 13) {
-            list.eq(keydownActive).trigger('mousedown');
-            $elm.blur();
-        }
-
-    }).on('blur', function (e) {
-        $selectList.fadeOut(function () {
-            $selectList.hide();
-        });
     });
 
+    //var show = {height: $elm.find(item + ':first').height() + 'px', borderWidth: '1px'};
+    //var hide = {height: 0, borderWidth: 0};
 
-    $selectList.on('mousedown', '[ic-role-type-item]', function (e) {
-        var index = $(this).index();
-        var item = pool[index];
-        var val = $(this).attr('ic-role-type-item');
-        $elm.val(val);
-        $elm.trigger('type.complete', item);
-        onTypeComplete && onTypeComplete.apply($elm[0], [e,item])
+    var $active = $elm.find('[ic-selected]').addClass(cla);
+
+
+    //对外接口
+    $elm.on(eventSpace + 'cancel', function (e, msg) {
+        if(msg){
+            $elm.find('[ic-select-val=?]'.replace('?', msg)).removeClass(cla);
+            model.set(msg, false);
+        }else{
+
+        }
+    });
+
+    //bind event
+    $elm.on('click', item, function (e) {
+
+        var $th = $(this);
+        var name = $th.attr(val);
+
+        var $siblings = $items.not(this);
+
+        $all.removeClass(cla);
+
+        if (isMultiple) {
+            $th.toggleClass(cla);
+            model.toggle(name);
+        } else {
+            if ($th.hasClass(cla)) return;
+            $th.addClass(cla);
+            $siblings.removeClass(cla);
+            model.clear();
+            model.set(name, true);
+        }
+
+    }).on('click', all, function (e) {
+
+        var th = $(this).addClass(cla);
+        var $siblings = $items.not(this);
+        $siblings.removeClass(cla);
+
+
+    }).on('click', more, function (e) {
+
+        $more.hide().nextAll().show();
+        $elm.trigger('ic-more-show', {form:shirkHeight, to:expandHeight});
+
+    }).on('click', shirk, function (e) {
+
+        $more.show().nextAll().hide();
+        $elm.trigger('ic-more-hide', {form:expandHeight, to:shirkHeight});
+
     });
 
 
 });;
-
 
     $(function () {
 
@@ -2720,12 +2281,13 @@ directives.add('ic-type-ahead', function ($elm, attrs) {
 
             console.log('brick start');
 
+            //
+            directives.init();
+
             //优先解析模板
-            directives.exec('ic-tpl');
-
-            directives.exec('ic-event');
-
-            directives.exec('ic-ajax');
+            //directives.exec('ic-tpl');
+            //directives.exec('ic-event');
+            //directives.exec('ic-ajax');
 
             (function (node) {
 

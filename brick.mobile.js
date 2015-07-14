@@ -21,17 +21,11 @@
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
 
-    __inline('src/widget/slider.js');
     __inline('src/widget/tabs.js');
-    __inline('src/widget/dropdown.js');
-    __inline('src/widget/pagination.js');
-    __inline('src/widget/dialog.js');
-    __inline('src/widget/drag.js');
     __inline('src/widget/form.js');
     __inline('src/widget/ajax.js');
     __inline('src/widget/tpl.js');
-    __inline('src/widget/typeAhead.js');
-
+    __inline('src/widget/select-list.js');
 
     $(function () {
 
@@ -39,12 +33,13 @@
 
             console.log('brick start');
 
+            //
+            directives.init();
+
             //优先解析模板
-            directives.exec('ic-tpl');
-
-            directives.exec('ic-event');
-
-            directives.exec('ic-ajax');
+            //directives.exec('ic-tpl');
+            //directives.exec('ic-event');
+            //directives.exec('ic-ajax');
 
             (function (node) {
 

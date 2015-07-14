@@ -77,12 +77,15 @@
 
         setTimeout(function(){
 
+            //
+            directives.init();
+
             //优先解析模板
-            directives.exec('ic-tpl');
+            //directives.exec('ic-tpl');
 
-            directives.exec('ic-event');
+            //directives.exec('ic-event');
 
-            directives.exec('ic-ajax');
+            //directives.exec('ic-ajax');
 
             (function (node) {
 

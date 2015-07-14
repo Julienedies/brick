@@ -4,6 +4,15 @@
  */
 (function ($) {
 
+    $.fn.icCompile = function(){
+
+        return this.each(function(i){
+
+            brick.compile(this);
+
+        });
+    };
+
     $.fn.icParseProperty = function (name) {
 
         if (name === void(0)) return void(0);
