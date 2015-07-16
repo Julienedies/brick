@@ -1632,8 +1632,8 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         var tabc = $('[ic-role-tabc=' + name + ']');
 
-        if (tabc && conSelect) {
-            tabc.find(conSelect).each(function (i) {
+        if (tabc) {
+            tabc.find(conSelect || '[ic-role-con]').each(function (i) {
                 i = $tabSelect.eq(i).attr('ic-role-tab');
                 $(this).attr('ic-role-con', i);
             });
@@ -2133,7 +2133,13 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
             console.log(eventSpace + action);
 
+            if(action == 'val') {
+                this.trigger(eventSpace + 'val', msg);
+                return this.data('ic-selected-val');
+            }
+
             return this.each(function(i){
+
                 $(this).trigger(eventSpace + action, msg);
             });
 
@@ -2158,6 +2164,7 @@ directives.add('ic-select-list', function ($elm, attrs) {
         },
         set: function (val, selected) {
             this.items[val] = selected;
+            var name = this.name;
             if (selected) {
                 this.selectedLength++;
             } else {
@@ -2166,12 +2173,13 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
             if (this.selectedLength === this.length) {
                 console.log('isall is true');
+                $elm.trigger(eventSpace + 'all',{name:name});
             }
             if (this.selectedLength === 0) {
                 console.log('not selected');
+                $elm.trigger(eventSpace + 'not',{name:name});
             }
 
-            var name = this.name;
             return $elm.trigger(eventSpace + 'change', {name: name, val: val, selected: selected, target:$elm.find('[ic-select-val='+val+']')[0]});
         },
         toggle: function (val) {
@@ -2189,6 +2197,17 @@ directives.add('ic-select-list', function ($elm, attrs) {
                     $elm.trigger(eventSpace + 'change', {name: name, val: i, selected: false, target:$elm.find('[ic-select-val='+i+']')[0]});
                 }
             }
+        },
+        get:function(){
+            var result = [];
+            var items = this.items;
+            for(var i in items){
+                if(items[i] === true){
+                    result.push(i);
+                }
+            }
+
+            return result;
         },
         all: function () {
 
@@ -2223,12 +2242,21 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
 
     //对外接口
+    $elm.on(eventSpace + 'val', function(e, msg){
+          var val = model.get();
+          $elm.data('ic-selected-val', val);
+    });
+
     $elm.on(eventSpace + 'cancel', function (e, msg) {
         if(msg){
             $elm.find('[ic-select-val=?]'.replace('?', msg)).removeClass(cla);
             model.set(msg, false);
         }else{
-
+            $elm.find('[ic-select-val]').not('[ic-selected]').each(function(i){
+                var $th = $(this);
+                var val = $th.attr('ic-select-val');
+                model.set(val, false);
+            });
         }
     });
 
@@ -2259,16 +2287,17 @@ directives.add('ic-select-list', function ($elm, attrs) {
         var $siblings = $items.not(this);
         $siblings.removeClass(cla);
 
+        $elm.trigger(eventSpace+'all',{name:name});
 
     }).on('click', more, function (e) {
 
         $more.hide().nextAll().show();
-        $elm.trigger('ic-more-show', {form:shirkHeight, to:expandHeight});
+        $elm.trigger('ic-more.show', {form:shirkHeight, to:expandHeight});
 
     }).on('click', shirk, function (e) {
 
         $more.show().nextAll().hide();
-        $elm.trigger('ic-more-hide', {form:expandHeight, to:shirkHeight});
+        $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
 
     });
 

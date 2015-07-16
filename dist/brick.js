@@ -1855,8 +1855,8 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         var tabc = $('[ic-role-tabc=' + name + ']');
 
-        if (tabc && conSelect) {
-            tabc.find(conSelect).each(function (i) {
+        if (tabc) {
+            tabc.find(conSelect || '[ic-role-con]').each(function (i) {
                 i = $tabSelect.eq(i).attr('ic-role-tab');
                 $(this).attr('ic-role-con', i);
             });
