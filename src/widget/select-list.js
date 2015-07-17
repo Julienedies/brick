@@ -35,7 +35,6 @@ directives.add('ic-select-list', function ($elm, attrs) {
             }
 
             return this.each(function(i){
-
                 $(this).trigger(eventSpace + action, msg);
             });
 
@@ -149,7 +148,7 @@ directives.add('ic-select-list', function ($elm, attrs) {
             model.set(msg, false);
         }else{
             $elm.find('[ic-select-val]').not('[ic-selected]').each(function(i){
-                var $th = $(this);
+                var $th = $(this).removeClass(cla);
                 var val = $th.attr('ic-select-val');
                 model.set(val, false);
             });
