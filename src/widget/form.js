@@ -195,13 +195,12 @@ directives.add('ic-form', function ($elm, attrs) {
 
         if (!$submit.icVerify()) return;
 
-
         //函数调用
         if (submitType === 1) {
-            return action.apply($submit, []);
+            return action.apply($submit[0], [fields]);
         }
 
-        var data = before(fields);
+        var data = before.apply($submit[0], [fields]);
         if (data === false) return;
 
         if ($loading.size()) {
