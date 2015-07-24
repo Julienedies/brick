@@ -18,7 +18,9 @@ directives.add('ic-form', function ($elm, attrs) {
         required: /[\w\d]+/,
         phone: /^1[0-9][0-9]\d{8}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
-        password: /(?:[\w]|[!@#$%^&*]){8,}/
+        password: /(?:[\w]|[!@#$%^&*]){8,}/,
+        desc:/.{4,18}/,
+        Plate:/^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
 
@@ -193,7 +195,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
     $submit.on('mousedown', function (e) {
 
-        if (!$submit.icVerify()) return;
+        if (!$submit.icVerify()) return $elm.trigger('ic-form.error');
 
         //函数调用
         if (submitType === 1) {
