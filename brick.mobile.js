@@ -60,6 +60,9 @@
 
             controllers.init();
 
+            //hashchange
+            __inline('src/event/hashChange.js');
+
         }, 30);
 
     });

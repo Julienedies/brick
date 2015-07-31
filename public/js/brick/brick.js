@@ -1247,6 +1247,7 @@ root.brick = {
     },
     on: function(e, fn){
       this.eventManager.bind(e, fn);
+      return this;
     },
     controllers: controllers,
     services: services,
