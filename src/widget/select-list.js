@@ -211,8 +211,13 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
     });
 
-    if(!$active.is(':visible')){
+    if(!$active.length){
+        return $all.addClass(cla);
+    }
+
+    if($active.index() > $more.index()){
         $more.click();
     }
+
 
 });
