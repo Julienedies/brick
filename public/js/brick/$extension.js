@@ -6,6 +6,8 @@
 
     $.fn.icCompile = function(){
 
+        if(!this.length) return;
+
         return this.each(function(i){
 
             brick.compile(this);

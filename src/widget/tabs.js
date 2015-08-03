@@ -52,7 +52,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
         function call_2(e, that) {
             activeTab && activeTab.removeClass('active');
             activeTab = $(that || this).addClass('active');
-            th.trigger('ic-tabs.change', {activeTab: activeTab});
+            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val')});
         }
 
 

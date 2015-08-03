@@ -35,6 +35,8 @@ var config = (function (){
 
 function compile(node, debug){
 
+    if(node.nodeType != 1) return;
+
     var $elm = $(node);
     var attrs = node.attributes;
 
@@ -1251,6 +1253,10 @@ root.brick = {
       this.eventManager.bind(e, fn);
       return this;
     },
+    off: function(e, fn){
+        this.eventManager.unbind(e, fn);
+        return this;
+    },
     controllers: controllers,
     services: services,
     directives: directives,
@@ -1318,6 +1324,8 @@ root._cc = ( window.console && function () {
 (function ($) {
 
     $.fn.icCompile = function(){
+
+        if(!this.length) return;
 
         return this.each(function(i){
 
@@ -1661,7 +1669,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
         function call_2(e, that) {
             activeTab && activeTab.removeClass('active');
             activeTab = $(that || this).addClass('active');
-            th.trigger('ic-tabs.change', {activeTab: activeTab});
+            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val')});
         }
 
 
@@ -1699,12 +1707,12 @@ directives.add('ic-form', function ($elm, attrs) {
 
     var presetRule = {
         id: /[\w_]{4,18}/,
-        required: /[\w\d]+/,
+        required: /.+/,
         phone: /^1[0-9][0-9]\d{8}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
         password: /(?:[\w]|[!@#$%^&*]){8,}/,
-        desc:/.{4,18}/,
-        Plate:/^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
+        desc:/.{4,32}/,
+        plate:/^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
 
@@ -2158,6 +2166,9 @@ directives.add('ic-select-list', function ($elm, attrs) {
         isAll: false,
         length: 0,
         selectedLength: 0,
+        _fire: function(){
+
+        },
         add: function (val, selected) {
             this.items[val] = selected;
             this.length++;
@@ -2174,14 +2185,14 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
             if (this.selectedLength === this.length) {
                 console.log('isall is true');
-                $elm.trigger(eventSpace + 'all',{name:name});
+                //$elm.trigger(eventSpace + 'all',{name:name});
             }
             if (this.selectedLength === 0) {
                 console.log('not selected');
-                $elm.trigger(eventSpace + 'not',{name:name});
+                //$elm.trigger(eventSpace + 'not',{name:name});
             }
 
-            return $elm.trigger(eventSpace + 'change', {name: name, val: val, selected: selected, target:$elm.find('[ic-select-val='+val+']')[0]});
+            //return $elm.trigger(eventSpace + 'change', {name: name, val: val, selected: selected, target:$elm.find('[ic-select-val='+val+']')[0]});
         },
         toggle: function (val) {
             var isSelected = this.items[val];
@@ -2195,7 +2206,7 @@ directives.add('ic-select-list', function ($elm, attrs) {
                 if (items[i] === true) {
                     items[i] = false;
                     this.selectedLength--;
-                    $elm.trigger(eventSpace + 'change', {name: name, val: i, selected: false, target:$elm.find('[ic-select-val='+i+']')[0]});
+                    //$elm.trigger(eventSpace + 'change', {name: name, val: i, selected: false, target:$elm.find('[ic-select-val='+i+']')[0]});
                 }
             }
         },
@@ -2228,7 +2239,6 @@ directives.add('ic-select-list', function ($elm, attrs) {
     var shirkHeight = $elm.height();
 
     model.name = name;
-    window.xx = model;
 
     var $items = $elm.find(item).each(function (i) {
 
@@ -2241,11 +2251,10 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
     var $active = $elm.find('[ic-selected]').addClass(cla);
 
-
     //对外接口
     $elm.on(eventSpace + 'val', function(e, msg){
-          var val = model.get();
-          $elm.data('ic-selected-val', val);
+        var val = model.get();
+        $elm.data('ic-selected-val', val);
     });
 
     $elm.on(eventSpace + 'cancel', function (e, msg) {
@@ -2259,34 +2268,46 @@ directives.add('ic-select-list', function ($elm, attrs) {
                 model.set(val, false);
             });
         }
+        $elm.trigger(eventSpace + 'change', getVal());
     });
+
+    function getVal(){
+
+        var result = [];
+
+        $items.filter('.'+cla).each(function(i){
+            var $th = $(this);
+            result.push({name: name, text:$th.text(), val:$th.attr('ic-select-val')});
+        });
+
+        return result.length == 1 ? result[0] : result.length > 1 ? result : {name:name};
+    }
 
     //bind event
     $elm.on('click', item, function (e) {
 
         var $th = $(this);
-        var name = $th.attr(val);
-
-        var $siblings = $items.not(this);
+        var _val = $th.attr(val);
 
         $all.removeClass(cla);
 
-        if (isMultiple) {
-            $th.toggleClass(cla);
-            model.toggle(name);
-        } else {
+        if(!isMultiple){
             if ($th.hasClass(cla)) return;
+            $items.removeClass(cla);
             $th.addClass(cla);
-            $siblings.removeClass(cla);
             model.clear();
-            model.set(name, true);
+            model.set(_val, true);
+        }else{
+            $th.toggleClass(cla);
+            model.toggle(_val);
         }
+
+        $elm.trigger(eventSpace + 'change', getVal());
 
     }).on('click', all, function (e) {
 
         var th = $(this).addClass(cla);
-        var $siblings = $items.not(this);
-        $siblings.removeClass(cla);
+        var $siblings = $items/*.not(this)*/.removeClass(cla);
 
         $elm.trigger(eventSpace+'all',{name:name});
 
@@ -2422,6 +2443,10 @@ brick.directives.reg('ic-upload', function($elm, attrs){
 //hashchange
 !function(){
 
+    var enable = brick.config.get('ic-hashChange.enable');
+
+    if(!enable) return;
+
     var $win = $(window);
 
     var prev;
@@ -2434,17 +2459,14 @@ brick.directives.reg('ic-upload', function($elm, attrs){
         }
 
         hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
-        console.log(hash);
 
-        brick.broadcast('ic-hashChange.' + hash, {from:prev, origin:e});
+        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:hash, origin:e});
 
         prev = hash;
 
     };
 
     $win.on('hashchange', function(e){
-
-        console.log(e);
 
         fire(e)
 

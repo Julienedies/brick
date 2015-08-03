@@ -6,6 +6,10 @@
 //hashchange
 !function(){
 
+    var enable = brick.config.get('ic-hashChange.enable');
+
+    if(!enable) return;
+
     var $win = $(window);
 
     var prev;
@@ -18,17 +22,14 @@
         }
 
         hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
-        console.log(hash);
 
-        brick.broadcast('ic-hashChange.' + hash, {from:prev, origin:e});
+        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:hash, origin:e});
 
         prev = hash;
 
     };
 
     $win.on('hashchange', function(e){
-
-        console.log(e);
 
         fire(e)
 

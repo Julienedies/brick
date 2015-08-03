@@ -4,6 +4,8 @@
 
 function compile(node, debug){
 
+    if(node.nodeType != 1) return;
+
     var $elm = $(node);
     var attrs = node.attributes;
 

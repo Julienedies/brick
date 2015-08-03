@@ -134,17 +134,3 @@ html,body{
     right:10px;
     top:10px;
 }
-/*.transparent{*/
-/*background:rgba(0,0,0,0.6);*/
-/*background: transparent\9;*/
-/*zoom:1\8; *//* required for the filters */
-/*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)"; *//* IE8 */
-/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000); *//* IE5.5-7 */
-/*}*/
-
-/*.transparent2{*/
-/**background:#f00; *filter:alpha(opacity=50);*/
-/*}*/
-
-.t{background:rgba(0,34,89,0.2);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33002259,endColorstr=#33002259);zoom:1;}
-:root .t{filter:none\9;}/*for IE9*/
