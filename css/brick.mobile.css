@@ -4,6 +4,11 @@
 html,body{
     height: 100%;
 }
+/* ic-upload */
+[ic-upload] form, [ic-upload] [type=file]{
+    position: absolute;
+    opacity: 0;
+}
 [ic-aniOut]{
     display: none!important;
 }
