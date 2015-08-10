@@ -28,6 +28,13 @@
     __inline('src/widget/select-list.js');
     __inline('src/widget/upload.js');
 
+    __inline('src/util.js');
+    __inline('src/cache.js');
+
+    function bootstrap(){
+
+    }
+
     $(function () {
 
         setTimeout(function () {

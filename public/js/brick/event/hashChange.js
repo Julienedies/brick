@@ -23,7 +23,9 @@
 
         hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
 
-        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:hash, origin:e});
+        var query = hash.split('?');
+
+        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:query[0], origin:e, query:query[1]});
 
         prev = hash;
 

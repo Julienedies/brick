@@ -192,7 +192,9 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
     }).on('click', all, function (e) {
 
-        var th = $(this).addClass(cla);
+        if( $all.hasClass(cla)) return;
+
+        var th = $all.addClass(cla);
         var $siblings = $items/*.not(this)*/.removeClass(cla);
 
         $elm.trigger(eventSpace+'all',{name:name});
@@ -208,6 +210,11 @@ directives.add('ic-select-list', function ($elm, attrs) {
         $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
 
     });
+
+
+    if($active.index() > $more.index()){
+        $more.click();
+    }
 
 
 });

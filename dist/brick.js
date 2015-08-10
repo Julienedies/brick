@@ -587,7 +587,9 @@ var services = (function() {
             if (depend) {
                 depend = that.get(depend);
             }
-            return info.serve.apply(null, depend || []);
+
+            window[name] = info.serve.apply(null, depend || []);
+            return window[name];
         },
 
         /**
