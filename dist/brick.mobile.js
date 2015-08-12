@@ -1671,9 +1671,8 @@ directives.add('ic-tabs', function ($elm, attrs) {
         function call_2(e, that) {
             activeTab && activeTab.removeClass('active');
             activeTab = $(that || this).addClass('active');
-            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val')});
+            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val'), index:activeTab.index()});
         }
-
 
         //fire
         if (activeTab) {
@@ -2751,16 +2750,21 @@ brick.getAniMap = function (animation) {
         return {isAnimating: isAnimating};
     }
 
-    function _onEndAnimation($elm) {
+    function _onEndAnimation($elm, call) {
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
+        call && call.call($elm[0]);
     }
 
     var $doc = $('body');
     var animEndEventName = 'webkitAnimationEnd';
 
-    $.fn.icAniOut = function (animation, $next) {
+    $.fn.icAniOut = function (animation, $next, call) {
 
-        if (typeof animation == 'object') {
+        if(_.isFunction(animation)){
+            call = animation;
+        }
+
+        if (_.isObject(animation)) {
             $next = animation;
             animation = void(0);
         }
@@ -2772,7 +2776,6 @@ brick.getAniMap = function (animation) {
         var cla = brick.getAniMap(animation);
         var inClass = cla.inClass;
         var outClass = cla.outClass;
-
 
         // $doc.animate({scrollTop: 0}, 150);
         $doc.scrollTop(0);
@@ -2787,7 +2790,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-view-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                _onEndAnimation($current);
+                _onEndAnimation($current, call);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -2806,9 +2809,8 @@ brick.getAniMap = function (animation) {
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                _onEndAnimation($next);
+                _onEndAnimation($next, call);
                 $next.removeClass(inClass);
-
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
                     //_onEndAnimation($next);
@@ -2823,20 +2825,23 @@ brick.getAniMap = function (animation) {
     };
 
     //in
-    $.fn.icAniIn = function (animation, $next) {
+    $.fn.icAniIn = function (animation, $next, call) {
 
-        if (typeof animation == 'object') {
+        if(_.isFunction(animation)){
+            call = animation;
+        }
+
+        if (_.isObject(animation)) {
             $next = animation;
             animation = void(0);
         }
 
         $next = $next || $({});
 
-        return $next.icAniOut(animation, this);
+        return $next.icAniOut(animation, this, call);
     }
 
 }();
-
 
 /**
  *
@@ -2874,7 +2879,17 @@ brick.addRoute = function (hash, handler) {
 brick.removeRoute = function (hash, handler) {
     return brick.off('ic-hashChange.' + hash, handler);
 };
-;
+
+/**
+ *
+ * @param msg  {String} 要打印的消息
+ * @param type {String} 错误级别
+ */
+brick.debug = function(msg, type){
+    type = type || 'log';
+    console[type](msg);
+
+};;
     /**
  * Created by Julien on 2015/8/10.
  */
