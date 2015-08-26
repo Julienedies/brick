@@ -22,6 +22,24 @@ brick.progress = {
 };
 
 /**
+ * 封装location.search为一个对象，如果不存在，返回undefined
+ * @returns {*}
+ */
+brick.getQuery = function () {
+    var result;
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    if(!query) return result;
+    try {
+        result = JSON.parse('{' + query + '}');
+    } catch (e) {
+        console.error(e);
+        result = void(0);
+    }
+
+    return result;
+};
+
+/**
  * 恢复被转义的html
  * @param text
  * @returns {*}
@@ -325,7 +343,7 @@ brick.getAniMap = function (animation) {
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
  */
-!function () {
+;!function () {
 
     function _initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
@@ -468,13 +486,3 @@ brick.removeRoute = function (hash, handler) {
     return brick.off('ic-hashChange.' + hash, handler);
 };
 
-/**
- *
- * @param msg  {String} 要打印的消息
- * @param type {String} 错误级别
- */
-brick.debug = function(msg, type){
-    type = type || 'log';
-    console[type](msg);
-
-};

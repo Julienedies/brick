@@ -14,7 +14,6 @@ directives.add('ic-tpl', {
 
             ($elm || $('[ic-tpl]')).each(function (i) {
 
-                var that = this.cloneNode(true);
                 var th = $(this);
 
                 var name = th.attr('ic-tpl');
@@ -26,13 +25,13 @@ directives.add('ic-tpl', {
 
                 //ie7下模板渲染会报错，有时间fix;
                 //try {
-                var compiled = createRender(that);
+                var compiled = createRender(this);
 //        } catch (e) {
 //            console.log('+_+ :)', e);
 //        }
 
-                var tplfs = brick._tplfs = brick._tplfs || {};
-                tplfs[name] = compiled;
+                var __tpl = brick.__tpl = brick.__tpl || {};
+                __tpl[name] = compiled;
 
             });
 

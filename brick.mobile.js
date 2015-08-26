@@ -25,7 +25,6 @@
     __inline('src/widget/form.js');
     __inline('src/widget/ajax.js');
     __inline('src/widget/tpl.js');
-    __inline('src/widget/select-list.js');
     __inline('src/widget/upload.js');
 
     __inline('src/util.js');

@@ -7,6 +7,7 @@
 !function(){
 
     var enable = brick.config.get('ic-hashChange.enable');
+    var _default = brick.config.get('route.default');
 
     if(!enable) return;
 
@@ -38,6 +39,6 @@
     });
 
 
-    fire();
+    fire(_default);
 
 }();

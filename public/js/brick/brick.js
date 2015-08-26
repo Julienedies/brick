@@ -1257,6 +1257,10 @@ root.brick = {
         this.eventManager.unbind(e, fn);
         return this;
     },
+    fire:function(e, msg){
+        this.eventManager.fire(e, msg);
+        return this;
+    },
     controllers: controllers,
     services: services,
     directives: directives,

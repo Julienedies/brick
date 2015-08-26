@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>
+<table ic-date-picker ic-date-picker-format="YYYY MM DD" ic-date>
+
+    <caption>
+        <a href="javascript:;" ic-prev-m>上月</a>
+        <span ic-bind="vm.current"></span>
+        <a href="javascript:;" ic-next-m>下月</a>
+    </caption>
+
+    <thead>
+        <tr>
+            <th>周一</th>
+            <th>周二</th>
+            <th>周三</th>
+            <th>周四</th>
+            <th>周五</th>
+            <th>周六</th>
+            <th>周日</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr ic-for="i, days in vm.weeks">
+            <td ic-for="j, day in days" ic-bind="day.n" ic-date="{{day.date}}" ic-date-status="day.status"></td>
+        </tr>
+    </tbody>
+
+</table>
+</div>
+<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/moment.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../dist/brick.mobile.js"></script>
+<script>
+    /**
+     * config:
+     * ic-date
+     * ic-date-picker-format
+     *
+     * attach:
+     * ic-date
+     * ic-date-status over:过去  today:今天  coming:未来
+     */
+brick.directives.reg('ic-date-picker', function($elm, attrs){
+
+    var tpl = brick.createRender($elm[0]);
+
+    render();
+
+    ////////////////////////////////////////////////////
+
+    $elm.on('click', '[ic-prev-m]', function(e){
+        _date = _date.replace(/^(\d+)-(\d+)-(\d+)$/img, function(match, y, m, d){
+            if(m*1 - 1 < 1){
+                y = y * 1 - 1;
+                m = 12;
+            }else{
+                m = m *1 - 1;
+            }
+            return y + '-' +  m + '-' + d;
+        });
+        render(_date);
+    });
+
+    $elm.on('click', '[ic-next-m]', function(e){
+        _date = _date.replace(/^(\d+)-(\d+)-(\d+)$/img, function(match, y, m, d){
+            if(m*1 + 1 > 12){
+                y = y * 1 + 1;
+                m = 1;
+            }else{
+                m = m *1 + 1;
+            }
+            return y + '-' +  m + '-' + d;
+        });
+
+        render(_date);
+    });
+
+    /////////////////////////////////////////////////////
+    var _d = new Date();
+    var _date = $elm.attr('ic-date') || _d.getFullYear() + '-' + (_d.getMonth()+1) + '-' + _d.getDate();
+    var _format = $elm.attr('ic-date-picker-format') || 'YYYY-MM-DD';
+
+    function render(date){
+        var html = tpl({vm:model(date)});
+        $elm.html(html);
+    }
+
+    function model(date){
+
+        console.log(date);
+
+        var current = date ? moment(date) : moment();
+
+        var year = current.year();
+        var month = current.month();
+
+        var days = _.range(1, current.daysInMonth() + 1);
+
+        var w = moment([year, month, 1]).weekday();
+
+        while(w > 1){
+            days.unshift('');
+            w--;
+        }
+
+        var weeks = [];
+        var week = days.splice(0,7);
+        while(week.length){
+            week = week.map(function(v, i){
+                return v*1 == v ? {n:v, date:moment([year, month, v]).format(_format)} : {};
+            });
+            weeks.push(week);
+            week = days.splice(0,7);
+        }
+
+        return {current: current.format('YYYY-MM'), weeks:weeks};
+    }
+
+});
+</script>
+</body>
+</html>

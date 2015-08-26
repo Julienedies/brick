@@ -22,6 +22,28 @@ brick.progress = {
 };
 
 /**
+ * 封装location.search为一个对象，如果不存在，返回undefined
+ * @returns {*}
+ */
+brick.getQuery = function () {
+    var result;
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    if(!query) return result;
+    try {
+        result = JSON.parse('{' + query + '}');
+    } catch (e) {
+        console.error(e);
+        return;
+    }
+
+    for(var i in result){
+        result[i] = decodeURIComponent(result[i]);
+    }
+
+    return result;
+};
+
+/**
  * 恢复被转义的html
  * @param text
  * @returns {*}
@@ -325,10 +347,11 @@ brick.getAniMap = function (animation) {
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
  */
-!function () {
+;!function () {
 
     function _initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
+        $elm.addClass('ic-animating');
         $elm.attr('ic-aniEnd', false);
         $elm.removeAttr('ic-aniIn');
     }
@@ -339,6 +362,7 @@ brick.getAniMap = function (animation) {
     }
 
     function _onEndAnimation($elm, call) {
+        $elm.removeClass('ic-animating');
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
         call && call.call($elm[0]);
     }
@@ -375,7 +399,7 @@ brick.getAniMap = function (animation) {
             $current.addClass(outClass).on(animEndEventName, function () {
 
                 $current.removeClass(outClass);
-                $current.removeAttr('ic-view-active');
+                $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
                 _onEndAnimation($current, call);
@@ -393,7 +417,7 @@ brick.getAniMap = function (animation) {
 
             _initStatus($next);
 
-            $next.attr('ic-view-active', true);
+            $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
@@ -468,13 +492,3 @@ brick.removeRoute = function (hash, handler) {
     return brick.off('ic-hashChange.' + hash, handler);
 };
 
-/**
- *
- * @param msg  {String} 要打印的消息
- * @param type {String} 错误级别
- */
-brick.debug = function(msg, type){
-    type = type || 'log';
-    console[type](msg);
-
-};

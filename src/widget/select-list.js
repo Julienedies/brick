@@ -45,16 +45,11 @@ directives.add('ic-select-list', function ($elm, attrs) {
     }
 
 
-    // $('[ic-select-list]').each(function (i) {
-
     var model = {
         name: '',
         isAll: false,
         length: 0,
         selectedLength: 0,
-        _fire: function(){
-
-        },
         add: function (val, selected) {
             this.items[val] = selected;
             this.length++;
@@ -195,7 +190,7 @@ directives.add('ic-select-list', function ($elm, attrs) {
         if( $all.hasClass(cla)) return;
 
         var th = $all.addClass(cla);
-        var $siblings = $items/*.not(this)*/.removeClass(cla);
+        $items.removeClass(cla);
 
         $elm.trigger(eventSpace+'all',{name:name});
 

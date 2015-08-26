@@ -1203,6 +1203,8 @@ function parser(node) {
 
 function createRender(root) {
 
+    root = root.cloneNode(true);
+
     //遍历dom节点，解析指令
     (function (node) {
 
@@ -1248,71 +1250,40 @@ services.fill('eventManager', eventManager);
 root.brick = {
     config: config,
     eventManager: eventManager,
-    broadcast: function(e, msg){
+    broadcast: function (e, msg) {
         this.eventManager.fire(e, msg);
+        return this;
     },
-    on: function(e, fn){
-      this.eventManager.bind(e, fn);
-      return this;
+    on: function (e, fn) {
+        this.eventManager.bind(e, fn);
+        return this;
     },
-    off: function(e, fn){
+    off: function (e, fn) {
         this.eventManager.unbind(e, fn);
+        return this;
+    },
+    fire: function (e, msg) {
+        this.eventManager.fire(e, msg);
         return this;
     },
     controllers: controllers,
     services: services,
     directives: directives,
-    compile:compile,
-    getTpl: function(name){
-        return this._tplfs[name];
+    compile: compile,
+    createRender:createRender,
+    getTpl: function (name) {
+        return this.__tpl[name];
     },
-    _tplfs:{},
-    _findProperty: function(name){
-
-    },
+    __tpl: {},
     init: function () {
 
-        //this.controllers.init();
-
-        //this.directives.init();
-
-        /////////////////////////////////////////////////////////////////////
-
-//        $('[ic-ctrl]').each(function (i, e) {
-//
-//            var root = $(e);
-//
-//            var name = root.attr('ic-ctrl');
-//
-//            var scope = brick.controllers.get(name);
-//
-//
-//            if (!scope) throw 'not find controller ' + name;
-//
-//
-//            scope.domNode = root;
-//
-//            scope.tmplFn = createRender(e);
-//
-//            scope.render();
-//
-//        });
-
-        /////////////////////////////////////////////////////////////////////
+        //init
 
     }
 };
 
 
-root._cc = ( window.console && function () {
 
-        try {
-            console.log.apply(console, arguments);
-        } catch (e) {
-        }
-
-} ) || function () {
-};
 
 
 
@@ -2086,7 +2057,6 @@ directives.add('ic-tpl', {
 
             ($elm || $('[ic-tpl]')).each(function (i) {
 
-                var that = this.cloneNode(true);
                 var th = $(this);
 
                 var name = th.attr('ic-tpl');
@@ -2098,13 +2068,13 @@ directives.add('ic-tpl', {
 
                 //ie7下模板渲染会报错，有时间fix;
                 //try {
-                var compiled = createRender(that);
+                var compiled = createRender(this);
 //        } catch (e) {
 //            console.log('+_+ :)', e);
 //        }
 
-                var tplfs = brick._tplfs = brick._tplfs || {};
-                tplfs[name] = compiled;
+                var __tpl = brick.__tpl = brick.__tpl || {};
+                __tpl[name] = compiled;
 
             });
 
@@ -2113,226 +2083,6 @@ directives.add('ic-tpl', {
     }
 });
 ;
-    /**
- * Created by julien on 2015/7/13.
- */
-
-//ic-select-list
-
-directives.add('ic-select-list', function ($elm, attrs) {
-
-    /*
-     ic-select-list
-     ic-select-item
-     ic-select-all
-     ic-select-more
-     */
-
-    var cla = 'selected';
-    var list = 'ic-select-list';
-    var item = '[ic-select-item]';
-    var all = '[ic-select-all]';
-    var more = '[ic-select-more]';
-    var shirk = '[ic-select-shirk]';
-    var box = '[ic-select-more-box]';
-    var val = 'ic-select-val';
-    var eventSpace = list + '.';
-
-    if (!$.fn.icSelectList) {
-
-        $.fn.icSelectList = function (action, msg) {
-
-            console.log(eventSpace + action);
-
-            if(action == 'val') {
-                this.trigger(eventSpace + 'val', msg);
-                return this.data('ic-selected-val');
-            }
-
-            return this.each(function(i){
-                $(this).trigger(eventSpace + action, msg);
-            });
-
-            //this.trigger(eventSpace + action, msg);
-
-        };
-
-    }
-
-
-    // $('[ic-select-list]').each(function (i) {
-
-    var model = {
-        name: '',
-        isAll: false,
-        length: 0,
-        selectedLength: 0,
-        _fire: function(){
-
-        },
-        add: function (val, selected) {
-            this.items[val] = selected;
-            this.length++;
-            if (selected) this.selectedLength++;
-        },
-        set: function (val, selected) {
-            this.items[val] = selected;
-            var name = this.name;
-            if (selected) {
-                this.selectedLength++;
-            } else {
-                this.selectedLength--;
-            }
-
-            if (this.selectedLength === this.length) {
-                console.log('isall is true');
-                //$elm.trigger(eventSpace + 'all',{name:name});
-            }
-            if (this.selectedLength === 0) {
-                console.log('not selected');
-                //$elm.trigger(eventSpace + 'not',{name:name});
-            }
-
-            //return $elm.trigger(eventSpace + 'change', {name: name, val: val, selected: selected, target:$elm.find('[ic-select-val='+val+']')[0]});
-        },
-        toggle: function (val) {
-            var isSelected = this.items[val];
-            console.log(isSelected);
-            this.set(val, !isSelected);
-        },
-        clear: function () {
-            var items = this.items;
-            var name = this.name;
-            for (var i in items) {
-                if (items[i] === true) {
-                    items[i] = false;
-                    this.selectedLength--;
-                    //$elm.trigger(eventSpace + 'change', {name: name, val: i, selected: false, target:$elm.find('[ic-select-val='+i+']')[0]});
-                }
-            }
-        },
-        get:function(){
-            var result = [];
-            var items = this.items;
-            for(var i in items){
-                if(items[i] === true){
-                    result.push(i);
-                }
-            }
-
-            return result;
-        },
-        all: function () {
-
-        },
-        items: {}
-    };
-
-    $elm = $elm || $(this);
-    var name = $elm.attr(list);
-    var isMultiple = $elm.attr('ic-select-multiple');
-    var isAll = $elm.find('ic-select-all');
-    var $more = $elm.find(more);
-    var $all = $elm.find(all);
-
-    var expandHeight = $elm.height();
-    $more.nextAll().hide();
-    var shirkHeight = $elm.height();
-
-    model.name = name;
-
-    var $items = $elm.find(item).each(function (i) {
-
-        model.add(this.getAttribute(val), this.getAttribute('ic-selected') != void(0));
-
-    });
-
-    //var show = {height: $elm.find(item + ':first').height() + 'px', borderWidth: '1px'};
-    //var hide = {height: 0, borderWidth: 0};
-
-    var $active = $elm.find('[ic-selected]').addClass(cla);
-
-    //对外接口
-    $elm.on(eventSpace + 'val', function(e, msg){
-        var val = model.get();
-        $elm.data('ic-selected-val', val);
-    });
-
-    $elm.on(eventSpace + 'cancel', function (e, msg) {
-        if(msg){
-            $elm.find('[ic-select-val=?]'.replace('?', msg)).removeClass(cla);
-            model.set(msg, false);
-        }else{
-            $elm.find('[ic-select-val]').not('[ic-selected]').each(function(i){
-                var $th = $(this).removeClass(cla);
-                var val = $th.attr('ic-select-val');
-                model.set(val, false);
-            });
-        }
-        $elm.trigger(eventSpace + 'change', getVal());
-    });
-
-    function getVal(){
-
-        var result = [];
-
-        $items.filter('.'+cla).each(function(i){
-            var $th = $(this);
-            result.push({name: name, text:$th.text(), val:$th.attr('ic-select-val')});
-        });
-
-        return result.length == 1 ? result[0] : result.length > 1 ? result : {name:name};
-    }
-
-    //bind event
-    $elm.on('click', item, function (e) {
-
-        var $th = $(this);
-        var _val = $th.attr(val);
-
-        $all.removeClass(cla);
-
-        if(!isMultiple){
-            if ($th.hasClass(cla)) return;
-            $items.removeClass(cla);
-            $th.addClass(cla);
-            model.clear();
-            model.set(_val, true);
-        }else{
-            $th.toggleClass(cla);
-            model.toggle(_val);
-        }
-
-        $elm.trigger(eventSpace + 'change', getVal());
-
-    }).on('click', all, function (e) {
-
-        if( $all.hasClass(cla)) return;
-
-        var th = $all.addClass(cla);
-        var $siblings = $items/*.not(this)*/.removeClass(cla);
-
-        $elm.trigger(eventSpace+'all',{name:name});
-
-    }).on('click', more, function (e) {
-
-        $more.hide().nextAll().show();
-        $elm.trigger('ic-more.show', {form:shirkHeight, to:expandHeight});
-
-    }).on('click', shirk, function (e) {
-
-        $more.show().nextAll().hide();
-        $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
-
-    });
-
-
-    if($active.index() > $more.index()){
-        $more.click();
-    }
-
-
-});;
     /**
  * Created by Julien on 2015/7/23.
  */
@@ -2431,6 +2181,28 @@ brick.progress = {
         this.current = 1;
         return this;
     }
+};
+
+/**
+ * 封装location.search为一个对象，如果不存在，返回undefined
+ * @returns {*}
+ */
+brick.getQuery = function () {
+    var result;
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    if(!query) return result;
+    try {
+        result = JSON.parse('{' + query + '}');
+    } catch (e) {
+        console.error(e);
+        return;
+    }
+
+    for(var i in result){
+        result[i] = decodeURIComponent(result[i]);
+    }
+
+    return result;
 };
 
 /**
@@ -2737,10 +2509,11 @@ brick.getAniMap = function (animation) {
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
  */
-!function () {
+;!function () {
 
     function _initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
+        $elm.addClass('ic-animating');
         $elm.attr('ic-aniEnd', false);
         $elm.removeAttr('ic-aniIn');
     }
@@ -2751,6 +2524,7 @@ brick.getAniMap = function (animation) {
     }
 
     function _onEndAnimation($elm, call) {
+        $elm.removeClass('ic-animating');
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
         call && call.call($elm[0]);
     }
@@ -2787,7 +2561,7 @@ brick.getAniMap = function (animation) {
             $current.addClass(outClass).on(animEndEventName, function () {
 
                 $current.removeClass(outClass);
-                $current.removeAttr('ic-view-active');
+                $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
                 _onEndAnimation($current, call);
@@ -2805,7 +2579,7 @@ brick.getAniMap = function (animation) {
 
             _initStatus($next);
 
-            $next.attr('ic-view-active', true);
+            $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
@@ -2880,56 +2654,109 @@ brick.removeRoute = function (hash, handler) {
     return brick.off('ic-hashChange.' + hash, handler);
 };
 
-/**
- *
- * @param msg  {String} 要打印的消息
- * @param type {String} 错误级别
- */
-brick.debug = function(msg, type){
-    type = type || 'log';
-    console[type](msg);
-
-};;
+;
     /**
  * Created by Julien on 2015/8/10.
  */
 
-brick.cache = function cache(k, v, expire){
 
-    if(_.isObject(expire)){
-        var conf = expire;
-        expire = conf.expire;
-    }
+!function(){
 
-    expire = expire || brick.cache.expire || 1 * 24 * 60 * 60 * 1000;
+    brick.cache = function(_conf){
 
-    var data;
+        _conf = _.extend({
+            expire : brick.config.get('cache.expire') ||  1 * 24 * 60 * 60 * 1000,
+            namespace : brick.config.get('cache.namespace') || '__ic__'
+        }, _conf || {});
 
-    if(!v) {
+        return function _cache(k, v, conf){
 
-        data = JSON.parse(localStorage.getItem(k));
+            if(_.isUndefined(k)) return console.log('return for undefined k.');
 
-        if(+new Date - data.__ic_start > data.__ic_expire){
+            var base = JSON.parse(JSON.stringify(_conf));
 
-            localStorage.removeItem(k);
-            return void(0);
+            if(_.isNumber(conf)){
+                base.expire = conf;
+            }
 
-        }else{
-            return data.__ic_data;
-        }
+            conf = _.isObject(conf) ? _.extend(base, conf) : base;
 
-    }else{
+            var namespace = conf.namespace ? conf.namespace + '.' : '';
+            var key = namespace + k;
 
-        data = {};
-        data.__ic_start = + new Date;
-        data.__ic_data = v;
-        data.__ic_expire = expire;
+            var expire = conf.expire;
 
-        localStorage.setItem(k, JSON.stringify(data));
+            var data;
 
-    }
+            //清空localStorage
+            if(k === false){
+                localStorage.clear();
+                return;
+            }
 
-};
+            //返回所有的key
+            if(k === true){
+
+                for(var i = 0, keys = []; i < localStorage.length; i++){
+                    keys.push(localStorage.key(i));
+                }
+
+                return keys;
+            }
+
+            //清空localStorage对应的key
+            if(v === false){
+                localStorage.removeItem(key);
+                return;
+            }
+
+            //从localStorage获取对应的key或者设置对应的键值对
+            if(_.isUndefined(v)) {
+
+                data = JSON.parse(localStorage.getItem(key));
+
+                if(!data) return void(0);
+
+                if(+new Date - data.__ic_start > data.__ic_expire){
+
+                    localStorage.removeItem(key);
+                    return void(0);
+
+                }else{
+                    return data.__ic_data;
+                }
+
+            }else{
+
+                data = {};
+                data.__ic_start = + new Date;
+                data.__ic_data = v;
+                data.__ic_expire = expire;
+
+                try{
+
+                    localStorage.setItem(key, JSON.stringify(data));
+
+                }catch(e){
+
+                    if(e.name == 'QuotaExceededError'){
+
+                        console.error('存储溢出.');
+                        localStorage.clear();
+                        localStorage.setItem(key, JSON.stringify(data));
+
+                    }
+
+                }
+
+            }
+
+        };
+    };
+
+}();
+
+
 ;
 
     function bootstrap(){
@@ -2978,6 +2805,7 @@ brick.cache = function cache(k, v, expire){
 !function(){
 
     var enable = brick.config.get('ic-hashChange.enable');
+    var _default = brick.config.get('route.default');
 
     if(!enable) return;
 
@@ -3009,7 +2837,7 @@ brick.cache = function cache(k, v, expire){
     });
 
 
-    fire();
+    fire(_default);
 
 }();;
 

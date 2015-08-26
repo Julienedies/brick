@@ -7,6 +7,8 @@
 
 function createRender(root) {
 
+    root = root.cloneNode(true);
+
     //遍历dom节点，解析指令
     (function (node) {
 
