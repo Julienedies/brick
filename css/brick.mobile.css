@@ -3,10 +3,8 @@
 */
 
 /* 转场动画 */
-[ic-view], [ic-panel] {
-    position: absolute;
-    top: 0;
-    left: 0;
+
+.ic-animating{
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -16,16 +14,34 @@
     -webkit-transform-style: preserve-3d;
     -moz-transform-style: preserve-3d;
     transform-style: preserve-3d;
+}
+
+[ic-view], [ic-panel] {
+    position: relative;
+    top: 0;
+    left: 0;
+    width:100%;
     min-height: 100%;
     background: #fff;
-    overflow-y: auto;
-    overflow-x: hidden;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
+    /*    -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        min-height: 100%;
+        background: #fff;
+        overflow-y: auto;
+        overflow-x: hidden;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;*/
 }
 
 [ic-view] {
-    position: absolute;
+    position: relative;
     left: 0;
     right:0;
     top: 0;
@@ -45,14 +61,15 @@
 }
 
 [ic-view][ic-active], [ic-panel][ic-active] {
-    position: static;
+    position: relative;
     z-index: auto;
     left: 0;
     top: 0;
 }
 
 [ic-aniOut] {
-    display: none !important;
+    position: absolute;
+    /*display: none !important;*/
 }
 
 [ic-aniIn] {
