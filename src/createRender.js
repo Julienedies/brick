@@ -28,9 +28,10 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
-        .replace(/\bic-(checked|disabled)\s*=\s*(\S*)\s+/g,function(m, $1, $2){
-            $2 = $2.replace(/^(?:"|')|(?:"|')$/g,'');
-            return ' <% if(?2){ %> ?1 <% } %> '.replace('?2',$2).replace('?1',$1);
+        .replace(/\bic-(\w+-)?(checked|disabled|selected)\s*=\s*(\S*)\s+/g,function(m, $1, $2, $3){
+            $1 = $1 ? 'ic-'+ $1 : '';
+            $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
         })
         .replace(/&amp;&amp;/g,'&&');
 
