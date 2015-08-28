@@ -58,29 +58,9 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     ////////////////////////////////////////////////////
     //bind event
 
-    $elm.on('click', '[ic-prev-m]', function (e) {
-        _date = _date.replace(/^(\d+)-(\d+)-(\d+)$/img, function (match, y, m, d) {
-            if (m * 1 - 1 < 1) {
-                y = y * 1 - 1;
-                m = 12;
-            } else {
-                m = m * 1 - 1;
-            }
-            return y + '-' + m + '-' + d;
-        });
-        render(_date);
-    });
-
-    $elm.on('click', '[ic-next-m]', function (e) {
-        _date = _date.replace(/^(\d+)-(\d+)-(\d+)$/img, function (match, y, m, d) {
-            if (m * 1 + 1 > 12) {
-                y = y * 1 + 1;
-                m = 1;
-            } else {
-                m = m * 1 + 1;
-            }
-            return y + '-' + m + '-' + d;
-        });
+    $elm.on('click', '[ic-role-prev-m], [ic-role-next-m]', function (e) {
+        var call = this.getAttribute('ic-role-prev-m') != void(0) ? 'subtract' : 'add';
+        _date = moment(_date, _format)[call](1, 'months').format(_format);
         render(_date);
     });
 
@@ -113,49 +93,74 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         $elm.trigger('ic-date-picker.init');
     }
 
-    //时间数据模型
-    function model(date) {
-
-        var current = date ? moment(date, _format) : moment();
+    //计算一个月的天数
+    function _countDays(current){
 
         var year = current.year();
         var month = current.month();
 
         var days = _.range(1, current.daysInMonth() + 1);
 
+        return days.map(function(day){
+            return moment([year, month, day]).format(_format);
+        });
+
+    }
+
+    //时间数据模型
+    function model(date) {
+
+        var current = date ? moment(date, _format) : moment();
+        var prev = date ? moment(date, _format) : moment();
+        prev.subtract(1, 'months');
+        var next = date ? moment(date, _format) : moment();
+        next.add(1, 'months');
+
+        console.log(next.format(_format));
+
+        var year = current.year();
+        var month = current.month();
+
+        //var days = _.range(1, current.daysInMonth() + 1);
+        var days = _countDays(current);
+        var prevDays = _countDays(prev);
+        var nextDays = _countDays(next);
+
+        var len = days.length;
+
         var w = moment([year, month, 1]).weekday();
         if (w == 0) w = 7;
 
         var start = _.indexOf(weekMap, w);
+        var _start = start;
         console.log(weekMap, w, start);
-        while (start > 0) {
-            days.unshift('');
-            start--;
+        while (_start > 0) {
+            days.unshift(prevDays.pop());
+            _start--;
         }
 
         //var end = Math.ceil(days.length/7) * 7 - days.length;
         var end = 42 - days.length;
         while (end > 0) {
-            days.push('');
+            days.push(nextDays.shift());
             end--;
         }
+
+        days = days.map(function(v, i){
+            var m = moment(v, _format);
+            var diff = m.diff(now, 'days');
+            var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
+            var position = i < start ? 'prev' : i > (len+start-1) ? 'next' : 'current';
+            var isSelected = _.indexOf(selectedDateArr, date) > -1;
+            var n = v.replace(/^\d\d\d\d-\d\d-/i,'');
+            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position};
+            day.custom = onRender(day);
+            return day;
+        });
 
         var weeks = [];
         var week = days.splice(0, 7);
         while (week.length) {
-            week = week.map(function (v, i) {
-                if (v * 1 !== v) {
-                    return {custom: {}};
-                }
-                var m = moment([year, month, v]);
-                var diff = m.diff(now, 'days');
-                var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
-                var date = m.format(_format);
-                var isSelected = _.indexOf(selectedDateArr, date) > -1;
-                var day = {n: v, date: date, status: status, diff: diff, selected: isSelected};
-                day.custom = onRender(day);
-                return day;
-            });
             weeks.push(week);
             week = days.splice(0, 7);
         }

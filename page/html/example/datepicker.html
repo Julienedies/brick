@@ -37,24 +37,25 @@
            ic-date-multiple="true"
            ic-date-enabled="true"
            ic-date-format="YYYY-MM-DD"
-           ic-date-week-start="7"
+           ic-date-week-start="1"
            ic-date-on-render="onRender">
 
         <caption>
-            <a href="javascript:;" ic-prev-m>上月</a>
+            <a href="javascript:;" ic-role-prev-m>上月</a>
             <span ic-bind="vm.current"></span>
-            <a href="javascript:;" ic-next-m>下月</a>
+            <a href="javascript:;" ic-role-next-m>下月</a>
         </caption>
 
         <thead>
         <tr>
-            <th>周日</th>
+
             <th>周一</th>
             <th>周二</th>
             <th>周三</th>
             <th>周四</th>
             <th>周五</th>
             <th>周六</th>
+            <th>周日</th>
         </tr>
         </thead>
 
@@ -67,6 +68,7 @@
                 ic-date-status="{{day.status}}"
                 ic-class="{{day.selected ? 'selected' : ''}}">
                 {{day.n}}
+                <div>{{day.position}}</div>
                 <div>{{day.custom.text}}</div>
                 <div>{{day.custom.status}}</div>
             </td>
