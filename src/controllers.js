@@ -132,7 +132,7 @@ var controllers = (function (){
         },
         _render_: function(tplName, model){
             var $elm = this.$elm;
-            var tplf = brick._tplfs[tplName];  //模板函数
+            var tplf = brick.getTpl(tplName);  //模板函数
             var tple; //dom元素
             var html;
             if($elm && tplf){
