@@ -152,7 +152,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
             var position = i < start ? 'prev' : i > (len+start-1) ? 'next' : 'current';
             var isSelected = _.indexOf(selectedDateArr, date) > -1;
-            var n = v.replace(/^\d\d\d\d-\d\d-/i,'');
+            var n = v.replace(/^\d\d\d\d-\d\d-0?/i,'');
             var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position};
             day.custom = onRender(day);
             return day;
