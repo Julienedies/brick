@@ -401,7 +401,7 @@ var controllers = (function (){
         },
         _render_: function(tplName, model){
             var $elm = this.$elm;
-            var tplf = brick._tplfs[tplName];  //模板函数
+            var tplf = brick.getTpl(tplName);  //模板函数
             var tple; //dom元素
             var html;
             if($elm && tplf){
@@ -1224,14 +1224,14 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
-        .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*(\S*)\s+/g,function(m, $1, $2, $3){
+        .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
             $1 = $1 ? 'ic-'+ $1 : '';
             $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
         })
         .replace(/&amp;&amp;/g,'&&');
 
-    //console.log(tpl)
+    //console.log(tpl);
 
     var tplf = _.template(tpl);
     tplf._tpl_ = tpl;
