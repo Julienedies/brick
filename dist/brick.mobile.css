@@ -17,7 +17,7 @@
 }
 
 [ic-view], [ic-panel] {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     width:100%;
@@ -41,7 +41,7 @@
 }
 
 [ic-view] {
-    position: relative;
+    position: absolute;
     left: 0;
     right:0;
     top: 0;
@@ -56,7 +56,6 @@
 [ic-view]:not([ic-active]), [ic-panel]:not([ic-active]) {
     position: absolute;
     z-index: -2;
-    left: 0;
     top: -10000px;
 }
 
@@ -68,13 +67,14 @@
 }
 
 [ic-aniOut] {
-    position: absolute;
-    /*display: none !important;*/
+    display: none!important;
 }
 
 [ic-aniIn] {
-    display: block !important;
+    display: block!important;
 }
+
+
 
 /* */
 [ic-upload] [type=file] {
