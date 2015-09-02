@@ -3,6 +3,12 @@
  * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
+//处理sass
+fis.config.set('modules.parser.scss', 'sass');
+fis.config.set('modules.parser.sass', 'sass');
+fis.config.set('roadmap.ext.scss', 'css');
+fis.config.set('roadmap.ext.sass', 'css');
+
 //开启simple插件，注意需要先进行插件安装 npm install -g fis-postpackager-simple
 fis.config.set('modules.postpackager', 'simple');
 

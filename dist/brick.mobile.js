@@ -2141,6 +2141,14 @@ brick.toHtml = function (text) {
     return c.text();
 };
 
+
+
+
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
 /**
  * 获取一个动画类
  * @param animation {Number} 1-67
@@ -2434,7 +2442,8 @@ brick.getAniMap = function (animation) {
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
  */
-;!function () {
+;
+(function () {
 
     function _initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
@@ -2459,7 +2468,7 @@ brick.getAniMap = function (animation) {
 
     $.fn.icAniOut = function (animation, $next, call) {
 
-        if(_.isFunction(animation)){
+        if (_.isFunction(animation)) {
             call = animation;
         }
 
@@ -2526,7 +2535,7 @@ brick.getAniMap = function (animation) {
     //in
     $.fn.icAniIn = function (animation, $next, call) {
 
-        if(_.isFunction(animation)){
+        if (_.isFunction(animation)) {
             call = animation;
         }
 
@@ -2540,7 +2549,81 @@ brick.getAniMap = function (animation) {
         return $next.icAniOut(animation, this, call);
     }
 
-}();
+})();
+
+
+;
+(function () {
+
+
+
+    function Transition(conf) {
+        _.extend(this, conf || {});
+        this.history = [];
+        this.pool = {};
+        this.conf = {};
+        this.currentView = '';
+    }
+
+    var proto = {
+        cache: function (name, $view) {
+            var viewProp = this.pool[name] = this.pool[name] || {};
+            if ($view) {
+                viewProp.$view = $view;
+                viewProp.aniId = $view.attr('ic-view-aniId') || Math.round(Math.random() * 66 + 1);
+            }
+            $view = viewProp.$view;
+            if (!$view) {
+                $view = $('[ic-view=?]'.replace('?', name));
+                return this.cache(name, $view);
+            }
+            return viewProp;
+        },
+        current: function () {
+            var currentView = this.currentView;
+            if (!currentView) {
+                var $view = $('[ic-view][ic-active]');
+                currentView = $view.attr('ic-view');
+                this.currentView = currentView;
+                this.cache(currentView, $view);
+            }
+            return currentView
+        },
+        to: function (name, reverse) {
+            var currentView = this.current();
+            this.history.push(currentView);
+            this.currentView = name;
+            var nextViewProp = this.cache(name);
+            var currentViewProp = this.cache(currentView);
+            currentViewProp.$view.icAniOut(currentViewProp.aniId, nextViewProp.$view);
+        },
+        back: function () {
+            var prev = this.history.pop();
+            prev && this.to(prev, true);
+        }
+    };
+
+    for (var i in proto) {
+        Transition.prototype[i] = proto[i];
+    }
+
+
+    var transition = brick.transition = new Transition;
+
+
+    $(document.body).on('click', '[ic-view-to]', function(e){
+        var name = $(this).attr('ic-view-to');
+        transition.to(name);
+    }).on('click', '[ic-view-back]', function(e){
+        transition.back();
+    });
+
+})();
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
 
 /**
  *
@@ -2577,9 +2660,7 @@ brick.addRoute = function (hash, handler) {
  */
 brick.removeRoute = function (hash, handler) {
     return brick.off('ic-hashChange.' + hash, handler);
-};
-
-;
+};;
     /**
  * Created by Julien on 2015/8/10.
  */

@@ -37,7 +37,7 @@
            ic-date-multiple="true"
            ic-date-enabled="true"
            ic-date-format="YYYY-MM-DD"
-           ic-date-week-start="1"
+           ic-date-week-start="7"
            ic-date-on-render="onRender">
 
         <caption>
@@ -48,14 +48,13 @@
 
         <thead>
         <tr>
-
+            <th>周日</th>
             <th>周一</th>
             <th>周二</th>
             <th>周三</th>
             <th>周四</th>
             <th>周五</th>
             <th>周六</th>
-            <th>周日</th>
         </tr>
         </thead>
 
@@ -85,14 +84,7 @@
 <script src="../../../dist/brick.datepicker.js"></script>
 <script>
 
-    function onRender(day) {
-        var custom = {};
-        if (day.diff == 0) custom.text = '今天';
-        if (day.diff == 1) custom.text = '明天';
-        if (day.diff == 2) custom.text = '后天';
-        //if(day.diff > 2) custom.enabled = true;
-        return custom;
-    }
+
 
 
 </script>

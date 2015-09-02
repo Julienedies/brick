@@ -27,7 +27,9 @@
     __inline('src/widget/tpl.js');
 
     __inline('src/util.js');
-    __inline('src/cache.js');
+    __inline('src/extend/transition.js');
+    __inline('src/extend/route.js');
+    __inline('src/extend/cache.js');
 
     function bootstrap(){
 
