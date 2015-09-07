@@ -339,7 +339,7 @@ brick.getAniMap = function (animation) {
         var outClass = cla.outClass;
 
         // $doc.animate({scrollTop: 0}, 150);
-        $doc.scrollTop(0);
+        //$doc.scrollTop(0);
 
         if ($current.length) {
 
@@ -408,8 +408,6 @@ brick.getAniMap = function (animation) {
 ;
 (function () {
 
-
-
     function Transition(conf) {
         _.extend(this, conf || {});
         this.history = [];
@@ -423,7 +421,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-aniId') || 10 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -448,7 +446,9 @@ brick.getAniMap = function (animation) {
             this.currentView = name;
             var nextViewProp = this.cache(name);
             var currentViewProp = this.cache(currentView);
-            currentViewProp.$view.icAniOut(currentViewProp.aniId, nextViewProp.$view);
+            var aniId = currentViewProp.aniId;
+            aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
         },
         back: function () {
             var prev = this.history.pop();
