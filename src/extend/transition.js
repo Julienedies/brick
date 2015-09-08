@@ -9,7 +9,7 @@
  */
 brick.getAniMap = function (animation) {
 
-    animation = animation || Math.round(Math.random() * 66 + 1);
+    animation = animation*1 || Math.round(Math.random() * 66 + 1);
 
     console.info('animation id is ' + animation);
 
@@ -294,6 +294,7 @@ brick.getAniMap = function (animation) {
 /**
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
+ * 一个元素css display:none  不能做css3动画
  */
 ;
 (function () {
@@ -319,29 +320,42 @@ brick.getAniMap = function (animation) {
     var $doc = $('body');
     var animEndEventName = 'webkitAnimationEnd';
 
-    $.fn.icAniOut = function (animation, $next, call) {
+    $.fn.icAniOut = function (aniId, $next, call) {
 
-        if (_.isFunction(animation)) {
-            call = animation;
-        }
+        var args = [].slice.call(arguments);
 
-        if (_.isObject(animation)) {
-            $next = animation;
-            animation = void(0);
-        }
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
 
         $next = $($next);
 
         var $current = this;
 
-        var cla = brick.getAniMap(animation);
+        $current = $current[0] && $current[0].hasAttribute ? $current : false;
+        $next = $next[0] && $next[0].hasAttribute ? $next : false;
+
+        if(!$next){
+            aniId = aniId || this.attr('ic-aniId');
+            aniId = aniId % 2 ? aniId + 1 : aniId - 1;
+        }
+
+        var cla = brick.getAniMap(aniId);
         var inClass = cla.inClass;
         var outClass = cla.outClass;
 
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
 
-        if ($current.length) {
+        if ($current) {
 
             _initStatus($current);
 
@@ -362,10 +376,10 @@ brick.getAniMap = function (animation) {
         }
 
 
-        if ($next.length) {
+        if ($next) {
 
             _initStatus($next);
-
+            $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
@@ -386,20 +400,25 @@ brick.getAniMap = function (animation) {
     };
 
     //in
-    $.fn.icAniIn = function (animation, $next, call) {
+    $.fn.icAniIn = function (aniId, $next, call) {
 
-        if (_.isFunction(animation)) {
-            call = animation;
-        }
+        var args = [].slice.call(arguments);
 
-        if (_.isObject(animation)) {
-            $next = animation;
-            animation = void(0);
-        }
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
 
         $next = $next || $({});
 
-        return $next.icAniOut(animation, this, call);
+        return $next.icAniOut(aniId, this, call);
     }
 
 })();
@@ -464,10 +483,10 @@ brick.getAniMap = function (animation) {
     var transition = brick.transition = new Transition;
 
 
-    $(document.body).on('click', '[ic-view-to]', function(e){
+    $(document.body).on('click', '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
-    }).on('click', '[ic-view-back]', function(e){
+    }).on('click', '[ic-view-back]', function (e) {
         transition.back();
     });
 

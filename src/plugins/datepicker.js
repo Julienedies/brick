@@ -29,8 +29,8 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     var weekStart = $elm.attr('ic-date-week-start') || 1;
     var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
-    var onRender = $elm.icParseProperty($elm.attr('ic-date-on-render')) || function (a) {
-        };
+    var onRender = $elm.icParseProperty2('ic-date-on-render') || function (a) { };
+
     var now = moment(_date, _format);
     var cla = 'selected';
     var weekMap = (function (weekStart) {

@@ -6,12 +6,18 @@ var directives = {
 
     _pool: {},
 
-    add: function (name, definition) {
+    add: function (name, definition, conf) {
+        if(conf){
+            conf.fn = definition;
+        }
         this._pool[name] = definition;
     },
 
-    reg: function(name, definition){
-        this._pool[name] = definition;
+    reg: function(name, definition, conf){
+        if(conf){
+            conf.fn = definition;
+        }
+        this._pool[name] = conf || definition;
     },
 
     get: function (name) {

@@ -7,6 +7,12 @@
 (function (root, undefined) {
 
     /**
+ * Created by Julien on 2015/9/8.
+ */
+
+IC_EVENT_TRIGGER_TYPE = 'event.trigger.type';
+IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';;
+    /**
  * Created by julien.zhang on 2014/9/16.
  *
  * 框架配置
@@ -639,12 +645,18 @@ var directives = {
 
     _pool: {},
 
-    add: function (name, definition) {
+    add: function (name, definition, conf) {
+        if(conf){
+            conf.fn = definition;
+        }
         this._pool[name] = definition;
     },
 
-    reg: function(name, definition){
-        this._pool[name] = definition;
+    reg: function(name, definition, conf){
+        if(conf){
+            conf.fn = definition;
+        }
+        this._pool[name] = conf || definition;
     },
 
     get: function (name) {
@@ -1291,17 +1303,717 @@ root.brick = {
 
 
 ;
+
+    /**
+ * Created by Juien on 2015/8/10.
+ */
+
+
+/**
+ * 虚构进度数字
+ * @type {{current: number, get: get, init: init}}
+ */
+brick.progress = {
+    current: 1,
+    get: function () {
+        var current = this.current;
+        var add = current > 97 ? 0 : current > 72 ? Math.random() : Math.round(Math.random() * 16);
+        current = this.current += add;
+        return (current.toFixed(2) + '%').replace(/\.00/i, '');
+    },
+    init: function () {
+        this.current = 1;
+        return this;
+    }
+};
+
+/**
+ * 封装location.search为一个对象，如果不存在，返回undefined
+ * @returns {*}
+ */
+brick.getQuery = function () {
+    var result;
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    if(!query) return result;
+    try {
+        result = JSON.parse('{' + query + '}');
+    } catch (e) {
+        console.error(e);
+        return;
+    }
+
+    for(var i in result){
+        result[i] = decodeURIComponent(result[i]);
+    }
+
+    return result;
+};
+
+/**
+ * 恢复被转义的html
+ * @param text
+ * @returns {*}
+ */
+brick.toHtml = function (text) {
+    var c = $('<div></div>');
+    c.html(text);
+    return c.text();
+};
+
+
+
+
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
+/**
+ * 获取一个动画类
+ * @param animation {Number} 1-67
+ * @returns {{inClass: string, outClass: string}}
+ */
+brick.getAniMap = function (animation) {
+
+    animation = animation*1 || Math.round(Math.random() * 66 + 1);
+
+    console.info('animation id is ' + animation);
+
+    var outClass = '', inClass = '';
+
+    switch (animation) {
+
+        case 1:
+            outClass = 'pt-page-moveToLeft';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 2:
+            outClass = 'pt-page-moveToRight';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 3:
+            outClass = 'pt-page-moveToTop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 4:
+            outClass = 'pt-page-moveToBottom';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 5:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromRight pt-page-ontop';
+            break;
+        case 6:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromLeft pt-page-ontop';
+            break;
+        case 7:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromBottom pt-page-ontop';
+            break;
+        case 8:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromTop pt-page-ontop';
+            break;
+        case 9:
+            outClass = 'pt-page-moveToLeftFade';
+            inClass = 'pt-page-moveFromRightFade';
+            break;
+        case 10:
+            outClass = 'pt-page-moveToRightFade';
+            inClass = 'pt-page-moveFromLeftFade';
+            break;
+        case 11:
+            outClass = 'pt-page-moveToTopFade';
+            inClass = 'pt-page-moveFromBottomFade';
+            break;
+        case 12:
+            outClass = 'pt-page-moveToBottomFade';
+            inClass = 'pt-page-moveFromTopFade';
+            break;
+        case 13:
+            outClass = 'pt-page-moveToLeftEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 14:
+            outClass = 'pt-page-moveToRightEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 15:
+            outClass = 'pt-page-moveToTopEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 16:
+            outClass = 'pt-page-moveToBottomEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 17:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromRight pt-page-ontop';
+            break;
+        case 18:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromLeft pt-page-ontop';
+            break;
+        case 19:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromBottom pt-page-ontop';
+            break;
+        case 20:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromTop pt-page-ontop';
+            break;
+        case 21:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-scaleUpDown pt-page-delay300';
+            break;
+        case 22:
+            outClass = 'pt-page-scaleDownUp';
+            inClass = 'pt-page-scaleUp pt-page-delay300';
+            break;
+        case 23:
+            outClass = 'pt-page-moveToLeft pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 24:
+            outClass = 'pt-page-moveToRight pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 25:
+            outClass = 'pt-page-moveToTop pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 26:
+            outClass = 'pt-page-moveToBottom pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 27:
+            outClass = 'pt-page-scaleDownCenter';
+            inClass = 'pt-page-scaleUpCenter pt-page-delay400';
+            break;
+        case 28:
+            outClass = 'pt-page-rotateRightSideFirst';
+            inClass = 'pt-page-moveFromRight pt-page-delay200 pt-page-ontop';
+            break;
+        case 29:
+            outClass = 'pt-page-rotateLeftSideFirst';
+            inClass = 'pt-page-moveFromLeft pt-page-delay200 pt-page-ontop';
+            break;
+        case 30:
+            outClass = 'pt-page-rotateTopSideFirst';
+            inClass = 'pt-page-moveFromTop pt-page-delay200 pt-page-ontop';
+            break;
+        case 31:
+            outClass = 'pt-page-rotateBottomSideFirst';
+            inClass = 'pt-page-moveFromBottom pt-page-delay200 pt-page-ontop';
+            break;
+        case 32:
+            outClass = 'pt-page-flipOutRight';
+            inClass = 'pt-page-flipInLeft pt-page-delay500';
+            break;
+        case 33:
+            outClass = 'pt-page-flipOutLeft';
+            inClass = 'pt-page-flipInRight pt-page-delay500';
+            break;
+        case 34:
+            outClass = 'pt-page-flipOutTop';
+            inClass = 'pt-page-flipInBottom pt-page-delay500';
+            break;
+        case 35:
+            outClass = 'pt-page-flipOutBottom';
+            inClass = 'pt-page-flipInTop pt-page-delay500';
+            break;
+        case 36:
+            outClass = 'pt-page-rotateFall pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 37:
+            outClass = 'pt-page-rotateOutNewspaper';
+            inClass = 'pt-page-rotateInNewspaper pt-page-delay500';
+            break;
+        case 38:
+            outClass = 'pt-page-rotatePushLeft';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 39:
+            outClass = 'pt-page-rotatePushRight';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 40:
+            outClass = 'pt-page-rotatePushTop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 41:
+            outClass = 'pt-page-rotatePushBottom';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 42:
+            outClass = 'pt-page-rotatePushLeft';
+            inClass = 'pt-page-rotatePullRight pt-page-delay180';
+            break;
+        case 43:
+            outClass = 'pt-page-rotatePushRight';
+            inClass = 'pt-page-rotatePullLeft pt-page-delay180';
+            break;
+        case 44:
+            outClass = 'pt-page-rotatePushTop';
+            inClass = 'pt-page-rotatePullBottom pt-page-delay180';
+            break;
+        case 45:
+            outClass = 'pt-page-rotatePushBottom';
+            inClass = 'pt-page-rotatePullTop pt-page-delay180';
+            break;
+        case 46:
+            outClass = 'pt-page-rotateFoldLeft';
+            inClass = 'pt-page-moveFromRightFade';
+            break;
+        case 47:
+            outClass = 'pt-page-rotateFoldRight';
+            inClass = 'pt-page-moveFromLeftFade';
+            break;
+        case 48:
+            outClass = 'pt-page-rotateFoldTop';
+            inClass = 'pt-page-moveFromBottomFade';
+            break;
+        case 49:
+            outClass = 'pt-page-rotateFoldBottom';
+            inClass = 'pt-page-moveFromTopFade';
+            break;
+        case 50:
+            outClass = 'pt-page-moveToRightFade';
+            inClass = 'pt-page-rotateUnfoldLeft';
+            break;
+        case 51:
+            outClass = 'pt-page-moveToLeftFade';
+            inClass = 'pt-page-rotateUnfoldRight';
+            break;
+        case 52:
+            outClass = 'pt-page-moveToBottomFade';
+            inClass = 'pt-page-rotateUnfoldTop';
+            break;
+        case 53:
+            outClass = 'pt-page-moveToTopFade';
+            inClass = 'pt-page-rotateUnfoldBottom';
+            break;
+        case 54:
+            outClass = 'pt-page-rotateRoomLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomLeftIn';
+            break;
+        case 55:
+            outClass = 'pt-page-rotateRoomRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomRightIn';
+            break;
+        case 56:
+            outClass = 'pt-page-rotateRoomTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomTopIn';
+            break;
+        case 57:
+            outClass = 'pt-page-rotateRoomBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomBottomIn';
+            break;
+        case 58:
+            outClass = 'pt-page-rotateCubeLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeLeftIn';
+            break;
+        case 59:
+            outClass = 'pt-page-rotateCubeRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeRightIn';
+            break;
+        case 60:
+            outClass = 'pt-page-rotateCubeTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeTopIn';
+            break;
+        case 61:
+            outClass = 'pt-page-rotateCubeBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeBottomIn';
+            break;
+        case 62:
+            outClass = 'pt-page-rotateCarouselLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselLeftIn';
+            break;
+        case 63:
+            outClass = 'pt-page-rotateCarouselRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselRightIn';
+            break;
+        case 64:
+            outClass = 'pt-page-rotateCarouselTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselTopIn';
+            break;
+        case 65:
+            outClass = 'pt-page-rotateCarouselBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselBottomIn';
+            break;
+        case 66:
+            outClass = 'pt-page-rotateSidesOut';
+            inClass = 'pt-page-rotateSidesIn pt-page-delay200';
+            break;
+        case 67:
+            outClass = 'pt-page-rotateSlideOut';
+            inClass = 'pt-page-rotateSlideIn';
+            break;
+
+    }
+
+    return {inClass: inClass, outClass: outClass};
+};
+
+/**
+ * 扩展jquery，添加转场动画支持
+ * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
+ * 一个元素css display:none  不能做css3动画
+ */
+;
+(function () {
+
+    function _initStatus($elm) {
+        $elm.attr('ic-isAnimating', false);
+        $elm.addClass('ic-animating');
+        $elm.attr('ic-aniEnd', false);
+        $elm.removeAttr('ic-aniIn');
+    }
+
+    function _getStatus($elm) {
+        var isAnimating = $elm.attr('ic-isAnimating');
+        return {isAnimating: isAnimating};
+    }
+
+    function _onEndAnimation($elm, call) {
+        $elm.removeClass('ic-animating');
+        $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
+        call && call.call($elm[0]);
+    }
+
+    var $doc = $('body');
+    var animEndEventName = 'webkitAnimationEnd';
+
+    $.fn.icAniOut = function (aniId, $next, call) {
+
+        var args = [].slice.call(arguments);
+
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
+
+        $next = $($next);
+
+        var $current = this;
+
+        $current = $current[0] && $current[0].hasAttribute ? $current : false;
+        $next = $next[0] && $next[0].hasAttribute ? $next : false;
+
+        if(!$next){
+            aniId = aniId || this.attr('ic-aniId');
+            aniId = aniId % 2 ? aniId + 1 : aniId - 1;
+        }
+
+        var cla = brick.getAniMap(aniId);
+        var inClass = cla.inClass;
+        var outClass = cla.outClass;
+
+        // $doc.animate({scrollTop: 0}, 150);
+        //$doc.scrollTop(0);
+
+        if ($current) {
+
+            _initStatus($current);
+
+            $current.addClass(outClass).on(animEndEventName, function () {
+
+                $current.removeClass(outClass);
+                $current.removeAttr('ic-active');
+                $current.removeAttr('ic-aniIn');
+                $current.attr('ic-aniOut', true);
+                _onEndAnimation($current, call);
+
+                if (!$next || $next && $next.attr('ic-aniEnd')) {
+                    //_onEndAnimation($current);
+                }
+
+            });
+
+        }
+
+
+        if ($next) {
+
+            _initStatus($next);
+            $next.attr('ic-aniId', aniId);
+            $next.attr('ic-active', true);
+            $next.attr('ic-aniIn', true);
+            $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
+
+                _onEndAnimation($next, call);
+                $next.removeClass(inClass);
+
+                if (!$current || $current && $current.attr('ic-aniEnd')) {
+                    //_onEndAnimation($next);
+                }
+
+            });
+
+        }
+
+        return this;
+
+    };
+
+    //in
+    $.fn.icAniIn = function (aniId, $next, call) {
+
+        var args = [].slice.call(arguments);
+
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
+
+        $next = $next || $({});
+
+        return $next.icAniOut(aniId, this, call);
+    }
+
+})();
+
+
+;
+(function () {
+
+    function Transition(conf) {
+        _.extend(this, conf || {});
+        this.history = [];
+        this.pool = {};
+        this.conf = {};
+        this.currentView = '';
+    }
+
+    var proto = {
+        cache: function (name, $view) {
+            var viewProp = this.pool[name] = this.pool[name] || {};
+            if ($view) {
+                viewProp.$view = $view;
+                viewProp.aniId = $view.attr('ic-view-aniId') || 10 || Math.round(Math.random() * 66 + 1);
+            }
+            $view = viewProp.$view;
+            if (!$view) {
+                $view = $('[ic-view=?]'.replace('?', name));
+                return this.cache(name, $view);
+            }
+            return viewProp;
+        },
+        current: function () {
+            var currentView = this.currentView;
+            if (!currentView) {
+                var $view = $('[ic-view][ic-active]');
+                currentView = $view.attr('ic-view');
+                this.currentView = currentView;
+                this.cache(currentView, $view);
+            }
+            return currentView
+        },
+        to: function (name, reverse) {
+            var currentView = this.current();
+            this.history.push(currentView);
+            this.currentView = name;
+            var nextViewProp = this.cache(name);
+            var currentViewProp = this.cache(currentView);
+            var aniId = currentViewProp.aniId;
+            aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
+        },
+        back: function () {
+            var prev = this.history.pop();
+            prev && this.to(prev, true);
+        }
+    };
+
+    for (var i in proto) {
+        Transition.prototype[i] = proto[i];
+    }
+
+
+    var transition = brick.transition = new Transition;
+
+
+    $(document.body).on('click', '[ic-view-to]', function (e) {
+        var name = $(this).attr('ic-view-to');
+        transition.to(name);
+    }).on('click', '[ic-view-back]', function (e) {
+        transition.back();
+    });
+
+})();
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
+
+/**
+ *
+ * @param hash
+ * @param handler
+ * @returns {Window.brick|*}
+ */
+brick.addRoute = function (hash, handler) {
+
+    if(hash == '') {
+        hash = '/';
+    }
+
+    function f(hash, handler) {
+        return brick.on('ic-hashChange.' + hash, handler);
+    }
+
+    //开启hashchange事件监听
+    brick.config.set('ic-hashChange.enable', true);
+
+    f(hash, handler);
+
+    brick.addRoute = f;
+
+    return brick;
+
+};
+
+/**
+ *
+ * @param hash
+ * @param handler
+ * @returns {*}
+ */
+brick.removeRoute = function (hash, handler) {
+    return brick.off('ic-hashChange.' + hash, handler);
+};;
+    /**
+ * Created by Julien on 2015/8/10.
+ */
+
+
+!function(){
+
+    brick.cache = function(_conf){
+
+        _conf = _.extend({
+            expire : brick.config.get('cache.expire') ||  1 * 24 * 60 * 60 * 1000,
+            namespace : brick.config.get('cache.namespace') || '__ic__'
+        }, _conf || {});
+
+        return function _cache(k, v, conf){
+
+            if(_.isUndefined(k)) return console.log('return for undefined k.');
+
+            var base = JSON.parse(JSON.stringify(_conf));
+
+            if(_.isNumber(conf)){
+                base.expire = conf;
+            }
+
+            conf = _.isObject(conf) ? _.extend(base, conf) : base;
+
+            var namespace = conf.namespace ? conf.namespace + '.' : '';
+            var key = namespace + k;
+
+            var expire = conf.expire;
+
+            var data;
+
+            //清空localStorage
+            if(k === false){
+                localStorage.clear();
+                return;
+            }
+
+            //返回所有的key
+            if(k === true){
+
+                for(var i = 0, keys = []; i < localStorage.length; i++){
+                    keys.push(localStorage.key(i));
+                }
+
+                return keys;
+            }
+
+            //清空localStorage对应的key
+            if(v === false){
+                localStorage.removeItem(key);
+                return;
+            }
+
+            //从localStorage获取对应的key或者设置对应的键值对
+            if(_.isUndefined(v)) {
+
+                data = JSON.parse(localStorage.getItem(key));
+
+                if(!data) return void(0);
+
+                if(+new Date - data.__ic_start > data.__ic_expire){
+
+                    localStorage.removeItem(key);
+                    return void(0);
+
+                }else{
+                    return data.__ic_data;
+                }
+
+            }else{
+
+                data = {};
+                data.__ic_start = + new Date;
+                data.__ic_data = v;
+                data.__ic_expire = expire;
+
+                try{
+
+                    localStorage.setItem(key, JSON.stringify(data));
+
+                }catch(e){
+
+                    if(e.name == 'QuotaExceededError'){
+
+                        console.error('存储溢出.');
+                        localStorage.clear();
+                        localStorage.setItem(key, JSON.stringify(data));
+
+                    }
+
+                }
+
+            }
+
+        };
+    };
+
+}();
+
+
+;
+
     /**
  * Created by julien.zhang on 2014/10/30.
  * 扩展 jquery
  */
 (function ($) {
 
-    $.fn.icCompile = function(){
+    $.fn.icCompile = function () {
 
-        if(!this.length) return;
+        if (!this.length) return;
 
-        return this.each(function(i){
+        return this.each(function (i) {
 
             brick.compile(this);
 
@@ -1314,60 +2026,117 @@ root.brick = {
         var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
         var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
-        return (function (root, key) {
+        var chain = name.split('.');
 
-            var chain = key.split('.');
+        return (function (root, chain) {
 
-            return (function (root, chain) {
+            var k = chain.shift();
+            var v = root[k];
 
-                var k = chain.shift();
-                var v = root[k];
+            if (!v) return;
 
-                if (!v) return;
+            if (chain.length) {
+                return arguments.callee(v, chain);
+            }
 
-                if (chain.length) {
-                    return arguments.callee(v, chain);
-                }
+            return v;
 
-                return v;
-
-            })(root, chain);
-
-        })(namespace, name);
+        })(namespace, chain);
 
     };
 
+    $.fn.icParseProperty2 = function (name) {
+        name = this.attr(name);
+        return this.icParseProperty(name);
+    };
 
-    $.fn.icTabActive = $.fn.icTabs = function(options){
+    $.fn.icTabs = function (options) {
         var active = options.active;
         active && this.attr('ic-tab-active', active);
         return this;
     };
 
     $.fn.icAjax = function (options) {
-        if(options === void(0)) return this.trigger('ic-ajax');
+        if (options === void(0)) return this.trigger('ic-ajax');
         options.data && this.data('ic-submit-data', options.data);
 
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
 
-        return this;//链式调用
+        return this;
     };
 
     $.fn.icDialog = function (options) {
 
-        this.show();
+        if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
+            console.error('not is ic-dialog');
+            return this;
+        }
+
         var that = this;
-        setTimeout(function () {
-            var id = that.attr('ic-dialog');
-            if (id !== void(0)) {
-                that.trigger('ic-dialog.call', options);
+
+        setTimeout(function(){
+
+            var tpl = brick.getTpl(that.attr('ic-tpl'));
+
+            if (options === void(0)) {
+                options = true;
             }
-        }, 30);
+
+            if (!options) {
+                that.icAniOut(21);
+            }
+
+            if (tpl && _.isObject(options)) {
+                 that.html(tpl(options.vm || options));
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-dialog.show');
+            });
+
+        },30);
 
         return this;
     };
 
-//定时器
+    $.fn.icPrompt = function (options) {
+
+        if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
+            console.error('not is ic-prompt');
+            return this;
+        }
+
+        var that = this;
+
+        setTimeout(function(){
+
+            var tpl = brick.getTpl(that.attr('ic-tpl'));
+
+            if (options === void(0)) {
+                options = true;
+            }
+
+            if (!options) {
+                that.icAniOut();
+            }
+
+            if (tpl && _.isObject(options)) {
+                 that.html(tpl(options.vm || options));
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-prompt.show');
+                setTimeout(function(){
+                    that.icAniOut();
+                }, 3000);
+            });
+
+        },30);
+
+        return this;
+    };
+
+    //定时器
     $.fn.icTimer = function () {
         var th = this;
         var count = th.attr('ic-timer-count') * 1;
@@ -1382,78 +2151,12 @@ root.brick = {
         }, 1000);
 
         return this;
-    }
-    //切换场景
-    $.icNextScene = function () {
-        var current = $('[ic-scene]').filter('[ic-scene-active=1]');
-
-        if (current.size) current.nextScene();
-    }
-
-    $.fn.nextScene = function () {
-        var next = this.attr('ic-scene-next');
-        if (next) {
-            this.hide().removeAttr('ic-scene-active');
-            $('[ic-scene=?]'.replace('?', next)).show().attr('ic-scene-active', 1);
-        }
-
-        return this;
-    }
-
-// 操作提示
-    var tipSize=0;
-    $.fn.tips = function (parent) {
-        ++tipSize;
-        var $parent = $(parent || 'body');
-        var w = $parent.innerWidth() * 0.4 + 'px';
-        var h;
-        var top;
-        var left;
-        var wraper = $('<div class="tipsBox"></div>');
-
-        this.addClass('tips1').css({
-            'width': w
-        });
-        this.appendTo(wraper);
-        wraper.appendTo($parent);
-
-        w = this.width()
-        h = this.height();
-        top = '-' + h / 2 + 'px';
-        left = '-' + w / 2 + 'px';
-        this.css({
-            'top': 40 * tipSize,
-            'left': left
-        });
-
-        wraper.animate({
-            top: 0,
-            'opacity': '1'
-        }, 500, function () {
-            $(this).addClass('animated wobble');
-        });
-
-        setTimeout(function () {
-            wraper.animate({
-                'top': -300,
-                'opacity': '0'
-            }, 500, function () {
-                --tipSize;
-                wraper.remove();
-            });
-        }, 2000 * tipSize);
-
-        return this;
     };
 
-    $.tips = function (massge) {
-        $('<div>' + massge + '</div>').tips();
-    };
-
-//监听enter键
+    //监听enter键
     $.fn.icEnterPress = function (call) {
 
-        return this.each(function(i){
+        return this.each(function (i) {
 
             call = $.proxy(call, this);
 
@@ -1474,17 +2177,10 @@ root.brick = {
 
     };
 
-//设置loading
+    //设置loading
     (function ($) {
 
         var loading = '<span style="margin:0.2em auto;display:inline-block;text-align:center;" role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
-
-        if (window.ActiveXObject) {
-
-            loading = 'data:image/gif;base64,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';
-            loading = '<span style="margin:0.2em; auto;display:inline-block;text-align:center;" role="_loading_"><img src="?"></span>'.replace('?', loading);
-
-        }
 
         $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
@@ -1492,7 +2188,7 @@ root.brick = {
 
             this.icClearLoading();
 
-            return this.each(function(){
+            return this.each(function () {
                 //this.parent().css({position:'relative'});
                 var $th = $(this);
                 var w = $th.outerWidth();
@@ -1500,7 +2196,7 @@ root.brick = {
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 999}).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 
@@ -1514,10 +2210,10 @@ root.brick = {
     })(jQuery);
 
 
-//清除loading
+    //清除loading
     $.fn.icClearLoading = $.fn.clearLoading = function () {
 
-        return this.each(function(){
+        return this.each(function () {
             var $th = $(this);
             var $loading = $th.data('_ic-role-loading');
             $loading && $loading.remove();
@@ -1663,6 +2359,50 @@ directives.add('ic-tabs', function ($elm, attrs) {
 });
 
 ;
+    /**
+ * Created by julien.zhang on 2014/10/29.
+ */
+
+
+directives.reg('ic-dialog', function ($elm, attrs) {
+
+    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+
+    $('body').on(event, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
+
+        var $th = $(this);
+        var type = this.hasAttribute('ic-dialog-confirm');
+
+        var $dialog = $th.closest('[ic-dialog]');
+
+        $dialog.icAniOut(21,function(){
+            $dialog.trigger('ic-dialog.hide', type);
+        });
+
+    });
+
+}, {selfExec: true, once: true });
+
+
+
+directives.reg('ic-prompt', function ($elm, attrs) {
+
+    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+
+    $('body').on(event, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+
+        var $th = $(this);
+        var type = this.hasAttribute('ic-prompt-confirm');
+
+        var $dialog = $th.closest('[ic-prompt]');
+
+        $dialog.icAniOut(21,function(){
+            $dialog.trigger('ic-prompt.hide', type);
+        });
+
+    });
+
+}, {selfExec: true, once: true });;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
@@ -2085,685 +2825,6 @@ directives.add('ic-tpl', {
 });
 ;
 
-    /**
- * Created by Juien on 2015/8/10.
- */
-
-
-/**
- * 虚构进度数字
- * @type {{current: number, get: get, init: init}}
- */
-brick.progress = {
-    current: 1,
-    get: function () {
-        var current = this.current;
-        var add = current > 97 ? 0 : current > 72 ? Math.random() : Math.round(Math.random() * 16);
-        current = this.current += add;
-        return (current.toFixed(2) + '%').replace(/\.00/i, '');
-    },
-    init: function () {
-        this.current = 1;
-        return this;
-    }
-};
-
-/**
- * 封装location.search为一个对象，如果不存在，返回undefined
- * @returns {*}
- */
-brick.getQuery = function () {
-    var result;
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    if(!query) return result;
-    try {
-        result = JSON.parse('{' + query + '}');
-    } catch (e) {
-        console.error(e);
-        return;
-    }
-
-    for(var i in result){
-        result[i] = decodeURIComponent(result[i]);
-    }
-
-    return result;
-};
-
-/**
- * 恢复被转义的html
- * @param text
- * @returns {*}
- */
-brick.toHtml = function (text) {
-    var c = $('<div></div>');
-    c.html(text);
-    return c.text();
-};
-
-
-
-
-;
-    /**
- * Created by Julien on 2015/9/1.
- */
-
-/**
- * 获取一个动画类
- * @param animation {Number} 1-67
- * @returns {{inClass: string, outClass: string}}
- */
-brick.getAniMap = function (animation) {
-
-    animation = animation || Math.round(Math.random() * 66 + 1);
-
-    console.info('animation id is ' + animation);
-
-    var outClass = '', inClass = '';
-
-    switch (animation) {
-
-        case 1:
-            outClass = 'pt-page-moveToLeft';
-            inClass = 'pt-page-moveFromRight';
-            break;
-        case 2:
-            outClass = 'pt-page-moveToRight';
-            inClass = 'pt-page-moveFromLeft';
-            break;
-        case 3:
-            outClass = 'pt-page-moveToTop';
-            inClass = 'pt-page-moveFromBottom';
-            break;
-        case 4:
-            outClass = 'pt-page-moveToBottom';
-            inClass = 'pt-page-moveFromTop';
-            break;
-        case 5:
-            outClass = 'pt-page-fade';
-            inClass = 'pt-page-moveFromRight pt-page-ontop';
-            break;
-        case 6:
-            outClass = 'pt-page-fade';
-            inClass = 'pt-page-moveFromLeft pt-page-ontop';
-            break;
-        case 7:
-            outClass = 'pt-page-fade';
-            inClass = 'pt-page-moveFromBottom pt-page-ontop';
-            break;
-        case 8:
-            outClass = 'pt-page-fade';
-            inClass = 'pt-page-moveFromTop pt-page-ontop';
-            break;
-        case 9:
-            outClass = 'pt-page-moveToLeftFade';
-            inClass = 'pt-page-moveFromRightFade';
-            break;
-        case 10:
-            outClass = 'pt-page-moveToRightFade';
-            inClass = 'pt-page-moveFromLeftFade';
-            break;
-        case 11:
-            outClass = 'pt-page-moveToTopFade';
-            inClass = 'pt-page-moveFromBottomFade';
-            break;
-        case 12:
-            outClass = 'pt-page-moveToBottomFade';
-            inClass = 'pt-page-moveFromTopFade';
-            break;
-        case 13:
-            outClass = 'pt-page-moveToLeftEasing pt-page-ontop';
-            inClass = 'pt-page-moveFromRight';
-            break;
-        case 14:
-            outClass = 'pt-page-moveToRightEasing pt-page-ontop';
-            inClass = 'pt-page-moveFromLeft';
-            break;
-        case 15:
-            outClass = 'pt-page-moveToTopEasing pt-page-ontop';
-            inClass = 'pt-page-moveFromBottom';
-            break;
-        case 16:
-            outClass = 'pt-page-moveToBottomEasing pt-page-ontop';
-            inClass = 'pt-page-moveFromTop';
-            break;
-        case 17:
-            outClass = 'pt-page-scaleDown';
-            inClass = 'pt-page-moveFromRight pt-page-ontop';
-            break;
-        case 18:
-            outClass = 'pt-page-scaleDown';
-            inClass = 'pt-page-moveFromLeft pt-page-ontop';
-            break;
-        case 19:
-            outClass = 'pt-page-scaleDown';
-            inClass = 'pt-page-moveFromBottom pt-page-ontop';
-            break;
-        case 20:
-            outClass = 'pt-page-scaleDown';
-            inClass = 'pt-page-moveFromTop pt-page-ontop';
-            break;
-        case 21:
-            outClass = 'pt-page-scaleDown';
-            inClass = 'pt-page-scaleUpDown pt-page-delay300';
-            break;
-        case 22:
-            outClass = 'pt-page-scaleDownUp';
-            inClass = 'pt-page-scaleUp pt-page-delay300';
-            break;
-        case 23:
-            outClass = 'pt-page-moveToLeft pt-page-ontop';
-            inClass = 'pt-page-scaleUp';
-            break;
-        case 24:
-            outClass = 'pt-page-moveToRight pt-page-ontop';
-            inClass = 'pt-page-scaleUp';
-            break;
-        case 25:
-            outClass = 'pt-page-moveToTop pt-page-ontop';
-            inClass = 'pt-page-scaleUp';
-            break;
-        case 26:
-            outClass = 'pt-page-moveToBottom pt-page-ontop';
-            inClass = 'pt-page-scaleUp';
-            break;
-        case 27:
-            outClass = 'pt-page-scaleDownCenter';
-            inClass = 'pt-page-scaleUpCenter pt-page-delay400';
-            break;
-        case 28:
-            outClass = 'pt-page-rotateRightSideFirst';
-            inClass = 'pt-page-moveFromRight pt-page-delay200 pt-page-ontop';
-            break;
-        case 29:
-            outClass = 'pt-page-rotateLeftSideFirst';
-            inClass = 'pt-page-moveFromLeft pt-page-delay200 pt-page-ontop';
-            break;
-        case 30:
-            outClass = 'pt-page-rotateTopSideFirst';
-            inClass = 'pt-page-moveFromTop pt-page-delay200 pt-page-ontop';
-            break;
-        case 31:
-            outClass = 'pt-page-rotateBottomSideFirst';
-            inClass = 'pt-page-moveFromBottom pt-page-delay200 pt-page-ontop';
-            break;
-        case 32:
-            outClass = 'pt-page-flipOutRight';
-            inClass = 'pt-page-flipInLeft pt-page-delay500';
-            break;
-        case 33:
-            outClass = 'pt-page-flipOutLeft';
-            inClass = 'pt-page-flipInRight pt-page-delay500';
-            break;
-        case 34:
-            outClass = 'pt-page-flipOutTop';
-            inClass = 'pt-page-flipInBottom pt-page-delay500';
-            break;
-        case 35:
-            outClass = 'pt-page-flipOutBottom';
-            inClass = 'pt-page-flipInTop pt-page-delay500';
-            break;
-        case 36:
-            outClass = 'pt-page-rotateFall pt-page-ontop';
-            inClass = 'pt-page-scaleUp';
-            break;
-        case 37:
-            outClass = 'pt-page-rotateOutNewspaper';
-            inClass = 'pt-page-rotateInNewspaper pt-page-delay500';
-            break;
-        case 38:
-            outClass = 'pt-page-rotatePushLeft';
-            inClass = 'pt-page-moveFromRight';
-            break;
-        case 39:
-            outClass = 'pt-page-rotatePushRight';
-            inClass = 'pt-page-moveFromLeft';
-            break;
-        case 40:
-            outClass = 'pt-page-rotatePushTop';
-            inClass = 'pt-page-moveFromBottom';
-            break;
-        case 41:
-            outClass = 'pt-page-rotatePushBottom';
-            inClass = 'pt-page-moveFromTop';
-            break;
-        case 42:
-            outClass = 'pt-page-rotatePushLeft';
-            inClass = 'pt-page-rotatePullRight pt-page-delay180';
-            break;
-        case 43:
-            outClass = 'pt-page-rotatePushRight';
-            inClass = 'pt-page-rotatePullLeft pt-page-delay180';
-            break;
-        case 44:
-            outClass = 'pt-page-rotatePushTop';
-            inClass = 'pt-page-rotatePullBottom pt-page-delay180';
-            break;
-        case 45:
-            outClass = 'pt-page-rotatePushBottom';
-            inClass = 'pt-page-rotatePullTop pt-page-delay180';
-            break;
-        case 46:
-            outClass = 'pt-page-rotateFoldLeft';
-            inClass = 'pt-page-moveFromRightFade';
-            break;
-        case 47:
-            outClass = 'pt-page-rotateFoldRight';
-            inClass = 'pt-page-moveFromLeftFade';
-            break;
-        case 48:
-            outClass = 'pt-page-rotateFoldTop';
-            inClass = 'pt-page-moveFromBottomFade';
-            break;
-        case 49:
-            outClass = 'pt-page-rotateFoldBottom';
-            inClass = 'pt-page-moveFromTopFade';
-            break;
-        case 50:
-            outClass = 'pt-page-moveToRightFade';
-            inClass = 'pt-page-rotateUnfoldLeft';
-            break;
-        case 51:
-            outClass = 'pt-page-moveToLeftFade';
-            inClass = 'pt-page-rotateUnfoldRight';
-            break;
-        case 52:
-            outClass = 'pt-page-moveToBottomFade';
-            inClass = 'pt-page-rotateUnfoldTop';
-            break;
-        case 53:
-            outClass = 'pt-page-moveToTopFade';
-            inClass = 'pt-page-rotateUnfoldBottom';
-            break;
-        case 54:
-            outClass = 'pt-page-rotateRoomLeftOut pt-page-ontop';
-            inClass = 'pt-page-rotateRoomLeftIn';
-            break;
-        case 55:
-            outClass = 'pt-page-rotateRoomRightOut pt-page-ontop';
-            inClass = 'pt-page-rotateRoomRightIn';
-            break;
-        case 56:
-            outClass = 'pt-page-rotateRoomTopOut pt-page-ontop';
-            inClass = 'pt-page-rotateRoomTopIn';
-            break;
-        case 57:
-            outClass = 'pt-page-rotateRoomBottomOut pt-page-ontop';
-            inClass = 'pt-page-rotateRoomBottomIn';
-            break;
-        case 58:
-            outClass = 'pt-page-rotateCubeLeftOut pt-page-ontop';
-            inClass = 'pt-page-rotateCubeLeftIn';
-            break;
-        case 59:
-            outClass = 'pt-page-rotateCubeRightOut pt-page-ontop';
-            inClass = 'pt-page-rotateCubeRightIn';
-            break;
-        case 60:
-            outClass = 'pt-page-rotateCubeTopOut pt-page-ontop';
-            inClass = 'pt-page-rotateCubeTopIn';
-            break;
-        case 61:
-            outClass = 'pt-page-rotateCubeBottomOut pt-page-ontop';
-            inClass = 'pt-page-rotateCubeBottomIn';
-            break;
-        case 62:
-            outClass = 'pt-page-rotateCarouselLeftOut pt-page-ontop';
-            inClass = 'pt-page-rotateCarouselLeftIn';
-            break;
-        case 63:
-            outClass = 'pt-page-rotateCarouselRightOut pt-page-ontop';
-            inClass = 'pt-page-rotateCarouselRightIn';
-            break;
-        case 64:
-            outClass = 'pt-page-rotateCarouselTopOut pt-page-ontop';
-            inClass = 'pt-page-rotateCarouselTopIn';
-            break;
-        case 65:
-            outClass = 'pt-page-rotateCarouselBottomOut pt-page-ontop';
-            inClass = 'pt-page-rotateCarouselBottomIn';
-            break;
-        case 66:
-            outClass = 'pt-page-rotateSidesOut';
-            inClass = 'pt-page-rotateSidesIn pt-page-delay200';
-            break;
-        case 67:
-            outClass = 'pt-page-rotateSlideOut';
-            inClass = 'pt-page-rotateSlideIn';
-            break;
-
-    }
-
-    return {inClass: inClass, outClass: outClass};
-};
-
-/**
- * 扩展jquery，添加转场动画支持
- * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
- */
-;
-(function () {
-
-    function _initStatus($elm) {
-        $elm.attr('ic-isAnimating', false);
-        $elm.addClass('ic-animating');
-        $elm.attr('ic-aniEnd', false);
-        $elm.removeAttr('ic-aniIn');
-    }
-
-    function _getStatus($elm) {
-        var isAnimating = $elm.attr('ic-isAnimating');
-        return {isAnimating: isAnimating};
-    }
-
-    function _onEndAnimation($elm, call) {
-        $elm.removeClass('ic-animating');
-        $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
-        call && call.call($elm[0]);
-    }
-
-    var $doc = $('body');
-    var animEndEventName = 'webkitAnimationEnd';
-
-    $.fn.icAniOut = function (animation, $next, call) {
-
-        if (_.isFunction(animation)) {
-            call = animation;
-        }
-
-        if (_.isObject(animation)) {
-            $next = animation;
-            animation = void(0);
-        }
-
-        $next = $($next);
-
-        var $current = this;
-
-        var cla = brick.getAniMap(animation);
-        var inClass = cla.inClass;
-        var outClass = cla.outClass;
-
-        // $doc.animate({scrollTop: 0}, 150);
-        //$doc.scrollTop(0);
-
-        if ($current.length) {
-
-            _initStatus($current);
-
-            $current.addClass(outClass).on(animEndEventName, function () {
-
-                $current.removeClass(outClass);
-                $current.removeAttr('ic-active');
-                $current.removeAttr('ic-aniIn');
-                $current.attr('ic-aniOut', true);
-                _onEndAnimation($current, call);
-
-                if (!$next || $next && $next.attr('ic-aniEnd')) {
-                    //_onEndAnimation($current);
-                }
-
-            });
-
-        }
-
-
-        if ($next.length) {
-
-            _initStatus($next);
-
-            $next.attr('ic-active', true);
-            $next.attr('ic-aniIn', true);
-            $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
-
-                _onEndAnimation($next, call);
-                $next.removeClass(inClass);
-
-                if (!$current || $current && $current.attr('ic-aniEnd')) {
-                    //_onEndAnimation($next);
-                }
-
-            });
-
-        }
-
-        return this;
-
-    };
-
-    //in
-    $.fn.icAniIn = function (animation, $next, call) {
-
-        if (_.isFunction(animation)) {
-            call = animation;
-        }
-
-        if (_.isObject(animation)) {
-            $next = animation;
-            animation = void(0);
-        }
-
-        $next = $next || $({});
-
-        return $next.icAniOut(animation, this, call);
-    }
-
-})();
-
-
-;
-(function () {
-
-    function Transition(conf) {
-        _.extend(this, conf || {});
-        this.history = [];
-        this.pool = {};
-        this.conf = {};
-        this.currentView = '';
-    }
-
-    var proto = {
-        cache: function (name, $view) {
-            var viewProp = this.pool[name] = this.pool[name] || {};
-            if ($view) {
-                viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 10 || Math.round(Math.random() * 66 + 1);
-            }
-            $view = viewProp.$view;
-            if (!$view) {
-                $view = $('[ic-view=?]'.replace('?', name));
-                return this.cache(name, $view);
-            }
-            return viewProp;
-        },
-        current: function () {
-            var currentView = this.currentView;
-            if (!currentView) {
-                var $view = $('[ic-view][ic-active]');
-                currentView = $view.attr('ic-view');
-                this.currentView = currentView;
-                this.cache(currentView, $view);
-            }
-            return currentView
-        },
-        to: function (name, reverse) {
-            var currentView = this.current();
-            this.history.push(currentView);
-            this.currentView = name;
-            var nextViewProp = this.cache(name);
-            var currentViewProp = this.cache(currentView);
-            var aniId = currentViewProp.aniId;
-            aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
-            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
-        },
-        back: function () {
-            var prev = this.history.pop();
-            prev && this.to(prev, true);
-        }
-    };
-
-    for (var i in proto) {
-        Transition.prototype[i] = proto[i];
-    }
-
-
-    var transition = brick.transition = new Transition;
-
-
-    $(document.body).on('click', '[ic-view-to]', function(e){
-        var name = $(this).attr('ic-view-to');
-        transition.to(name);
-    }).on('click', '[ic-view-back]', function(e){
-        transition.back();
-    });
-
-})();
-;
-    /**
- * Created by Julien on 2015/9/1.
- */
-
-
-/**
- *
- * @param hash
- * @param handler
- * @returns {Window.brick|*}
- */
-brick.addRoute = function (hash, handler) {
-
-    if(hash == '') {
-        hash = '/';
-    }
-
-    function f(hash, handler) {
-        return brick.on('ic-hashChange.' + hash, handler);
-    }
-
-    //开启hashchange事件监听
-    brick.config.set('ic-hashChange.enable', true);
-
-    f(hash, handler);
-
-    brick.addRoute = f;
-
-    return brick;
-
-};
-
-/**
- *
- * @param hash
- * @param handler
- * @returns {*}
- */
-brick.removeRoute = function (hash, handler) {
-    return brick.off('ic-hashChange.' + hash, handler);
-};;
-    /**
- * Created by Julien on 2015/8/10.
- */
-
-
-!function(){
-
-    brick.cache = function(_conf){
-
-        _conf = _.extend({
-            expire : brick.config.get('cache.expire') ||  1 * 24 * 60 * 60 * 1000,
-            namespace : brick.config.get('cache.namespace') || '__ic__'
-        }, _conf || {});
-
-        return function _cache(k, v, conf){
-
-            if(_.isUndefined(k)) return console.log('return for undefined k.');
-
-            var base = JSON.parse(JSON.stringify(_conf));
-
-            if(_.isNumber(conf)){
-                base.expire = conf;
-            }
-
-            conf = _.isObject(conf) ? _.extend(base, conf) : base;
-
-            var namespace = conf.namespace ? conf.namespace + '.' : '';
-            var key = namespace + k;
-
-            var expire = conf.expire;
-
-            var data;
-
-            //清空localStorage
-            if(k === false){
-                localStorage.clear();
-                return;
-            }
-
-            //返回所有的key
-            if(k === true){
-
-                for(var i = 0, keys = []; i < localStorage.length; i++){
-                    keys.push(localStorage.key(i));
-                }
-
-                return keys;
-            }
-
-            //清空localStorage对应的key
-            if(v === false){
-                localStorage.removeItem(key);
-                return;
-            }
-
-            //从localStorage获取对应的key或者设置对应的键值对
-            if(_.isUndefined(v)) {
-
-                data = JSON.parse(localStorage.getItem(key));
-
-                if(!data) return void(0);
-
-                if(+new Date - data.__ic_start > data.__ic_expire){
-
-                    localStorage.removeItem(key);
-                    return void(0);
-
-                }else{
-                    return data.__ic_data;
-                }
-
-            }else{
-
-                data = {};
-                data.__ic_start = + new Date;
-                data.__ic_data = v;
-                data.__ic_expire = expire;
-
-                try{
-
-                    localStorage.setItem(key, JSON.stringify(data));
-
-                }catch(e){
-
-                    if(e.name == 'QuotaExceededError'){
-
-                        console.error('存储溢出.');
-                        localStorage.clear();
-                        localStorage.setItem(key, JSON.stringify(data));
-
-                    }
-
-                }
-
-            }
-
-        };
-    };
-
-}();
-
-
-;
 
     function bootstrap(){
 
