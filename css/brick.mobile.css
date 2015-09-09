@@ -95,7 +95,7 @@
 
 /* 对话框 */
 [ic-dialog], [ic-prompt] {
-    display: block!important;
+    display: none;
     z-index: -2;
 }
 [ic-dialog][ic-active], [ic-prompt][ic-active]{

@@ -26,6 +26,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     var _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
     var _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
     var multiple = !!$elm.attr('ic-date-multiple');
+    var auto = $elm.attr('ic-date-auto');
     var weekStart = $elm.attr('ic-date-week-start') || 1;
     var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
@@ -51,8 +52,15 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     ////////////////////////////////////////////////////
     //init
 
-    render();
-    $elm.show();
+    //if(auto){
+        render();
+        $elm.show();
+    //}
+
+    $elm.on('ic-date-picker.render', function(e, msg){
+        render();
+        $elm.show();
+    });
 
     ////////////////////////////////////////////////////
     //bind event
@@ -63,7 +71,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         render(_date);
     });
 
-    $elm.on('click', '[ic-date]' + enabled + disabled, multiple ? function (e) {
+    $elm.on('click', '[ic-date]', multiple ? function (e) {
         var bindDate = this.getAttribute('ic-date');
         if (this.classList.contains(cla)) {
             this.classList.remove(cla);

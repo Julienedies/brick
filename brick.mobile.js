@@ -30,8 +30,8 @@
 
     __inline('src/widget/tabs.js');
     __inline('src/widget/mobile/dialog.js');
-    __inline('src/widget/form.js');
-    __inline('src/widget/ajax.js');
+    __inline('src/widget/mobile/form.js');
+    __inline('src/widget/mobile/ajax.js');
     __inline('src/widget/tpl.js');
 
 
@@ -69,7 +69,7 @@
 
             })(document.body);
 
-            controllers.init();
+            //controllers.init();
 
             //hashchange
             __inline('src/event/hashChange.js');

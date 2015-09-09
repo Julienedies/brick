@@ -299,27 +299,23 @@ brick.getAniMap = function (animation) {
 ;
 (function () {
 
-    function _initStatus($elm) {
+    var $doc = $('body');
+    var animEndEventName = 'webkitAnimationEnd';
+
+    function initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
         $elm.addClass('ic-animating');
         $elm.attr('ic-aniEnd', false);
         $elm.removeAttr('ic-aniIn');
     }
 
-    function _getStatus($elm) {
-        var isAnimating = $elm.attr('ic-isAnimating');
-        return {isAnimating: isAnimating};
-    }
-
-    function _onEndAnimation($elm, call) {
+    function onEndAnimation($elm, call) {
         $elm.removeClass('ic-animating');
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
         call && call.call($elm[0]);
     }
 
-    var $doc = $('body');
-    var animEndEventName = 'webkitAnimationEnd';
-
+    //out
     $.fn.icAniOut = function (aniId, $next, call) {
 
         var args = [].slice.call(arguments);
@@ -344,7 +340,7 @@ brick.getAniMap = function (animation) {
         $next = $next[0] && $next[0].hasAttribute ? $next : false;
 
         if(!$next){
-            aniId = aniId || this.attr('ic-aniId');
+            aniId = aniId || this.attr('ic-aniId') * 1;
             aniId = aniId % 2 ? aniId + 1 : aniId - 1;
         }
 
@@ -357,7 +353,7 @@ brick.getAniMap = function (animation) {
 
         if ($current) {
 
-            _initStatus($current);
+            initStatus($current);
 
             $current.addClass(outClass).on(animEndEventName, function () {
 
@@ -365,7 +361,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                _onEndAnimation($current, call);
+                onEndAnimation($current, call);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -378,13 +374,13 @@ brick.getAniMap = function (animation) {
 
         if ($next) {
 
-            _initStatus($next);
+            initStatus($next);
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                _onEndAnimation($next, call);
+                onEndAnimation($next, call);
                 $next.removeClass(inClass);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
@@ -483,7 +479,7 @@ brick.getAniMap = function (animation) {
     var transition = brick.transition = new Transition;
 
 
-    $(document.body).on('click', '[ic-view-to]', function (e) {
+    $(document).on('click', '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {

@@ -1665,27 +1665,23 @@ brick.getAniMap = function (animation) {
 ;
 (function () {
 
-    function _initStatus($elm) {
+    var $doc = $('body');
+    var animEndEventName = 'webkitAnimationEnd';
+
+    function initStatus($elm) {
         $elm.attr('ic-isAnimating', false);
         $elm.addClass('ic-animating');
         $elm.attr('ic-aniEnd', false);
         $elm.removeAttr('ic-aniIn');
     }
 
-    function _getStatus($elm) {
-        var isAnimating = $elm.attr('ic-isAnimating');
-        return {isAnimating: isAnimating};
-    }
-
-    function _onEndAnimation($elm, call) {
+    function onEndAnimation($elm, call) {
         $elm.removeClass('ic-animating');
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
         call && call.call($elm[0]);
     }
 
-    var $doc = $('body');
-    var animEndEventName = 'webkitAnimationEnd';
-
+    //out
     $.fn.icAniOut = function (aniId, $next, call) {
 
         var args = [].slice.call(arguments);
@@ -1710,7 +1706,7 @@ brick.getAniMap = function (animation) {
         $next = $next[0] && $next[0].hasAttribute ? $next : false;
 
         if(!$next){
-            aniId = aniId || this.attr('ic-aniId');
+            aniId = aniId || this.attr('ic-aniId') * 1;
             aniId = aniId % 2 ? aniId + 1 : aniId - 1;
         }
 
@@ -1723,7 +1719,7 @@ brick.getAniMap = function (animation) {
 
         if ($current) {
 
-            _initStatus($current);
+            initStatus($current);
 
             $current.addClass(outClass).on(animEndEventName, function () {
 
@@ -1731,7 +1727,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                _onEndAnimation($current, call);
+                onEndAnimation($current, call);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -1744,13 +1740,13 @@ brick.getAniMap = function (animation) {
 
         if ($next) {
 
-            _initStatus($next);
+            initStatus($next);
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                _onEndAnimation($next, call);
+                onEndAnimation($next, call);
                 $next.removeClass(inClass);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
@@ -1849,7 +1845,7 @@ brick.getAniMap = function (animation) {
     var transition = brick.transition = new Transition;
 
 
-    $(document.body).on('click', '[ic-view-to]', function (e) {
+    $(document).on('click', '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
@@ -2126,9 +2122,11 @@ brick.removeRoute = function (hash, handler) {
 
             that.icAniIn(21, function () {
                 that.trigger('ic-prompt.show');
+
                 setTimeout(function(){
                     that.icAniOut();
-                }, 3000);
+                }, 4000);
+
             });
 
         },30);
@@ -2136,21 +2134,13 @@ brick.removeRoute = function (hash, handler) {
         return this;
     };
 
-    //定时器
-    $.fn.icTimer = function () {
-        var th = this;
-        var count = th.attr('ic-timer-count') * 1;
+    $.icPrompt = function(msg){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-prompt]:first').icPrompt(options);
+    };
 
-        var timer = setInterval(function () {
-            if (count--) {
-                th.text(count);
-            } else {
-                clearInterval(timer);
-                th.trigger('ic-timer.' + 'end');
-            }
-        }, 1000);
-
-        return this;
+    $.fn.icDatePicker = function(options){
+        this.trigger('ic-date-picker.render', options);
     };
 
     //监听enter键
@@ -2412,7 +2402,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     /**
-     * 要验证的字段 ic-role-field
+     * 要验证的字段 ic-form-field
      * 验证规则  ic-field-rule
      * 验证失败提示 ic-role-field-err-tip
      * 验证成功提示 ic-role-field-ok-tip
@@ -2490,8 +2480,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
     }
 
-
-
     //只执行一次绑定
     if (!arguments.callee._run) {
 
@@ -2501,14 +2489,14 @@ directives.add('ic-form', function ($elm, attrs) {
          */
         $.fn.icVerify = function () {
 
-            var isSubmit = this.attr('ic-role-submit');
+            var isSubmit = this.attr('ic-form-submit');
 
             if (isSubmit) {
                 this.trigger('ic-form.' + isSubmit);
                 return this.attr('ic-verification');
             }
 
-            var isField = this.attr('ic-role-field');
+            var isField = this.attr('ic-form-field');
 
             if (isField) {
                 this.trigger('change');
@@ -2522,8 +2510,8 @@ directives.add('ic-form', function ($elm, attrs) {
 
     // 执行指令
     var namespace = $elm.attr('ic-form');
-    var $fields = $elm.find('[ic-role-field]');
-    var $submit = $elm.find('[ic-role-submit]');
+    var $fields = $elm.find('[ic-form-field]');
+    var $submit = $elm.find('[ic-form-submit]');
     var $loading = $elm.find('[ic-role-loading]');
 
     var fields = {};
@@ -2535,9 +2523,39 @@ directives.add('ic-form', function ($elm, attrs) {
 
         $fields.filter(':not("[ic-field-rule]")').each(function (i) {
             var $th = $(this);
-            var name = $th.attr('ic-role-field');
+            var tag = this.tagName;
+            var type = $th.attr('type');
+            var name = $th.attr('ic-form-field');
             var submitName = $th.attr('name') || name;
-            fields[submitName] = $th.val();
+            var val;
+
+            if(/^input$/img.test(tag)){
+
+                if(/^checkbox|radio$/i.test(type)){
+
+                    if($th.is(':checked')){
+                        val = $th.val();
+                    }else{
+                        return;
+                    }
+
+                }else{
+                    val = $th.val();
+                }
+
+            }else{
+                val = $th.attr('ic-val');
+            }
+
+            var prev = fields[submitName];
+            if(prev){
+                prev = _.isArray(prev) ? prev : [prev];
+                prev.push(val);
+                fields[submitName] = prev;
+            }else{
+                fields[submitName] = val;
+            }
+
         });
 
         //显示并且有验证规则
@@ -2556,14 +2574,15 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
-
+    var defaultCall = function(){console.log(arguments)};
     //提交
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
-    var done = $submit.attr('ic-submit-on-done');
-    var always = $submit.attr('ic-submit-on-always');
-    var failed = $submit.attr('ic-submit-on-failed');
-    var before = $submit.attr('ic-submit-before');
+    var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
+    var failed = $submit.icParseProperty2('ic-submit-on-fail') || defaultCall;
+    var done = $submit.icParseProperty2('ic-submit-on-done') || defaultCall;
+    var always = $submit.icParseProperty2('ic-submit-on-always') || defaultCall;
+
     var dataType = $submit.attr('ic-submit-data-type') || 'json';
 
     var submitType = (function () {
@@ -2572,33 +2591,14 @@ directives.add('ic-form', function ($elm, attrs) {
             action = $submit.icParseProperty(action.replace(/[();]/g, ''));
             return 1;
         }
-        //跨域提交
-        var match = action.match(/https?:\/\/[\w.:]+/i);
-        //console.log(match, location.origin);
-        if (match && match[0] !== location.origin) {
-            //_iframe = $('<iframe name="loginIframe" href="#"></iframe>').insertAfter($submit);
-            return 2;
-        }
         //普通提交
         return 3;
     })();
 
 
-    always = $submit.icParseProperty(always) || function () {
-    };
-    done = $submit.icParseProperty(done) || function () {
-    };
-    failed = $submit.icParseProperty(failed) || function (msg) {
-        console.log(msg)
-    };
-    before = $submit.icParseProperty(before) || function () {
-    };
-
-    var _iframe;
-    var _form;
-
-
     $submit.on('mousedown', function (e) {
+
+        if($submit[0].hasAttribute('ic-submit-disabled')) return;
 
         if (!$submit.icVerify()) return $elm.trigger('ic-form.error');
 
@@ -2617,6 +2617,7 @@ directives.add('ic-form', function ($elm, attrs) {
             $submit.setLoading();
         }
 
+        $submit.attr('ic-submit-disabled', true);
 
         //同域提交
         if (submitType === 3) {
@@ -2635,12 +2636,12 @@ directives.add('ic-form', function ($elm, attrs) {
                     $loading.hide();
                     $submit.clearLoading();
                     always();
+                    $submit.removeAttr('ic-submit-disabled');
                 });
         }
 
         //跨域提交
         if (submitType === 2) {
-
 
         }
 
@@ -2654,7 +2655,7 @@ directives.add('ic-form', function ($elm, attrs) {
     $fields.each(function (i) {
 
         var $th = $(this);
-        var name = $th.attr('ic-role-field');
+        var name = $th.attr('ic-form-field');
         var submitName = $th.attr('name') || name;
         var rules = $th.attr('ic-field-rule');
 
@@ -2662,7 +2663,6 @@ directives.add('ic-form', function ($elm, attrs) {
         if ($th.attr('type') === 'hidden') return;
 
         var errTips = $th.attr('ic-field-err-tip');
-        var fire = $th.attr('ic-field-verify-fire');
         var $errTip = $elm.find('[ic-role-field-err-tip="?"]'.replace('?', name));
         var foucsTip = $errTip.text();
 
@@ -2678,14 +2678,13 @@ directives.add('ic-form', function ($elm, attrs) {
                 $errTip.css({'visibility': 'visible'}).addClass('error').text(tip);
                 $th.removeAttr('ic-verification');
                 fields[name] = false;
-                fire && $th.trigger('ic-form.' + namespace + '.' + name + '.verify', 0);
+                $th.trigger('ic-form-field.error', tip);
             } else {
                 //验证通过
                 $errTip.css({'visibility': 'hidden'}).removeClass('error');
                 $th.attr('ic-verification', 1);
                 fields[submitName] = val;
-                fire && $th.trigger('ic-form.' + namespace + '.' + name + '.verify', 1);
-
+                $th.trigger('ic-form-field.ok', val);
             }
 
         });
@@ -2706,78 +2705,69 @@ directives.add('ic-form', function ($elm, attrs) {
  */
 
 
-directives.add('ic-ajax', {
-        selfExec: true,
-        once: true,
-        fn: function () {
+directives.add('ic-ajax', function () {
 
-            //只执行一次绑定
-            if (arguments.callee._run_) return;
-            arguments.callee._run_ = 1;
+        var $doc = $(document);
+        $doc.on('click', '[ic-ajax]', _call);
+        $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-            var $doc = $(document);
-            $doc.on('click', '[ic-ajax]', _call);
-            $doc.on('ic-ajax', '[ic-ajax]', _call);
+        function _call(e) {
 
-            function _call(e) {
+            var that = this;
 
-                var that = this;
-                var $elm = $(this);
-                var namespace = $elm.attr('ic-ajax');
+            if (this.hasAttribute('ic-ajax-disabled')) return;
 
-                var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
+            var $elm = $(this);
+            var namespace = $elm.attr('ic-ajax');
 
-                //提交
-                var url = $elm.attr('ic-submit-action');
-                var dataType = $elm.attr('ic-submit-data-type') || 'json';
-                var method = $elm.attr('ic-submit-method') || 'post';
-                var done = $elm.attr('ic-submit-on-done');
-                var always = $elm.attr('ic-submit-on-always');
-                var failed = $elm.attr('ic-submit-on-failed');
-                var before = $elm.attr('ic-submit-before');
+            var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-                always = $elm.icParseProperty(always) || function () {
-                    //console.log('always is undefined;')
-                };
-                done = $elm.icParseProperty(done) || function () {
-                    //console.info('done is undefined;')
-                };
-                failed = $elm.icParseProperty(failed) || function (msg) {
-                    //console.info('failed is undefined;')
-                };
-                before = $elm.icParseProperty(before) || function () {
-                    //console.info('before is undefined;')
-                };
+            //提交
+            var defaultCall = function () {
+                console.log(arguments)
+            };
+            var url = $elm.attr('ic-submit-action');
+            var dataType = $elm.attr('ic-submit-data-type') || 'json';
+            var method = $elm.attr('ic-submit-method') || 'post';
 
-                if (before.apply(that) === false) return;
-                if ($elm.attr('ic-ajax-disabled') === 'true') return;
+            var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
+            var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
+            var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
+            var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-                var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+            if (before.apply(that) === false) return;
 
-                $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
-                $.ajax({
-                    url: url,
-                    type: method,
-                    dataType: dataType,
-                    data: data
-                }).done(function (data) {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        done.apply(that, [data]);
-                    }
-                ).fail(function (msg) {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        failed.apply(that, [msg]);
-                    }
-                ).always(function () {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        always.apply(that);
-                        $elm.removeData('ic-submit-data');
-                    });
-            }
+            $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
 
+            $elm.attr('ic-ajax-disabled', true);
 
+            $.ajax({
+                url: url,
+                type: method,
+                dataType: dataType,
+                data: data
+            }).done(function (data) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    done.apply(that, [data]);
+                }
+            ).fail(function (msg) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    failed.apply(that, [msg]);
+                }
+            ).always(function () {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    always.apply(that);
+                    $elm.removeData('ic-submit-data');
+                    $elm.removeAttr('ic-ajax-disabled');
+                });
         }
+
+    },
+    {
+        selfExec: true,
+        once: true
     }
 );
 
@@ -2860,7 +2850,7 @@ directives.add('ic-tpl', {
 
             })(document.body);
 
-            controllers.init();
+            //controllers.init();
 
             //hashchange
             /**

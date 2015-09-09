@@ -121,9 +121,11 @@
 
             that.icAniIn(21, function () {
                 that.trigger('ic-prompt.show');
+
                 setTimeout(function(){
                     that.icAniOut();
-                }, 3000);
+                }, 4000);
+
             });
 
         },30);
@@ -131,21 +133,13 @@
         return this;
     };
 
-    //定时器
-    $.fn.icTimer = function () {
-        var th = this;
-        var count = th.attr('ic-timer-count') * 1;
+    $.icPrompt = function(msg){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-prompt]:first').icPrompt(options);
+    };
 
-        var timer = setInterval(function () {
-            if (count--) {
-                th.text(count);
-            } else {
-                clearInterval(timer);
-                th.trigger('ic-timer.' + 'end');
-            }
-        }, 1000);
-
-        return this;
+    $.fn.icDatePicker = function(options){
+        this.trigger('ic-date-picker.render', options);
     };
 
     //监听enter键

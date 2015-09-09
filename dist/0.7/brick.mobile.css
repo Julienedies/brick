@@ -30,7 +30,8 @@ for animating
   transform: translate3d(0, 0, 0);
   -webkit-transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
-  transform-style: preserve-3d; }
+  transform-style: preserve-3d;
+  display: block !important; }
 
 .ic-view, [ic-panel], [ic-view] {
   position: absolute;
@@ -153,7 +154,7 @@ for animating
 
 /* 对话框 */
 [ic-dialog], [ic-prompt] {
-    display: block!important;
+    display: none;
     z-index: -2;
 }
 [ic-dialog][ic-active], [ic-prompt][ic-active]{
