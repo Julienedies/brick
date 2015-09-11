@@ -4,6 +4,14 @@
  */
 (function ($) {
 
+    $.fn.icRender = function(tpl, model, callback){
+        tpl = brick.getTpl(tpl);
+        var html = tpl(model);
+        this.html(html);
+        callback && callback.apply(this[0]);
+        return this;
+    };
+
     $.fn.icCompile = function () {
 
         if (!this.length) return;
@@ -15,11 +23,13 @@
         });
     };
 
-    $.fn.icParseProperty = function (name) {
+    $.fn.icParseProperty = function (name, debug) {
 
         if (name === void(0)) return void(0);
-        var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
-        var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+        var $ctrl = this.closest('[ic-ctrl]');
+        var ctrl = $ctrl.attr('ic-ctrl');
+        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
         var chain = name.split('.');
 
@@ -94,6 +104,11 @@
         return this;
     };
 
+    $.icDialog = function(options){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-Dialog]:first').icDialog(options);
+    };
+
     $.fn.icPrompt = function (options) {
 
         if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
@@ -102,6 +117,8 @@
         }
 
         var that = this;
+
+        clearTimeout(that.data('ic-prompt-timer'));
 
         setTimeout(function(){
 
@@ -122,9 +139,11 @@
             that.icAniIn(21, function () {
                 that.trigger('ic-prompt.show');
 
-                setTimeout(function(){
+                var timer = setTimeout(function(){
                     that.icAniOut();
-                }, 4000);
+                }, 3000);
+
+                that.data('ic-prompt-timer', timer);
 
             });
 

@@ -18,8 +18,10 @@
     $.fn.icParseProperty = function (name) {
 
         if (name === void(0)) return void(0);
-        var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
-        var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+        var $ctrl = this.closest('[ic-ctrl]');
+        var ctrl = $ctrl.attr('ic-ctrl');
+        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
         var chain = name.split('.');
 

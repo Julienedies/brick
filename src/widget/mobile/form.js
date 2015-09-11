@@ -115,8 +115,8 @@ directives.add('ic-form', function ($elm, attrs) {
 
     // 执行指令
     var namespace = $elm.attr('ic-form');
-    var $fields = $elm.find('[ic-form-field]');
-    var $submit = $elm.find('[ic-form-submit]');
+    var $fields = $elm.find('[ic-form-field]').not($elm.find('[ic-form] [ic-form-field]'));
+    var $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
     var $loading = $elm.find('[ic-role-loading]');
 
     var fields = {};
@@ -134,7 +134,7 @@ directives.add('ic-form', function ($elm, attrs) {
             var submitName = $th.attr('name') || name;
             var val;
 
-            if(/^input$/img.test(tag)){
+            if(/^input|select|textarea$/img.test(tag)){
 
                 if(/^checkbox|radio$/i.test(type)){
 
@@ -168,6 +168,10 @@ directives.add('ic-form', function ($elm, attrs) {
             $(this).change();
         });
 
+        $fields.filter('[ic-field-placeholder][ic-field-rule]').each(function (i) {
+            $(this).change();
+        });
+
         for (var i in fields) {
             if (fields[i] === false) {
                 $submit.removeAttr('ic-verification');
@@ -193,7 +197,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var submitType = (function () {
         //函数调用
         if (/[\w_.]+\(\)\;?$/i.test(action)) {
-            action = $submit.icParseProperty(action.replace(/[();]/g, ''));
+            action = $submit.icParseProperty(action.replace(/[();]/g, ''), true);
             return 1;
         }
         //普通提交
@@ -265,10 +269,11 @@ directives.add('ic-form', function ($elm, attrs) {
         var rules = $th.attr('ic-field-rule');
 
         if (!rules) return;
-        if ($th.attr('type') === 'hidden') return;
+        //if ($th.attr('type') === 'hidden') return;
 
         var errTips = $th.attr('ic-field-err-tip');
-        var $errTip = $elm.find('[ic-role-field-err-tip="?"]'.replace('?', name));
+        var $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
+        var $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
         var foucsTip = $errTip.text();
 
         rules = compileRule(rules, $elm);
@@ -280,15 +285,21 @@ directives.add('ic-form', function ($elm, attrs) {
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
-                $errTip.css({'visibility': 'visible'}).addClass('error').text(tip);
+                $fieldBox.addClass('error');
+                $errTip.addClass('error').text(tip);
                 $th.removeAttr('ic-verification');
                 fields[name] = false;
                 $th.trigger('ic-form-field.error', tip);
             } else {
                 //验证通过
-                $errTip.css({'visibility': 'hidden'}).removeClass('error');
+                $fieldBox.removeClass('error');
+                $errTip.removeClass('error');
                 $th.attr('ic-verification', 1);
-                fields[submitName] = val;
+                if($th[0].hasAttribute('ic-field-placeholder')){
+
+                }else{
+                    fields[submitName] = val;
+                }
                 $th.trigger('ic-form-field.ok', val);
             }
 

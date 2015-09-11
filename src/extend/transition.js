@@ -340,8 +340,13 @@ brick.getAniMap = function (animation) {
         $next = $next[0] && $next[0].hasAttribute ? $next : false;
 
         if(!$next){
-            aniId = aniId || this.attr('ic-aniId') * 1;
-            aniId = aniId % 2 ? aniId + 1 : aniId - 1;
+
+            if(!aniId){
+                aniId = aniId || this.attr('ic-aniId');
+                aniId = aniId && aniId * 1;
+                aniId = aniId && aniId % 2 ? aniId + 1 : aniId - 1;
+            }
+
         }
 
         var cla = brick.getAniMap(aniId);
@@ -436,7 +441,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 10 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-aniId') || 9 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -476,7 +481,7 @@ brick.getAniMap = function (animation) {
     }
 
 
-    var transition = brick.transition = new Transition;
+    var transition = brick.view = new Transition;
 
 
     $(document).on('click', '[ic-view-to]', function (e) {

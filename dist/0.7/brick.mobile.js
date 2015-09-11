@@ -489,7 +489,7 @@ var controllers = (function (){
         reg: function(name, ctrl, conf){
             conf = conf || {};
             var depend = conf.depend || [];
-            _ctrls[name] = {fn:ctrl, conf: conf, depend:depend, service:conf.service, scope:f(name)};
+            _ctrls[name] = {fn:ctrl, conf: conf, depend:depend, service:conf.service, scope:[]};
         },
 
         /**
@@ -508,16 +508,17 @@ var controllers = (function (){
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
-            ctrl.scope = scope;
+            //ctrl.scope = scope;
+            $elm.data('ic-ctrl-scope', scope);
 
             depend = services.get(depend) || [];
             depend = depend.constructor !== Array ? [depend] : depend;
             depend.unshift(scope);
 
             ctrl.fn.apply(null, depend);
-            ctrl.fn = function(){};
+            //ctrl.fn = function(){};  //为什么要清空呢？，记不得了
 
-            if(conf.global) window[name] = scope;
+            //if(conf.global) window[name] = scope;
             return scope;
         },
 
@@ -1706,8 +1707,13 @@ brick.getAniMap = function (animation) {
         $next = $next[0] && $next[0].hasAttribute ? $next : false;
 
         if(!$next){
-            aniId = aniId || this.attr('ic-aniId') * 1;
-            aniId = aniId % 2 ? aniId + 1 : aniId - 1;
+
+            if(!aniId){
+                aniId = aniId || this.attr('ic-aniId');
+                aniId = aniId && aniId * 1;
+                aniId = aniId && aniId % 2 ? aniId + 1 : aniId - 1;
+            }
+
         }
 
         var cla = brick.getAniMap(aniId);
@@ -1802,7 +1808,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 10 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-aniId') || 9 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -1842,7 +1848,7 @@ brick.getAniMap = function (animation) {
     }
 
 
-    var transition = brick.transition = new Transition;
+    var transition = brick.view = new Transition;
 
 
     $(document).on('click', '[ic-view-to]', function (e) {
@@ -2005,6 +2011,14 @@ brick.removeRoute = function (hash, handler) {
  */
 (function ($) {
 
+    $.fn.icRender = function(tpl, model, callback){
+        tpl = brick.getTpl(tpl);
+        var html = tpl(model);
+        this.html(html);
+        callback && callback.apply(this[0]);
+        return this;
+    };
+
     $.fn.icCompile = function () {
 
         if (!this.length) return;
@@ -2016,11 +2030,13 @@ brick.removeRoute = function (hash, handler) {
         });
     };
 
-    $.fn.icParseProperty = function (name) {
+    $.fn.icParseProperty = function (name, debug) {
 
         if (name === void(0)) return void(0);
-        var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
-        var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+        var $ctrl = this.closest('[ic-ctrl]');
+        var ctrl = $ctrl.attr('ic-ctrl');
+        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
         var chain = name.split('.');
 
@@ -2095,6 +2111,11 @@ brick.removeRoute = function (hash, handler) {
         return this;
     };
 
+    $.icDialog = function(options){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-Dialog]:first').icDialog(options);
+    };
+
     $.fn.icPrompt = function (options) {
 
         if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
@@ -2103,6 +2124,8 @@ brick.removeRoute = function (hash, handler) {
         }
 
         var that = this;
+
+        clearTimeout(that.data('ic-prompt-timer'));
 
         setTimeout(function(){
 
@@ -2123,9 +2146,11 @@ brick.removeRoute = function (hash, handler) {
             that.icAniIn(21, function () {
                 that.trigger('ic-prompt.show');
 
-                setTimeout(function(){
+                var timer = setTimeout(function(){
                     that.icAniOut();
-                }, 4000);
+                }, 3000);
+
+                that.data('ic-prompt-timer', timer);
 
             });
 
@@ -2225,13 +2250,13 @@ brick.removeRoute = function (hash, handler) {
 
 directives.add('ic-ctrl', function ($elm, attrs) {
 
-
     var ctrlName = $elm.attr('ic-ctrl');
 
     if(ctrlName){
-        var parent = $elm.parent().closest('[ic-ctrl]');
-        var parentName = parent.size() ? parent.attr('ic-ctrl') : '';
-        controllers.exec(ctrlName, controllers.get(parentName), $elm);
+        var $parent = $elm.parent().closest('[ic-ctrl]');
+        //var parentName = $parent.size() ? $parent.attr('ic-ctrl') : '';
+        controllers.exec(ctrlName, $parent.data('ic-ctrl-scope'), $elm);
+        //controllers.exec(ctrlName, controllers.get(parentName), $elm);
     }
 
 });;
@@ -2510,8 +2535,8 @@ directives.add('ic-form', function ($elm, attrs) {
 
     // 执行指令
     var namespace = $elm.attr('ic-form');
-    var $fields = $elm.find('[ic-form-field]');
-    var $submit = $elm.find('[ic-form-submit]');
+    var $fields = $elm.find('[ic-form-field]').not($elm.find('[ic-form] [ic-form-field]'));
+    var $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
     var $loading = $elm.find('[ic-role-loading]');
 
     var fields = {};
@@ -2529,7 +2554,7 @@ directives.add('ic-form', function ($elm, attrs) {
             var submitName = $th.attr('name') || name;
             var val;
 
-            if(/^input$/img.test(tag)){
+            if(/^input|select|textarea$/img.test(tag)){
 
                 if(/^checkbox|radio$/i.test(type)){
 
@@ -2563,6 +2588,10 @@ directives.add('ic-form', function ($elm, attrs) {
             $(this).change();
         });
 
+        $fields.filter('[ic-field-placeholder][ic-field-rule]').each(function (i) {
+            $(this).change();
+        });
+
         for (var i in fields) {
             if (fields[i] === false) {
                 $submit.removeAttr('ic-verification');
@@ -2588,7 +2617,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var submitType = (function () {
         //函数调用
         if (/[\w_.]+\(\)\;?$/i.test(action)) {
-            action = $submit.icParseProperty(action.replace(/[();]/g, ''));
+            action = $submit.icParseProperty(action.replace(/[();]/g, ''), true);
             return 1;
         }
         //普通提交
@@ -2660,10 +2689,11 @@ directives.add('ic-form', function ($elm, attrs) {
         var rules = $th.attr('ic-field-rule');
 
         if (!rules) return;
-        if ($th.attr('type') === 'hidden') return;
+        //if ($th.attr('type') === 'hidden') return;
 
         var errTips = $th.attr('ic-field-err-tip');
-        var $errTip = $elm.find('[ic-role-field-err-tip="?"]'.replace('?', name));
+        var $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
+        var $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
         var foucsTip = $errTip.text();
 
         rules = compileRule(rules, $elm);
@@ -2675,15 +2705,21 @@ directives.add('ic-form', function ($elm, attrs) {
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
-                $errTip.css({'visibility': 'visible'}).addClass('error').text(tip);
+                $fieldBox.addClass('error');
+                $errTip.addClass('error').text(tip);
                 $th.removeAttr('ic-verification');
                 fields[name] = false;
                 $th.trigger('ic-form-field.error', tip);
             } else {
                 //验证通过
-                $errTip.css({'visibility': 'hidden'}).removeClass('error');
+                $fieldBox.removeClass('error');
+                $errTip.removeClass('error');
                 $th.attr('ic-verification', 1);
-                fields[submitName] = val;
+                if($th[0].hasAttribute('ic-field-placeholder')){
+
+                }else{
+                    fields[submitName] = val;
+                }
                 $th.trigger('ic-form-field.ok', val);
             }
 

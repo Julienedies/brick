@@ -214,7 +214,7 @@ var controllers = (function (){
         reg: function(name, ctrl, conf){
             conf = conf || {};
             var depend = conf.depend || [];
-            _ctrls[name] = {fn:ctrl, conf: conf, depend:depend, service:conf.service, scope:f(name)};
+            _ctrls[name] = {fn:ctrl, conf: conf, depend:depend, service:conf.service, scope:[]};
         },
 
         /**
@@ -233,16 +233,17 @@ var controllers = (function (){
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
-            ctrl.scope = scope;
+            //ctrl.scope = scope;
+            $elm.data('ic-ctrl-scope', scope);
 
             depend = services.get(depend) || [];
             depend = depend.constructor !== Array ? [depend] : depend;
             depend.unshift(scope);
 
             ctrl.fn.apply(null, depend);
-            ctrl.fn = function(){};
+            //ctrl.fn = function(){};  //为什么要清空呢？，记不得了
 
-            if(conf.global) window[name] = scope;
+            //if(conf.global) window[name] = scope;
             return scope;
         },
 
