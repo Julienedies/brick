@@ -17,6 +17,7 @@ directives.add('ic-tpl', {
                 var th = $(this);
 
                 var name = th.attr('ic-tpl');
+                th.attr('ic-tpl-name', name);
 
 //        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
 //        var scope = brick.controllers.get(ctrl);

@@ -77,6 +77,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     $elm.on('click', '[ic-date-prev-m], [ic-date-next-m]', function (e) {
         var call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
         _date = moment(_date, _format)[call](1, 'months').format(_format);
+        console.info(_date)
         render(_date);
     });
 

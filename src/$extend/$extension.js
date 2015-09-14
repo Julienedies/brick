@@ -79,10 +79,9 @@
         }
 
         var that = this;
+        var tpl = that.attr('ic-tpl-name');
 
         setTimeout(function(){
-
-            var tpl = brick.getTpl(that.attr('ic-tpl'));
 
             if (options === void(0)) {
                 options = true;
@@ -93,7 +92,7 @@
             }
 
             if (tpl && _.isObject(options)) {
-                 that.html(tpl(options.vm || options));
+                that.icRender(tpl, options.vm || options);
             }
 
             that.icAniIn(21, function () {
@@ -107,7 +106,7 @@
 
     $.icDialog = function(msg){
         var options = _.isObject(msg) ? msg : {desc:msg};
-        $('[ic-Dialog]:first').icDialog(options);
+        $('[ic-dialog]:first').icDialog(options);
     };
 
     $.fn.icPrompt = function (options) {
@@ -118,12 +117,11 @@
         }
 
         var that = this;
+        var tpl = that.attr('ic-tpl-name');
 
         clearTimeout(that.data('ic-prompt-timer'));
 
         setTimeout(function(){
-
-            var tpl = brick.getTpl(that.attr('ic-tpl'));
 
             if (options === void(0)) {
                 options = true;
@@ -134,7 +132,7 @@
             }
 
             if (tpl && _.isObject(options)) {
-                 that.html(tpl(options.vm || options));
+                that.icRender(tpl, options.vm || options);
             }
 
             that.icAniIn(21, function () {

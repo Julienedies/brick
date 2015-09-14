@@ -2086,10 +2086,9 @@ brick.removeRoute = function (hash, handler) {
         }
 
         var that = this;
+        var tpl = that.attr('ic-tpl-name');
 
         setTimeout(function(){
-
-            var tpl = brick.getTpl(that.attr('ic-tpl'));
 
             if (options === void(0)) {
                 options = true;
@@ -2100,11 +2099,11 @@ brick.removeRoute = function (hash, handler) {
             }
 
             if (tpl && _.isObject(options)) {
-                 that.html(tpl(options.vm || options));
+                that.icRender(tpl, options.vm || options);
             }
 
             that.icAniIn(21, function () {
-                that.trigger('ic-dialog.show');
+                that.trigger('ic-dialog.show');;;;
             });
 
         },30);
@@ -2114,7 +2113,7 @@ brick.removeRoute = function (hash, handler) {
 
     $.icDialog = function(msg){
         var options = _.isObject(msg) ? msg : {desc:msg};
-        $('[ic-Dialog]:first').icDialog(options);
+        $('[ic-dialog]:first').icDialog(options);
     };
 
     $.fn.icPrompt = function (options) {
@@ -2125,12 +2124,11 @@ brick.removeRoute = function (hash, handler) {
         }
 
         var that = this;
+        var tpl = that.attr('ic-tpl-name');
 
         clearTimeout(that.data('ic-prompt-timer'));
 
         setTimeout(function(){
-
-            var tpl = brick.getTpl(that.attr('ic-tpl'));
 
             if (options === void(0)) {
                 options = true;
@@ -2141,7 +2139,7 @@ brick.removeRoute = function (hash, handler) {
             }
 
             if (tpl && _.isObject(options)) {
-                 that.html(tpl(options.vm || options));
+                that.icRender(tpl, options.vm || options);
             }
 
             that.icAniIn(21, function () {
@@ -2704,6 +2702,8 @@ directives.add('ic-form', function ($elm, attrs) {
             var val = $th.val();
             var tip;
 
+            console.log(this, val, errTips);
+
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
                 $fieldBox.addClass('error');
@@ -2828,6 +2828,7 @@ directives.add('ic-tpl', {
                 var th = $(this);
 
                 var name = th.attr('ic-tpl');
+                th.attr('ic-tpl-name', name);
 
 //        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
 //        var scope = brick.controllers.get(ctrl);

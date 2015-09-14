@@ -125,28 +125,7 @@ for animating
     display: none;
 }
 
-[ic-dropdown] {
-    position: relative;
-}
 
-[ic-role-dropdown-menu] {
-    position: absolute;
-    left: 0;
-    z-index: 10;
-    display: none;
-}
-
-[ic-role-dropdown-con] {
-    overflow: hidden;
-}
-
-[ic-scene] {
-    display: none;
-}
-
-[ic-scene-active] {
-    display: inherit;
-}
 
 /*输入提示列表*/
 [ic-role-list] {

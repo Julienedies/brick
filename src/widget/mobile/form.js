@@ -283,6 +283,8 @@ directives.add('ic-form', function ($elm, attrs) {
             var val = $th.val();
             var tip;
 
+            console.log(this, val, errTips);
+
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
                 $fieldBox.addClass('error');
