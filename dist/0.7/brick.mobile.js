@@ -1233,7 +1233,7 @@ function createRender(root) {
 
     })(root);
 
-    var tpl = $(root).html()
+    var _tpl = $(root).html()
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
@@ -1246,9 +1246,9 @@ function createRender(root) {
 
     //console.log(tpl);
 
-    var tplf = _.template(tpl);
-    tplf._tpl_ = tpl;
-    return tplf;
+    var tpl = _.template(_tpl);
+    tpl._tpl_ = _tpl;
+    return tpl;
 
 };
     /**
@@ -2014,6 +2014,7 @@ brick.removeRoute = function (hash, handler) {
     $.fn.icRender = function(tpl, model, callback){
         tpl = brick.getTpl(tpl);
         var html = tpl(model);
+        this.removeAttr('ic-tpl');
         this.html(html);
         callback && callback.apply(this[0]);
         return this;
@@ -2111,7 +2112,7 @@ brick.removeRoute = function (hash, handler) {
         return this;
     };
 
-    $.icDialog = function(options){
+    $.icDialog = function(msg){
         var options = _.isObject(msg) ? msg : {desc:msg};
         $('[ic-Dialog]:first').icDialog(options);
     };
@@ -2165,7 +2166,7 @@ brick.removeRoute = function (hash, handler) {
     };
 
     $.fn.icDatePicker = function(options){
-        this.trigger('ic-date-picker.render', options);
+        return this.trigger('ic-date-picker.render', options);
     };
 
     //监听enter键

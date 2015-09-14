@@ -7,6 +7,7 @@
     $.fn.icRender = function(tpl, model, callback){
         tpl = brick.getTpl(tpl);
         var html = tpl(model);
+        this.removeAttr('ic-tpl');
         this.html(html);
         callback && callback.apply(this[0]);
         return this;
@@ -104,7 +105,7 @@
         return this;
     };
 
-    $.icDialog = function(options){
+    $.icDialog = function(msg){
         var options = _.isObject(msg) ? msg : {desc:msg};
         $('[ic-Dialog]:first').icDialog(options);
     };
@@ -158,7 +159,7 @@
     };
 
     $.fn.icDatePicker = function(options){
-        this.trigger('ic-date-picker.render', options);
+        return this.trigger('ic-date-picker.render', options);
     };
 
     //监听enter键

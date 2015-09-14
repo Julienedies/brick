@@ -30,7 +30,7 @@
 }
 
 [ic-tpl] {
-    display: none;
+    display: none!important;
 }
 
 [ic-drag-view] {

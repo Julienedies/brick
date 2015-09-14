@@ -24,7 +24,7 @@ function createRender(root) {
 
     })(root);
 
-    var tpl = $(root).html()
+    var _tpl = $(root).html()
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
@@ -37,8 +37,8 @@ function createRender(root) {
 
     //console.log(tpl);
 
-    var tplf = _.template(tpl);
-    tplf._tpl_ = tpl;
-    return tplf;
+    var tpl = _.template(_tpl);
+    tpl._tpl_ = _tpl;
+    return tpl;
 
 }

@@ -22,11 +22,10 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     //var tpl = brick.createRender($elm[0]);
 
     var _d = new Date();
-    var tpl = brick.getTpl($elm.attr('ic-tpl'));
+    var tpl = $elm.attr('ic-tpl');
     var _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
     var _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
     var multiple = !!$elm.attr('ic-date-multiple');
-    var auto = $elm.attr('ic-date-auto');
     var weekStart = $elm.attr('ic-date-week-start') || 1;
     var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
@@ -49,17 +48,27 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         return d || [];
     })();
 
-    ////////////////////////////////////////////////////
-    //init
+    //更新html
+    function render(date) {
+        var dateModel = model(date);
+        if(onRender){
+            onRender(dateModel);
+        }else{
+            $elm.icRender(tpl, dateModel);
+            $elm.trigger('ic-date-picker.init');
+        }
+    }
 
-    //if(auto){
-        render();
-        $elm.show();
-    //}
+    ////////////////////////////////////////////////////
+
 
     $elm.on('ic-date-picker.render', function(e, msg){
-        render();
-        $elm.show();
+        try{
+            $elm.icRender(tpl, msg);
+            $elm.trigger('ic-date-picker.init');
+        }catch(e){
+            console.log(e);
+        }
     });
 
     ////////////////////////////////////////////////////
@@ -71,7 +80,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         render(_date);
     });
 
-    $elm.on('click', '[ic-date]', multiple ? function (e) {
+    $elm.on('click', '[ic-date]'+enabled, multiple ? function (e) {
         var bindDate = this.getAttribute('ic-date');
         if (this.classList.contains(cla)) {
             this.classList.remove(cla);
@@ -92,13 +101,11 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         }
     });
 
+    //////////////////////////////////////////////////////
+    //init
+    render(_date);
+
     /////////////////////////////////////////////////////
-    //更新html
-    function render(date) {
-        var html = tpl({vm: model(date)});
-        $elm.html(html);
-        $elm.trigger('ic-date-picker.init');
-    }
 
     //计算一个月的天数
     function _countDays(current){
@@ -125,6 +132,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         var month = current.month();
 
         //var days = _.range(1, current.daysInMonth() + 1);
+        var calendar = [];
         var days = _countDays(current);
         var prevDays = _countDays(prev);
         var nextDays = _countDays(next);
@@ -157,7 +165,8 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             var isSelected = _.indexOf(selectedDateArr, date) > -1;
             var n = v.replace(/^\d\d\d\d-\d\d-0?/i,'');
             var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position};
-            day.custom = onRender(day) || {};
+            calendar.push(day);
+            //day.custom = onRender(day) || {};
             return day;
         });
 
@@ -168,7 +177,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             week = days.splice(0, 7);
         }
 
-        return {current: current.format('YYYY-MM'), weeks: weeks};
+        return {current: current.format('YYYY-MM'), weeks: weeks, calendar:calendar, year:current.format('YYYY'), month:current.format('MM')};
     }
 
 });
