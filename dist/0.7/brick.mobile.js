@@ -2103,7 +2103,7 @@ brick.removeRoute = function (hash, handler) {
             }
 
             that.icAniIn(21, function () {
-                that.trigger('ic-dialog.show');;;;
+                that.trigger('ic-dialog.show');
             });
 
         },30);
@@ -2112,7 +2112,7 @@ brick.removeRoute = function (hash, handler) {
     };
 
     $.icDialog = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg};
+        var options = _.isObject(msg) ? msg : {desc:msg, title:''};
         $('[ic-dialog]:first').icDialog(options);
     };
 
@@ -2147,7 +2147,7 @@ brick.removeRoute = function (hash, handler) {
 
                 var timer = setTimeout(function(){
                     that.icAniOut();
-                }, 3000);
+                }, 2400);
 
                 that.data('ic-prompt-timer', timer);
 
@@ -2435,11 +2435,11 @@ directives.add('ic-form', function ($elm, attrs) {
     var presetRule = {
         id: /[\w_]{4,18}/,
         required: /.+/,
-        phone: /^1[0-9][0-9]\d{8}$/,
+        phone: /^\d{6,}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
         password: /(?:[\w]|[!@#$%^&*]){8,}/,
-        desc:/.{4,32}/,
-        plate:/^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
+        desc: /.{4,32}/,
+        plate: /^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
 
@@ -2475,6 +2475,8 @@ directives.add('ic-form', function ($elm, attrs) {
     //校验函数
     function _verify(val, rules, tips, $field) {
 
+        if (rules == undefined) return false;
+
         tips = tips || 'error';
 
         var fns = {};
@@ -2504,33 +2506,27 @@ directives.add('ic-form', function ($elm, attrs) {
 
     }
 
-    //只执行一次绑定
-    if (!arguments.callee._run) {
+    /**
+     * 对外js调用接口
+     */
+    $.fn.icVerify = $.fn.icVerify || function () {
 
-        arguments.callee._run = 1;
-        /**
-         * 对外js调用接口
-         */
-        $.fn.icVerify = function () {
+        var isSubmit = this.attr('ic-form-submit');
 
-            var isSubmit = this.attr('ic-form-submit');
+        if (isSubmit) {
+            this.trigger('ic-form.' + isSubmit);
+            return this.attr('ic-verification');
+        }
 
-            if (isSubmit) {
-                this.trigger('ic-form.' + isSubmit);
-                return this.attr('ic-verification');
-            }
+        var isField = this.attr('ic-form-field');
 
-            var isField = this.attr('ic-form-field');
+        if (isField) {
+            this.trigger('change');
+            return this.attr('ic-verification');
+        }
 
-            if (isField) {
-                this.trigger('change');
-                return this.attr('ic-verification');
-            }
-
-            return false;
-        };
-    }
-
+        return false;
+    };
 
     // 执行指令
     var namespace = $elm.attr('ic-form');
@@ -2553,41 +2549,42 @@ directives.add('ic-form', function ($elm, attrs) {
             var submitName = $th.attr('name') || name;
             var val;
 
-            if(/^input|select|textarea$/img.test(tag)){
+            if (/^input|select|textarea$/img.test(tag)) {
 
-                if(/^checkbox|radio$/i.test(type)){
+                if (/^checkbox|radio$/i.test(type)) {
 
-                    if($th.is(':checked')){
+                    if ($th.is(':checked')) {
                         val = $th.val();
-                    }else{
+                    } else {
                         return;
                     }
 
-                }else{
+                } else {
                     val = $th.val();
                 }
 
-            }else{
+            } else {
                 val = $th.attr('ic-val');
             }
 
             var prev = fields[submitName];
-            if(prev){
+            if (prev) {
                 prev = _.isArray(prev) ? prev : [prev];
                 prev.push(val);
                 fields[submitName] = prev;
-            }else{
+            } else {
                 fields[submitName] = val;
             }
 
         });
 
-        //显示并且有验证规则
-        $fields.filter(':visible').filter('[ic-field-rule]').each(function (i) {
+
+        $fields.filter('[ic-field-placeholder][ic-field-rule]').each(function (i) {
             $(this).change();
         });
 
-        $fields.filter('[ic-field-placeholder][ic-field-rule]').each(function (i) {
+        //显示并且有验证规则
+        $fields.filter(':visible').filter('[ic-field-rule]').each(function (i) {
             $(this).change();
         });
 
@@ -2602,7 +2599,9 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
-    var defaultCall = function(){console.log(arguments)};
+    var defaultCall = function () {
+        console.log(arguments)
+    };
     //提交
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
@@ -2626,7 +2625,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
     $submit.on('mousedown', function (e) {
 
-        if($submit[0].hasAttribute('ic-submit-disabled')) return;
+        if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
         if (!$submit.icVerify()) return $elm.trigger('ic-form.error');
 
@@ -2702,7 +2701,7 @@ directives.add('ic-form', function ($elm, attrs) {
             var val = $th.val();
             var tip;
 
-            console.log(this, val, errTips);
+            //console.log(this, val, errTips);
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
@@ -2716,9 +2715,9 @@ directives.add('ic-form', function ($elm, attrs) {
                 $fieldBox.removeClass('error');
                 $errTip.removeClass('error');
                 $th.attr('ic-verification', 1);
-                if($th[0].hasAttribute('ic-field-placeholder')){
+                if ($th[0].hasAttribute('ic-field-placeholder')) {
 
-                }else{
+                } else {
                     fields[submitName] = val;
                 }
                 $th.trigger('ic-form-field.ok', val);
@@ -2728,7 +2727,8 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
         $th.on('focus', function () {
-            $errTip.text(foucsTip);
+            $fieldBox.removeClass('error');
+            $errTip.removeClass('error').text(foucsTip);
         });
 
     });

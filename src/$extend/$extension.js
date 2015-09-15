@@ -105,7 +105,7 @@
     };
 
     $.icDialog = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg};
+        var options = _.isObject(msg) ? msg : {desc:msg, title:''};
         $('[ic-dialog]:first').icDialog(options);
     };
 
@@ -140,7 +140,7 @@
 
                 var timer = setTimeout(function(){
                     that.icAniOut();
-                }, 3000);
+                }, 2400);
 
                 that.data('ic-prompt-timer', timer);
 

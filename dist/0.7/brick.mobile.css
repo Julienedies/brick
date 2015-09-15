@@ -142,7 +142,9 @@ for animating
 [ic-dialog][ic-active], [ic-prompt][ic-active]{
     z-index: 1000;
 }
-
+[ic-dialog][ic-active]{
+    z-index: 1200;
+}
 /*
 iOS 上，屏幕是触碰的，所以页面元素默认会有 touch 一类事件，而不是 click。也就是说，
 点击一个元素时，iOS 上的 Safari 冒泡的是 touch 一类事件，而不是 click。
