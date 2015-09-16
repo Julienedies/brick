@@ -5,12 +5,11 @@
 
 directives.add('ic-form', function ($elm, attrs) {
 
-
     /**
      * 要验证的字段 ic-form-field
      * 验证规则  ic-field-rule
-     * 验证失败提示 ic-role-field-err-tip
-     * 验证成功提示 ic-role-field-ok-tip
+     * 验证失败提示 ic-field-err-tip
+     * 验证成功提示 ic-field-ok-tip
      */
 
     var presetRule = {
@@ -23,31 +22,43 @@ directives.add('ic-form', function ($elm, attrs) {
         plate: /^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
+    var customRule = brick.config.get('ic-form.rule');
+
+    if (_.isObject(customRule)) {
+        _.extend(presetRule, customRule);
+    }
+
+    console.info(presetRule);
 
     /**
      * 对ic-field-rule属性定义的字段校验规则编译处理
      * 校验规则分为3类：
-     * 1：预设的规则表示符，映射到相应的正则表达式，如: 'phone';
+     * 1：预设的规则表示符，映射到相应的正则表达式或函数，如: 'phone';
      * 2：用户自定义的正则表达式, 如: /\d3/;
      * 3：用户自定义函数 如: equal(val); 传入校验字段校验时的字段值
      *
      * @param rule
      * @param $elm
-     * @returns {XML|string|void|*}
+     * @returns {}
      */
     function compileRule(rule, $elm) {
 
+        var v;
         //替换预设的规则标识符
         for (var i in presetRule) {
-            rule = rule.replace(i, presetRule[i]);
+            v = presetRule[i];
+            rule = rule.replace(i, function(m){
+                return _.isFunction(v) ? m+'()' : _.isRegExp(v) ? v : m;
+            });
         }
 
-        var call = '.test("?")';
         //rule = rule.replace(/(\&\&|\|\|)(?=(?:\/|\w))/g, call+'$1');
         //rule += call;
 
+        //console.error(rule);
+
         rule = rule.replace(/\/[igm]{0,3}(?=(?:\|\||\&\&|$))/g, function (m) {
-            return m + call;
+            return m + '.test("?")';
         });
 
         return rule;
@@ -62,8 +73,10 @@ directives.add('ic-form', function ($elm, attrs) {
 
         var fns = {};
 
+        console.error(rules);
+
         rules = rules.replace(/(?:^|\|\||\&\&)(\w+?)\(\)(?=(?:\|\||\&\&|$))/g, function (m, $1) {
-            var fn = $field.icParseProperty($1);
+            var fn = presetRule[$1] || $field.icParseProperty($1);
             fns[$1] = fn;
             return m.replace($1, 'fns.' + $1).replace('()', '("?")');
         });
@@ -90,13 +103,20 @@ directives.add('ic-form', function ($elm, attrs) {
     /**
      * 对外js调用接口
      */
+    $.fn.icForm = $.fn.icForm || function (e, msg) {
+
+        this.trigger('ic-form.' + e, msg);
+
+    };
+
+
     $.fn.icVerify = $.fn.icVerify || function () {
 
         var isSubmit = this.attr('ic-form-submit');
 
         if (isSubmit) {
-            this.trigger('ic-form.' + isSubmit);
-            return this.attr('ic-verification');
+            this.trigger('ic-form.verify');
+            return this.attr('ic-verification') ? fields : false;
         }
 
         var isField = this.attr('ic-form-field');
@@ -118,7 +138,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var fields = {};
 
     //处理js调用
-    $submit.on('ic-form.' + namespace, function (e, field) {
+    $submit.on('ic-form.verify', function (e, field) {
 
         fields = {};
 

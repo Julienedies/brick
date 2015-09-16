@@ -20,13 +20,9 @@ directives.add('ic-ajax', function () {
 
             var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-            //提交
             var defaultCall = function () {
                 console.log(arguments)
             };
-            var url = $elm.attr('ic-submit-action');
-            var dataType = $elm.attr('ic-submit-data-type') || 'json';
-            var method = $elm.attr('ic-submit-method') || 'post';
 
             var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
             var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
@@ -34,6 +30,10 @@ directives.add('ic-ajax', function () {
             var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
             if (before.apply(that) === false) return;
+
+            var url = $elm.attr('ic-submit-action');
+            var dataType = $elm.attr('ic-submit-data-type') || 'json';
+            var method = $elm.attr('ic-submit-method') || 'post';
 
             var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 

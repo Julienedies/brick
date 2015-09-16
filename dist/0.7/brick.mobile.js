@@ -29,8 +29,13 @@ var config = (function (){
             return conf[key];
         },
         set: function(key, val){
+            var old = conf[key];
+            if(old && _.isObject(old) && _.isObject(val)){
+                return _.extend(old, val);
+            }
             conf[key] = val;
         }
+
     };
 
 
@@ -112,7 +117,7 @@ var eventManager = (function() {
          * @param context {Object} 调用watch方法的scope
          */
         bind: function (e, f, context) {
-            e = e.split(',');
+            e = e.split(/[,\s]+/g);
             for(var i in e){
                 this._bind(e[i], f, context);
             }
@@ -138,7 +143,7 @@ var eventManager = (function() {
          * @param f {Function} 回调函数，可选，如果没有传递，则取消该事件下的所有监听
          */
         unbind: function (e, f) {
-            e = e.split(',');
+            e = e.split(/[,\s]+/g);
             for(var i in e){
                 this._unbind(e[i], f);
             }
@@ -2163,8 +2168,8 @@ brick.removeRoute = function (hash, handler) {
         $('[ic-prompt]:first').icPrompt(options);
     };
 
-    $.fn.icDatePicker = function(options){
-        return this.trigger('ic-date-picker.render', options);
+    $.fn.icDatePicker = function(call, options){
+        return this.trigger('ic-date-picker.'+call, options);
     };
 
     //监听enter键
@@ -2194,7 +2199,7 @@ brick.removeRoute = function (hash, handler) {
     //设置loading
     (function ($) {
 
-        var loading = '<span style="margin:0.2em auto;display:inline-block;text-align:center;" role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
+        var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
 
         $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
@@ -2210,7 +2215,7 @@ brick.removeRoute = function (hash, handler) {
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 999}).appendTo('body');
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 
@@ -2424,12 +2429,11 @@ directives.reg('ic-prompt', function ($elm, attrs) {
 
 directives.add('ic-form', function ($elm, attrs) {
 
-
     /**
      * 要验证的字段 ic-form-field
      * 验证规则  ic-field-rule
-     * 验证失败提示 ic-role-field-err-tip
-     * 验证成功提示 ic-role-field-ok-tip
+     * 验证失败提示 ic-field-err-tip
+     * 验证成功提示 ic-field-ok-tip
      */
 
     var presetRule = {
@@ -2442,31 +2446,43 @@ directives.add('ic-form', function ($elm, attrs) {
         plate: /^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
+    var customRule = brick.config.get('ic-form.rule');
+
+    if (_.isObject(customRule)) {
+        _.extend(presetRule, customRule);
+    }
+
+    console.info(presetRule);
 
     /**
      * 对ic-field-rule属性定义的字段校验规则编译处理
      * 校验规则分为3类：
-     * 1：预设的规则表示符，映射到相应的正则表达式，如: 'phone';
+     * 1：预设的规则表示符，映射到相应的正则表达式或函数，如: 'phone';
      * 2：用户自定义的正则表达式, 如: /\d3/;
      * 3：用户自定义函数 如: equal(val); 传入校验字段校验时的字段值
      *
      * @param rule
      * @param $elm
-     * @returns {XML|string|void|*}
+     * @returns {}
      */
     function compileRule(rule, $elm) {
 
+        var v;
         //替换预设的规则标识符
         for (var i in presetRule) {
-            rule = rule.replace(i, presetRule[i]);
+            v = presetRule[i];
+            rule = rule.replace(i, function(m){
+                return _.isFunction(v) ? m+'()' : _.isRegExp(v) ? v : m;
+            });
         }
 
-        var call = '.test("?")';
         //rule = rule.replace(/(\&\&|\|\|)(?=(?:\/|\w))/g, call+'$1');
         //rule += call;
 
+        //console.error(rule);
+
         rule = rule.replace(/\/[igm]{0,3}(?=(?:\|\||\&\&|$))/g, function (m) {
-            return m + call;
+            return m + '.test("?")';
         });
 
         return rule;
@@ -2481,8 +2497,10 @@ directives.add('ic-form', function ($elm, attrs) {
 
         var fns = {};
 
+        console.error(rules);
+
         rules = rules.replace(/(?:^|\|\||\&\&)(\w+?)\(\)(?=(?:\|\||\&\&|$))/g, function (m, $1) {
-            var fn = $field.icParseProperty($1);
+            var fn = presetRule[$1] || $field.icParseProperty($1);
             fns[$1] = fn;
             return m.replace($1, 'fns.' + $1).replace('()', '("?")');
         });
@@ -2509,13 +2527,20 @@ directives.add('ic-form', function ($elm, attrs) {
     /**
      * 对外js调用接口
      */
+    $.fn.icForm = $.fn.icForm || function (e, msg) {
+
+        this.trigger('ic-form.' + e, msg);
+
+    };
+
+
     $.fn.icVerify = $.fn.icVerify || function () {
 
         var isSubmit = this.attr('ic-form-submit');
 
         if (isSubmit) {
-            this.trigger('ic-form.' + isSubmit);
-            return this.attr('ic-verification');
+            this.trigger('ic-form.verify');
+            return this.attr('ic-verification') ? fields : false;
         }
 
         var isField = this.attr('ic-form-field');
@@ -2537,7 +2562,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var fields = {};
 
     //处理js调用
-    $submit.on('ic-form.' + namespace, function (e, field) {
+    $submit.on('ic-form.verify', function (e, field) {
 
         fields = {};
 
@@ -2759,13 +2784,9 @@ directives.add('ic-ajax', function () {
 
             var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-            //提交
             var defaultCall = function () {
                 console.log(arguments)
             };
-            var url = $elm.attr('ic-submit-action');
-            var dataType = $elm.attr('ic-submit-data-type') || 'json';
-            var method = $elm.attr('ic-submit-method') || 'post';
 
             var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
             var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
@@ -2773,6 +2794,10 @@ directives.add('ic-ajax', function () {
             var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
             if (before.apply(that) === false) return;
+
+            var url = $elm.attr('ic-submit-action');
+            var dataType = $elm.attr('ic-submit-data-type') || 'json';
+            var method = $elm.attr('ic-submit-method') || 'post';
 
             var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 

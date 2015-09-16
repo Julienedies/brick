@@ -156,8 +156,8 @@
         $('[ic-prompt]:first').icPrompt(options);
     };
 
-    $.fn.icDatePicker = function(options){
-        return this.trigger('ic-date-picker.render', options);
+    $.fn.icDatePicker = function(call, options){
+        return this.trigger('ic-date-picker.'+call, options);
     };
 
     //监听enter键
@@ -187,7 +187,7 @@
     //设置loading
     (function ($) {
 
-        var loading = '<span style="margin:0.2em auto;display:inline-block;text-align:center;" role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
+        var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
 
         $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
@@ -203,7 +203,7 @@
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 999}).appendTo('body');
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 

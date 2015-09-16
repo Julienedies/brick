@@ -18,7 +18,7 @@ var eventManager = (function() {
          * @param context {Object} 调用watch方法的scope
          */
         bind: function (e, f, context) {
-            e = e.split(',');
+            e = e.split(/[,\s]+/g);
             for(var i in e){
                 this._bind(e[i], f, context);
             }
@@ -44,7 +44,7 @@ var eventManager = (function() {
          * @param f {Function} 回调函数，可选，如果没有传递，则取消该事件下的所有监听
          */
         unbind: function (e, f) {
-            e = e.split(',');
+            e = e.split(/[,\s]+/g);
             for(var i in e){
                 this._unbind(e[i], f);
             }
