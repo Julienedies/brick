@@ -31,6 +31,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
     var onRender = $elm.icParseProperty2('ic-date-on-render') || function (a) { };
 
+    var START = _date;
     var now = moment(_date, _format);
     var cla = 'selected';
     var weekMap = (function (weekStart) {
@@ -78,7 +79,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     //bind event
     var old_date;
 
-    $elm.on('click', '[ic-date-prev-m], [ic-date-next-m]', function (e) {
+    $elm.on('click', '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
         var call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
         old_date = _date;
         _date = moment(_date, _format)[call](1, 'months').format(_format);
@@ -183,7 +184,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             week = days.splice(0, 7);
         }
 
-        return {current: current.format('YYYY-MM'), weeks: weeks, calendar:calendar, year:current.format('YYYY'), month:current.format('MM')};
+        return {current: current.format('YYYY-MM'), weeks: weeks, calendar:calendar, year:current.format('YYYY'), month:current.format('MM'), x: current.diff(now,'months') };
     }
 
 });

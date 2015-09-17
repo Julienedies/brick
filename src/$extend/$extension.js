@@ -9,7 +9,7 @@
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);
-        callback && callback.apply(this[0]);
+        callback && callback.apply(this[0], [this.children()]);
         return this;
     };
 
@@ -36,8 +36,10 @@
 
         return (function (root, chain) {
 
+            console.log(root, chain);
+
             var k = chain.shift();
-            var v = root[k];
+            var v = root && root[k];
 
             if (!v) return;
 
@@ -159,6 +161,7 @@
     $.fn.icDatePicker = function(call, options){
         return this.trigger('ic-date-picker.'+call, options);
     };
+
 
     //监听enter键
     $.fn.icEnterPress = function (call) {

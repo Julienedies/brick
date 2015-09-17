@@ -1269,6 +1269,12 @@ services.fill('eventManager', eventManager);
 root.brick = {
     config: config,
     eventManager: eventManager,
+    set: function(k, v){
+        return this.config.set(k, v);
+    },
+    get: function(k){
+      return this.config.get(k);
+    },
     broadcast: function (e, msg) {
         this.eventManager.fire(e, msg);
         return this;
@@ -2021,7 +2027,7 @@ brick.removeRoute = function (hash, handler) {
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);
-        callback && callback.apply(this[0]);
+        callback && callback.apply(this[0], [this.children()]);
         return this;
     };
 
@@ -2048,8 +2054,10 @@ brick.removeRoute = function (hash, handler) {
 
         return (function (root, chain) {
 
+            console.log(root, chain);
+
             var k = chain.shift();
-            var v = root[k];
+            var v = root && root[k];
 
             if (!v) return;
 
@@ -2171,6 +2179,7 @@ brick.removeRoute = function (hash, handler) {
     $.fn.icDatePicker = function(call, options){
         return this.trigger('ic-date-picker.'+call, options);
     };
+
 
     //监听enter键
     $.fn.icEnterPress = function (call) {
@@ -2441,7 +2450,7 @@ directives.add('ic-form', function ($elm, attrs) {
         required: /.+/,
         phone: /^\d{6,}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
-        password: /(?:[\w]|[!@#$%^&*]){8,}/,
+        password: /(?:[\w]|[!@#$%^&*]){6,16}/,
         desc: /.{4,32}/,
         plate: /^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
@@ -2451,8 +2460,6 @@ directives.add('ic-form', function ($elm, attrs) {
     if (_.isObject(customRule)) {
         _.extend(presetRule, customRule);
     }
-
-    console.info(presetRule);
 
     /**
      * 对ic-field-rule属性定义的字段校验规则编译处理
@@ -2497,8 +2504,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
         var fns = {};
 
-        console.error(rules);
-
         rules = rules.replace(/(?:^|\|\||\&\&)(\w+?)\(\)(?=(?:\|\||\&\&|$))/g, function (m, $1) {
             var fn = presetRule[$1] || $field.icParseProperty($1);
             fns[$1] = fn;
@@ -2512,9 +2517,18 @@ directives.add('ic-form', function ($elm, attrs) {
 
         //console.log(script)
 
+        var result;
+
         try {
-            if (eval(script)) {
+            result = eval(script);
+            //如果result是一个字符串，表示一个
+            if(typeof result === 'string'){
+                return result;
+            }
+            if (result === true) {
                 return false;
+            } else if(result){
+                return result;
             } else {
                 return tips;
             }
@@ -2527,12 +2541,11 @@ directives.add('ic-form', function ($elm, attrs) {
     /**
      * 对外js调用接口
      */
-    $.fn.icForm = $.fn.icForm || function (e, msg) {
 
-        this.trigger('ic-form.' + e, msg);
 
-    };
-
+   /* $.fn.icForm = $.fn.icForm || function (call, msg) {
+        $submit.trigger('mousedown');
+    };*/
 
     $.fn.icVerify = $.fn.icVerify || function () {
 

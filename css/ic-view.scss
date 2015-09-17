@@ -65,7 +65,7 @@ for animating
 }
 
 [ic-view][ic-active], [ic-panel][ic-active] {
-  z-index: auto;
+  z-index: 2;
   visibility: visible;
 }
 

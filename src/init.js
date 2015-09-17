@@ -11,6 +11,12 @@ services.fill('eventManager', eventManager);
 root.brick = {
     config: config,
     eventManager: eventManager,
+    set: function(k, v){
+        return this.config.set(k, v);
+    },
+    get: function(k){
+      return this.config.get(k);
+    },
     broadcast: function (e, msg) {
         this.eventManager.fire(e, msg);
         return this;
