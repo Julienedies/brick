@@ -2054,8 +2054,6 @@ brick.removeRoute = function (hash, handler) {
 
         return (function (root, chain) {
 
-            console.log(root, chain);
-
             var k = chain.shift();
             var v = root && root[k];
 
@@ -2448,7 +2446,7 @@ directives.add('ic-form', function ($elm, attrs) {
     var presetRule = {
         id: /[\w_]{4,18}/,
         required: /.+/,
-        phone: /^\d{6,}$/,
+        phone: /^\d[\d-]{5,16}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
         password: /(?:[\w]|[!@#$%^&*]){6,16}/,
         desc: /.{4,32}/,

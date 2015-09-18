@@ -36,8 +36,6 @@
 
         return (function (root, chain) {
 
-            console.log(root, chain);
-
             var k = chain.shift();
             var v = root && root[k];
 
