@@ -59,6 +59,7 @@ directives.add('ic-form', function ($elm, attrs) {
             return m + '.test("?")';
         });
 
+        //console.info(rule);
         return rule;
     }
 
@@ -108,8 +109,6 @@ directives.add('ic-form', function ($elm, attrs) {
     /**
      * 对外js调用接口
      */
-
-
    /* $.fn.icForm = $.fn.icForm || function (call, msg) {
         $submit.trigger('mousedown');
     };*/

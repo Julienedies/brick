@@ -50,16 +50,17 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     })();
 
     //更新html
-    function render(date) {
+    function render(date, flag) {
         var dateModel = model(date);
-        if(onRender){
+        if(onRender && !flag){
             onRender(dateModel);
         }else{
-            $elm.icRender(tpl, dateModel);
+            $elm.icRender(tpl, {vm:dateModel});
             $elm.trigger('ic-date-picker.init');
         }
     }
 
+    render(undefined, true);
     ////////////////////////////////////////////////////
 
     $elm.on('ic-date-picker.render', function(e, msg){
@@ -171,9 +172,8 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             var position = i < start ? 'prev' : i > (len+start-1) ? 'next' : 'current';
             var isSelected = _.indexOf(selectedDateArr, date) > -1;
             var n = v.replace(/^\d\d\d\d-\d\d-0?/i,'');
-            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position};
+            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom:{}};
             calendar.push(day);
-            //day.custom = onRender(day) || {};
             return day;
         });
 

@@ -34,7 +34,6 @@
     __inline('src/widget/mobile/ajax.js');
     __inline('src/widget/tpl.js');
 
-
     function bootstrap(){
 
     }
