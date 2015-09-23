@@ -6,6 +6,7 @@
 ;
 (function (root, undefined) {
 
+    __inline('src/var.js');
     __inline('src/config.js');
     __inline('src/compile.js');
     __inline('src/eventManager.js');
@@ -16,22 +17,26 @@
     __inline('src/parser.js');
     __inline('src/createRender.js');
     __inline('src/init.js');
-    __inline('src/$extension.js');
+
+    __inline('src/util.js');
+    __inline('src/extend/transition.js');
+    __inline('src/extend/route.js');
+    __inline('src/extend/cache.js');
+
+    __inline('src/$extend/$extension.js');
 
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
 
-    __inline('src/widget/slider.js');
     __inline('src/widget/tabs.js');
-    __inline('src/widget/dropdown.js');
-    __inline('src/widget/pagination.js');
-    __inline('src/widget/dialog.js');
-    __inline('src/widget/drag.js');
-    __inline('src/widget/form.js');
-    __inline('src/widget/ajax.js');
+    __inline('src/widget/mobile/dialog.js');
+    __inline('src/widget/mobile/form.js');
+    __inline('src/widget/mobile/ajax.js');
     __inline('src/widget/tpl.js');
-    __inline('src/widget/typeAhead.js');
 
+    function bootstrap(){
+
+    }
 
     $(function () {
 
@@ -39,12 +44,13 @@
 
             console.log('brick start');
 
+            //
+            directives.init();
+
             //优先解析模板
-            directives.exec('ic-tpl');
-
-            directives.exec('ic-event');
-
-            directives.exec('ic-ajax');
+            //directives.exec('ic-tpl');
+            //directives.exec('ic-event');
+            //directives.exec('ic-ajax');
 
             (function (node) {
 
@@ -62,7 +68,10 @@
 
             })(document.body);
 
-            controllers.init();
+            //controllers.init();
+
+            //hashchange
+            __inline('src/event/hashChange.js');
 
         }, 30);
 

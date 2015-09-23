@@ -15,10 +15,12 @@ directives.add('ic-form', function ($elm, attrs) {
 
     var presetRule = {
         id: /[\w_]{4,18}/,
-        required: /[\w\d]+/,
+        required: /.+/,
         phone: /^1[0-9][0-9]\d{8}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
-        password: /(?:[\w]|[!@#$%^&*]){8,}/
+        password: /(?:[\w]|[!@#$%^&*]){8,}/,
+        desc:/.{4,32}/,
+        plate:/^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
 
 
@@ -193,15 +195,14 @@ directives.add('ic-form', function ($elm, attrs) {
 
     $submit.on('mousedown', function (e) {
 
-        if (!$submit.icVerify()) return;
-
+        if (!$submit.icVerify()) return $elm.trigger('ic-form.error');
 
         //函数调用
         if (submitType === 1) {
-            return action.apply($submit, []);
+            return action.apply($submit[0], [fields]);
         }
 
-        var data = before(fields);
+        var data = before.apply($submit[0], [fields]);
         if (data === false) return;
 
         if ($loading.size()) {

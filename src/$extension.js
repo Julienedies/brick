@@ -4,35 +4,48 @@
  */
 (function ($) {
 
+    $.fn.icCompile = function(){
+
+        if(!this.length) return;
+
+        return this.each(function(i){
+
+            brick.compile(this);
+
+        });
+    };
+
     $.fn.icParseProperty = function (name) {
 
         if (name === void(0)) return void(0);
-        var ctrl = this.closest('[ic-ctrl]').attr('ic-ctrl');
-        var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+        var $ctrl = this.closest('[ic-ctrl]');
+        var ctrl = $ctrl.attr('ic-ctrl');
+        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
-        return (function (root, key) {
+        var chain = name.split('.');
 
-            var chain = key.split('.');
+        return (function (root, chain) {
 
-            return (function (root, chain) {
+            var k = chain.shift();
+            var v = root[k];
 
-                var k = chain.shift();
-                var v = root[k];
+            if (!v) return;
 
-                if (!v) return;
+            if (chain.length) {
+                return arguments.callee(v, chain);
+            }
 
-                if (chain.length) {
-                    return arguments.callee(v, chain);
-                }
+            return v;
 
-                return v;
-
-            })(root, chain);
-
-        })(namespace, name);
+        })(namespace, chain);
 
     };
 
+    $.fn.icParseProperty2 = function(name){
+        name = this.attr(name);
+        return this.icParseProperty(name);
+    };
 
     $.fn.icTabActive = $.fn.icTabs = function(options){
         var active = options.active;
@@ -46,7 +59,7 @@
 
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
 
-        return this;//链式调用
+        return this;
     };
 
     $.fn.icDialog = function (options) {
@@ -78,13 +91,13 @@
         }, 1000);
 
         return this;
-    }
+    };
     //切换场景
     $.icNextScene = function () {
         var current = $('[ic-scene]').filter('[ic-scene-active=1]');
 
         if (current.size) current.nextScene();
-    }
+    };
 
     $.fn.nextScene = function () {
         var next = this.attr('ic-scene-next');
@@ -94,7 +107,7 @@
         }
 
         return this;
-    }
+    };
 
 // 操作提示
     var tipSize=0;

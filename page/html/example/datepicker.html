@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../../css/brick.mobile.css">
+    <style>
+        [ic-date-status=over] {
+            opacity: 0.4;
+        }
+
+        [ic-date-status=today] {
+            background: red;
+            color: #fff;
+        }
+
+        .selected {
+            background: blue;
+            color: #fff;
+        }
+
+        [ic-date-picker] {
+            border-collapse: collapse;
+        }
+
+        [ic-date-picker] td {
+            border: solid 1px #ccc;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <table ic-tpl="datePicker"
+           ic-date-picker
+           ic-date-now
+           ic-date-default="2015-08-31"
+           ic-date-multiple="true"
+           ic-date-enabled="true"
+           ic-date-format="YYYY-MM-DD"
+           ic-date-week-start="7"
+           ic-date-on-render="onRender">
+
+        <caption>
+            <span ic-date-prev-m>上月</span>
+            <span ic-bind="vm.current"></span>
+            <span ic-date-next-m>下月</span>
+        </caption>
+
+        <thead>
+        <tr>
+            <th>周日</th>
+            <th>周一</th>
+            <th>周二</th>
+            <th>周三</th>
+            <th>周四</th>
+            <th>周五</th>
+            <th>周六</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ic-for="i, days in vm.weeks">
+            <td ic-for="j, day in days"
+                ic-date="{{day.date}}"
+                ic-date-disabled="day.custom.disabled"
+                ic-date-enabled="day.custom.enabled"
+                ic-date-status="{{day.status}}"
+                ic-class="{{day.selected ? 'selected' : ''}}">
+                {{day.n}}
+                <div>{{day.position}}</div>
+                <div>{{day.custom.text}}</div>
+                <div>{{day.custom.status}}</div>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+<script src="../../js/vendor/underscore.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/moment.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../dist/brick.mobile.js"></script>
+<script src="../../../dist/brick.datepicker.js"></script>
+<script>
+
+
+
+
+</script>
+</body>
+</html>

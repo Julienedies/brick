@@ -4,13 +4,13 @@
 
 directives.add('ic-ctrl', function ($elm, attrs) {
 
-
     var ctrlName = $elm.attr('ic-ctrl');
 
     if(ctrlName){
-        var parent = $elm.parent().closest('[ic-ctrl]');
-        var parentName = parent.size() ? parent.attr('ic-ctrl') : '';
-        controllers.exec(ctrlName, controllers.get(parentName), $elm);
+        var $parent = $elm.parent().closest('[ic-ctrl]');
+        //var parentName = $parent.size() ? $parent.attr('ic-ctrl') : '';
+        controllers.exec(ctrlName, $parent.data('ic-ctrl-scope'), $elm);
+        //controllers.exec(ctrlName, controllers.get(parentName), $elm);
     }
 
 });

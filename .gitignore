@@ -3,7 +3,6 @@ Thumbs.db
 .DS_Store
 
 #IDE创建
-#ide create
 .idea/
 .settings/
 .project
@@ -16,5 +15,7 @@ node_modules/
 *.log
 *map.json
 
-fis-dev.js
+
+#临时使用
 fis-llt.cmd
+fis/llt.js

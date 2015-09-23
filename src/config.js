@@ -15,8 +15,13 @@ var config = (function (){
             return conf[key];
         },
         set: function(key, val){
+            var old = conf[key];
+            if(old && _.isObject(old) && _.isObject(val)){
+                return _.extend(old, val);
+            }
             conf[key] = val;
         }
+
     };
 
 

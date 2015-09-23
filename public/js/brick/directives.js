@@ -29,7 +29,24 @@ var directives = {
         }
     },
 
-    init: function (name) {
+    init: function(){
+        var _pool = this._pool;
+        for(var i in _pool){
+
+            var definition = _pool[i];
+
+            if(definition.selfExec){
+                definition.fn && definition.fn();
+            }
+
+            if(definition.once){
+                delete _pool[i];
+            }
+        }
+
+    },
+
+    _init: function (name) {
         var _pool = this._pool;
         for (var i in _pool) {
             var definition = _pool[i];

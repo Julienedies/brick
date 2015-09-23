@@ -11,65 +11,46 @@ services.fill('eventManager', eventManager);
 root.brick = {
     config: config,
     eventManager: eventManager,
-    broadcast: function(e, msg){
-        this.eventManager.fire(e, msg);
+    set: function(k, v){
+        return this.config.set(k, v);
     },
-    on: function(e, fn){
-      this.eventManager.watch(e, fn);
+    get: function(k){
+      return this.config.get(k);
+    },
+    broadcast: function (e, msg) {
+        this.eventManager.fire(e, msg);
+        return this;
+    },
+    on: function (e, fn) {
+        this.eventManager.bind(e, fn);
+        return this;
+    },
+    off: function (e, fn) {
+        this.eventManager.unbind(e, fn);
+        return this;
+    },
+    fire: function (e, msg) {
+        this.eventManager.fire(e, msg);
+        return this;
     },
     controllers: controllers,
     services: services,
     directives: directives,
-    getTpl: function(name){
-        return this._tplfs[name];
+    compile: compile,
+    createRender:createRender,
+    getTpl: function (name) {
+        return this.__tpl[name];
     },
-    _tplfs:{},
-    _findProperty: function(name){
-
-    },
+    __tpl: {},
     init: function () {
 
-        //this.controllers.init();
-
-        //this.directives.init();
-
-        /////////////////////////////////////////////////////////////////////
-
-//        $('[ic-ctrl]').each(function (i, e) {
-//
-//            var root = $(e);
-//
-//            var name = root.attr('ic-ctrl');
-//
-//            var scope = brick.controllers.get(name);
-//
-//
-//            if (!scope) throw 'not find controller ' + name;
-//
-//
-//            scope.domNode = root;
-//
-//            scope.tmplFn = createRender(e);
-//
-//            scope.render();
-//
-//        });
-
-        /////////////////////////////////////////////////////////////////////
+        //init
 
     }
 };
 
 
-root._cc = ( window.console && function () {
 
-        try {
-            console.log.apply(console, arguments);
-        } catch (e) {
-        }
-
-} ) || function () {
-};
 
 
 

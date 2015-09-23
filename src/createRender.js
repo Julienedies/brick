@@ -7,6 +7,8 @@
 
 function createRender(root) {
 
+    root = root.cloneNode(true);
+
     //遍历dom节点，解析指令
     (function (node) {
 
@@ -22,20 +24,21 @@ function createRender(root) {
 
     })(root);
 
-    var tpl = $(root).html()
+    var _tpl = $(root).html()
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
-        .replace(/\bic-(checked|disabled)\s*=\s*(\S*)\s+/g,function(m, $1, $2){
-            $2 = $2.replace(/^(?:"|')|(?:"|')$/g,'');
-            return ' <% if(?2){ %> ?1 <% } %> '.replace('?2',$2).replace('?1',$1);
+        .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
+            $1 = $1 ? 'ic-'+ $1 : '';
+            $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
         })
         .replace(/&amp;&amp;/g,'&&');
 
-    //console.log(tpl)
+    //console.log(tpl);
 
-    var tplf = _.template(tpl);
-    tplf._tpl_ = tpl;
-    return tplf;
+    var tpl = _.template(_tpl);
+    tpl._tpl_ = _tpl;
+    return tpl;
 
 }

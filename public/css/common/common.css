@@ -2181,6 +2181,73 @@ t    为前缀；
 /*
 ==========================================
  */
+html,body{
+    height: 100%;
+}
+[ic-aniOut]{
+    display: none!important;
+}
+[ic-aniIn]{
+    display: block!important;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-overflow-scrolling: touch;
+}
+[ic-view]{
+    background: #fff;
+    top:0;
+    left:0;
+    position: absolute;
+    width:100%;
+    min-height: 100%;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+[ic-view]:not([ic-view-active]){
+    position: absolute;
+    z-index: -2;
+    left:0;
+    top:-10000px;
+}
+[ic-view][ic-view-active]{
+    position: absolute;
+    z-index: auto;
+    left:0;
+    top:0;
+}
+[ic-accordion] [ic-accordion-con]{
+    display: none;
+}
+[ic-accordion] [ic-accordion-item][ic-accordion-active] [ic-accordion-con],
+[ic-accordion] [ic-accordion-item]:nth-child(1) [ic-accordion-con]{
+    display: block;
+}
+[ic-accordion] [ic-accordion-item][ic-accordion-active] [ic-accordion-title],
+[ic-accordion] [ic-accordion-item]:nth-child(1) [ic-accordion-title]{
+    display: none;
+}
+
+[ic-upload][type=file]{
+    width:0;
+    height: 0;
+    visibility: hidden;
+}
 [ic-tpl]{
     display: none;
 }
@@ -2190,7 +2257,6 @@ t    为前缀；
 }
 [ic-role-drag-handle]{
     cursor:  move;
-    cursor: url(http://webmap0.map.bdimg.com/image/api/openhand.cur) 8 8,default;
 }
 [ic-role-loading]{
     display: none;
@@ -2249,15 +2315,15 @@ t    为前缀；
     top:10px;
 }
 /*.transparent{*/
-    /*background:rgba(0,0,0,0.6);*/
-    /*background: transparent\9;*/
-    /*zoom:1\8; *//* required for the filters */
-    /*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)"; *//* IE8 */
-    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000); *//* IE5.5-7 */
+/*background:rgba(0,0,0,0.6);*/
+/*background: transparent\9;*/
+/*zoom:1\8; *//* required for the filters */
+/*-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)"; *//* IE8 */
+/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000); *//* IE5.5-7 */
 /*}*/
 
 /*.transparent2{*/
-    /**background:#f00; *filter:alpha(opacity=50);*/
+/**background:#f00; *filter:alpha(opacity=50);*/
 /*}*/
 
 .t{background:rgba(0,34,89,0.2);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33002259,endColorstr=#33002259);zoom:1;}

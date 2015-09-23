@@ -24,8 +24,8 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         var tabc = $('[ic-role-tabc=' + name + ']');
 
-        if (tabc && conSelect) {
-            tabc.find(conSelect).each(function (i) {
+        if (tabc) {
+            tabc.find(conSelect || '[ic-role-con]').each(function (i) {
                 i = $tabSelect.eq(i).attr('ic-role-tab');
                 $(this).attr('ic-role-con', i);
             });
@@ -52,9 +52,8 @@ directives.add('ic-tabs', function ($elm, attrs) {
         function call_2(e, that) {
             activeTab && activeTab.removeClass('active');
             activeTab = $(that || this).addClass('active');
-            th.trigger('ic-tabs.change', {activeTab: activeTab});
+            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val'), index:activeTab.index()});
         }
-
 
         //fire
         if (activeTab) {
