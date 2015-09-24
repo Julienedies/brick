@@ -64,6 +64,7 @@ fis.config.set('roadmap.path', [
     {
         reg: /^\/src\/(.+\.js)/i,
         release: 'brick/'+ version +'/src/$1',
+        url: '/public/brick/'+ version +'/src/$1',
         isJsLike: true,
         useHash: true
     },
