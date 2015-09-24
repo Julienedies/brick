@@ -5,8 +5,8 @@
     "description": "前端开发框架",
     "repository": "http://github.com/Julienedies/brick.git",
     "devDependencies": {
-        "fis":"1.8.6",
-        "fis-postpackager-simple":"0.0.18"
+        "fis":"*",
+        "fis-postpackager-simple":"*"
     },
     "scripts": {}
 }

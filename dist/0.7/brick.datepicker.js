@@ -55,7 +55,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         if(onRender && !flag){
             onRender(dateModel);
         }else{
-            $elm.icRender(tpl, {vm:dateModel});
+            $elm.icRender(tpl, {vm:dateModel});alert(tpl);
             $elm.trigger('ic-date-picker.init');
         }
     }
