@@ -44,8 +44,8 @@ fis.config.set('roadmap.path', [
     //制作主页用
     {
         reg: /^\/brick(?:\.mobile)?\.js$/i,
-        release: 'brick/'+version+'/$&',
-        url: '/public/brick/'+version+'/$&',
+        release: 'brick/'+version+'$&',
+        url: '/public/brick/'+version+'$&',
         isJsLike: true
     },
     {
