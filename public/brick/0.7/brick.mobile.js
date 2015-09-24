@@ -2532,7 +2532,7 @@ directives.add('ic-form', function ($elm, attrs) {
                 return tips;
             }
         } catch (e) {
-            console.error(e);
+            console.error(e, script);
         }
 
     }

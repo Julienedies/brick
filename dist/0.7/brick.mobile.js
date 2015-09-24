@@ -2459,6 +2459,14 @@ directives.add('ic-form', function ($elm, attrs) {
         _.extend(presetRule, customRule);
     }
 
+    var keys = _.keys(presetRule);
+
+    keys.sort(function(a, b){
+        return b.length - a.length;
+    });
+
+    console.log(keys);
+
     /**
      * 对ic-field-rule属性定义的字段校验规则编译处理
      * 校验规则分为3类：
@@ -2474,9 +2482,10 @@ directives.add('ic-form', function ($elm, attrs) {
 
         var v;
         //替换预设的规则标识符
-        for (var i in presetRule) {
+        for (var i in keys) {
+            i = keys[i];
             v = presetRule[i];
-            rule = rule.replace(i, function(m){
+            rule = rule.replace(new RegExp(i+'(?![^|&])','g'), function(m){
                 return _.isFunction(v) ? m+'()' : _.isRegExp(v) ? v : m;
             });
         }
@@ -2490,7 +2499,7 @@ directives.add('ic-form', function ($elm, attrs) {
             return m + '.test("?")';
         });
 
-        //console.info(rule);
+        console.info(rule);
         return rule;
     }
 
@@ -2532,7 +2541,7 @@ directives.add('ic-form', function ($elm, attrs) {
                 return tips;
             }
         } catch (e) {
-            console.error(e);
+            console.error(e, script);
         }
 
     }

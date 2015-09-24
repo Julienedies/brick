@@ -29,7 +29,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     var weekStart = $elm.attr('ic-date-week-start') || 1;
     var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
-    var onRender = $elm.icParseProperty2('ic-date-on-render') || function (a) { };
+    var onRender = $elm.icParseProperty2('ic-date-on-render');
 
     var START = _date;
     var now = moment(_date, _format);
@@ -45,7 +45,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
 
     var selectedDateArr = (function () {
         var d = $elm.attr('ic-date-default');
-        d = d && d.trim() && d.split(/(?:\s*,\s*)|(?:\s*)/img);
+        d = d && d.trim() && d.split(/(?:\s*,\s*)|(?:\s+)/img);
         return d || [];
     })();
 
@@ -170,7 +170,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             var diff = m.diff(now, 'days');
             var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
             var position = i < start ? 'prev' : i > (len+start-1) ? 'next' : 'current';
-            var isSelected = _.indexOf(selectedDateArr, date) > -1;
+            var isSelected = _.indexOf(selectedDateArr, v) > -1;
             var n = v.replace(/^\d\d\d\d-\d\d-0?/i,'');
             var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom:{}};
             calendar.push(day);

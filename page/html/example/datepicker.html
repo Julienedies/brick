@@ -32,9 +32,9 @@
     </style>
 </head>
 <body>
-<div>
+<div ic-ctrl="mainCtrl">
     <table ic-tpl="datePicker"
-           ic-date-picker
+           ic-date-picker="a"
            ic-date-now
            ic-date-default="2015-10-31"
            ic-date-multiple="true"
@@ -86,7 +86,23 @@
 <script src="../../../brick.mobile.js"></script>
 <script src="../../../src/plugins/datepicker.js"></script>
 <script>
+brick.controllers.reg('mainCtrl', function(scope){
+    console.log(scope);
 
+    var $elm = scope.$elm;
+    var $picker = $elm.find('[ic-date-picker=a]');
+
+    scope.onRender = function(dateModel){
+        console.info(dateModel);
+        dateModel.calendar.forEach(function(v){
+            var custom = v.custom = {};
+            var x = v.n%2;
+            custom.disabled = x;
+            custom.enabled = !x;
+            $picker.icDatePicker('render', {vm:dateModel});
+        });
+    }
+});
 </script>
 </body>
 </html>
