@@ -71,7 +71,7 @@ fis.config.set('roadmap.path', [
 
     //主页相关内容
     {
-        reg: /include\/.*|.*tpl\.html$/i,
+        reg: /include\/.*$/i,
         release: false
     },
     {
