@@ -32,8 +32,8 @@ fis.config.set('modules.postpackager', 'simple');
 //线上部署前domain设为http://julienedies.github.io/brick;
 fis.config.merge({
     roadmap : {
-        //domain : 'http://julienedies.github.io/brick'
-        domain:''
+        domain : 'http://julienedies.github.io/brick'
+        //domain:''
     }
 });
 

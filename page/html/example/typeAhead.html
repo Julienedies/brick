@@ -95,7 +95,7 @@
             complete: function (e, msg) {
                 $elm.find('[role=selected]').text(typeof msg === 'object' ? JSON.stringify(msg) : msg);
             }
-        }
+        };
 
 
         $elm.find('[role=showSource]').text(JSON.stringify(scope.source));

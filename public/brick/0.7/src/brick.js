@@ -505,7 +505,7 @@ var controllers = (function (){
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
-            //ctrl.scope = scope;
+            ctrl.scope = scope; //如果有多个控制器实例，则改名下控制器的作用域对象引用的会是最后一个实例化控制器的作用域对象
             $elm.data('ic-ctrl-scope', scope);
 
             depend = services.get(depend) || [];
@@ -513,7 +513,8 @@ var controllers = (function (){
             depend.unshift(scope);
 
             ctrl.fn.apply(null, depend);
-            //ctrl.fn = function(){};  //为什么要清空呢？，记不得了
+            //ctrl.fn = function(){};
+            ctrl.exec = (ctrl.exec || 0)+1;
 
             //if(conf.global) window[name] = scope;
             return scope;
@@ -529,6 +530,7 @@ var controllers = (function (){
             var service;
             for(var i in ctrls){
                 ctrl = ctrls[i];
+                if(ctrl.exec) continue;
                 depend = services.get(ctrl.depend) || [];
                 if(depend.constructor !== Array){
                     depend = [depend];
@@ -2028,7 +2030,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
                 for (; item = _list.shift(); start++) {
                     list[start] = item;
                 }
-                var html = brick._tplfs[namespace]({model: list});
+                var html = brick.getTpl(namespace)({model: list});
                 $tpl.html(html).show();
             };
         }else{

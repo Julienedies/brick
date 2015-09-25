@@ -42,7 +42,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
                 for (; item = _list.shift(); start++) {
                     list[start] = item;
                 }
-                var html = brick._tplfs[namespace]({model: list});
+                var html = brick.getTpl(namespace)({model: list});
                 $tpl.html(html).show();
             };
         }else{

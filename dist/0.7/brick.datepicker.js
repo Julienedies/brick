@@ -77,7 +77,6 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     });
 
     ////////////////////////////////////////////////////
-    //bind event
     var old_date;
 
     $elm.on('click', '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
