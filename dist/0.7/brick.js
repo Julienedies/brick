@@ -15,19 +15,55 @@
 var config = (function (){
 
     var conf = {
-        directive_prefix: 'ic'
+        namespace:{
+            prefix: 'ic'
+        },
+        event:{
+            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
+            action:'click'
+        }
     };
 
     return {
         get: function(key){
-            return conf[key];
+            if(!key) return _.extend({}, conf);
+
+            var keys = key.split('.');
+
+            return (function x(namespace, keys){
+                var k = keys.shift();
+                var o = namespace[k];
+                if(o && keys.length) return x(namespace[k], keys);
+                return o;
+            })(conf, keys);
+
         },
+
         set: function(key, val){
-            var old = conf[key];
-            if(old && _.isObject(old) && _.isObject(val)){
-                return _.extend(old, val);
-            }
-            conf[key] = val;
+
+            var old = this.get(key);
+
+            if(old && _.isObject(old) && _.isObject(val)) return _.extend(old, val);
+
+            this._set(key, val);
+        },
+
+        _set: function(key, val){
+
+            var keys = key.split('.');
+
+            (function x(namespace, keys){
+                var k = keys.shift();
+                var o = namespace[k];
+                if(keys.length){
+                    if(!o) o = namespace[k] = {};
+                    x(o, keys);
+                }else{
+                    if(val === undefined) return delete namespace[k];
+                    namespace[k] = val;
+                }
+            })(conf, keys);
+
         }
 
     };
@@ -507,7 +543,7 @@ var controllers = (function (){
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
-            //ctrl.scope = scope;
+            ctrl.scope = scope; //如果有多个控制器实例，则改名下控制器的作用域对象引用的会是最后一个实例化控制器的作用域对象
             $elm.data('ic-ctrl-scope', scope);
 
             depend = services.get(depend) || [];
@@ -515,7 +551,8 @@ var controllers = (function (){
             depend.unshift(scope);
 
             ctrl.fn.apply(null, depend);
-            //ctrl.fn = function(){};  //为什么要清空呢？，记不得了
+            //ctrl.fn = function(){};
+            ctrl.exec = (ctrl.exec || 0)+1;
 
             //if(conf.global) window[name] = scope;
             return scope;
@@ -531,6 +568,7 @@ var controllers = (function (){
             var service;
             for(var i in ctrls){
                 ctrl = ctrls[i];
+                if(ctrl.exec) continue;
                 depend = services.get(ctrl.depend) || [];
                 if(depend.constructor !== Array){
                     depend = [depend];
@@ -1578,6 +1616,8 @@ directives.add('ic-event', {
     once: true,
     fn: function () {
 
+        var eventAction = brick.get('event.action');
+
         var events = 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
@@ -1585,13 +1625,14 @@ directives.add('ic-event', {
             return m.replace($1, s);
         });
 
-        var $doc = $('body');
+        var $doc = $(document);
 
         events = events.split(',');
         targets = targets.split(',');
 
         _.forEach(events, function (event, i, list) {
             var target = targets[i];
+            if (event == 'click') event = eventAction;
             $doc.on(event, target, _call);
         });
 
@@ -1836,7 +1877,9 @@ directives.add('ic-slider', function ($elm, attr) {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tabs', function ($elm, attrs) {
+directives.reg('ic-tabs', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
 
         var th = $elm;
         var name = th.attr('ic-tabs');
@@ -1872,7 +1915,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         }
 
-        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -1896,7 +1939,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger('click');
+        activeTab.trigger(eventAction);
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 
@@ -2004,7 +2047,7 @@ directives.add('ic-pagination', function ($elm, attrs) {
                 for (; item = _list.shift(); start++) {
                     list[start] = item;
                 }
-                var html = brick._tplfs[namespace]({model: list});
+                var html = brick.getTpl(namespace)({model: list});
                 $tpl.html(html).show();
             };
         }else{

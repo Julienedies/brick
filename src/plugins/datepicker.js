@@ -85,7 +85,9 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     ////////////////////////////////////////////////////
     var old_date;
 
-    $elm.on('click', '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
+    var eventAction = brick.get('event.action');
+
+    $elm.on(eventAction, '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
         var call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
         old_date = _date;
         _date = moment(_date, _format)[call](1, 'months').format(_format);
@@ -93,7 +95,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         render(_date);
     });
 
-    $elm.on('click', '[ic-date]'+enabled, multiple ? function (e) {
+    $elm.on(eventAction, '[ic-date]'+enabled, multiple ? function (e) {
         var bindDate = this.getAttribute('ic-date');
         if (this.classList.contains(cla)) {
             this.classList.remove(cla);

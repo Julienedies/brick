@@ -56,7 +56,7 @@ for animating
   visibility: visible; }
 
 [ic-aniOut] {
-  display: none !important; }
+  /*display: none !important;*/ }
 
 [ic-aniIn] {
   display: block !important; }

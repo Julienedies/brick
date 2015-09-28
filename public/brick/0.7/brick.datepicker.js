@@ -6,16 +6,22 @@
 
 /**
  * config:
- * ic-date-now //定义当前日期，通常有server端提供，如果未提供则为浏览器端当前日期
- * ic-date-default="2015-08-31" //默认选中日期，多个以,或空格分隔
- * ic-date-format //定义日期格式化格式
- * ic-date-multiple="true" //是否多选
- * ic-date-week-start 1-7 分别对应周一到周日
- * ic-date-on-render 自定义render函数
+ * ic-date-now     #定义当前日期，通常有server端提供，如果未提供则为浏览器端当前日期
+ * ic-date-default="2015-08-31" #默认选中日期，多个以,或空格分隔
+ * ic-date-format   #定义日期格式化格式,默认为YYYY-MM-DD，格式定义详见moment库
+ * ic-date-multiple="true" #是否多选
+ * ic-date-week-start #定义周一到周日的排列顺序，1-7 分别对应周一到周日
+ * ic-date-on-render  #自定义render函数，接受一个日期模型对象作为参数，改日期对象封装了相关的日期数据，开发者根据需要渲染成合适的html
+ *
+ * ic-date-prev-m  #定义一个dom元素为显示上月按钮，如果有disabled属性，则无效
+ * ic-date-next-m  #定义一个dom元素为显示下月按钮，如果有disabled属性，则无效
+ * ic-date         #定义一个dom元素为日期选择cell，通过ic-date-enabled属性使其可用
  *
  * attach:
  * ic-date 2012-08-27,格式由 ic-date-format 定义
  * ic-date-status over:过去  today:今天  coming:未来
+ *
+
  */
 brick.directives.reg('ic-date-picker', function ($elm) {
 

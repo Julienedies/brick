@@ -21,19 +21,55 @@ IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';;
 var config = (function (){
 
     var conf = {
-        directive_prefix: 'ic'
+        namespace:{
+            prefix: 'ic'
+        },
+        event:{
+            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
+            action:'click'
+        }
     };
 
     return {
         get: function(key){
-            return conf[key];
+            if(!key) return _.extend({}, conf);
+
+            var keys = key.split('.');
+
+            return (function x(namespace, keys){
+                var k = keys.shift();
+                var o = namespace[k];
+                if(o && keys.length) return x(namespace[k], keys);
+                return o;
+            })(conf, keys);
+
         },
+
         set: function(key, val){
-            var old = conf[key];
-            if(old && _.isObject(old) && _.isObject(val)){
-                return _.extend(old, val);
-            }
-            conf[key] = val;
+
+            var old = this.get(key);
+
+            if(old && _.isObject(old) && _.isObject(val)) return _.extend(old, val);
+
+            this._set(key, val);
+        },
+
+        _set: function(key, val){
+
+            var keys = key.split('.');
+
+            (function x(namespace, keys){
+                var k = keys.shift();
+                var o = namespace[k];
+                if(keys.length){
+                    if(!o) o = namespace[k] = {};
+                    x(o, keys);
+                }else{
+                    if(val === undefined) return delete namespace[k];
+                    namespace[k] = val;
+                }
+            })(conf, keys);
+
         }
 
     };
@@ -1862,9 +1898,9 @@ brick.getAniMap = function (animation) {
 
 
     var transition = brick.view = new Transition;
+    var eventAction = brick.get('event.action');
 
-
-    $(document).on('click', '[ic-view-to]', function (e) {
+    $(document).on(eventAction, '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
@@ -2282,6 +2318,8 @@ directives.add('ic-event', {
     once: true,
     fn: function () {
 
+        var eventAction = brick.get('event.action');
+
         var events = 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
@@ -2289,13 +2327,14 @@ directives.add('ic-event', {
             return m.replace($1, s);
         });
 
-        var $doc = $('body');
+        var $doc = $(document);
 
         events = events.split(',');
         targets = targets.split(',');
 
         _.forEach(events, function (event, i, list) {
             var target = targets[i];
+            if (event == 'click') event = eventAction;
             $doc.on(event, target, _call);
         });
 
@@ -2317,7 +2356,9 @@ directives.add('ic-event', {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tabs', function ($elm, attrs) {
+directives.reg('ic-tabs', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
 
         var th = $elm;
         var name = th.attr('ic-tabs');
@@ -2353,7 +2394,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         }
 
-        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -2377,7 +2418,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger('click');
+        activeTab.trigger(eventAction);
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 
@@ -2391,12 +2432,12 @@ directives.add('ic-tabs', function ($elm, attrs) {
  * Created by julien.zhang on 2014/10/29.
  */
 
-
+//ic-dialog
 directives.reg('ic-dialog', function ($elm, attrs) {
 
-    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+    var eventAction = brick.get('event.action');
 
-    $('body').on(event, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
+    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
 
         var $th = $(this);
         var type = this.hasAttribute('ic-dialog-confirm');
@@ -2412,12 +2453,12 @@ directives.reg('ic-dialog', function ($elm, attrs) {
 }, {selfExec: true, once: true });
 
 
-
+//ic-prompt
 directives.reg('ic-prompt', function ($elm, attrs) {
 
-    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+    var eventAction = brick.get('event.action');
 
-    $('body').on(event, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
 
         var $th = $(this);
         var type = this.hasAttribute('ic-prompt-confirm');
@@ -2669,7 +2710,9 @@ directives.add('ic-form', function ($elm, attrs) {
     })();
 
 
-    $submit.on('mousedown', function (e) {
+    var eventAction = 'mousedown' || brick.get('event.action');
+
+    $submit.on(eventAction, function (e) {
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -2722,7 +2765,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     $fields.icEnterPress(function () {
-        $submit.trigger('mousedown');
+        $submit.trigger(eventAction);
     });
 
     $fields.each(function (i) {
@@ -2790,8 +2833,10 @@ directives.add('ic-form', function ($elm, attrs) {
 
 directives.add('ic-ajax', function () {
 
+        var eventAction = brick.get('event.action');
+
         var $doc = $(document);
-        $doc.on('click', '[ic-ajax]', _call);
+        $doc.on(eventAction, '[ic-ajax]', _call);
         $doc.on('ic-ajax', '[ic-ajax]', _call);
 
         function _call(e) {

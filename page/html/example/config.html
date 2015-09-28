@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>brick config </title>
+    <link rel="stylesheet" href="../../../css/brick.mobile.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div ic-ctrl="mainCtrl">
+    <h1>brick config example</h1>
+    <pre>
+        //设置
+        brick.set('a.x', 3);
+
+        //如果对应属性值是一个对象,并且新值也是一个对象，新值对象会合并到旧值对象上。
+        brick.set('a.y',{j:1});
+        brick.set('a.y',{k:2});
+
+        //如果调用set方法没有提供值参数，则会触发删除属性行为
+        brick.set('a.x');
+
+        //获取
+        brick.get('a.y');
+    </pre>
+
+</div>
+<script src="../../js/vendor/underscore.js"></script>
+<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="../../js/vendor/plugins.js"></script>
+<script src="../../../brick.mobile.js"></script>
+<script>
+brick.controllers.reg('mainCtrl', function(scope){
+
+});
+</script>
+</body>
+</html>

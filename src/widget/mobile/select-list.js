@@ -4,7 +4,7 @@
 
 //ic-select-list
 
-directives.add('ic-select-list', function ($elm, attrs) {
+brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
     /*
      ic-select-list
@@ -12,6 +12,8 @@ directives.add('ic-select-list', function ($elm, attrs) {
      ic-select-all
      ic-select-more
      */
+
+    var eventAction = brick.get('event.action');
 
     var cla = 'selected';
     var list = 'ic-select-list';
@@ -110,7 +112,8 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
     $elm = $elm || $(this);
     var name = $elm.attr(list);
-    var isMultiple = $elm.attr('ic-select-multiple');
+    var isMultiple = $elm.attr('ic-select-multiple')*1;
+    var isReadonly = $elm.attr('ic-select-readonly');
     var isAll = $elm.find('ic-select-all');
     var $more = $elm.find(more);
     var $all = $elm.find(all);
@@ -156,23 +159,26 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
         var result = [];
 
-        $items.filter('.'+cla).each(function(i){
+        var $filter = $items.filter('.'+cla).each(function(i){
             var $th = $(this);
             result.push({name: name, text:$th.text(), val:$th.attr('ic-select-val')});
         });
 
-        return result.length == 1 ? result[0] : result.length > 1 ? result : {name:name};
+        return {name:name, result:result, over: result.length-isMultiple, all: $items.length == $filter.length, __size:$items.length};
     }
 
+
+    if(isReadonly) return;
+
     //bind event
-    $elm.on('click', item, function (e) {
+    $elm.on(eventAction, item, function (e) {
 
         var $th = $(this);
         var _val = $th.attr(val);
 
         $all.removeClass(cla);
 
-        if(!isMultiple){
+        if(isNaN(isMultiple) || isMultiple === 1){
             if ($th.hasClass(cla)) return;
             $items.removeClass(cla);
             $th.addClass(cla);
@@ -185,30 +191,29 @@ directives.add('ic-select-list', function ($elm, attrs) {
 
         $elm.trigger(eventSpace + 'change', getVal());
 
-    }).on('click', all, function (e) {
+    }).on(eventAction, all, function (e) {
 
         if( $all.hasClass(cla)) return;
 
         var th = $all.addClass(cla);
         $items.removeClass(cla);
 
-        $elm.trigger(eventSpace+'all',{name:name});
+        $elm.trigger(eventSpace+'change',{name:name, all: true});
 
-    }).on('click', more, function (e) {
+    }).on(eventAction, more, function (e) {
 
         $more.hide().nextAll().show();
         $elm.trigger('ic-more.show', {form:shirkHeight, to:expandHeight});
 
-    }).on('click', shirk, function (e) {
+    }).on(eventAction, shirk, function (e) {
 
         $more.show().nextAll().hide();
         $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
 
     });
 
-
     if($active.index() > $more.index()){
-        $more.click();
+        $more.trigger(eventAction);
     }
 
 
