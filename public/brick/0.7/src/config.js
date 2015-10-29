@@ -7,8 +7,13 @@
 var config = (function (){
 
     var conf = {
-        directive_prefix: 'ic'
-
+        namespace:{
+            prefix: 'ic'
+        },
+        event:{
+            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
+            action:'click'
+        }
     };
 
     return {

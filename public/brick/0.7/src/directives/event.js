@@ -7,6 +7,8 @@ directives.add('ic-event', {
     once: true,
     fn: function () {
 
+        var eventAction = brick.get('event.action');
+
         var events = 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
@@ -14,13 +16,14 @@ directives.add('ic-event', {
             return m.replace($1, s);
         });
 
-        var $doc = $('body');
+        var $doc = $(document);
 
         events = events.split(',');
         targets = targets.split(',');
 
         _.forEach(events, function (event, i, list) {
             var target = targets[i];
+            if (event == 'click') event = eventAction;
             $doc.on(event, target, _call);
         });
 

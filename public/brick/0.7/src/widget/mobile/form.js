@@ -236,7 +236,9 @@ directives.add('ic-form', function ($elm, attrs) {
     })();
 
 
-    $submit.on('mousedown', function (e) {
+    var eventAction = 'mousedown' || brick.get('event.action');
+
+    $submit.on(eventAction, function (e) {
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -289,7 +291,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     $fields.icEnterPress(function () {
-        $submit.trigger('mousedown');
+        $submit.trigger(eventAction);
     });
 
     $fields.each(function (i) {

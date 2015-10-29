@@ -2,12 +2,12 @@
  * Created by julien.zhang on 2014/10/29.
  */
 
-
+//ic-dialog
 directives.reg('ic-dialog', function ($elm, attrs) {
 
-    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+    var eventAction = brick.get('event.action');
 
-    $('body').on(event, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
+    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
 
         var $th = $(this);
         var type = this.hasAttribute('ic-dialog-confirm');
@@ -15,7 +15,7 @@ directives.reg('ic-dialog', function ($elm, attrs) {
         var $dialog = $th.closest('[ic-dialog]');
 
         $dialog.icAniOut(21,function(){
-            $dialog.trigger('ic-dialog.hide', type);
+            $dialog.trigger('ic-dialog.close', type);
         });
 
     });
@@ -23,12 +23,12 @@ directives.reg('ic-dialog', function ($elm, attrs) {
 }, {selfExec: true, once: true });
 
 
-
+//ic-prompt
 directives.reg('ic-prompt', function ($elm, attrs) {
 
-    var event = brick.config.get(IC_EVENT_TRIGGER_TYPE) || IC_DEFAULT_EVENT_TRIGGER_TYPE;
+    var eventAction = brick.get('event.action');
 
-    $('body').on(event, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
 
         var $th = $(this);
         var type = this.hasAttribute('ic-prompt-confirm');

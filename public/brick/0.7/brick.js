@@ -15,8 +15,13 @@
 var config = (function (){
 
     var conf = {
-        directive_prefix: 'ic'
-
+        namespace:{
+            prefix: 'ic'
+        },
+        event:{
+            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
+            action:'click'
+        }
     };
 
     return {
@@ -1611,6 +1616,8 @@ directives.add('ic-event', {
     once: true,
     fn: function () {
 
+        var eventAction = brick.get('event.action');
+
         var events = 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
@@ -1618,13 +1625,14 @@ directives.add('ic-event', {
             return m.replace($1, s);
         });
 
-        var $doc = $('body');
+        var $doc = $(document);
 
         events = events.split(',');
         targets = targets.split(',');
 
         _.forEach(events, function (event, i, list) {
             var target = targets[i];
+            if (event == 'click') event = eventAction;
             $doc.on(event, target, _call);
         });
 
@@ -1828,7 +1836,9 @@ directives.add('ic-slider', function ($elm, attr) {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tabs', function ($elm, attrs) {
+directives.reg('ic-tabs', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
 
         var th = $elm;
         var name = th.attr('ic-tabs');
@@ -1864,7 +1874,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
 
         }
 
-        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -1888,7 +1898,7 @@ directives.add('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger('click');
+        activeTab.trigger(eventAction);
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 

@@ -482,9 +482,9 @@ brick.getAniMap = function (animation) {
 
 
     var transition = brick.view = new Transition;
+    var eventAction = brick.get('event.action');
 
-
-    $(document).on('click', '[ic-view-to]', function (e) {
+    $(document).on(eventAction, '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
