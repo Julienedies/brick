@@ -68,7 +68,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
 
     render(undefined, true);
     ////////////////////////////////////////////////////
-
+    //对外js接口
     $elm.on('ic-date-picker.render', function(e, msg){
         try{
             $elm.icRender(tpl, msg);
@@ -82,10 +82,16 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         _date = old_date;
     });
 
+    $elm.on('ic-date-picker.next', function(e, msg){
+        old_date = _date;
+        _date = moment(_date, _format).add(1, 'months').format(_format);
+        render(_date);
+    });
+
     ////////////////////////////////////////////////////
     var old_date;
 
-    var eventAction = brick.get('event.action');
+    var eventAction = brick.get('event.action') || 'click';
 
     $elm.on(eventAction, '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
         var call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
