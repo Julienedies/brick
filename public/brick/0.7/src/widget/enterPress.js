@@ -3,7 +3,7 @@
  * Created by julien.zhang on 2015/3/23.
  */
 
-directives.add('ic-enter-press', function ($elm, attrs) {
+directives.reg('ic-enter-press', function ($elm, attrs) {
 
     $('body').on('focus', '[type="text"][ic-enter-press]', function(e){
 
@@ -23,4 +23,4 @@ directives.add('ic-enter-press', function ($elm, attrs) {
 
     });
 
-});
+}, {selfExec: true, once: true });
