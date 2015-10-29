@@ -1643,72 +1643,31 @@ directives.add('ic-event', {
 ;
 
     /**
- * Created by julien.zhang on 2014/11/11.
- *
- * 使ie9及以下版本支持placeholder功能
+ * 回车键按下监听指令
+ * Created by julien.zhang on 2015/3/23.
  */
 
-directives.add('placeholder', function ($elm, attrs) {
+directives.reg('ic-enter-press', function ($elm, attrs) {
 
-    function ltIe(ver) {
-        var b = document.createElement('b');
-        b.innerHTML = '<!--[if lt IE ' + ver + ']><i></i><![endif]-->';
-        return b.getElementsByTagName('i').length === 1
-    }
+    $('body').on('focus', '[type="text"][ic-enter-press]', function(e){
 
-    //如果非ie浏览器或大于ie9,返回
-    if (!window.ActiveXObject || !ltIe(10)) return;
+        var $elm = $(this);
+        var call = $elm.attr('ic-enter-press');
+        call = $elm.icParseProperty(call);
+        call = $.proxy(call, this);
+        var fn = function(e){
+            e.which == 13  && call(e);
+        };
 
+        $elm.keypress(fn);
 
-    var $th = $elm;
-    var placeholder = $th.attr('placeholder');
-
-    if (!placeholder) return;
-
-    var type = $th.attr('type');
-
-    //密码输入框处理
-    if (type === 'password') {
-
-        var cla = $th.attr('class');
-        var style = $th.attr('style');
-        var clone = '<input type="text" class="?" style="%">'.replace('?', cla).replace('%', style);
-        clone = $(clone).insertBefore($th.hide()).val(placeholder).css({color: '#CDCDCD'});
-
-        clone.on('focus', function (e) {
-            clone.hide();
-            $th.show().focus();
+        $elm.on('blur', function(e){
+            $elm.unbind('keypress', fn);
         });
 
-        $th.on('blur', function (e) {
-            if ($th.val() == '') {
-                clone.show();
-                $th.hide();
-            }
-        });
+    });
 
-        return;
-    }
-
-    //普通文本框处理
-    if (type === 'text') {
-
-        $th.val(placeholder).css({color: '#CDCDCD'});
-
-        $th.on('focus', function () {
-            $th.val() === placeholder && $th.val('').css({color: ''});
-        });
-
-        $th.on('blur', function () {
-            if ($th.val() === '') {
-                $th.val(placeholder).css({color: '#CDCDCD'});
-            }
-        });
-
-    }
-
-
-});;
+}, {selfExec: true, once: true });;
     /**
  * Created by julien.zhang on 2014/10/11.
  */

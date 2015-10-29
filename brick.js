@@ -21,7 +21,7 @@
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
 
-    __inline('src/widget/placeholder.js');
+    __inline('src/widget/enterPress.js');
     __inline('src/widget/slider.js');
     __inline('src/widget/tabs.js');
     __inline('src/widget/dropdown.js');
