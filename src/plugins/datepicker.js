@@ -31,7 +31,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     var tpl = $elm.attr('ic-tpl');
     var _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
     var _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
-    var multiple = !!$elm.attr('ic-date-multiple');
+    var multiple = $elm.attr('ic-date-multiple');
     var weekStart = $elm.attr('ic-date-week-start') || 1;
     var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
     var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
@@ -67,7 +67,8 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     }
 
     render(undefined, true);
-    ////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //对外js接口
     $elm.on('ic-date-picker.render', function(e, msg){
         try{
@@ -88,7 +89,13 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         render(_date);
     });
 
-    ////////////////////////////////////////////////////
+    //取消一个日期选择, msg == YYYY-MM-DD
+    $elm.on('ic-date-picker.cancel', function(e, msg){
+        $elm.find('[ic-date=?]'.replace('?', msg)).removeClass(cla);
+        selectedDateArr = _.without(selectedDateArr, msg);
+    });
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var old_date;
 
     var eventAction = brick.get('event.action') || 'click';
