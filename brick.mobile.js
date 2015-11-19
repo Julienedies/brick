@@ -52,21 +52,23 @@
             //directives.exec('ic-event');
             //directives.exec('ic-ajax');
 
-            (function (node) {
+            compile(document.body);
 
-                var $elm = $(node);
-
-                compile(node);
-
-                var children = $elm.children();
-                var child;
-                var i = 0;
-                while (child = children.eq(i)[0]) {
-                    i++;
-                    arguments.callee(child);
-                }
-
-            })(document.body);
+//            (function (node) {
+//
+//                var $elm = $(node);
+//
+//                compile(node);
+//
+//                var children = $elm.children();
+//                var child;
+//                var i = 0;
+//                while (child = children.eq(i)[0]) {
+//                    i++;
+//                    arguments.callee(child);
+//                }
+//
+//            })(document.body);
 
             //controllers.init();
 
