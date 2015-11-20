@@ -11,7 +11,8 @@
  */
 
 IC_EVENT_TRIGGER_TYPE = 'event.trigger.type';
-IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';;
+IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';
+IC_IS_MOBILE = navigator.userAgent.match(/iPhone|iPad|iPod|Android/i) ? true : false;;
     /**
  * Created by julien.zhang on 2014/9/16.
  *
@@ -1440,7 +1441,8 @@ brick.toHtml = function (text) {
  */
 brick.getAniMap = function (animation) {
 
-    animation = animation*1 || Math.round(Math.random() * 66 + 1);
+    animation = animation*1 > 67 ? 0 : animation*1;
+    animation = animation || Math.round(Math.random() * 66 + 1);
 
     console.info('animation id is ' + animation);
 
@@ -1872,7 +1874,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -2085,12 +2087,12 @@ brick.removeRoute = function (hash, handler) {
         return this;
     };
 
-    $.fn.icCompile = function (debug) {
+    $.fn.icCompile = function () {
 
         if (!this.length) return this;
 
         return this.each(function (i) {
-            brick.compile(this, debug);
+            brick.compile(this);
         });
     };
 

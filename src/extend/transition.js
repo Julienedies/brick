@@ -9,7 +9,8 @@
  */
 brick.getAniMap = function (animation) {
 
-    animation = animation*1 || Math.round(Math.random() * 66 + 1);
+    animation = animation*1 > 67 ? 0 : animation*1;
+    animation = animation || Math.round(Math.random() * 66 + 1);
 
     console.info('animation id is ' + animation);
 
@@ -441,7 +442,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
