@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ic-view指令</title>
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/vendor/effeckt/animations.css">
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/brick/0.8/brick.mobile.css">
+    <style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        [ic-view] {
+            color: #fff;
+            background: gray;
+        }
+
+        [ic-view="0"] {
+            background: blue;
+        }
+
+        [ic-view="1"] {
+            background: green;
+        }
+
+        [ic-view="2"] {
+            background: red;
+        }
+
+        [ic-view="3"] {
+            background: #800080;
+        }
+
+        a {
+            color: #fff;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div ic-view-stage>
+
+    <div ic-view="0" ic-view-ani-id="77" ic-active>
+        视图0
+        <a href="javascript:;" ic-view-to="1">to view 1</a>
+        <a href="javascript:;" ic-click="to3a">js切换视图</a>
+    </div>
+
+    <div ic-view="1">
+        视图1
+        <a href="javascript:;" ic-view-to="2">to view 2</a>
+        <a href="javascript:;" ic-view-back>back</a>
+    </div>
+
+    <div ic-view="2">
+        视图2
+        <a href="javascript:;" ic-view-to="3">to view 3</a>
+        <a href="javascript:;" ic-view-back>back</a>
+    </div>
+
+    <div ic-view="3">
+        视图3
+        <a href="javascript:;" ic-view-to="0">to view 0</a>
+        <a href="javascript:;" ic-view-back>back</a>
+    </div>
+
+    <div ic-view="aaa">
+        视图3a
+        <a href="javascript:;" ic-click="back">js back</a>
+        <img src="http://b.zol-img.com.cn/desk/bizhi/image/7/1680x1050/1447900306473.jpg">
+    </div>
+
+</div>
+<script src="http://julienedies.github.io/brick/public/js/vendor/underscore.js"></script>
+<script src="http://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="http://julienedies.github.io/brick/public/brick/0.8/brick.mobile.js"></script>
+<script>
+
+    $('[ic-view=2]').on('ic-view.active', function (e, msg) {
+        alert('view 2 is active.');
+        console.log(msg);
+    });
+
+    function to3a(e) {
+        brick.view.to('aaa');
+    }
+
+    function back() {
+        brick.view.back();
+    }
+</script>
+</body>
+</html>
