@@ -8,7 +8,7 @@ fis.config.set('modules.parser.sass', 'sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
 
-var version = 0.7;
+var version = 0.8;
 
 fis.config.set('roadmap.path', [
 
@@ -43,12 +43,14 @@ fis.config.merge({
         //app.lulutrip.com
         app : {
             to : '../app.lulutrip.com-front-end/static/js/brick/' + version
-            //to : '../a/static/js/brick'
+        },
+        //hybrid app
+        hybrid : {
+            to : '../app/src/pages/js/brick/' + version
         },
         //car.lulutrip.com
         car : {
-            //to : '../carp2p.driver-front-end/static/js/brick'
-            to : '../b/static/js/brick/' + version
+            to : '../carp2p.driver-front-end/static/js/brick'
         }
     }
 });

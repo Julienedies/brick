@@ -11,7 +11,8 @@
  */
 
 IC_EVENT_TRIGGER_TYPE = 'event.trigger.type';
-IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';;
+IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';
+IC_IS_MOBILE = navigator.userAgent.match(/iPhone|iPad|iPod|Android/i) ? true : false;;
     /**
  * Created by julien.zhang on 2014/9/16.
  *
@@ -80,9 +81,25 @@ var config = (function (){
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node, debug){
+function compile(node){
 
-    if(node.nodeType != 1) return;
+    var $elm = $(node);
+
+    __compile(node);
+
+    var children = $elm.children();
+    var child;
+    var i = 0;
+    while (child = children.eq(i)[0]) {
+        i++;
+        compile(child);
+    }
+}
+
+
+function __compile(node){
+
+    if(node.nodeType != 1) return console.info('compile exit', node);
 
     var $elm = $(node);
     var attrs = node.attributes;
@@ -107,7 +124,6 @@ function compile(node, debug){
 
     var name;
 
-
     for (var i = 0, l = attrs.length; i < l; i++) {
 
         name = attrs[i].name;
@@ -124,15 +140,15 @@ function compile(node, debug){
         return priority[a] - priority[b];
     });
 
-
     //处理每一个指令
     while (name = _directives.shift()) {
-        debug && console.log(name, $elm, attrs);
+        //console.log(name, $elm, attrs);
         directives.exec(name, $elm, attrs);
     }
 
+}
 
-};
+;
     /**
  * Created by julien.zhang on 2014/9/15.
  *
@@ -1425,7 +1441,8 @@ brick.toHtml = function (text) {
  */
 brick.getAniMap = function (animation) {
 
-    animation = animation*1 || Math.round(Math.random() * 66 + 1);
+    animation = animation*1 > 67 ? 0 : animation*1;
+    animation = animation || Math.round(Math.random() * 66 + 1);
 
     console.info('animation id is ' + animation);
 
@@ -1857,7 +1874,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-aniId') || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -1884,6 +1901,7 @@ brick.getAniMap = function (animation) {
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
+            nextViewProp.$view.trigger('brick.view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
         },
         back: function () {
@@ -2071,12 +2089,10 @@ brick.removeRoute = function (hash, handler) {
 
     $.fn.icCompile = function () {
 
-        if (!this.length) return;
+        if (!this.length) return this;
 
         return this.each(function (i) {
-
             brick.compile(this);
-
         });
     };
 
@@ -2445,7 +2461,7 @@ directives.reg('ic-dialog', function ($elm, attrs) {
         var $dialog = $th.closest('[ic-dialog]');
 
         $dialog.icAniOut(21,function(){
-            $dialog.trigger('ic-dialog.hide', type);
+            $dialog.trigger('ic-dialog.close', type);
         });
 
     });
@@ -2962,21 +2978,23 @@ directives.add('ic-tpl', {
             //directives.exec('ic-event');
             //directives.exec('ic-ajax');
 
-            (function (node) {
+            compile(document.body);
 
-                var $elm = $(node);
-
-                compile(node);
-
-                var children = $elm.children();
-                var child;
-                var i = 0;
-                while (child = children.eq(i)[0]) {
-                    i++;
-                    arguments.callee(child);
-                }
-
-            })(document.body);
+//            (function (node) {
+//
+//                var $elm = $(node);
+//
+//                compile(node);
+//
+//                var children = $elm.children();
+//                var child;
+//                var i = 0;
+//                while (child = children.eq(i)[0]) {
+//                    i++;
+//                    arguments.callee(child);
+//                }
+//
+//            })(document.body);
 
             //controllers.init();
 

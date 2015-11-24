@@ -1,10 +1,10 @@
 /**
  * Created by Julien on 2015/7/29.
+ * 对hashchange事件进行包装
  */
 
 
-//hashchange
-!function(){
+function hashChangeInit(){
 
     var enable = brick.config.get('ic-hashChange.enable');
     var _default = brick.config.get('route.default');
@@ -41,4 +41,4 @@
 
     fire(_default);
 
-}();
+}

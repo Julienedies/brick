@@ -27,6 +27,7 @@
 
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
+    __inline('src/event/hashChange.js');
 
     __inline('src/widget/tabs.js');
     __inline('src/widget/mobile/dialog.js');
@@ -34,47 +35,13 @@
     __inline('src/widget/mobile/ajax.js');
     __inline('src/widget/tpl.js');
 
-    function bootstrap(){
-
-    }
-
+    //bootstrap
     $(function () {
-
         setTimeout(function () {
-
-            console.log('brick start');
-
-            //
-            directives.init();
-
-            //优先解析模板
-            //directives.exec('ic-tpl');
-            //directives.exec('ic-event');
-            //directives.exec('ic-ajax');
-
-            (function (node) {
-
-                var $elm = $(node);
-
-                compile(node);
-
-                var children = $elm.children();
-                var child;
-                var i = 0;
-                while (child = children.eq(i)[0]) {
-                    i++;
-                    arguments.callee(child);
-                }
-
-            })(document.body);
-
-            //controllers.init();
-
-            //hashchange
-            __inline('src/event/hashChange.js');
-
-        }, 30);
-
+            var auto = brick.config.get('bootstrap.auto');
+            if(auto === false) return;
+            brick.bootstrap(document.body);
+        }, 10);
     });
 
 })(window);
