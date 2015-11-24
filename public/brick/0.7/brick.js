@@ -74,9 +74,25 @@ var config = (function (){
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node, debug){
+function compile(node){
 
-    if(node.nodeType != 1) return;
+    var $elm = $(node);
+
+    __compile(node);
+
+    var children = $elm.children();
+    var child;
+    var i = 0;
+    while (child = children.eq(i)[0]) {
+        i++;
+        compile(child);
+    }
+}
+
+
+function __compile(node){
+
+    if(node.nodeType != 1) return console.info('compile exit', node);
 
     var $elm = $(node);
     var attrs = node.attributes;
@@ -101,7 +117,6 @@ function compile(node, debug){
 
     var name;
 
-
     for (var i = 0, l = attrs.length; i < l; i++) {
 
         name = attrs[i].name;
@@ -118,15 +133,15 @@ function compile(node, debug){
         return priority[a] - priority[b];
     });
 
-
     //处理每一个指令
     while (name = _directives.shift()) {
-        debug && console.log(name, $elm, attrs);
+        //console.log(name, $elm, attrs);
         directives.exec(name, $elm, attrs);
     }
 
+}
 
-};
+;
     /**
  * Created by julien.zhang on 2014/9/15.
  *
@@ -1332,10 +1347,12 @@ root.brick = {
         return this.__tpl[name];
     },
     __tpl: {},
-    init: function () {
-
-        //init
-
+    bootstrap: function (node) {
+        console.log('brick start');
+        this.directives.init();
+        compile(node || document.body);
+        hashChangeInit();
+        this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
 

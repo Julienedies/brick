@@ -37,7 +37,7 @@ fis.config.merge({
     }
 });
 
-var version = 0.7;
+var version = 0.8;
 
 fis.config.set('roadmap.path', [
 
