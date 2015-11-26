@@ -33,7 +33,8 @@ directives.add('ic-ajax', function () {
 
             if (before.apply(that) === false) return;
 
-            var url = $elm.attr('ic-submit-action');
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
             var dataType = $elm.attr('ic-submit-data-type') || 'json';
             var method = $elm.attr('ic-submit-method') || 'post';
 

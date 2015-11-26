@@ -28,6 +28,9 @@ var config = (function (){
         event:{
             //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
+        },
+        ajax:{
+            domain:''
         }
     };
 
@@ -1401,18 +1404,32 @@ brick.progress = {
  */
 brick.getQuery = function () {
     var result;
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    if(!query) return result;
-    try {
-        result = JSON.parse('{' + query + '}');
-    } catch (e) {
-        console.error(e);
-        return;
-    }
+    //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
+        result = result || {};
+        var k;
+        var arr;
+        $2 = decodeURIComponent($2);
+        if(/\[\]$/i.test($1)){
+            k = $1.replace(/\[\]$/i, '');
+            arr = result[k] = result[k] || [];
+            arr.push($2);
+        }else{
+            result[$1] = $2;
+        }
+    });
+//    if(!query) return result;
+//    try {
+//        result = JSON.parse('{' + query + '}');
+//    } catch (e) {
+//        console.error(e);
+//        return;
+//    }
 
-    for(var i in result){
-        result[i] = decodeURIComponent(result[i]);
-    }
+//    for(var i in result){
+//        result[i] = decodeURIComponent(result[i]);
+//    }
 
     return result;
 };
@@ -1903,7 +1920,7 @@ brick.getAniMap = function (animation) {
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
-            nextViewProp.$view.trigger('brick.view.active', nextViewProp);
+            nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
         },
         back: function () {
@@ -2923,7 +2940,8 @@ directives.add('ic-ajax', function () {
 
             if (before.apply(that) === false) return;
 
-            var url = $elm.attr('ic-submit-action');
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
             var dataType = $elm.attr('ic-submit-data-type') || 'json';
             var method = $elm.attr('ic-submit-method') || 'post';
 

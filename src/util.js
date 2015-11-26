@@ -27,18 +27,32 @@ brick.progress = {
  */
 brick.getQuery = function () {
     var result;
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    if(!query) return result;
-    try {
-        result = JSON.parse('{' + query + '}');
-    } catch (e) {
-        console.error(e);
-        return;
-    }
+    //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
+        result = result || {};
+        var k;
+        var arr;
+        $2 = decodeURIComponent($2);
+        if(/\[\]$/i.test($1)){
+            k = $1.replace(/\[\]$/i, '');
+            arr = result[k] = result[k] || [];
+            arr.push($2);
+        }else{
+            result[$1] = $2;
+        }
+    });
+//    if(!query) return result;
+//    try {
+//        result = JSON.parse('{' + query + '}');
+//    } catch (e) {
+//        console.error(e);
+//        return;
+//    }
 
-    for(var i in result){
-        result[i] = decodeURIComponent(result[i]);
-    }
+//    for(var i in result){
+//        result[i] = decodeURIComponent(result[i]);
+//    }
 
     return result;
 };
