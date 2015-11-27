@@ -216,6 +216,7 @@ directives.add('ic-form', function ($elm, attrs) {
         console.log(arguments)
     };
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
@@ -264,7 +265,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields

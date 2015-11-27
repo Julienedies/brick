@@ -25,10 +25,10 @@ brick.progress = {
  * 封装location.search为一个对象，如果不存在，返回undefined
  * @returns {*}
  */
-brick.getQuery = function () {
+brick.getQuery = function (str) {
     var result;
     //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
     query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
         result = result || {};
         var k;

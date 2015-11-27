@@ -28,6 +28,9 @@ var config = (function (){
         event:{
             //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
+        },
+        ajax:{
+            domain:''
         }
     };
 
@@ -1354,10 +1357,12 @@ root.brick = {
         return this.__tpl[name];
     },
     __tpl: {},
-    init: function () {
-
-        //init
-
+    bootstrap: function (node) {
+        console.log('brick start');
+        this.directives.init();
+        compile(node || document.body);
+        hashChangeInit();
+        this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
 
@@ -1397,20 +1402,34 @@ brick.progress = {
  * 封装location.search为一个对象，如果不存在，返回undefined
  * @returns {*}
  */
-brick.getQuery = function () {
+brick.getQuery = function (str) {
     var result;
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    if(!query) return result;
-    try {
-        result = JSON.parse('{' + query + '}');
-    } catch (e) {
-        console.error(e);
-        return;
-    }
+    //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
+        result = result || {};
+        var k;
+        var arr;
+        $2 = decodeURIComponent($2);
+        if(/\[\]$/i.test($1)){
+            k = $1.replace(/\[\]$/i, '');
+            arr = result[k] = result[k] || [];
+            arr.push($2);
+        }else{
+            result[$1] = $2;
+        }
+    });
+//    if(!query) return result;
+//    try {
+//        result = JSON.parse('{' + query + '}');
+//    } catch (e) {
+//        console.error(e);
+//        return;
+//    }
 
-    for(var i in result){
-        result[i] = decodeURIComponent(result[i]);
-    }
+//    for(var i in result){
+//        result[i] = decodeURIComponent(result[i]);
+//    }
 
     return result;
 };
@@ -1901,7 +1920,7 @@ brick.getAniMap = function (animation) {
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
-            nextViewProp.$view.trigger('brick.view.active', nextViewProp);
+            nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
         },
         back: function () {
@@ -2367,6 +2386,50 @@ directives.add('ic-event', {
     }
 });
 ;
+    /**
+ * Created by Julien on 2015/7/29.
+ * 对hashchange事件进行包装
+ */
+
+
+function hashChangeInit(){
+
+    var enable = brick.config.get('ic-hashChange.enable');
+    var _default = brick.config.get('route.default');
+
+    if(!enable) return;
+
+    var $win = $(window);
+
+    var prev;
+
+    var fire = function(hash, e){
+
+        if(typeof hash === 'object'){
+            e = hash;
+            hash = void(0);
+        }
+
+        hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
+
+        var query = hash.split('?');
+
+        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:query[0], origin:e, query:query[1]});
+
+        prev = hash;
+
+    };
+
+    $win.on('hashchange', function(e){
+
+        fire(e)
+
+    });
+
+
+    fire(_default);
+
+};
 
     /**
  * Created by julien.zhang on 2014/10/11.
@@ -2706,6 +2769,7 @@ directives.add('ic-form', function ($elm, attrs) {
         console.log(arguments)
     };
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
@@ -2754,7 +2818,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields
@@ -2877,7 +2941,8 @@ directives.add('ic-ajax', function () {
 
             if (before.apply(that) === false) return;
 
-            var url = $elm.attr('ic-submit-action');
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
             var dataType = $elm.attr('ic-submit-data-type') || 'json';
             var method = $elm.attr('ic-submit-method') || 'post';
 
@@ -2960,92 +3025,13 @@ directives.add('ic-tpl', {
 });
 ;
 
-    function bootstrap(){
-
-    }
-
+    //bootstrap
     $(function () {
-
         setTimeout(function () {
-
-            console.log('brick start');
-
-            //
-            directives.init();
-
-            //优先解析模板
-            //directives.exec('ic-tpl');
-            //directives.exec('ic-event');
-            //directives.exec('ic-ajax');
-
-            compile(document.body);
-
-//            (function (node) {
-//
-//                var $elm = $(node);
-//
-//                compile(node);
-//
-//                var children = $elm.children();
-//                var child;
-//                var i = 0;
-//                while (child = children.eq(i)[0]) {
-//                    i++;
-//                    arguments.callee(child);
-//                }
-//
-//            })(document.body);
-
-            //controllers.init();
-
-            //hashchange
-            /**
- * Created by Julien on 2015/7/29.
- */
-
-
-//hashchange
-!function(){
-
-    var enable = brick.config.get('ic-hashChange.enable');
-    var _default = brick.config.get('route.default');
-
-    if(!enable) return;
-
-    var $win = $(window);
-
-    var prev;
-
-    var fire = function(hash, e){
-
-        if(typeof hash === 'object'){
-            e = hash;
-            hash = void(0);
-        }
-
-        hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
-
-        var query = hash.split('?');
-
-        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:query[0], origin:e, query:query[1]});
-
-        prev = hash;
-
-    };
-
-    $win.on('hashchange', function(e){
-
-        fire(e)
-
-    });
-
-
-    fire(_default);
-
-}();;
-
-        }, 30);
-
+            var auto = brick.config.get('bootstrap.auto');
+            if(auto === false) return;
+            brick.bootstrap(document.body);
+        }, 10);
     });
 
 })(window);

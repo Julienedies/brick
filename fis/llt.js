@@ -8,7 +8,7 @@ fis.config.set('modules.parser.sass', 'sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
 
-var version = 0.8;
+var version = 0.7;
 
 fis.config.set('roadmap.path', [
 
