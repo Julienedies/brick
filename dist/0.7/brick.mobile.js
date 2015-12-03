@@ -1247,7 +1247,7 @@ function parser(node) {
 
             if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
                 elm.removeAttr(name);
-                elm.attr(name.replace('ic-',''), value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
                 continue;
             }
 
@@ -2985,43 +2985,27 @@ directives.add('ic-ajax', function () {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tpl', {
+directives.reg('ic-tpl', {
     selfExec: true,
     once: true,
-    fn:function ($elm) {
+    fn: function ($elm) {
 
-        //只执行一次
-        if (!arguments.callee._run || $elm) {
+        ($elm || $('[ic-tpl]')).each(function (i) {
 
-            arguments.callee._run = 1;
+            var th = $(this);
 
-            ($elm || $('[ic-tpl]')).each(function (i) {
+            var name = th.attr('ic-tpl');
+            th.attr('ic-tpl-name', name);
 
-                var th = $(this);
+            var compiled = createRender(this);
 
-                var name = th.attr('ic-tpl');
-                th.attr('ic-tpl-name', name);
+            var __tpl = brick.__tpl = brick.__tpl || {};
+            __tpl[name] = compiled;
 
-//        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
-//        var scope = brick.controllers.get(ctrl);
-
-                //console.log(ctrl, scope);
-
-                //ie7下模板渲染会报错，有时间fix;
-                //try {
-                var compiled = createRender(this);
-//        } catch (e) {
-//            console.log('+_+ :)', e);
-//        }
-
-                var __tpl = brick.__tpl = brick.__tpl || {};
-                __tpl[name] = compiled;
-
-            });
-
-        }
+        });
 
     }
+
 });
 ;
 

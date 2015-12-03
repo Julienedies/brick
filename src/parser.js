@@ -131,7 +131,7 @@ function parser(node) {
 
             if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
                 elm.removeAttr(name);
-                elm.attr(name.replace('ic-',''), value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
                 continue;
             }
 

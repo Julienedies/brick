@@ -33,7 +33,7 @@
     __inline('src/widget/mobile/dialog.js');
     __inline('src/widget/mobile/form.js');
     __inline('src/widget/mobile/ajax.js');
-    __inline('src/widget/tpl.js');
+    __inline('src/widget/mobile/tpl.js');
 
     //bootstrap
     $(function () {
