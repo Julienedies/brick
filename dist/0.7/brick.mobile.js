@@ -25,6 +25,7 @@ var config = (function (){
         namespace:{
             prefix: 'ic'
         },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent),
         event:{
             //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
@@ -1937,7 +1938,7 @@ brick.getAniMap = function (animation) {
     var transition = brick.view = new Transition;
     var eventAction = brick.get('event.action');
 
-    $(document).on(eventAction, '[ic-view-to]', function (e) {
+    $(document.body).on(eventAction, '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
@@ -2160,6 +2161,10 @@ brick.removeRoute = function (hash, handler) {
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
 
         return this;
+    };
+
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
     };
 
     $.fn.icDialog = function (options) {
@@ -2765,6 +2770,11 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
+    $submit.on('ic-form.submit', function(e){
+        toSubmit(e);
+    });
+
+
     var defaultCall = function () {
         console.log(arguments)
     };
@@ -2789,10 +2799,7 @@ directives.add('ic-form', function ($elm, attrs) {
         return 3;
     })();
 
-
-    var eventAction = 'mousedown' || brick.get('event.action');
-
-    $submit.on(eventAction, function (e) {
+    function toSubmit(e){
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -2835,14 +2842,12 @@ directives.add('ic-form', function ($elm, attrs) {
                     $submit.removeAttr('ic-submit-disabled');
                 });
         }
+    }
 
-        //跨域提交
-        if (submitType === 2) {
 
-        }
+    var eventAction = 'click' || brick.get('event.action');
 
-    });
-
+    $submit.on(eventAction, toSubmit);
 
     $fields.icEnterPress(function () {
         $submit.trigger(eventAction);
@@ -2902,7 +2907,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
-
 });
 
 ;
@@ -2913,9 +2917,9 @@ directives.add('ic-form', function ($elm, attrs) {
 
 directives.add('ic-ajax', function () {
 
-        var eventAction = brick.get('event.action');
+        var eventAction = 'click' || brick.get('event.action');
 
-        var $doc = $(document);
+        var $doc = $(document.body);
         $doc.on(eventAction, '[ic-ajax]', _call);
         $doc.on('ic-ajax', '[ic-ajax]', _call);
 

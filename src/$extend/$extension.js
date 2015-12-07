@@ -69,6 +69,10 @@
         return this;
     };
 
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
+    };
+
     $.fn.icDialog = function (options) {
 
         if (!(this[0] && this[0].hasAttribute('ic-dialog'))){

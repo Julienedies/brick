@@ -10,8 +10,8 @@ var config = (function (){
         namespace:{
             prefix: 'ic'
         },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent),
         event:{
-            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
         },
         ajax:{

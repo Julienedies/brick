@@ -212,6 +212,11 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
+    $submit.on('ic-form.submit', function(e){
+        toSubmit(e);
+    });
+
+
     var defaultCall = function () {
         console.log(arguments)
     };
@@ -236,10 +241,7 @@ directives.add('ic-form', function ($elm, attrs) {
         return 3;
     })();
 
-
-    var eventAction = 'mousedown' || brick.get('event.action');
-
-    $submit.on(eventAction, function (e) {
+    function toSubmit(e){
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -282,14 +284,12 @@ directives.add('ic-form', function ($elm, attrs) {
                     $submit.removeAttr('ic-submit-disabled');
                 });
         }
+    }
 
-        //跨域提交
-        if (submitType === 2) {
 
-        }
+    var eventAction = 'click' || brick.get('event.action');
 
-    });
-
+    $submit.on(eventAction, toSubmit);
 
     $fields.icEnterPress(function () {
         $submit.trigger(eventAction);
@@ -348,7 +348,6 @@ directives.add('ic-form', function ($elm, attrs) {
         });
 
     });
-
 
 });
 
