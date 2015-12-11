@@ -27,7 +27,6 @@ var config = (function (){
         },
         isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent),
         event:{
-            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
         },
         ajax:{
@@ -1887,6 +1886,8 @@ brick.getAniMap = function (animation) {
         this.pool = {};
         this.conf = {};
         this.currentView = '';
+        this.$current = $({});
+        this.current();
     }
 
     var proto = {
@@ -1894,7 +1895,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -1909,6 +1910,7 @@ brick.getAniMap = function (animation) {
                 var $view = $('[ic-view][ic-active]');
                 currentView = $view.attr('ic-view');
                 this.currentView = currentView;
+                this.$current = $view;
                 this.cache(currentView, $view);
             }
             return currentView
@@ -1923,6 +1925,7 @@ brick.getAniMap = function (animation) {
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
+            this.$current = nextViewProp.$view;
         },
         back: function () {
             var prev = this.history.pop();

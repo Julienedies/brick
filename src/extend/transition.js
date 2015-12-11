@@ -435,6 +435,8 @@ brick.getAniMap = function (animation) {
         this.pool = {};
         this.conf = {};
         this.currentView = '';
+        this.$current = $({});
+        this.current();
     }
 
     var proto = {
@@ -457,6 +459,7 @@ brick.getAniMap = function (animation) {
                 var $view = $('[ic-view][ic-active]');
                 currentView = $view.attr('ic-view');
                 this.currentView = currentView;
+                this.$current = $view;
                 this.cache(currentView, $view);
             }
             return currentView
@@ -471,6 +474,7 @@ brick.getAniMap = function (animation) {
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
+            this.$current = nextViewProp.$view;
         },
         back: function () {
             var prev = this.history.pop();
