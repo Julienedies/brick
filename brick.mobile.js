@@ -27,13 +27,14 @@
 
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
-    __inline('src/event/hashChange.js');
 
     __inline('src/widget/tabs.js');
+    __inline('src/widget/infinite-scroll.js');
     __inline('src/widget/mobile/dialog.js');
     __inline('src/widget/mobile/form.js');
     __inline('src/widget/mobile/ajax.js');
     __inline('src/widget/mobile/tpl.js');
+
 
     //bootstrap
     $(function () {

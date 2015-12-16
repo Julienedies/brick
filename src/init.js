@@ -46,7 +46,7 @@ root.brick = {
         console.log('brick start');
         this.directives.init();
         compile(node || document.body);
-        hashChangeInit();
+        //hashChangeInit();
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };

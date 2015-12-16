@@ -45,7 +45,7 @@ for animating
   visibility: hidden;
   background: #fff; }
 
-.ic-panel, [ic-panel], [ic-view] {
+.ic-panel, [ic-panel], [ic-view][ic-pan-y] {
   overflow-y: auto;
   overflow-x: hidden;
   touch-action: pan-y;

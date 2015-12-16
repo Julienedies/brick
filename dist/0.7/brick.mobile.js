@@ -1361,7 +1361,7 @@ root.brick = {
         console.log('brick start');
         this.directives.init();
         compile(node || document.body);
-        hashChangeInit();
+        //hashChangeInit();
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
@@ -1808,7 +1808,7 @@ brick.getAniMap = function (animation) {
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
 
-        if ($current) {
+        if ($current && !$current.hasClass('ic-animating')) {
 
             initStatus($current);
 
@@ -1829,9 +1829,10 @@ brick.getAniMap = function (animation) {
         }
 
 
-        if ($next) {
+        if ($next && !$next.hasClass('ic-animating')) {
 
             initStatus($next);
+
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
@@ -1887,7 +1888,7 @@ brick.getAniMap = function (animation) {
         this.conf = {};
         this.currentView = '';
         this.$current = $({});
-        this.current();
+        //this.current();
     }
 
     var proto = {
@@ -1913,19 +1914,23 @@ brick.getAniMap = function (animation) {
                 this.$current = $view;
                 this.cache(currentView, $view);
             }
-            return currentView
+            return currentView;
         },
         to: function (name, reverse) {
+            if(!name) throw 'must to provide name of view.';
+            var that = this;
             var currentView = this.current();
-            this.history.push(currentView);
-            this.currentView = name;
+            if(currentView == name) return;
             var nextViewProp = this.cache(name);
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
-            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
-            this.$current = nextViewProp.$view;
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
+                that.history.push(currentView);
+                that.currentView = name;
+                that.$current = nextViewProp.$view;
+            });
         },
         back: function () {
             var prev = this.history.pop();
@@ -2394,50 +2399,6 @@ directives.add('ic-event', {
     }
 });
 ;
-    /**
- * Created by Julien on 2015/7/29.
- * 对hashchange事件进行包装
- */
-
-
-function hashChangeInit(){
-
-    var enable = brick.config.get('ic-hashChange.enable');
-    var _default = brick.config.get('route.default');
-
-    if(!enable) return;
-
-    var $win = $(window);
-
-    var prev;
-
-    var fire = function(hash, e){
-
-        if(typeof hash === 'object'){
-            e = hash;
-            hash = void(0);
-        }
-
-        hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
-
-        var query = hash.split('?');
-
-        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:query[0], origin:e, query:query[1]});
-
-        prev = hash;
-
-    };
-
-    $win.on('hashchange', function(e){
-
-        fire(e)
-
-    });
-
-
-    fire(_default);
-
-};
 
     /**
  * Created by julien.zhang on 2014/10/11.
@@ -2515,6 +2476,31 @@ directives.reg('ic-tabs', function ($elm, attrs) {
 });
 
 ;
+    /**
+ * Created by julien on 2015/11/30.
+ */
+
+brick.directives.reg('ic-infinite-scroll', function($elm){
+
+    var $th = $elm || $(this);
+
+    var onEnd = $elm.icParseProperty2('ic-infinite-scroll');
+
+    var prevScrollTop;
+    var scrollDirection = 'down';
+
+    $th.scroll(_.throttle(function (e) {
+        var scrollTop = $th.scrollTop();
+        scrollDirection = (prevScrollTop || 0 ) > scrollTop ? 'up' : 'down';
+        prevScrollTop = scrollTop;
+        if(scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + $th.scrollTop()){
+            console.log('trigger ic-infinite-scroll.end');
+            $th.trigger('ic-infinite-scroll.end');
+            onEnd && onEnd.call($elm[0]);
+        }
+    }, 300));
+
+});;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
@@ -3015,6 +3001,7 @@ directives.reg('ic-tpl', {
 
 });
 ;
+
 
     //bootstrap
     $(function () {
