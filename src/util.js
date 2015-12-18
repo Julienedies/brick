@@ -27,6 +27,11 @@ brick.progress = {
  */
 brick.getQuery = function (str) {
     var result;
+    var k;
+    if(str && /^[\w]+$/i.test(str)){
+        k = str;
+        str = '';
+    }
     //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
     var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
     query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
@@ -54,7 +59,7 @@ brick.getQuery = function (str) {
 //        result[i] = decodeURIComponent(result[i]);
 //    }
 
-    return result;
+    return k ? result[k] : result;
 };
 
 /**
