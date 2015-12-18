@@ -15,7 +15,7 @@ html, body {
   perspective: 1200px;
 }
 
-// 以下是最初版本
+//以下是最早版本
 .ic-animating{
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
@@ -90,6 +90,4 @@ html, body {
   display: block !important;
 }
 
-[ic-view-to]{
-  cursor: pointer;
-}
+

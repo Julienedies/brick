@@ -1823,7 +1823,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current, call);
+                onEndAnimation($current);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -1843,8 +1843,8 @@ brick.getAniMap = function (animation) {
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                onEndAnimation($next, call);
                 $next.removeClass(inClass);
+                onEndAnimation($next, call);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
                     //_onEndAnimation($next);
