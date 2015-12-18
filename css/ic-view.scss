@@ -17,10 +17,9 @@ html, body {
   perspective: 1200px;
 }
 
-/*
-for animating
-*/
-.ic-animating {
+//以下是最早版本
+
+.ic-animating{
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -30,49 +29,62 @@ for animating
   -webkit-transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  display: block!important;
+  position: absolute!important;
 }
 
-//动画元素最外层
-.ic-view {
-  position: absolute;
-  z-index: -2;
+[ic-view], [ic-panel] {
+  position: relative;
   top: 0;
   left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+  width:100%;
   min-height: 100%;
-  visibility: hidden;
   background: #fff;
+  /*    -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translate3d(0, 0, 0);
+      -moz-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      min-height: 100%;
+      background: #fff;
+      overflow-y: auto;
+      overflow-x: hidden;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;*/
 }
 
-.ic-panel {
+[ic-view] {
+  position: relative;
+  left: 0;
+  right:0;
+  top: 0;
+  bottom:0;
+  width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
-[ic-panel] {
-  @extend .ic-view;
-  @extend .ic-panel;
-}
-
-[ic-view] {
-  @extend .ic-view;
-  //@extend .ic-panel;
-}
-[ic-view][ic-pan-y]{
-  @extend .ic-panel;
+[ic-view]:not([ic-active]), [ic-panel]:not([ic-active]) {
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  top: -10000px;
 }
 
 [ic-view][ic-active], [ic-panel][ic-active] {
-  z-index: 2;
-  visibility: visible;
+  position: relative;
+  z-index: auto;
+  left: 0;
+  top: 0;
 }
 
 [ic-aniOut] {
+  position: absolute;
   /*display: none !important;*/
 }
 
@@ -80,6 +92,4 @@ for animating
   display: block !important;
 }
 
-[ic-view-to]{
-  cursor: pointer;
-}
+
