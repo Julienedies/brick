@@ -18,7 +18,7 @@ fis.config.set('roadmap.path', [
         isJsLike: true
     },
     {
-        reg: /^\/src\/plugins\/([\w]+\.js)$/i,
+        reg: /^\/src\/plugins\/([-_.\w]+\.js)$/i,
         release: 'brick.$1',
         isJsLike: true
     },

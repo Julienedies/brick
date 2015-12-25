@@ -10,13 +10,13 @@ var config = (function (){
         namespace:{
             prefix: 'ic'
         },
-        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent),
         event:{
             action:'click'
         },
         ajax:{
             domain:''
-        }
+        },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {

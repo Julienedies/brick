@@ -25,13 +25,13 @@ var config = (function (){
         namespace:{
             prefix: 'ic'
         },
-        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent),
         event:{
             action:'click'
         },
         ajax:{
             domain:''
-        }
+        },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {
@@ -1323,7 +1323,7 @@ services.add('recordManager', recordManager);
 services.fill('eventManager', eventManager);
 
 //对外接口
-root.brick = {
+var brick = root.brick = {
     config: config,
     eventManager: eventManager,
     set: function(k, v){
@@ -3011,8 +3011,7 @@ directives.reg('ic-tpl', {
     //bootstrap
     $(function () {
         setTimeout(function () {
-            var auto = brick.config.get('bootstrap.auto');
-            if(auto === false) return;
+            if(brick.get('bootstrap.auto') === false) return;
             brick.bootstrap(document.body);
         }, 10);
     });

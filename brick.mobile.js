@@ -39,8 +39,7 @@
     //bootstrap
     $(function () {
         setTimeout(function () {
-            var auto = brick.config.get('bootstrap.auto');
-            if(auto === false) return;
+            if(brick.get('bootstrap.auto') === false) return;
             brick.bootstrap(document.body);
         }, 10);
     });
