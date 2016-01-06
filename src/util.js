@@ -59,7 +59,7 @@ brick.getQuery = function (str) {
 //        result[i] = decodeURIComponent(result[i]);
 //    }
 
-    return k ? result[k] : result;
+    return k ? (result && result[k]) : result;
 };
 
 /**
