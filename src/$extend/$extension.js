@@ -5,6 +5,11 @@
 (function ($) {
 
     $.fn.icRender = function(tpl, model, callback){
+        if(typeof tpl == 'object'){
+            callback = model;
+            model = tpl;
+            tpl = this.attr('ic-tpl-name');
+        }
         tpl = brick.getTpl(tpl);
         var html = tpl(model);
         this.removeAttr('ic-tpl');
@@ -178,10 +183,10 @@
 
             $(this)
                 .on('focus', function () {
-                    $(this).keypress(fn);
+                    $(this).on('input keypress', fn);
                 })
                 .on('blur', function () {
-                    $(this).unbind('keypress', fn);
+                    $(this).off('input keypress', fn);
                 });
         });
 
