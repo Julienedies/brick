@@ -1405,7 +1405,7 @@ brick.progress = {
 brick.getQuery = function (str) {
     var result;
     var k;
-    if(str && /^[\w]+$/i.test(str)){
+    if(str && /^[-_\w]+$/i.test(str)){
         k = str;
         str = '';
     }
@@ -2411,6 +2411,31 @@ directives.add('ic-event', {
 ;
 
     /**
+ * Created by julien on 2015/11/30.
+ */
+
+brick.directives.reg('ic-infinite-scroll', function($elm){
+
+    var $th = $elm || $(this);
+
+    var onEnd = $elm.icParseProperty2('ic-infinite-scroll');
+
+    var prevScrollTop;
+    var scrollDirection = 'down';
+
+    $th.scroll(_.throttle(function (e) {
+        var scrollTop = $th.scrollTop();
+        scrollDirection = (prevScrollTop || 0 ) > scrollTop ? 'up' : 'down';
+        prevScrollTop = scrollTop;
+        if(scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + $th.scrollTop()){
+            console.log('trigger ic-infinite-scroll.end');
+            $th.trigger('ic-infinite-scroll.end');
+            onEnd && onEnd.call($elm[0]);
+        }
+    }, 300));
+
+});;
+    /**
  * Created by julien.zhang on 2014/10/11.
  */
 
@@ -2445,14 +2470,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             });
         }
 
-        var interval = th.attr('ic-tabs-interval');
-        var timer;
-
-        if (interval) {
-
-        }
-
-        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -2476,7 +2494,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger(eventAction);
+        activeTab.trigger('click');
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 
@@ -2487,28 +2505,29 @@ directives.reg('ic-tabs', function ($elm, attrs) {
 
 ;
     /**
- * Created by julien on 2015/11/30.
+ * Created by Julien on 2016/1/12.
  */
 
-brick.directives.reg('ic-infinite-scroll', function($elm){
+directives.reg('ic-tabs2', function ($elm, attrs) {
 
-    var $th = $elm || $(this);
+    var th = $elm;
+    var name = th.attr('ic-tabs2');
+    var disabled = th.attr('ic-tab-disabled');
+    var tabSelect = th.attr('ic-tab-select');
+    var conSelect = th.attr('ic-con-select');
+    var activeTab = th.attr('ic-tab-active');
+    var $tabSelect;
+    var cla = 'active';
+    var s_tab = '[ic-role-tab]';
 
-    var onEnd = $elm.icParseProperty2('ic-infinite-scroll');
-
-    var prevScrollTop;
-    var scrollDirection = 'down';
-
-    $th.scroll(_.throttle(function (e) {
-        var scrollTop = $th.scrollTop();
-        scrollDirection = (prevScrollTop || 0 ) > scrollTop ? 'up' : 'down';
-        prevScrollTop = scrollTop;
-        if(scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + $th.scrollTop()){
-            console.log('trigger ic-infinite-scroll.end');
-            $th.trigger('ic-infinite-scroll.end');
-            onEnd && onEnd.call($elm[0]);
-        }
-    }, 300));
+    $elm.on('click', s_tab, function(e){
+        if(this.hasAttribute('ic-tab-disabled')) return;
+        var $th = $(this);
+        if($th.hasClass(cla)) return;
+        var $siblings = $th.siblings().removeClass(cla);
+        $th.addClass(cla);
+        $elm.trigger('ic-tabs.change', {target:this, val: $th.attr('ic-tab-val'), index:$th.index()});
+    });
 
 });;
     /**

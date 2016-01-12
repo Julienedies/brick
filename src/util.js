@@ -28,7 +28,7 @@ brick.progress = {
 brick.getQuery = function (str) {
     var result;
     var k;
-    if(str && /^[\w]+$/i.test(str)){
+    if(str && /^[-_\w]+$/i.test(str)){
         k = str;
         str = '';
     }

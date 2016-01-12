@@ -33,13 +33,6 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             });
         }
 
-        var interval = th.attr('ic-tabs-interval');
-        var timer;
-
-        if (interval) {
-
-        }
-
         th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
