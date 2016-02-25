@@ -32,6 +32,7 @@ brick.getQuery = function (str) {
         k = str;
         str = '';
     }
+    str = str && str.split('?').length > 1 ? str.split('?')[1] : str;
     //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
     var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
     query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){

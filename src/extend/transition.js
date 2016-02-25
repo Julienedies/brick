@@ -476,7 +476,7 @@ brick.getAniMap = function (animation) {
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
-                that.history.push(currentView);
+                !reverse && that.history.push(currentView);
                 that.currentView = name;
                 that.$current = nextViewProp.$view;
             });

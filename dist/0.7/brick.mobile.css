@@ -28,7 +28,8 @@ html, body {
   -moz-transform-style: preserve-3d;
   transform-style: preserve-3d;
   display: block !important;
-  position: absolute !important; }
+  position: absolute !important;
+  pointer-events: none; }
 
 [ic-view], [ic-panel] {
   position: relative;

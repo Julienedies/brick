@@ -1409,6 +1409,7 @@ brick.getQuery = function (str) {
         k = str;
         str = '';
     }
+    str = str && str.split('?').length > 1 ? str.split('?')[1] : str;
     //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
     var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
     query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
@@ -1932,6 +1933,7 @@ brick.getAniMap = function (animation) {
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
+                console.info('ic-view.over');
                 that.history.push(currentView);
                 that.currentView = name;
                 that.$current = nextViewProp.$view;
@@ -2118,6 +2120,7 @@ brick.removeRoute = function (hash, handler) {
             tpl = this.attr('ic-tpl-name');
         }
         tpl = brick.getTpl(tpl);
+        if(!tpl) return console.info('not find tpl: '+ tpl);
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);
@@ -2414,24 +2417,28 @@ directives.add('ic-event', {
  * Created by julien on 2015/11/30.
  */
 
-brick.directives.reg('ic-infinite-scroll', function($elm){
+brick.directives.reg('ic-scroll', function ($elm) {
 
     var $th = $elm || $(this);
 
-    var onEnd = $elm.icParseProperty2('ic-infinite-scroll');
+    var onScroll = $elm.icParseProperty2('ic-scroll');
 
-    var prevScrollTop;
+    var prevScrollTop = 0;
     var scrollDirection = 'down';
 
-    $th.scroll(_.throttle(function (e) {
+    onScroll && $th.on('ic-scroll', onScroll);
+
+    $th.on('scroll', _.throttle(function (e) {
         var scrollTop = $th.scrollTop();
-        scrollDirection = (prevScrollTop || 0 ) > scrollTop ? 'up' : 'down';
+        var end;
+        scrollDirection = (scrollTop - prevScrollTop > 1) ? 'down' : 'up';
         prevScrollTop = scrollTop;
-        if(scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + $th.scrollTop()){
-            console.log('trigger ic-infinite-scroll.end');
-            $th.trigger('ic-infinite-scroll.end');
-            onEnd && onEnd.call($elm[0]);
+        if (scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + scrollTop) {
+            console.log('trigger ic-scroll.end');
+            $th.trigger('ic-scroll-end');
+            end = true;
         }
+        $th.trigger('ic-scroll', {direction: scrollDirection, end: end});
     }, 300));
 
 });;

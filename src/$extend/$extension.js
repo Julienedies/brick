@@ -11,6 +11,7 @@
             tpl = this.attr('ic-tpl-name');
         }
         tpl = brick.getTpl(tpl);
+        if(!tpl) return console.info('not find tpl: '+ tpl);
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);

@@ -28,7 +28,7 @@
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
 
-    __inline('src/widget/infinite-scroll.js');
+    __inline('src/widget/scroll.js');
     __inline('src/widget/mobile/tabs.js');
     __inline('src/widget/mobile/tabs2.js');
     __inline('src/widget/mobile/dialog.js');
