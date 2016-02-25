@@ -27,19 +27,20 @@
 
     __inline('src/directives/ctrl.js');
     __inline('src/directives/event.js');
-    __inline('src/event/hashChange.js');
 
-    __inline('src/widget/tabs.js');
+    __inline('src/widget/scroll.js');
+    __inline('src/widget/mobile/tabs.js');
+    __inline('src/widget/mobile/tabs2.js');
     __inline('src/widget/mobile/dialog.js');
     __inline('src/widget/mobile/form.js');
     __inline('src/widget/mobile/ajax.js');
-    __inline('src/widget/tpl.js');
+    __inline('src/widget/mobile/tpl.js');
+
 
     //bootstrap
     $(function () {
         setTimeout(function () {
-            var auto = brick.config.get('bootstrap.auto');
-            if(auto === false) return;
+            if(brick.get('bootstrap.auto') === false) return;
             brick.bootstrap(document.body);
         }, 10);
     });

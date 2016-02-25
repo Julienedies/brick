@@ -8,10 +8,6 @@ directives.add('ic-ajax', {
         once: true,
         fn: function () {
 
-            //只执行一次绑定
-            if (arguments.callee._run_) return;
-            arguments.callee._run_ = 1;
-
             var $doc = $(document);
             $doc.on('click', '[ic-ajax]', _call);
             $doc.on('ic-ajax', '[ic-ajax]', _call);
@@ -25,6 +21,7 @@ directives.add('ic-ajax', {
                 var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
                 //提交
+
                 var url = $elm.attr('ic-submit-action');
                 var dataType = $elm.attr('ic-submit-data-type') || 'json';
                 var method = $elm.attr('ic-submit-method') || 'post';

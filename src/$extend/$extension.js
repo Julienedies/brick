@@ -5,7 +5,13 @@
 (function ($) {
 
     $.fn.icRender = function(tpl, model, callback){
+        if(typeof tpl == 'object'){
+            callback = model;
+            model = tpl;
+            tpl = this.attr('ic-tpl-name');
+        }
         tpl = brick.getTpl(tpl);
+        if(!tpl) return console.info('not find tpl: '+ tpl);
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);
@@ -67,6 +73,10 @@
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
 
         return this;
+    };
+
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
     };
 
     $.fn.icDialog = function (options) {
@@ -174,10 +184,10 @@
 
             $(this)
                 .on('focus', function () {
-                    $(this).keypress(fn);
+                    $(this).on('input keypress', fn);
                 })
                 .on('blur', function () {
-                    $(this).unbind('keypress', fn);
+                    $(this).off('input keypress', fn);
                 });
         });
 

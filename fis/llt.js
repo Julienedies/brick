@@ -8,7 +8,7 @@ fis.config.set('modules.parser.sass', 'sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
 
-var version = 0.8;
+var version = 0.7;
 
 fis.config.set('roadmap.path', [
 
@@ -18,7 +18,7 @@ fis.config.set('roadmap.path', [
         isJsLike: true
     },
     {
-        reg: /^\/src\/plugins\/([\w]+\.js)$/i,
+        reg: /^\/src\/plugins\/([-_.\w]+\.js)$/i,
         release: 'brick.$1',
         isJsLike: true
     },

@@ -13,8 +13,6 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
      ic-select-more
      */
 
-    var eventAction = brick.get('event.action');
-
     var cla = 'selected';
     var list = 'ic-select-list';
     var item = '[ic-select-item]';
@@ -112,8 +110,10 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
     $elm = $elm || $(this);
     var name = $elm.attr(list);
+    var handle = $elm.is('[ic-select-handle]') ? ' [ic-select-handle]' : '';
     var isMultiple = $elm.attr('ic-select-multiple')*1;
     var isReadonly = $elm.attr('ic-select-readonly');
+    var isOptional = $elm.is('[ic-select-optional]');
     var isAll = $elm.find('ic-select-all');
     var $more = $elm.find(more);
     var $all = $elm.find(all);
@@ -143,7 +143,7 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
     $elm.on(eventSpace + 'cancel', function (e, msg) {
         if(msg){
-            $elm.find('[ic-select-val=?]'.replace('?', msg)).removeClass(cla);
+            $elm.find('[ic-select-val="?"]'.replace('?', msg)).removeClass(cla);
             model.set(msg, false);
         }else{
             $elm.find('[ic-select-val]').not('[ic-selected]').each(function(i){
@@ -158,28 +158,40 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
     function getVal(){
 
         var result = [];
+        var extra = false;
 
         var $filter = $items.filter('.'+cla).each(function(i){
             var $th = $(this);
+            extra = this.hasAttribute('ic-select-extra');
             result.push({name: name, text:$th.text(), val:$th.attr('ic-select-val')});
         });
 
-        return {name:name, result:result, over: result.length-isMultiple, all: $items.length == $filter.length, __size:$items.length};
+        return {name:name, result:result, over: result.length-isMultiple, all: $items.length == $filter.length, extra:extra, __size:$items.length};
     }
 
 
     if(isReadonly) return;
 
     //bind event
-    $elm.on(eventAction, item, function (e) {
+//    $elm.on('click', '[ic-select-ignore]', function(e){
+//        e.stopPropagation();
+//    });
+    $elm.on('click', item, function (e) {
 
-        var $th = $(this);
+        var $th = $(this).closest(item);
         var _val = $th.attr(val);
 
         $all.removeClass(cla);
 
         if(isNaN(isMultiple) || isMultiple === 1){
-            if ($th.hasClass(cla)) return;
+            if ($th.hasClass(cla)){
+                if(isOptional){
+                    $th.toggleClass(cla);
+                    model.toggle(_val);
+                    $elm.trigger(eventSpace + 'change', getVal());
+                }
+                return;
+            }
             $items.removeClass(cla);
             $th.addClass(cla);
             model.clear();
@@ -191,7 +203,7 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
         $elm.trigger(eventSpace + 'change', getVal());
 
-    }).on(eventAction, all, function (e) {
+    }).on('click', all, function (e) {
 
         if( $all.hasClass(cla)) return;
 
@@ -200,12 +212,12 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
         $elm.trigger(eventSpace+'change',{name:name, all: true});
 
-    }).on(eventAction, more, function (e) {
+    }).on('click', more, function (e) {
 
         $more.hide().nextAll().show();
         $elm.trigger('ic-more.show', {form:shirkHeight, to:expandHeight});
 
-    }).on(eventAction, shirk, function (e) {
+    }).on('click', shirk, function (e) {
 
         $more.show().nextAll().hide();
         $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
@@ -213,7 +225,7 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
     });
 
     if($active.index() > $more.index()){
-        $more.trigger(eventAction);
+        $more.click();
     }
 
 

@@ -11,9 +11,12 @@ var config = (function (){
             prefix: 'ic'
         },
         event:{
-            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
-        }
+        },
+        ajax:{
+            domain:''
+        },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {

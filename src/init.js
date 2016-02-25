@@ -8,7 +8,7 @@ services.add('recordManager', recordManager);
 services.fill('eventManager', eventManager);
 
 //对外接口
-root.brick = {
+var brick = root.brick = {
     config: config,
     eventManager: eventManager,
     set: function(k, v){
@@ -46,7 +46,7 @@ root.brick = {
         console.log('brick start');
         this.directives.init();
         compile(node || document.body);
-        hashChangeInit();
+        //hashChangeInit();
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
