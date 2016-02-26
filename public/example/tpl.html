@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,6 +28,8 @@
 </header>
 
     <main ic-ctrl="mainCtrl">
+        <h2>demo1</h2>
+
         <div ic-tpl="companies">
             <table>
                 <thead class="lg-36">
@@ -59,6 +65,14 @@
             </table>
         </div>
 
+        <section>
+            <h2>demo2</h2>
+
+            <div ic-tpl="demo2">
+                <div ic-has-checked="vm.checked">is checked.</div>
+            </div>
+            <div id="demo2"></div>
+        </section>
     </main>
 
     <footer>
@@ -74,19 +88,29 @@
 <script src="http://julienedies.github.io/brick/public/js/vendor/underscore-1.6.0.min.js"></script>
 <script src="http://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
 <script src="http://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
-<script src="http://julienedies.github.io/brick/public/brick/0.8/brick.js"></script>
+<script src="http://julienedies.github.io/brick/public/brick/0.7/brick.mobile.js"></script>
 <script>
-brick.controllers.reg('mainCtrl', function(scope){
+    brick.controllers.reg('mainCtrl', function (scope) {
 
-    var companies = [{"company":{"code":"600352_SH_EQ","abbrEn":"ZHEJIANG LONGSHENG","abbrSzh":"\u6d59\u6c5f\u9f99\u76db","sam":null},"closePrice":17.19,"changeRatio":6.11,"changeRatio7":8.73,"totalMarketValue":26300114336.7,"volume":100741598,"time":1418342400000},{"company":{"code":"002440_SZ_EQ","abbrEn":"RUNTU","abbrSzh":"\u95f0\u571f\u80a1\u4efd","sam":null},"closePrice":18.5,"changeRatio":2.89,"changeRatio7":4.46,"totalMarketValue":14189500000,"volume":44396937,"time":1418342400000},{"company":{"code":"300067_SZ_EQ","abbrEn":"Anoky","abbrSzh":"\u5b89\u8bfa\u5176","sam":null},"closePrice":10.41,"changeRatio":4,"changeRatio7":-2.25,"totalMarketValue":3405444120,"volume":7294354,"time":1418342400000}];
+        var companies = [
+            {"company": {"code": "600352_SH_EQ", "abbrEn": "ZHEJIANG LONGSHENG", "abbrSzh": "\u6d59\u6c5f\u9f99\u76db", "sam": null}, "closePrice": 17.19, "changeRatio": 6.11, "changeRatio7": 8.73, "totalMarketValue": 26300114336.7, "volume": 100741598, "time": 1418342400000},
+            {"company": {"code": "002440_SZ_EQ", "abbrEn": "RUNTU", "abbrSzh": "\u95f0\u571f\u80a1\u4efd", "sam": null}, "closePrice": 18.5, "changeRatio": 2.89, "changeRatio7": 4.46, "totalMarketValue": 14189500000, "volume": 44396937, "time": 1418342400000},
+            {"company": {"code": "300067_SZ_EQ", "abbrEn": "Anoky", "abbrSzh": "\u5b89\u8bfa\u5176", "sam": null}, "closePrice": 10.41, "changeRatio": 4, "changeRatio7": -2.25, "totalMarketValue": 3405444120, "volume": 7294354, "time": 1418342400000}
+        ];
 
-scope.render('companies', companies);
+        scope.render('companies', companies);
 
-    //底层实现
-    //var tpl = brick.getTpl('companies');
-    //var html = tpl({model:companies});
-    //$('[ic-tpl="companies"]').html(html);
-})
+        var vm = {vm: {checked: 1}};
+
+        $('#demo2').icRender('demo2', vm);
+
+        $('[ic-tpl=demo2]').icRender({vm: {checked: 0}});
+
+        //底层实现
+        //var tpl = brick.getTpl('companies');
+        //var html = tpl({model:companies});
+        //$('[ic-tpl="companies"]').html(html);
+    })
 </script>
 </body>
 </html>

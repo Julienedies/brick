@@ -153,6 +153,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var done = $submit.attr('ic-submit-on-done');
@@ -169,7 +170,6 @@ directives.add('ic-form', function ($elm, attrs) {
         }
         //跨域提交
         var match = action.match(/https?:\/\/[\w.:]+/i);
-        //console.log(match, location.origin);
         if (match && match[0] !== location.origin) {
             //_iframe = $('<iframe name="loginIframe" href="#"></iframe>').insertAfter($submit);
             return 2;
@@ -216,7 +216,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields
@@ -235,7 +235,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
         //跨域提交
         if (submitType === 2) {
-
 
         }
 

@@ -212,10 +212,16 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
+    $submit.on('ic-form.submit', function(e){
+        toSubmit(e);
+    });
+
+
     var defaultCall = function () {
         console.log(arguments)
     };
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
@@ -235,10 +241,7 @@ directives.add('ic-form', function ($elm, attrs) {
         return 3;
     })();
 
-
-    var eventAction = 'mousedown' || brick.get('event.action');
-
-    $submit.on(eventAction, function (e) {
+    function toSubmit(e){
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -264,7 +267,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields
@@ -281,14 +284,12 @@ directives.add('ic-form', function ($elm, attrs) {
                     $submit.removeAttr('ic-submit-disabled');
                 });
         }
+    }
 
-        //跨域提交
-        if (submitType === 2) {
 
-        }
+    var eventAction = 'click' || brick.get('event.action');
 
-    });
-
+    $submit.on(eventAction, toSubmit);
 
     $fields.icEnterPress(function () {
         $submit.trigger(eventAction);
@@ -347,7 +348,6 @@ directives.add('ic-form', function ($elm, attrs) {
         });
 
     });
-
 
 });
 

@@ -26,9 +26,12 @@ var config = (function (){
             prefix: 'ic'
         },
         event:{
-            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
-        }
+        },
+        ajax:{
+            domain:''
+        },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {
@@ -1244,7 +1247,7 @@ function parser(node) {
 
             if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
                 elm.removeAttr(name);
-                elm.attr(name.replace('ic-',''), value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
                 continue;
             }
 
@@ -1296,10 +1299,16 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        //早期判断是否输出属性的实现，建议使用ic-has-[prop]指令取代
         .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
+            if($1 == 'has-') return m;
             $1 = $1 ? 'ic-'+ $1 : '';
             $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
+        })
+        //实现ic-has-[prop]指令
+        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
         })
         .replace(/&amp;&amp;/g,'&&');
 
@@ -1320,7 +1329,7 @@ services.add('recordManager', recordManager);
 services.fill('eventManager', eventManager);
 
 //对外接口
-root.brick = {
+var brick = root.brick = {
     config: config,
     eventManager: eventManager,
     set: function(k, v){
@@ -1358,7 +1367,7 @@ root.brick = {
         console.log('brick start');
         this.directives.init();
         compile(node || document.body);
-        hashChangeInit();
+        //hashChangeInit();
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
@@ -1399,22 +1408,42 @@ brick.progress = {
  * 封装location.search为一个对象，如果不存在，返回undefined
  * @returns {*}
  */
-brick.getQuery = function () {
+brick.getQuery = function (str) {
     var result;
-    var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
-    if(!query) return result;
-    try {
-        result = JSON.parse('{' + query + '}');
-    } catch (e) {
-        console.error(e);
-        return;
+    var k;
+    if(str && /^[-_\w]+$/i.test(str)){
+        k = str;
+        str = '';
     }
+    str = str && str.split('?').length > 1 ? str.split('?')[1] : str;
+    //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
+        result = result || {};
+        var k;
+        var arr;
+        $2 = decodeURIComponent($2);
+        if(/\[\]$/i.test($1)){
+            k = $1.replace(/\[\]$/i, '');
+            arr = result[k] = result[k] || [];
+            arr.push($2);
+        }else{
+            result[$1] = $2;
+        }
+    });
+//    if(!query) return result;
+//    try {
+//        result = JSON.parse('{' + query + '}');
+//    } catch (e) {
+//        console.error(e);
+//        return;
+//    }
 
-    for(var i in result){
-        result[i] = decodeURIComponent(result[i]);
-    }
+//    for(var i in result){
+//        result[i] = decodeURIComponent(result[i]);
+//    }
 
-    return result;
+    return k ? (result && result[k]) : result;
 };
 
 /**
@@ -1791,7 +1820,7 @@ brick.getAniMap = function (animation) {
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
 
-        if ($current) {
+        if ($current && !$current.hasClass('ic-animating')) {
 
             initStatus($current);
 
@@ -1801,7 +1830,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current, call);
+                onEndAnimation($current);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -1812,16 +1841,17 @@ brick.getAniMap = function (animation) {
         }
 
 
-        if ($next) {
+        if ($next && !$next.hasClass('ic-animating')) {
 
             initStatus($next);
+
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                onEndAnimation($next, call);
                 $next.removeClass(inClass);
+                onEndAnimation($next, call);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
                     //_onEndAnimation($next);
@@ -1869,6 +1899,8 @@ brick.getAniMap = function (animation) {
         this.pool = {};
         this.conf = {};
         this.currentView = '';
+        this.$current = $({});
+        //this.current();
     }
 
     var proto = {
@@ -1876,7 +1908,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -1891,20 +1923,26 @@ brick.getAniMap = function (animation) {
                 var $view = $('[ic-view][ic-active]');
                 currentView = $view.attr('ic-view');
                 this.currentView = currentView;
+                this.$current = $view;
                 this.cache(currentView, $view);
             }
-            return currentView
+            return currentView;
         },
         to: function (name, reverse) {
+            if(!name) throw 'must to provide name of view.';
+            var that = this;
             var currentView = this.current();
-            this.history.push(currentView);
-            this.currentView = name;
+            if(currentView == name) return;
             var nextViewProp = this.cache(name);
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
-            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
+                !reverse && that.history.push(currentView);
+                that.currentView = name;
+                that.$current = nextViewProp.$view;
+            });
         },
         back: function () {
             var prev = this.history.pop();
@@ -1920,7 +1958,7 @@ brick.getAniMap = function (animation) {
     var transition = brick.view = new Transition;
     var eventAction = brick.get('event.action');
 
-    $(document).on(eventAction, '[ic-view-to]', function (e) {
+    $(document.body).on(eventAction, '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
@@ -2081,7 +2119,13 @@ brick.removeRoute = function (hash, handler) {
 (function ($) {
 
     $.fn.icRender = function(tpl, model, callback){
+        if(typeof tpl == 'object'){
+            callback = model;
+            model = tpl;
+            tpl = this.attr('ic-tpl-name');
+        }
         tpl = brick.getTpl(tpl);
+        if(!tpl) return console.info('not find tpl: '+ tpl);
         var html = tpl(model);
         this.removeAttr('ic-tpl');
         this.html(html);
@@ -2143,6 +2187,10 @@ brick.removeRoute = function (hash, handler) {
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
 
         return this;
+    };
+
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
     };
 
     $.fn.icDialog = function (options) {
@@ -2250,10 +2298,10 @@ brick.removeRoute = function (hash, handler) {
 
             $(this)
                 .on('focus', function () {
-                    $(this).keypress(fn);
+                    $(this).on('input keypress', fn);
                 })
                 .on('blur', function () {
-                    $(this).unbind('keypress', fn);
+                    $(this).off('input keypress', fn);
                 });
         });
 
@@ -2369,51 +2417,36 @@ directives.add('ic-event', {
     }
 });
 ;
+
     /**
- * Created by Julien on 2015/7/29.
- * 对hashchange事件进行包装
+ * Created by julien on 2015/11/30.
  */
 
+brick.directives.reg('ic-scroll', function ($elm) {
 
-function hashChangeInit(){
+    var $th = $elm || $(this);
 
-    var enable = brick.config.get('ic-hashChange.enable');
-    var _default = brick.config.get('route.default');
+    var onScroll = $elm.icParseProperty2('ic-scroll');
 
-    if(!enable) return;
+    var prevScrollTop = 0;
+    var scrollDirection = 'down';
 
-    var $win = $(window);
+    onScroll && $th.on('ic-scroll', onScroll);
 
-    var prev;
-
-    var fire = function(hash, e){
-
-        if(typeof hash === 'object'){
-            e = hash;
-            hash = void(0);
+    $th.on('scroll', _.throttle(function (e) {
+        var scrollTop = $th.scrollTop();
+        var end;
+        scrollDirection = (scrollTop - prevScrollTop > 1) ? 'down' : 'up';
+        prevScrollTop = scrollTop;
+        if (scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + scrollTop) {
+            console.log('trigger ic-scroll.end');
+            $th.trigger('ic-scroll-end');
+            end = true;
         }
+        $th.trigger('ic-scroll', {direction: scrollDirection, end: end});
+    }, 300));
 
-        hash = hash || location.hash.replace(/^#[^\w]*/i,'') || '/';
-
-        var query = hash.split('?');
-
-        brick.broadcast('ic-hashChange.' + hash, {from:prev,hash:query[0], origin:e, query:query[1]});
-
-        prev = hash;
-
-    };
-
-    $win.on('hashchange', function(e){
-
-        fire(e)
-
-    });
-
-
-    fire(_default);
-
-};
-
+});;
     /**
  * Created by julien.zhang on 2014/10/11.
  */
@@ -2449,14 +2482,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             });
         }
 
-        var interval = th.attr('ic-tabs-interval');
-        var timer;
-
-        if (interval) {
-
-        }
-
-        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -2480,7 +2506,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger(eventAction);
+        activeTab.trigger('click');
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 
@@ -2490,6 +2516,32 @@ directives.reg('ic-tabs', function ($elm, attrs) {
 });
 
 ;
+    /**
+ * Created by Julien on 2016/1/12.
+ */
+
+directives.reg('ic-tabs2', function ($elm, attrs) {
+
+    var th = $elm;
+    var name = th.attr('ic-tabs2');
+    var disabled = th.attr('ic-tab-disabled');
+    var tabSelect = th.attr('ic-tab-select');
+    var conSelect = th.attr('ic-con-select');
+    var activeTab = th.attr('ic-tab-active');
+    var $tabSelect;
+    var cla = 'active';
+    var s_tab = '[ic-role-tab]';
+
+    $elm.on('click', s_tab, function(e){
+        if(this.hasAttribute('ic-tab-disabled')) return;
+        var $th = $(this);
+        if($th.hasClass(cla)) return;
+        var $siblings = $th.siblings().removeClass(cla);
+        $th.addClass(cla);
+        $elm.trigger('ic-tabs.change', {target:this, val: $th.attr('ic-tab-val'), index:$th.index()});
+    });
+
+});;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
@@ -2748,10 +2800,16 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
+    $submit.on('ic-form.submit', function(e){
+        toSubmit(e);
+    });
+
+
     var defaultCall = function () {
         console.log(arguments)
     };
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
@@ -2771,10 +2829,7 @@ directives.add('ic-form', function ($elm, attrs) {
         return 3;
     })();
 
-
-    var eventAction = 'mousedown' || brick.get('event.action');
-
-    $submit.on(eventAction, function (e) {
+    function toSubmit(e){
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -2800,7 +2855,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields
@@ -2817,14 +2872,12 @@ directives.add('ic-form', function ($elm, attrs) {
                     $submit.removeAttr('ic-submit-disabled');
                 });
         }
+    }
 
-        //跨域提交
-        if (submitType === 2) {
 
-        }
+    var eventAction = 'click' || brick.get('event.action');
 
-    });
-
+    $submit.on(eventAction, toSubmit);
 
     $fields.icEnterPress(function () {
         $submit.trigger(eventAction);
@@ -2884,7 +2937,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
-
 });
 
 ;
@@ -2895,9 +2947,9 @@ directives.add('ic-form', function ($elm, attrs) {
 
 directives.add('ic-ajax', function () {
 
-        var eventAction = brick.get('event.action');
+        var eventAction = 'click' || brick.get('event.action');
 
-        var $doc = $(document);
+        var $doc = $(document.body);
         $doc.on(eventAction, '[ic-ajax]', _call);
         $doc.on('ic-ajax', '[ic-ajax]', _call);
 
@@ -2923,7 +2975,8 @@ directives.add('ic-ajax', function () {
 
             if (before.apply(that) === false) return;
 
-            var url = $elm.attr('ic-submit-action');
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
             var dataType = $elm.attr('ic-submit-data-type') || 'json';
             var method = $elm.attr('ic-submit-method') || 'post';
 
@@ -2966,51 +3019,35 @@ directives.add('ic-ajax', function () {
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-tpl', {
+directives.reg('ic-tpl', {
     selfExec: true,
     once: true,
-    fn:function ($elm) {
+    fn: function ($elm) {
 
-        //只执行一次
-        if (!arguments.callee._run || $elm) {
+        ($elm || $('[ic-tpl]')).each(function (i) {
 
-            arguments.callee._run = 1;
+            var th = $(this);
 
-            ($elm || $('[ic-tpl]')).each(function (i) {
+            var name = th.attr('ic-tpl');
+            th.attr('ic-tpl-name', name);
 
-                var th = $(this);
+            var compiled = createRender(this);
 
-                var name = th.attr('ic-tpl');
-                th.attr('ic-tpl-name', name);
+            var __tpl = brick.__tpl = brick.__tpl || {};
+            __tpl[name] = compiled;
 
-//        var ctrl = th.closest('[ic-ctrl]').attr('ic-ctrl');
-//        var scope = brick.controllers.get(ctrl);
-
-                //console.log(ctrl, scope);
-
-                //ie7下模板渲染会报错，有时间fix;
-                //try {
-                var compiled = createRender(this);
-//        } catch (e) {
-//            console.log('+_+ :)', e);
-//        }
-
-                var __tpl = brick.__tpl = brick.__tpl || {};
-                __tpl[name] = compiled;
-
-            });
-
-        }
+        });
 
     }
+
 });
 ;
+
 
     //bootstrap
     $(function () {
         setTimeout(function () {
-            var auto = brick.config.get('bootstrap.auto');
-            if(auto === false) return;
+            if(brick.get('bootstrap.auto') === false) return;
             brick.bootstrap(document.body);
         }, 10);
     });

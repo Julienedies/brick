@@ -17,9 +17,12 @@ var config = (function (){
             prefix: 'ic'
         },
         event:{
-            //action:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent) ? 'touchstart' : 'click'
             action:'click'
-        }
+        },
+        ajax:{
+            domain:''
+        },
+        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {
@@ -1235,7 +1238,7 @@ function parser(node) {
 
             if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
                 elm.removeAttr(name);
-                elm.attr(name.replace('ic-',''), value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
                 continue;
             }
 
@@ -1287,10 +1290,16 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        //早期判断是否输出属性的实现，建议使用ic-has-[prop]指令取代
         .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
+            if($1 == 'has-') return m;
             $1 = $1 ? 'ic-'+ $1 : '';
             $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
+        })
+        //实现ic-has-[prop]指令
+        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
         })
         .replace(/&amp;&amp;/g,'&&');
 
@@ -1311,7 +1320,7 @@ services.add('recordManager', recordManager);
 services.fill('eventManager', eventManager);
 
 //对外接口
-root.brick = {
+var brick = root.brick = {
     config: config,
     eventManager: eventManager,
     set: function(k, v){
@@ -1349,7 +1358,7 @@ root.brick = {
         console.log('brick start');
         this.directives.init();
         compile(node || document.body);
-        hashChangeInit();
+        //hashChangeInit();
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
@@ -1672,7 +1681,7 @@ directives.add('ic-event', {
 
 directives.reg('ic-enter-press', function ($elm, attrs) {
 
-    $('body').on('focus', '[type="text"][ic-enter-press]', function(e){
+    $(document.body).on('focus', '[ic-enter-press]', function(e){alert(1)
 
         var $elm = $(this);
         var call = $elm.attr('ic-enter-press');
@@ -2549,6 +2558,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     //提交
+    var domain = brick.get('ajax.domain') || '';
     var method = $submit.attr('ic-submit-method') || 'post';
     var action = $submit.attr('ic-submit-action');
     var done = $submit.attr('ic-submit-on-done');
@@ -2565,7 +2575,6 @@ directives.add('ic-form', function ($elm, attrs) {
         }
         //跨域提交
         var match = action.match(/https?:\/\/[\w.:]+/i);
-        //console.log(match, location.origin);
         if (match && match[0] !== location.origin) {
             //_iframe = $('<iframe name="loginIframe" href="#"></iframe>').insertAfter($submit);
             return 2;
@@ -2612,7 +2621,7 @@ directives.add('ic-form', function ($elm, attrs) {
         //同域提交
         if (submitType === 3) {
             return $.ajax({
-                url: action,
+                url: domain + action,
                 type: method,
                 dataType: dataType,
                 data: data || fields
@@ -2631,7 +2640,6 @@ directives.add('ic-form', function ($elm, attrs) {
 
         //跨域提交
         if (submitType === 2) {
-
 
         }
 
@@ -2702,10 +2710,6 @@ directives.add('ic-ajax', {
         once: true,
         fn: function () {
 
-            //只执行一次绑定
-            if (arguments.callee._run_) return;
-            arguments.callee._run_ = 1;
-
             var $doc = $(document);
             $doc.on('click', '[ic-ajax]', _call);
             $doc.on('ic-ajax', '[ic-ajax]', _call);
@@ -2719,6 +2723,7 @@ directives.add('ic-ajax', {
                 var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
                 //提交
+
                 var url = $elm.attr('ic-submit-action');
                 var dataType = $elm.attr('ic-submit-data-type') || 'json';
                 var method = $elm.attr('ic-submit-method') || 'post';

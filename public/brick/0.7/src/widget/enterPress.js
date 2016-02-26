@@ -5,7 +5,7 @@
 
 directives.reg('ic-enter-press', function ($elm, attrs) {
 
-    $('body').on('focus', '[type="text"][ic-enter-press]', function(e){
+    $(document.body).on('focus', '[ic-enter-press]', function(e){alert(1)
 
         var $elm = $(this);
         var call = $elm.attr('ic-enter-press');

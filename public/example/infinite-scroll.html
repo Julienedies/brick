@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>无限滚动</title>
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/brick/0.7/brick.mobile.css">
+</head>
+<body>
+<div ic-ctrl="mainCtrl">
+    <ul style="height: 800px; overflow:scroll;" ic-infinite-scroll="loadMore">
+
+    </ul>
+</div>
+<script src="http://julienedies.github.io/brick/public/js/vendor/underscore.js"></script>
+<script src="http://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="http://julienedies.github.io/brick/public/brick/0.7/brick.mobile.js"></script>
+<script>
+brick.controllers.reg('mainCtrl', function(scope){
+    var $elm = scope.$elm;
+
+    scope.loadMore = function(){
+        var html = _.range(10).map(function(i){
+            return '<li>'+ i + '-' + new Date + '</li>';
+        });
+        $(this).append(html);
+    };
+});
+</script>
+</body>
+</html>

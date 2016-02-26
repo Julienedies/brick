@@ -357,7 +357,7 @@ brick.getAniMap = function (animation) {
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
 
-        if ($current) {
+        if ($current && !$current.hasClass('ic-animating')) {
 
             initStatus($current);
 
@@ -367,7 +367,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current, call);
+                onEndAnimation($current);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -378,16 +378,17 @@ brick.getAniMap = function (animation) {
         }
 
 
-        if ($next) {
+        if ($next && !$next.hasClass('ic-animating')) {
 
             initStatus($next);
+
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
-                onEndAnimation($next, call);
                 $next.removeClass(inClass);
+                onEndAnimation($next, call);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
                     //_onEndAnimation($next);
@@ -435,6 +436,8 @@ brick.getAniMap = function (animation) {
         this.pool = {};
         this.conf = {};
         this.currentView = '';
+        this.$current = $({});
+        //this.current();
     }
 
     var proto = {
@@ -442,7 +445,7 @@ brick.getAniMap = function (animation) {
             var viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || 9 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -457,20 +460,26 @@ brick.getAniMap = function (animation) {
                 var $view = $('[ic-view][ic-active]');
                 currentView = $view.attr('ic-view');
                 this.currentView = currentView;
+                this.$current = $view;
                 this.cache(currentView, $view);
             }
-            return currentView
+            return currentView;
         },
         to: function (name, reverse) {
+            if(!name) throw 'must to provide name of view.';
+            var that = this;
             var currentView = this.current();
-            this.history.push(currentView);
-            this.currentView = name;
+            if(currentView == name) return;
             var nextViewProp = this.cache(name);
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
-            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view);
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
+                !reverse && that.history.push(currentView);
+                that.currentView = name;
+                that.$current = nextViewProp.$view;
+            });
         },
         back: function () {
             var prev = this.history.pop();
@@ -486,7 +495,7 @@ brick.getAniMap = function (animation) {
     var transition = brick.view = new Transition;
     var eventAction = brick.get('event.action');
 
-    $(document).on(eventAction, '[ic-view-to]', function (e) {
+    $(document.body).on(eventAction, '[ic-view-to]', function (e) {
         var name = $(this).attr('ic-view-to');
         transition.to(name);
     }).on('click', '[ic-view-back]', function (e) {
