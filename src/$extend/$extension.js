@@ -10,13 +10,15 @@
             model = tpl;
             tpl = this.attr('ic-tpl-name');
         }
-        tpl = brick.getTpl(tpl);
-        if(!tpl) return console.info('not find tpl: '+ tpl);
-        var html = tpl(model);
-        this.removeAttr('ic-tpl');
-        this.html(html);
-        callback && callback.apply(this[0], [this.children()]);
-        return this;
+        var tplFn = brick.getTpl(tpl);
+        if(!tplFn) return console.info('not find tpl: '+ tpl);
+        var html = tplFn(model);
+        return this.each(function(){
+            var $th = $(this);
+            $th.removeAttr('ic-tpl');
+            $th.html(html);
+            callback && callback.apply(this, [$th.children()]);
+        });
     };
 
     $.fn.icCompile = function () {

@@ -1299,14 +1299,20 @@ function createRender(root) {
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        //早期判断是否输出属性的实现，建议使用ic-has-[prop]指令取代
         .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
+            if($1 == 'has-') return m;
             $1 = $1 ? 'ic-'+ $1 : '';
             $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
         })
+        //实现ic-has-[prop]指令
+        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
+        })
         .replace(/&amp;&amp;/g,'&&');
 
-    //console.log(tpl);
+    brick.get('debug') && console.info(_tpl);
 
     var tpl = _.template(_tpl);
     tpl._tpl_ = _tpl;
@@ -1933,8 +1939,7 @@ brick.getAniMap = function (animation) {
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
             nextViewProp.$view.trigger('ic-view.active', nextViewProp);
             currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
-                console.info('ic-view.over');
-                that.history.push(currentView);
+                !reverse && that.history.push(currentView);
                 that.currentView = name;
                 that.$current = nextViewProp.$view;
             });
@@ -2119,13 +2124,15 @@ brick.removeRoute = function (hash, handler) {
             model = tpl;
             tpl = this.attr('ic-tpl-name');
         }
-        tpl = brick.getTpl(tpl);
-        if(!tpl) return console.info('not find tpl: '+ tpl);
-        var html = tpl(model);
-        this.removeAttr('ic-tpl');
-        this.html(html);
-        callback && callback.apply(this[0], [this.children()]);
-        return this;
+        var tplFn = brick.getTpl(tpl);
+        if(!tplFn) return console.info('not find tpl: '+ tpl);
+        var html = tplFn(model);
+        return this.each(function(){
+            var $th = $(this);
+            $th.removeAttr('ic-tpl');
+            $th.html(html);
+            callback && callback.apply(this, [$th.children()]);
+        });
     };
 
     $.fn.icCompile = function () {
