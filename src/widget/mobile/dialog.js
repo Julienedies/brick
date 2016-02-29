@@ -14,7 +14,8 @@ directives.reg('ic-dialog', function ($elm, attrs) {
 
         var $dialog = $th.closest('[ic-dialog]');
 
-        $dialog.icAniOut(21,function(){
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-dialog.hide', type);
             $dialog.trigger('ic-dialog.close', type);
         });
 

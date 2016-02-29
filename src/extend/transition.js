@@ -367,7 +367,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current);
+                onEndAnimation($current, call);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);

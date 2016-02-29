@@ -1830,7 +1830,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current);
+                onEndAnimation($current, call);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -2195,7 +2195,9 @@ brick.removeRoute = function (hash, handler) {
         return this.trigger('ic-form.'+call, options);
     };
 
-    $.fn.icDialog = function (options) {
+    $.fn.icDialog = function (options, callback) {
+
+        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
 
         if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
             console.error('not is ic-dialog');
@@ -2204,6 +2206,8 @@ brick.removeRoute = function (hash, handler) {
 
         var that = this;
         var tpl = that.attr('ic-tpl-name');
+
+        callback && this.one('ic-dialog.close', callback);
 
         setTimeout(function(){
 
@@ -2228,9 +2232,9 @@ brick.removeRoute = function (hash, handler) {
         return this;
     };
 
-    $.icDialog = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg, title:''};
-        $('[ic-dialog]:first').icDialog(options);
+    $.icDialog = function(msg, callback){
+        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
+        $('[ic-dialog]:first').icDialog(options, callback);
     };
 
     $.fn.icPrompt = function (options) {
@@ -2560,7 +2564,8 @@ directives.reg('ic-dialog', function ($elm, attrs) {
 
         var $dialog = $th.closest('[ic-dialog]');
 
-        $dialog.icAniOut(21,function(){
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-dialog.hide', type);
             $dialog.trigger('ic-dialog.close', type);
         });
 
