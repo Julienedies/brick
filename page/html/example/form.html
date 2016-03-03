@@ -126,7 +126,7 @@
     brick.set('ic-form.rule',{
            code:/\d{6}/,
            f: function(input){
-               if(!input) return '不能为空。';
+               if(!input) return '表单字段f不能为空。';
                if(input === 'js') return true;
                return '提示：必须输入js';
            }
