@@ -8,10 +8,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-form指令使用示例</title>
     <meta name="description" content="">
-    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/vendor/normalize.css">
-    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/vendor/main.css">
-    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/common/common.css">
-    <script src="http://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+    <link rel="stylesheet" href="/public/css/vendor/normalize.css">
+    <link rel="stylesheet" href="/public/css/vendor/main.css">
+    <link rel="stylesheet" href="/public/css/common/common.css">
+    <script src="/public/js/vendor/modernizr-2.6.2.min.js"></script>
+    <style>
+        .error{
+            border:solid 1px red;
+        }
+    </style>
 </head>
 <body>
 <div id="wraper">
@@ -25,19 +30,18 @@
 
             <form action="#" method="post" target="_top" class="hc form" ic-form="login">
 
-
                 <div class="inline hl">
-                    <div class="mt-15">
+                    <div ic-form-field-container="id" class="mt-15">
                         <input type="text"
                                name="id"
                                class="input-text-md"
                                placeholder="用户名/手机号码/电子邮箱"
-                               ic-role-field="id"
+                               ic-form-field="id"
                                ic-field-rule="id||phone||email"
                                ic-field-err-tip="请输入有效的用户名/手机号码/电子邮箱."
-                               role=""/>
+                                />
 
-                        <p class="tip error" ic-role-field-err-tip="id"></p>
+                        <p class="tip" ic-role-field-err-tip="id">用户名长度大于5</p>
                     </div>
 
                     <div class="mt-15">
@@ -45,32 +49,55 @@
                                name="password"
                                class="input-text-md"
                                placeholder="密码"
-                               ic-role-field="password"
+                               ic-form-field="password"
                                ic-field-rule="password"
-                               ic-field-err-tip="请输入正确的密码"
+                               ic-field-err-tip="请输入正确的密码，密码长度大于5"
                                role="">
 
-                        <p class="tip error" ic-role-field-err-tip="password"></p>
+                        <p class="tip" ic-form-field-err-tip="password">密码长度大于5</p>
+                    </div>
+
+                    <div class="mt-15">
+                        <input type="text"
+                               class="input-text-md"
+                               placeholder="请输入5位数字"
+                               ic-form-field="code"
+                               ic-field-rule="code"
+                               ic-field-err-tip="占位符显示的是错误的，请输入6位数字."
+                                />
+
+                        <p class="tip" ic-form-field-err-tip="code">请在占位符显示的数字基础上加1.</p>
+                    </div>
+
+                    <div class="mt-15">
+                        <input type="text"
+                               class="input-text-md"
+                               placeholder="请输入js"
+                               ic-form-field="f"
+                               ic-field-rule="f"
+                               ic-field-err-tip="请输入js."
+                                />
                     </div>
 
                     <div class="mt-10">
                         <label><input type="checkbox"
-                                                 name="remember"
-                                                 value="1"
-                                                 onclick="this.value=this.checked?1:0;"
-                                                 ic-role-field="remember"
-                                                 checked> 记住我</label>
+                                      name="remember"
+                                      value="1"
+                                      onclick="this.value=this.checked?1:0;"
+                                      ic-form-field="remember"
+                                      checked> 记住我</label>
                     </div>
 
                     <div class="mt-10">
                         <button type="button"
                                 class="btn btn-1-1 btn-md-1-1"
-                                ic-role-submit="login"
+                                ic-form-submit="login"
                                 ic-submit-action="http://www.baidu.com"
                                 ic-submit-method="get"
                                 ic-submit-before="before"
                                 ic-submit-on-done="done"
-                                ic-submit-on-failed="failed">登 录
+                                ic-submit-on-fail="failed"
+                                ic-submit-on-always="always">点击测试提交
                         </button>
                     </div>
 
@@ -94,35 +121,57 @@
 
 
 
-<script src="http://julienedies.github.io/brick/public/js/vendor/underscore-1.6.0.min.js"></script>
-<script src="http://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="http://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
-<script src="http://julienedies.github.io/brick/public/brick/0.7/brick.js"></script>
+<script src="/public/js/vendor/underscore-1.6.0.min.js"></script>
+<script src="/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="/public/js/vendor/plugins.js"></script>
+<script src="/public/brick/0.7/brick.mobile.js"></script>
 <script>
+
+    //debug 模式
+    brick.set('debug', true);
+
+    //自定义关键字验证规则
+    brick.set('ic-form.rule',{
+           code:/\d{6}/,
+           f: function(input){
+               if(!input) return '不能为空。';
+               if(input === 'js') return true;
+               return '提示：必须输入js';
+           }
+    });
+
+
+
 brick.controllers.reg('loginCtrl', function(scope){
 
-    scope.action = function(){
+    scope.$elm.find('[ic-form=login]').on('ic-form.error', function(e){
+         console.error('表单验证失败，请检查。');
+    });
+
+    scope.$elm.find('[ic-form-field="f"]').on('ic-form-field.error', function(e, msg){
+        console.info(this, e, msg);
+        alert(msg);
+    });
+
+    scope.action = function(fields){
         alert('表单验证通过，执行action();')
     };
 
     //登录请求发起前
-    scope.before = function(f){
-
-        alert('发起登录请求前');
-
+    scope.before = function(fields){
+        console.info(fields);
+        alert('发起登录请求前,如果返回false，则中止表单提交。');
     };
 
-    //登录完成
+    //提交完成
     scope.done = function (data) {
-
-        alert('登录成功');
+        alert('提交成功');
     };
 
-    //登录请求失败
+    //提交请求失败
     scope.failed = function(msg){
-
         alert('请求失败');
-
+        console.info(arguments);
     }
 
 })

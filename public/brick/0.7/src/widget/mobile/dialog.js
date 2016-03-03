@@ -16,8 +16,13 @@ directives.reg('ic-dialog', function ($elm, attrs) {
 
         $dialog.icAniOut(21,function(){
             $dialog.trigger('ic-dialog.close', type);
+            $dialog.trigger('ic-dialog.hide', type);
         });
 
+    }).on(eventAction, '[ic-dialog-href]', function (e) {
+        var target = $(this).attr('ic-dialog-href');
+        $('[ic-dialog=?]'.replace('?', target)).icDialog();
+        return false;
     });
 
 }, {selfExec: true, once: true });

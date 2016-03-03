@@ -10,7 +10,10 @@ directives.add('ic-form', function ($elm, attrs) {
      * 验证规则  ic-field-rule
      * 验证失败提示 ic-field-err-tip
      * 验证成功提示 ic-field-ok-tip
+     * ic-submit-disabled
      */
+
+    var debug =  brick.get('debug');
 
     var presetRule = {
         id: /[\w_]{4,18}/,
@@ -34,7 +37,7 @@ directives.add('ic-form', function ($elm, attrs) {
         return b.length - a.length;
     });
 
-    console.log(keys);
+    debug && console.info('当前关键字验证规则列表：', keys);
 
     /**
      * 对ic-field-rule属性定义的字段校验规则编译处理
@@ -59,16 +62,11 @@ directives.add('ic-form', function ($elm, attrs) {
             });
         }
 
-        //rule = rule.replace(/(\&\&|\|\|)(?=(?:\/|\w))/g, call+'$1');
-        //rule += call;
-
-        //console.error(rule);
-
         rule = rule.replace(/\/[igm]{0,3}(?=(?:\|\||\&\&|$))/g, function (m) {
             return m + '.test("?")';
         });
 
-        console.info(rule);
+        debug && !console.count('解析规则：') && console.info(rule);
         return rule;
     }
 
@@ -87,21 +85,21 @@ directives.add('ic-form', function ($elm, attrs) {
             return m.replace($1, 'fns.' + $1).replace('()', '("?")');
         });
 
-        var script = rules.replace(/\.\w+\("\?"\)/g, function (m) {
-
+        var _script = rules.replace(/\.\w+\("\?"\)/g, function (m) {
             return m.replace('?', val);
         });
 
-        //console.log(script)
+        debug && console.info(_script);
 
         var result;
 
         try {
-            result = eval(script);
-            //如果result是一个字符串，表示一个
+            result = eval(_script);
+            //如果result是一个字符串，表示一个错误提示
             if(typeof result === 'string'){
                 return result;
             }
+            //如果为result===true,表示验证通过
             if (result === true) {
                 return false;
             } else if(result){
@@ -110,7 +108,7 @@ directives.add('ic-form', function ($elm, attrs) {
                 return tips;
             }
         } catch (e) {
-            console.error(e, script);
+            console.error(e, _script);
         }
 
     }
