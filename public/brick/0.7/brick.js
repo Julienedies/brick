@@ -1305,7 +1305,7 @@ function createRender(root) {
         })
         .replace(/&amp;&amp;/g,'&&');
 
-    //console.log(tpl);
+    brick.get('debug') && console.info(_tpl);
 
     var tpl = _.template(_tpl);
     tpl._tpl_ = _tpl;

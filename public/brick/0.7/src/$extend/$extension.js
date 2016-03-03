@@ -10,13 +10,15 @@
             model = tpl;
             tpl = this.attr('ic-tpl-name');
         }
-        tpl = brick.getTpl(tpl);
-        if(!tpl) return console.info('not find tpl: '+ tpl);
-        var html = tpl(model);
-        this.removeAttr('ic-tpl');
-        this.html(html);
-        callback && callback.apply(this[0], [this.children()]);
-        return this;
+        var tplFn = brick.getTpl(tpl);
+        if(!tplFn) return console.info('not find tpl: '+ tpl);
+        var html = tplFn(model);
+        return this.each(function(){
+            var $th = $(this);
+            $th.removeAttr('ic-tpl');
+            $th.html(html);
+            callback && callback.apply(this, [$th.children()]);
+        });
     };
 
     $.fn.icCompile = function () {
@@ -79,7 +81,9 @@
         return this.trigger('ic-form.'+call, options);
     };
 
-    $.fn.icDialog = function (options) {
+    $.fn.icDialog = function (options, callback) {
+
+        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
 
         if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
             console.error('not is ic-dialog');
@@ -88,6 +92,8 @@
 
         var that = this;
         var tpl = that.attr('ic-tpl-name');
+
+        callback && this.one('ic-dialog.close', callback);
 
         setTimeout(function(){
 
@@ -112,9 +118,9 @@
         return this;
     };
 
-    $.icDialog = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg, title:''};
-        $('[ic-dialog]:first').icDialog(options);
+    $.icDialog = function(msg, callback){
+        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
+        $('[ic-dialog]:first').icDialog(options, callback);
     };
 
     $.fn.icPrompt = function (options) {
