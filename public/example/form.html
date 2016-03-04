@@ -11,10 +11,12 @@
     <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/vendor/normalize.css">
     <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/vendor/main.css">
     <link rel="stylesheet" href="http://julienedies.github.io/brick/public/css/common/common.css">
+    <link rel="stylesheet" href="http://julienedies.github.io/brick/public/brick/0.7/brick.mobile.css">
     <script src="http://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
     <style>
         .error{
-            border:solid 1px red;
+            background: lightyellow;
+            color:#e57f7f;
         }
     </style>
 </head>
@@ -72,7 +74,7 @@
                     <div class="mt-15">
                         <input type="text"
                                class="input-text-md"
-                               placeholder="请输入js"
+                               placeholder="字段f, 请输入js"
                                ic-form-field="f"
                                ic-field-rule="f"
                                ic-field-err-tip="请输入js."
@@ -106,7 +108,6 @@
 
         </section>
 
-
     </main>
 
     <footer>
@@ -132,7 +133,7 @@
 
     //自定义关键字验证规则
     brick.set('ic-form.rule',{
-           code:/\d{6}/,
+           code:/^\d{6}$/,
            f: function(input){
                if(!input) return '表单字段f不能为空。';
                if(input === 'js') return true;

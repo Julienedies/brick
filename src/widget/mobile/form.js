@@ -216,7 +216,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
 
     var defaultCall = function () {
-        console.log(arguments)
+        console.info(arguments);
     };
     //提交
     var domain = brick.get('ajax.domain') || '';
@@ -257,7 +257,7 @@ directives.add('ic-form', function ($elm, attrs) {
             $submit.hide();
             $loading.show();
         } else {
-            $submit.setLoading();
+            $submit.icSetLoading();
         }
 
         $submit.attr('ic-submit-disabled', true);
