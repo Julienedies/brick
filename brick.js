@@ -26,7 +26,6 @@
     __inline('src/widget/tabs.js');
     __inline('src/widget/dropdown.js');
     __inline('src/widget/pagination.js');
-    __inline('src/widget/scene.js');
     __inline('src/widget/timer.js');
     __inline('src/widget/dialog.js');
     __inline('src/widget/drag.js');
