@@ -33,7 +33,6 @@ fis.config.set('modules.postpackager', 'simple');
 fis.config.merge({
     roadmap : {
         domain : 'http://julienedies.github.io/brick'
-        //domain:''
     }
 });
 
