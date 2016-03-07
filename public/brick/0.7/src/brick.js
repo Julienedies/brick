@@ -725,6 +725,9 @@ var directives = {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {
             definition.fn.apply(null, [$elm, attrs]);
+            if(definition.once){
+                delete _pool[i];
+            }
         }
     },
 
@@ -736,13 +739,12 @@ var directives = {
 
             if(definition.selfExec){
                 definition.fn && definition.fn();
+                if(definition.once){
+                    delete _pool[i];
+                }
             }
 
-            if(definition.once){
-                delete _pool[i];
-            }
         }
-
     },
 
     _init: function (name) {
@@ -754,7 +756,6 @@ var directives = {
             } else if (definition.fn) {
                 definition.fn();
             }
-
         }
     }
 
@@ -1104,7 +1105,10 @@ function recordManager() {
     return fn;
 
 }
-;
+
+
+//内置服务
+services.reg('recordManager', recordManager);;
         /**
  * Created by julien.zhang on 2014/9/12.
  *
@@ -1314,15 +1318,19 @@ function createRender(root) {
  * Created by julien.zhang on 2014/9/15.
  */
 
-
 //内置服务
-services.add('recordManager', recordManager);
 services.fill('eventManager', eventManager);
 
 //对外接口
 var brick = root.brick = {
     config: config,
+    controllers: controllers,
+    services: services,
+    directives: directives,
+    compile: compile,
+    createRender:createRender,
     eventManager: eventManager,
+    __tpl: {},
     set: function(k, v){
         return this.config.set(k, v);
     },
@@ -1345,20 +1353,13 @@ var brick = root.brick = {
         this.eventManager.fire(e, msg);
         return this;
     },
-    controllers: controllers,
-    services: services,
-    directives: directives,
-    compile: compile,
-    createRender:createRender,
     getTpl: function (name) {
         return this.__tpl[name];
     },
-    __tpl: {},
     bootstrap: function (node) {
-        console.log('brick start');
+        console.info('brick start');
         this.directives.init();
-        compile(node || document.body);
-        //hashChangeInit();
+        this.compile(node || document.body);
         this.bootstrap = function(){console.info('only bootstrap once.')};
     }
 };
@@ -1642,7 +1643,7 @@ directives.add('ic-event', {
 
         var eventAction = brick.get('event.action');
 
-        var events = 'click,change';
+        var events = brick.get('ic-event.extend') || 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
             var s = '[ic-?]'.replace('?', $1);
@@ -2180,61 +2181,6 @@ directives.add('ic-pagination', function ($elm, attrs) {
 
 
 });;
-        /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-scene', function ($elm, attr) {
-
-    var scenes = $('[ic-scene]');
-    var active = $('[ic-scene-active]');
-    active = active.size() ? active : scenes.first();
-
-    active.show();
-    scenes.not(active).hide();
-
-    scenes.each(function (i) {
-
-        var th = $(this);
-
-        th.on('click', '[ic-role-scene-next]', function(e){
-            var next = $(this).attr('ic-role-scene-next');
-            active && active.hide();
-            active = $('[ic-scene=' + next + ']').show();
-
-        });
-
-
-    });
-
-
-});
-
-;
-        /**
- * Created by julien.zhang on 2014/10/28.
- */
-
-directives.add('ic-timer', function ($elm, attr) {
-
-    return;
-
-    var th = $elm;
-    var count = th.attr('ic-timer-count') * 1;
-
-    var timer = setInterval(function () {
-        if (count--) {
-            th.text(count);
-        } else {
-            clearInterval(timer);
-            th.trigger('ic-timer.' + 'end');
-        }
-    }, 1000);
-
-
-});
-
-;
         /**
  * Created by julien.zhang on 2014/10/29.
  */

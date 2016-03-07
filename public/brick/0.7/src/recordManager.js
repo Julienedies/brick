@@ -341,3 +341,7 @@ function recordManager() {
     return fn;
 
 }
+
+
+//内置服务
+services.reg('recordManager', recordManager);

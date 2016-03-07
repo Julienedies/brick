@@ -4,27 +4,40 @@
     <meta charset="UTF-8">
     <title>无限滚动</title>
     <link rel="stylesheet" href="../../../css/brick.mobile.css">
+    <style>
+        body{margin:0;}
+        [ic-ctrl]{
+            height: 100%;
+            overflow: scroll;;
+        }
+    </style>
 </head>
 <body>
-<div ic-ctrl="mainCtrl">
-    <ul style="height: 800px; overflow:scroll;" ic-infinite-scroll="loadMore">
+<div ic-ctrl="mainCtrl" ic-scroll="loadMore">
+    <ol style="min-height: 1200px;">
 
-    </ul>
+    </ol>
+    <div style="text-align: center;line-height: 4;">loading...</div>
 </div>
 <script src="../../js/vendor/underscore.js"></script>
 <script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
 <script src="../../../brick.mobile.js"></script>
 <script>
-brick.controllers.reg('mainCtrl', function(scope){
-    var $elm = scope.$elm;
+    brick.controllers.reg('mainCtrl', function(scope){
 
-    scope.loadMore = function(){
-        var html = _.range(10).map(function(i){
-            return '<li>'+ i + '-' + new Date + '</li>';
-        });
-        $(this).append(html);
-    };
-});
+        var $elm = scope.$elm;
+        var $ol = $elm.find('ol');
+
+        scope.loadMore = function(e, msg){
+            if(!msg.end) return;
+            setTimeout(function(){
+                var html = _.range(100).map(function(i){
+                    return '<li>'+ i + '-' + new Date + '</li>';
+                });
+                $ol.append(html.join(''));
+            },1000);
+        };
+    });
 </script>
 </body>
 </html>

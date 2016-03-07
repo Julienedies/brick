@@ -6,70 +6,64 @@
 ;
 (function (root, undefined) {
 
-    /**
- * Created by Julien on 2015/9/8.
- */
-
-IC_EVENT_TRIGGER_TYPE = 'event.trigger.type';
-IC_DEFAULT_EVENT_TRIGGER_TYPE = 'click';
-IC_IS_MOBILE = navigator.userAgent.match(/iPhone|iPad|iPod|Android/i) ? true : false;;
+    //core
     /**
  * Created by julien.zhang on 2014/9/16.
  *
  * 框架配置
  */
 
-var config = (function (){
+var config = (function () {
 
     var conf = {
-        namespace:{
+        namespace: {
             prefix: 'ic'
         },
-        event:{
-            action:'click'
+        event: {
+            action: 'click'
         },
-        ajax:{
-            domain:''
+        ajax: {
+            domain: ''
         },
-        isMobile:/iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
+        isMobile: /iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
     };
 
     return {
-        get: function(key){
-            if(!key) return _.extend({}, conf);
+        get: function (key) {
+            if (!key) return _.extend({}, conf);
 
             var keys = key.split('.');
 
-            return (function x(namespace, keys){
+            return (function x(namespace, keys) {
                 var k = keys.shift();
                 var o = namespace[k];
-                if(o && keys.length) return x(namespace[k], keys);
+                if (o && keys.length) return x(namespace[k], keys);
                 return o;
             })(conf, keys);
 
         },
 
-        set: function(key, val){
+        set: function (key, val) {
 
             var old = this.get(key);
 
-            if(old && _.isObject(old) && _.isObject(val)) return _.extend(old, val);
+            if (old && _.isObject(old) && _.isObject(val)) return _.extend(old, val);
 
             this._set(key, val);
         },
 
-        _set: function(key, val){
+        _set: function (key, val) {
 
             var keys = key.split('.');
 
-            (function x(namespace, keys){
+            (function x(namespace, keys) {
                 var k = keys.shift();
                 var o = namespace[k];
-                if(keys.length){
-                    if(!o) o = namespace[k] = {};
+                if (keys.length) {
+                    if (!o) o = namespace[k] = {};
                     x(o, keys);
-                }else{
-                    if(val === undefined) return delete namespace[k];
+                } else {
+                    if (val === undefined) return delete namespace[k];
                     namespace[k] = val;
                 }
             })(conf, keys);
@@ -734,6 +728,9 @@ var directives = {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {
             definition.fn.apply(null, [$elm, attrs]);
+            if(definition.once){
+                delete _pool[i];
+            }
         }
     },
 
@@ -745,13 +742,12 @@ var directives = {
 
             if(definition.selfExec){
                 definition.fn && definition.fn();
+                if(definition.once){
+                    delete _pool[i];
+                }
             }
 
-            if(definition.once){
-                delete _pool[i];
-            }
         }
-
     },
 
     _init: function (name) {
@@ -763,13 +759,587 @@ var directives = {
             } else if (definition.fn) {
                 definition.fn();
             }
-
         }
     }
 
 };
 
 ;
+    /**
+ * Created by julien.zhang on 2014/9/12.
+ *
+ * 主要用于解析一个dom节点上绑定的操作
+ *
+ */
+
+function parser(node) {
+
+
+    if (node.nodeType == 1) {
+
+        var elm = $(node);
+        var attrs = node.attributes;
+
+        var directives = [];
+
+        var priority = {
+            'skip': -100,
+            'init': -10,
+            'for': 0,
+            'for-start':1,
+            'for-init': 10,
+            'if': 100,
+            'else-if':99,
+            'if-start': 100,
+            'if-init': 110,
+            'else': 100,
+            'bind': 1000,
+            'if-end':10000,
+            'for-end':10000
+        };
+
+
+        for (var i = 0, attr, name, value, l = attrs.length; i < l; i++) {
+
+            attr = attrs[i];
+
+            name = attr.name;
+            value = attr.value;
+
+            if (/^ic-(skip|init|for|if|else|bind)/.test(name) || /\{\{.+?\}\}/.test(value)) {
+                directives.push([name, value]);
+                //continue;
+            }
+
+        }
+
+        //对指令按优先级排序
+        directives.sort(function(a, b){
+            return priority[a[0].replace(/^ic-/,'')] - priority[b[0].replace(/^ic-/,'')];
+        });
+
+
+        //处理每一个指令
+        while (attr = directives.shift()) {
+
+            name = attr[0];
+            value = attr[1];
+
+            if (/-skip$/.test(name)) {
+                elm.remove();
+                return;
+            }
+
+            if (/-init$/.test(name)) {
+                elm.before('\r\n<% var ' + value.replace(/;(?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-for$/.test(name)) {
+                //elm.before('<% for( var ' + value + '){ %>\r\n');
+                elm.before(value.replace(/^\s*(?:(\w+?)\s*\,\s*)?(\w+?)\s*in\s*([\w.]+)/,function(m,$1,$2,$3,t){
+                    if ($1 && $2) return '<% for( var ' + $1 + ' in ' + $3 + '){ var ' + $2 + ' = ' + $3+'[' +$1 + ']; %>\r\n';
+                    return '<% for( var ' + m + '){ %>\r\n';
+                }));
+                elm.after('\r\n<% } %>');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-for-start$/.test(name)) {
+                elm.before(value.replace(/^\s*(?:(\w+?)\s*\,\s*)?(\w+?)\s*in\s*([\w.]+)/,function(m,$1,$2,$3,t){
+                    if ($1 && $2) return '<% for( var ' + $1 + ' in ' + $3 + '){ var ' + $2 + ' = ' + $3+'[' +$1 + ']; %>\r\n';
+                    return '<% for( var ' + m + '){ %>\r\n';
+                }));
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-for-end$/.test(name) || /-if-end$/.test(name)) {
+                elm.after('\r\n<% } %>');
+                elm.removeAttr(name);
+                continue;
+            }
+
+
+            if (/-else-if$/.test(name)) {
+                elm.before('<% } else if(' + (value===''?void(0):value) + '){ %>\r\n');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-if$/.test(name)) {
+                elm.before('<% if(' + (value===''?void(0):value) + '){ %>\r\n');
+                elm.after('\r\n<% } %>');
+                elm.removeAttr(name);
+                continue;
+            }
+
+
+            if (/-if-start$/.test(name)) {
+                elm.before('<% if(' + (value===''?void(0):value) + '){ %>\r\n');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-else$/.test(name)) {
+                elm.before('<% } else{ %>\r\n');
+                elm.after('\r\n<% } %>');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if (/-bind$/.test(name)) {
+                elm.html('\r\n<%= ' + (value===''?'\"\"':value) + ' %>\r\n');
+                elm.removeAttr(name);
+                continue;
+            }
+
+            if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
+                elm.removeAttr(name);
+                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+                continue;
+            }
+
+            elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
+
+        }
+
+        return;
+
+    }
+
+    if (node.nodeType == 3) {
+
+        var text = node.nodeValue;
+
+        node.nodeValue = text.replace(/{{(.+?)}}/g, '<%= $1 %>');
+
+    }
+
+
+};
+    /**
+ * Created by julien.zhang on 2014/9/15.
+ *
+ * 遍历dom节点，根据指令生成一个编译过的模板渲染函数
+ *
+ */
+
+function createRender(root) {
+
+    root = root.cloneNode(true);
+
+    //遍历dom节点，解析指令
+    (function (node) {
+
+        parser(node);
+
+        var children = $(node).contents();
+        var child;
+        var i = 0;
+        while (child = children.eq(i)[0]) {
+            i++;
+            arguments.callee(child);
+        }
+
+    })(root);
+
+    var _tpl = $(root).html()
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
+        //早期判断是否输出属性的实现，建议使用ic-has-[prop]指令取代
+        .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
+            if($1 == 'has-') return m;
+            $1 = $1 ? 'ic-'+ $1 : '';
+            $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
+        })
+        //实现ic-has-[prop]指令
+        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
+            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
+        })
+        .replace(/&amp;&amp;/g,'&&');
+
+    brick.get('debug') && console.info(_tpl);
+
+    var tpl = _.template(_tpl);
+    tpl._tpl_ = _tpl;
+    return tpl;
+
+};
+    /**
+ * Created by julien.zhang on 2014/9/15.
+ */
+
+//内置服务
+services.fill('eventManager', eventManager);
+
+//对外接口
+var brick = root.brick = {
+    config: config,
+    controllers: controllers,
+    services: services,
+    directives: directives,
+    compile: compile,
+    createRender:createRender,
+    eventManager: eventManager,
+    __tpl: {},
+    set: function(k, v){
+        return this.config.set(k, v);
+    },
+    get: function(k){
+      return this.config.get(k);
+    },
+    broadcast: function (e, msg) {
+        this.eventManager.fire(e, msg);
+        return this;
+    },
+    on: function (e, fn) {
+        this.eventManager.bind(e, fn);
+        return this;
+    },
+    off: function (e, fn) {
+        this.eventManager.unbind(e, fn);
+        return this;
+    },
+    fire: function (e, msg) {
+        this.eventManager.fire(e, msg);
+        return this;
+    },
+    getTpl: function (name) {
+        return this.__tpl[name];
+    },
+    bootstrap: function (node) {
+        console.info('brick start');
+        this.directives.init();
+        this.compile(node || document.body);
+        this.bootstrap = function(){console.info('only bootstrap once.')};
+    }
+};
+
+
+
+
+
+
+
+
+;
+    /**
+ * Created by julien.zhang on 2014/12/9.
+ */
+
+directives.add('ic-ctrl', function ($elm, attrs) {
+
+    var ctrlName = $elm.attr('ic-ctrl');
+
+    if(ctrlName){
+        var $parent = $elm.parent().closest('[ic-ctrl]');
+        //var parentName = $parent.size() ? $parent.attr('ic-ctrl') : '';
+        controllers.exec(ctrlName, $parent.data('ic-ctrl-scope'), $elm);
+        //controllers.exec(ctrlName, controllers.get(parentName), $elm);
+    }
+
+});;
+    /**
+ * Created by julien.zhang on 2014/10/11.
+ */
+
+directives.add('ic-event', {
+    selfExec: true,
+    once: true,
+    fn: function () {
+
+        var eventAction = brick.get('event.action');
+
+        var events = brick.get('ic-event.extend') || 'click,change';
+
+        var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
+            var s = '[ic-?]'.replace('?', $1);
+            return m.replace($1, s);
+        });
+
+        var $doc = $(document);
+
+        events = events.split(',');
+        targets = targets.split(',');
+
+        _.forEach(events, function (event, i, list) {
+            var target = targets[i];
+            if (event == 'click') event = eventAction;
+            $doc.on(event, target, _call);
+        });
+
+
+        function _call(e) {
+            var th = $(this);
+            var type = e.type;
+            var fn = th.attr('ic-' + type);
+            fn = th.icParseProperty(fn);
+
+            return fn.apply(this, [e]);
+        }
+
+    }
+});
+;
+    /**
+ * Created by julien.zhang on 2014/10/30.
+ * 扩展 jquery
+ */
+(function ($) {
+
+    $.fn.icRender = function(tpl, model, callback){
+        if(typeof tpl == 'object'){
+            callback = model;
+            model = tpl;
+            tpl = this.attr('ic-tpl-name');
+        }
+        var tplFn = brick.getTpl(tpl);
+        if(!tplFn) return console.info('not find tpl: '+ tpl);
+        var html = tplFn(model);
+        return this.each(function(){
+            var $th = $(this);
+            $th.removeAttr('ic-tpl');
+            $th.html(html);
+            callback && callback.apply(this, [$th.children()]);
+        });
+    };
+
+    $.fn.icCompile = function () {
+
+        if (!this.length) return this;
+
+        return this.each(function (i) {
+            brick.compile(this);
+        });
+    };
+
+    $.fn.icParseProperty = function (name, debug) {
+
+        if (name === void(0)) return void(0);
+        var $ctrl = this.closest('[ic-ctrl]');
+        var ctrl = $ctrl.attr('ic-ctrl');
+        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+
+        var chain = name.split('.');
+
+        return (function (root, chain) {
+
+            var k = chain.shift();
+            var v = root && root[k];
+
+            if (!v) return;
+
+            if (chain.length) {
+                return arguments.callee(v, chain);
+            }
+
+            return v;
+
+        })(namespace, chain);
+
+    };
+
+    $.fn.icParseProperty2 = function (name) {
+        name = this.attr(name);
+        return this.icParseProperty(name);
+    };
+
+    $.fn.icTabs = function (options) {
+        var active = options.active;
+        active && this.attr('ic-tab-active', active);
+        return this;
+    };
+
+    $.fn.icAjax = function (options) {
+        if (options === void(0)) return this.trigger('ic-ajax');
+        options.data && this.data('ic-submit-data', options.data);
+
+        options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
+
+        return this;
+    };
+
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
+    };
+
+    $.fn.icDialog = function (options, callback) {
+
+        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
+
+        if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
+            console.error('not is ic-dialog');
+            return this;
+        }
+
+        var that = this;
+        var tpl = that.attr('ic-tpl-name');
+
+        callback && this.one('ic-dialog.close', callback);
+
+        setTimeout(function(){
+
+            if (options === void(0)) {
+                options = true;
+            }
+
+            if (!options) {
+                that.icAniOut(21);
+            }
+
+            if (tpl && _.isObject(options)) {
+                that.icRender(tpl, options.vm || options);
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-dialog.show');
+            });
+
+        },30);
+
+        return this;
+    };
+
+    $.icDialog = function(msg, callback){
+        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
+        $('[ic-dialog]:first').icDialog(options, callback);
+    };
+
+    $.fn.icPrompt = function (options) {
+
+        if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
+            console.error('not is ic-prompt');
+            return this;
+        }
+
+        var that = this;
+        var tpl = that.attr('ic-tpl-name');
+
+        clearTimeout(that.data('ic-prompt-timer'));
+
+        setTimeout(function(){
+
+            if (options === void(0)) {
+                options = true;
+            }
+
+            if (!options) {
+                that.icAniOut();
+            }
+
+            if (tpl && _.isObject(options)) {
+                that.icRender(tpl, options.vm || options);
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-prompt.show');
+
+                var timer = setTimeout(function(){
+                    that.icAniOut();
+                }, 2400);
+
+                that.data('ic-prompt-timer', timer);
+
+            });
+
+        },30);
+
+        return this;
+    };
+
+    $.icPrompt = function(msg){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-prompt]:first').icPrompt(options);
+    };
+
+    $.fn.icDatePicker = function(call, options){
+        return this.trigger('ic-date-picker.'+call, options);
+    };
+
+
+    //监听enter键
+    $.fn.icEnterPress = function (call) {
+
+        return this.each(function (i) {
+
+            call = $.proxy(call, this);
+
+            var fn = function (e) {
+                if (e.which == 13) {
+                    call(e);
+                }
+            };
+
+            $(this)
+                .on('focus', function () {
+                    $(this).on('input keypress', fn);
+                })
+                .on('blur', function () {
+                    $(this).off('input keypress', fn);
+                });
+        });
+
+    };
+
+    //设置loading
+    (function ($) {
+
+        var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
+
+        $.fn.icSetLoading = $.fn.setLoading = function (option) {
+
+            var _loading = option && option.loading;
+
+            this.icClearLoading();
+
+            return this.each(function () {
+                //this.parent().css({position:'relative'});
+                var $th = $(this);
+                var w = $th.outerWidth();
+                var h = $th.outerHeight();
+                var offset = $th.offset();
+                var top = offset.top;
+                var left = offset.left;
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
+
+                //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
+
+                $th.css({opacity: '0.5'});
+
+                $th.data('_ic-role-loading', $loading);
+            });
+
+        };
+
+    })($);
+
+
+    //清除loading
+    $.fn.icClearLoading = $.fn.clearLoading = function () {
+
+        return this.each(function () {
+            var $th = $(this);
+            var $loading = $th.data('_ic-role-loading');
+            $loading && $loading.remove();
+            $th.removeData('_ic-role-loading');
+            $th.css({opacity: '1'});
+        });
+
+    };
+
+
+})(jQuery);
+
+
+;
+
+    //以下都是可选的内置的services、directives、brick扩展
     /**
  * Created by Julien on 2014/8/13.
  *
@@ -1113,273 +1683,10 @@ function recordManager() {
     return fn;
 
 }
-;
-    /**
- * Created by julien.zhang on 2014/9/12.
- *
- * 主要用于解析一个dom节点上绑定的操作
- *
- */
-
-function parser(node) {
-
-
-    if (node.nodeType == 1) {
-
-        var elm = $(node);
-        var attrs = node.attributes;
-
-        var directives = [];
-
-        var priority = {
-            'skip': -100,
-            'init': -10,
-            'for': 0,
-            'for-start':1,
-            'for-init': 10,
-            'if': 100,
-            'else-if':99,
-            'if-start': 100,
-            'if-init': 110,
-            'else': 100,
-            'bind': 1000,
-            'if-end':10000,
-            'for-end':10000
-        };
-
-
-        for (var i = 0, attr, name, value, l = attrs.length; i < l; i++) {
-
-            attr = attrs[i];
-
-            name = attr.name;
-            value = attr.value;
-
-            if (/^ic-(skip|init|for|if|else|bind)/.test(name) || /\{\{.+?\}\}/.test(value)) {
-                directives.push([name, value]);
-                //continue;
-            }
-
-        }
-
-        //对指令按优先级排序
-        directives.sort(function(a, b){
-            return priority[a[0].replace(/^ic-/,'')] - priority[b[0].replace(/^ic-/,'')];
-        });
-
-
-        //处理每一个指令
-        while (attr = directives.shift()) {
-
-            name = attr[0];
-            value = attr[1];
-
-            if (/-skip$/.test(name)) {
-                elm.remove();
-                return;
-            }
-
-            if (/-init$/.test(name)) {
-                elm.before('\r\n<% var ' + value.replace(/;(?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-for$/.test(name)) {
-                //elm.before('<% for( var ' + value + '){ %>\r\n');
-                elm.before(value.replace(/^\s*(?:(\w+?)\s*\,\s*)?(\w+?)\s*in\s*([\w.]+)/,function(m,$1,$2,$3,t){
-                    if ($1 && $2) return '<% for( var ' + $1 + ' in ' + $3 + '){ var ' + $2 + ' = ' + $3+'[' +$1 + ']; %>\r\n';
-                    return '<% for( var ' + m + '){ %>\r\n';
-                }));
-                elm.after('\r\n<% } %>');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-for-start$/.test(name)) {
-                elm.before(value.replace(/^\s*(?:(\w+?)\s*\,\s*)?(\w+?)\s*in\s*([\w.]+)/,function(m,$1,$2,$3,t){
-                    if ($1 && $2) return '<% for( var ' + $1 + ' in ' + $3 + '){ var ' + $2 + ' = ' + $3+'[' +$1 + ']; %>\r\n';
-                    return '<% for( var ' + m + '){ %>\r\n';
-                }));
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-for-end$/.test(name) || /-if-end$/.test(name)) {
-                elm.after('\r\n<% } %>');
-                elm.removeAttr(name);
-                continue;
-            }
-
-
-            if (/-else-if$/.test(name)) {
-                elm.before('<% } else if(' + (value===''?void(0):value) + '){ %>\r\n');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-if$/.test(name)) {
-                elm.before('<% if(' + (value===''?void(0):value) + '){ %>\r\n');
-                elm.after('\r\n<% } %>');
-                elm.removeAttr(name);
-                continue;
-            }
-
-
-            if (/-if-start$/.test(name)) {
-                elm.before('<% if(' + (value===''?void(0):value) + '){ %>\r\n');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-else$/.test(name)) {
-                elm.before('<% } else{ %>\r\n');
-                elm.after('\r\n<% } %>');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if (/-bind$/.test(name)) {
-                elm.html('\r\n<%= ' + (value===''?'\"\"':value) + ' %>\r\n');
-                elm.removeAttr(name);
-                continue;
-            }
-
-            if(/^ic-(?:href|src|style|class|data|value)$/.test(name)){
-                elm.removeAttr(name);
-                elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
-                continue;
-            }
-
-            elm.attr(name, value.replace(/{{(.+?)}}/g, '<%= $1 %>'));
-
-        }
-
-        return;
-
-    }
-
-    if (node.nodeType == 3) {
-
-        var text = node.nodeValue;
-
-        node.nodeValue = text.replace(/{{(.+?)}}/g, '<%= $1 %>');
-
-    }
-
-
-};
-    /**
- * Created by julien.zhang on 2014/9/15.
- *
- * 遍历dom节点，根据指令生成一个编译过的模板渲染函数
- *
- */
-
-function createRender(root) {
-
-    root = root.cloneNode(true);
-
-    //遍历dom节点，解析指令
-    (function (node) {
-
-        parser(node);
-
-        var children = $(node).contents();
-        var child;
-        var i = 0;
-        while (child = children.eq(i)[0]) {
-            i++;
-            arguments.callee(child);
-        }
-
-    })(root);
-
-    var _tpl = $(root).html()
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/\b(ic-)(?=href|src|style|class|data|value)/g,'')
-        //早期判断是否输出属性的实现，建议使用ic-has-[prop]指令取代
-        .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
-            if($1 == 'has-') return m;
-            $1 = $1 ? 'ic-'+ $1 : '';
-            $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
-            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
-        })
-        //实现ic-has-[prop]指令
-        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
-            return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
-        })
-        .replace(/&amp;&amp;/g,'&&');
-
-    brick.get('debug') && console.info(_tpl);
-
-    var tpl = _.template(_tpl);
-    tpl._tpl_ = _tpl;
-    return tpl;
-
-};
-    /**
- * Created by julien.zhang on 2014/9/15.
- */
 
 
 //内置服务
-services.add('recordManager', recordManager);
-services.fill('eventManager', eventManager);
-
-//对外接口
-var brick = root.brick = {
-    config: config,
-    eventManager: eventManager,
-    set: function(k, v){
-        return this.config.set(k, v);
-    },
-    get: function(k){
-      return this.config.get(k);
-    },
-    broadcast: function (e, msg) {
-        this.eventManager.fire(e, msg);
-        return this;
-    },
-    on: function (e, fn) {
-        this.eventManager.bind(e, fn);
-        return this;
-    },
-    off: function (e, fn) {
-        this.eventManager.unbind(e, fn);
-        return this;
-    },
-    fire: function (e, msg) {
-        this.eventManager.fire(e, msg);
-        return this;
-    },
-    controllers: controllers,
-    services: services,
-    directives: directives,
-    compile: compile,
-    createRender:createRender,
-    getTpl: function (name) {
-        return this.__tpl[name];
-    },
-    __tpl: {},
-    bootstrap: function (node) {
-        console.log('brick start');
-        this.directives.init();
-        compile(node || document.body);
-        //hashChangeInit();
-        this.bootstrap = function(){console.info('only bootstrap once.')};
-    }
-};
-
-
-
-
-
-
-
-
-;
+services.reg('recordManager', recordManager);;
 
     /**
  * Created by Juien on 2015/8/10.
@@ -2113,346 +2420,32 @@ brick.removeRoute = function (hash, handler) {
 ;
 
     /**
- * Created by julien.zhang on 2014/10/30.
- * 扩展 jquery
- */
-(function ($) {
-
-    $.fn.icRender = function(tpl, model, callback){
-        if(typeof tpl == 'object'){
-            callback = model;
-            model = tpl;
-            tpl = this.attr('ic-tpl-name');
-        }
-        var tplFn = brick.getTpl(tpl);
-        if(!tplFn) return console.info('not find tpl: '+ tpl);
-        var html = tplFn(model);
-        return this.each(function(){
-            var $th = $(this);
-            $th.removeAttr('ic-tpl');
-            $th.html(html);
-            callback && callback.apply(this, [$th.children()]);
-        });
-    };
-
-    $.fn.icCompile = function () {
-
-        if (!this.length) return this;
-
-        return this.each(function (i) {
-            brick.compile(this);
-        });
-    };
-
-    $.fn.icParseProperty = function (name, debug) {
-
-        if (name === void(0)) return void(0);
-        var $ctrl = this.closest('[ic-ctrl]');
-        var ctrl = $ctrl.attr('ic-ctrl');
-        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
-        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
-
-        var chain = name.split('.');
-
-        return (function (root, chain) {
-
-            var k = chain.shift();
-            var v = root && root[k];
-
-            if (!v) return;
-
-            if (chain.length) {
-                return arguments.callee(v, chain);
-            }
-
-            return v;
-
-        })(namespace, chain);
-
-    };
-
-    $.fn.icParseProperty2 = function (name) {
-        name = this.attr(name);
-        return this.icParseProperty(name);
-    };
-
-    $.fn.icTabs = function (options) {
-        var active = options.active;
-        active && this.attr('ic-tab-active', active);
-        return this;
-    };
-
-    $.fn.icAjax = function (options) {
-        if (options === void(0)) return this.trigger('ic-ajax');
-        options.data && this.data('ic-submit-data', options.data);
-
-        options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
-
-        return this;
-    };
-
-    $.fn.icForm = function(call, options){
-        return this.trigger('ic-form.'+call, options);
-    };
-
-    $.fn.icDialog = function (options, callback) {
-
-        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
-
-        if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
-            console.error('not is ic-dialog');
-            return this;
-        }
-
-        var that = this;
-        var tpl = that.attr('ic-tpl-name');
-
-        callback && this.one('ic-dialog.close', callback);
-
-        setTimeout(function(){
-
-            if (options === void(0)) {
-                options = true;
-            }
-
-            if (!options) {
-                that.icAniOut(21);
-            }
-
-            if (tpl && _.isObject(options)) {
-                that.icRender(tpl, options.vm || options);
-            }
-
-            that.icAniIn(21, function () {
-                that.trigger('ic-dialog.show');
-            });
-
-        },30);
-
-        return this;
-    };
-
-    $.icDialog = function(msg, callback){
-        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
-        $('[ic-dialog]:first').icDialog(options, callback);
-    };
-
-    $.fn.icPrompt = function (options) {
-
-        if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
-            console.error('not is ic-prompt');
-            return this;
-        }
-
-        var that = this;
-        var tpl = that.attr('ic-tpl-name');
-
-        clearTimeout(that.data('ic-prompt-timer'));
-
-        setTimeout(function(){
-
-            if (options === void(0)) {
-                options = true;
-            }
-
-            if (!options) {
-                that.icAniOut();
-            }
-
-            if (tpl && _.isObject(options)) {
-                that.icRender(tpl, options.vm || options);
-            }
-
-            that.icAniIn(21, function () {
-                that.trigger('ic-prompt.show');
-
-                var timer = setTimeout(function(){
-                    that.icAniOut();
-                }, 2400);
-
-                that.data('ic-prompt-timer', timer);
-
-            });
-
-        },30);
-
-        return this;
-    };
-
-    $.icPrompt = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg};
-        $('[ic-prompt]:first').icPrompt(options);
-    };
-
-    $.fn.icDatePicker = function(call, options){
-        return this.trigger('ic-date-picker.'+call, options);
-    };
-
-
-    //监听enter键
-    $.fn.icEnterPress = function (call) {
-
-        return this.each(function (i) {
-
-            call = $.proxy(call, this);
-
-            var fn = function (e) {
-                if (e.which == 13) {
-                    call(e);
-                }
-            };
-
-            $(this)
-                .on('focus', function () {
-                    $(this).on('input keypress', fn);
-                })
-                .on('blur', function () {
-                    $(this).off('input keypress', fn);
-                });
-        });
-
-    };
-
-    //设置loading
-    (function ($) {
-
-        var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
-
-        $.fn.icSetLoading = $.fn.setLoading = function (option) {
-
-            var _loading = option && option.loading;
-
-            this.icClearLoading();
-
-            return this.each(function () {
-                //this.parent().css({position:'relative'});
-                var $th = $(this);
-                var w = $th.outerWidth();
-                var h = $th.outerHeight();
-                var offset = $th.offset();
-                var top = offset.top;
-                var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
-
-                //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
-
-                $th.css({opacity: '0.5'});
-
-                $th.data('_ic-role-loading', $loading);
-            });
-
-        };
-
-    })(jQuery);
-
-
-    //清除loading
-    $.fn.icClearLoading = $.fn.clearLoading = function () {
-
-        return this.each(function () {
-            var $th = $(this);
-            var $loading = $th.data('_ic-role-loading');
-            $loading && $loading.remove();
-            $th.removeData('_ic-role-loading');
-            $th.css({opacity: '1'});
-        });
-
-    };
-
-
-})(jQuery);
-
-
-;
-
-    /**
- * Created by julien.zhang on 2014/12/9.
- */
-
-directives.add('ic-ctrl', function ($elm, attrs) {
-
-    var ctrlName = $elm.attr('ic-ctrl');
-
-    if(ctrlName){
-        var $parent = $elm.parent().closest('[ic-ctrl]');
-        //var parentName = $parent.size() ? $parent.attr('ic-ctrl') : '';
-        controllers.exec(ctrlName, $parent.data('ic-ctrl-scope'), $elm);
-        //controllers.exec(ctrlName, controllers.get(parentName), $elm);
-    }
-
-});;
-    /**
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-event', {
+directives.reg('ic-tpl', {
     selfExec: true,
     once: true,
-    fn: function () {
+    fn: function ($elm) {
 
-        var eventAction = brick.get('event.action');
+        ($elm || $('[ic-tpl]')).each(function (i) {
 
-        var events = 'click,change';
-
-        var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
-            var s = '[ic-?]'.replace('?', $1);
-            return m.replace($1, s);
-        });
-
-        var $doc = $(document);
-
-        events = events.split(',');
-        targets = targets.split(',');
-
-        _.forEach(events, function (event, i, list) {
-            var target = targets[i];
-            if (event == 'click') event = eventAction;
-            $doc.on(event, target, _call);
-        });
-
-
-        function _call(e) {
             var th = $(this);
-            var type = e.type;
-            var fn = th.attr('ic-' + type);
-            fn = th.icParseProperty(fn);
 
-            return fn.apply(this, [e]);
-        }
+            var name = th.attr('ic-tpl');
+            th.attr('ic-tpl-name', name);
+
+            var compiled = createRender(this);
+
+            var __tpl = brick.__tpl = brick.__tpl || {};
+            __tpl[name] = compiled;
+
+        });
 
     }
+
 });
 ;
-
-    /**
- * Created by julien on 2015/11/30.
- */
-
-brick.directives.reg('ic-scroll', function ($elm) {
-
-    var $th = $elm || $(this);
-
-    var onScroll = $elm.icParseProperty2('ic-scroll');
-
-    var prevScrollTop = 0;
-    var scrollDirection = 'down';
-
-    onScroll && $th.on('ic-scroll', onScroll);
-
-    $th.on('scroll', _.throttle(function (e) {
-        var scrollTop = $th.scrollTop();
-        var end;
-        scrollDirection = (scrollTop - prevScrollTop > 1) ? 'down' : 'up';
-        prevScrollTop = scrollTop;
-        if (scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + scrollTop) {
-            console.log('trigger ic-scroll.end');
-            $th.trigger('ic-scroll-end');
-            end = true;
-        }
-        $th.trigger('ic-scroll', {direction: scrollDirection, end: end});
-    }, 300));
-
-});;
     /**
  * Created by julien.zhang on 2014/10/11.
  */
@@ -2549,55 +2542,80 @@ directives.reg('ic-tabs2', function ($elm, attrs) {
 
 });;
     /**
- * Created by julien.zhang on 2014/10/29.
+ * Created by julien.zhang on 2014/10/31.
  */
 
-//ic-dialog
-directives.reg('ic-dialog', function ($elm, attrs) {
 
-    var eventAction = brick.get('event.action');
+directives.add('ic-ajax', function () {
 
-    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
+        var eventAction = brick.get('event.action');
 
-        var $th = $(this);
-        var type = this.hasAttribute('ic-dialog-confirm');
+        var $doc = $(document.body);
+        $doc.on(eventAction, '[ic-ajax]', _call);
+        $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-        var $dialog = $th.closest('[ic-dialog]');
+        function _call(e) {
 
-        $dialog.icAniOut(21, function(){
-            $dialog.trigger('ic-dialog.hide', type);
-            $dialog.trigger('ic-dialog.close', type);
-            $dialog.trigger('ic-dialog.hide', type);
-        });
+            var that = this;
 
-    }).on(eventAction, '[ic-dialog-href]', function (e) {
-        var target = $(this).attr('ic-dialog-href');
-        $('[ic-dialog=?]'.replace('?', target)).icDialog();
-        return false;
-    });
+            if (this.hasAttribute('ic-ajax-disabled')) return;
 
-}, {selfExec: true, once: true });
+            var $elm = $(this);
+            var namespace = $elm.attr('ic-ajax');
 
+            var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-//ic-prompt
-directives.reg('ic-prompt', function ($elm, attrs) {
+            var defaultCall = function () {
+                console.log(arguments)
+            };
 
-    var eventAction = brick.get('event.action');
+            var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
+            var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
+            var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
+            var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+            if (before.apply(that) === false) return;
 
-        var $th = $(this);
-        var type = this.hasAttribute('ic-prompt-confirm');
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
+            var dataType = $elm.attr('ic-submit-data-type') || 'json';
+            var method = $elm.attr('ic-submit-method') || 'post';
 
-        var $dialog = $th.closest('[ic-prompt]');
+            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
-        $dialog.icAniOut(21,function(){
-            $dialog.trigger('ic-prompt.hide', type);
-        });
+            $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
 
-    });
+            $elm.attr('ic-ajax-disabled', true);
 
-}, {selfExec: true, once: true });;
+            $.ajax({
+                url: url,
+                type: method,
+                dataType: dataType,
+                data: data
+            }).done(function (data) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    done.apply(that, [data]);
+                }
+            ).fail(function (msg) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    failed.apply(that, [msg]);
+                }
+            ).always(function () {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    always.apply(that);
+                    $elm.removeData('ic-submit-data');
+                    $elm.removeAttr('ic-ajax-disabled');
+                });
+        }
+
+    },
+    {
+        selfExec: true,
+        once: true
+    }
+);
+
+;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
@@ -2950,109 +2968,85 @@ directives.add('ic-form', function ($elm, attrs) {
 });
 
 ;
+
     /**
- * Created by julien.zhang on 2014/10/31.
+ * Created by julien on 2015/11/30.
  */
 
+brick.directives.reg('ic-scroll', function ($elm) {
 
-directives.add('ic-ajax', function () {
+    var $th = $elm || $(this);
 
-        var eventAction = 'click' || brick.get('event.action');
+    var onScroll = $elm.icParseProperty2('ic-scroll');
 
-        var $doc = $(document.body);
-        $doc.on(eventAction, '[ic-ajax]', _call);
-        $doc.on('ic-ajax', '[ic-ajax]', _call);
+    var prevScrollTop = 0;
+    var scrollDirection = 'down';
 
-        function _call(e) {
+    onScroll && $th.on('ic-scroll', onScroll);
 
-            var that = this;
-
-            if (this.hasAttribute('ic-ajax-disabled')) return;
-
-            var $elm = $(this);
-            var namespace = $elm.attr('ic-ajax');
-
-            var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
-
-            var defaultCall = function () {
-                console.log(arguments)
-            };
-
-            var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
-            var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
-            var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
-            var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
-
-            if (before.apply(that) === false) return;
-
-            var domain = brick.get('ajax.domain') || '';
-            var url = domain + $elm.attr('ic-submit-action');
-            var dataType = $elm.attr('ic-submit-data-type') || 'json';
-            var method = $elm.attr('ic-submit-method') || 'post';
-
-            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
-
-            $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
-
-            $elm.attr('ic-ajax-disabled', true);
-
-            $.ajax({
-                url: url,
-                type: method,
-                dataType: dataType,
-                data: data
-            }).done(function (data) {
-                    $elm.clearLoading() && $loading.hide() && $elm.show();
-                    done.apply(that, [data]);
-                }
-            ).fail(function (msg) {
-                    $elm.clearLoading() && $loading.hide() && $elm.show();
-                    failed.apply(that, [msg]);
-                }
-            ).always(function () {
-                    $elm.clearLoading() && $loading.hide() && $elm.show();
-                    always.apply(that);
-                    $elm.removeData('ic-submit-data');
-                    $elm.removeAttr('ic-ajax-disabled');
-                });
+    $th.on('scroll', _.throttle(function (e) {
+        var scrollTop = $th.scrollTop();
+        var end;
+        scrollDirection = (scrollTop - prevScrollTop > 1) ? 'down' : 'up';
+        prevScrollTop = scrollTop;
+        if (scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + scrollTop) {
+            console.log('trigger ic-scroll.end');
+            $th.trigger('ic-scroll-end');
+            end = true;
         }
+        $th.trigger('ic-scroll', {direction: scrollDirection, end: end});
+    }, 300));
 
-    },
-    {
-        selfExec: true,
-        once: true
-    }
-);
-
-;
+});;
     /**
- * Created by julien.zhang on 2014/10/11.
+ * Created by julien.zhang on 2014/10/29.
  */
 
-directives.reg('ic-tpl', {
-    selfExec: true,
-    once: true,
-    fn: function ($elm) {
+//ic-dialog
+directives.reg('ic-dialog', function ($elm, attrs) {
 
-        ($elm || $('[ic-tpl]')).each(function (i) {
+    var eventAction = brick.get('event.action');
 
-            var th = $(this);
+    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
 
-            var name = th.attr('ic-tpl');
-            th.attr('ic-tpl-name', name);
+        var $th = $(this);
+        var type = this.hasAttribute('ic-dialog-confirm');
 
-            var compiled = createRender(this);
+        var $dialog = $th.closest('[ic-dialog]');
 
-            var __tpl = brick.__tpl = brick.__tpl || {};
-            __tpl[name] = compiled;
-
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-dialog.close', type);
+            $dialog.trigger('ic-dialog.hide', type);
         });
 
-    }
+    }).on(eventAction, '[ic-dialog-href]', function (e) {
+        var target = $(this).attr('ic-dialog-href');
+        $('[ic-dialog=?]'.replace('?', target)).icDialog();
+        return false;
+    });
 
-});
-;
+}, {selfExec: true, once: true });
 
+
+//ic-prompt
+directives.reg('ic-prompt', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
+
+    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+
+        var $th = $(this);
+        var type = this.hasAttribute('ic-prompt-confirm');
+
+        var $dialog = $th.closest('[ic-prompt]');
+
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-prompt.hide', type);
+        });
+
+    });
+
+}, {selfExec: true, once: true });;
 
     //bootstrap
     $(function () {

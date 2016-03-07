@@ -5,7 +5,7 @@
 
 directives.add('ic-ajax', function () {
 
-        var eventAction = 'click' || brick.get('event.action');
+        var eventAction = brick.get('event.action');
 
         var $doc = $(document.body);
         $doc.on(eventAction, '[ic-ajax]', _call);

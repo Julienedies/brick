@@ -9,7 +9,7 @@ directives.add('ic-event', {
 
         var eventAction = brick.get('event.action');
 
-        var events = 'click,change';
+        var events = brick.get('ic-event.extend') || 'click,change';
 
         var targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
             var s = '[ic-?]'.replace('?', $1);
