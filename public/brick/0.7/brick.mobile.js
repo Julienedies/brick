@@ -569,9 +569,9 @@ var controllers = (function (){
             depend = depend.constructor !== Array ? [depend] : depend;
             depend.unshift(scope);
 
-            ctrl.fn.apply(null, depend);
+            ctrl.fn.apply(scope, depend);
             //ctrl.fn = function(){};
-            ctrl.exec = (ctrl.exec || 0)+1;
+            ctrl.exec = (ctrl.exec || 0) + 1;
 
             //if(conf.global) window[name] = scope;
             return scope;
@@ -593,7 +593,7 @@ var controllers = (function (){
                     depend = [depend];
                 }
                 depend.unshift(ctrl.scope);
-                service = ctrl.fn.apply(null, depend);
+                service = ctrl.fn.apply(ctrl.scope, depend);
                 ctrl.fn = function(){};
 
                 if(ctrl.service){
