@@ -3,75 +3,72 @@
  */
 
 
-directives.add('ic-ajax', {
-        selfExec: true,
-        once: true,
-        fn: function () {
+directives.add('ic-ajax', function () {
 
-            var $doc = $(document);
-            $doc.on('click', '[ic-ajax]', _call);
-            $doc.on('ic-ajax', '[ic-ajax]', _call);
+        var eventAction = brick.get('event.action');
 
-            function _call(e) {
+        var $doc = $(document.body);
+        $doc.on(eventAction, '[ic-ajax]', _call);
+        $doc.on('ic-ajax', '[ic-ajax]', _call);
 
-                var that = this;
-                var $elm = $(this);
-                var namespace = $elm.attr('ic-ajax');
+        function _call(e) {
 
-                var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
+            var that = this;
 
-                //提交
+            if (this.hasAttribute('ic-ajax-disabled')) return;
 
-                var url = $elm.attr('ic-submit-action');
-                var dataType = $elm.attr('ic-submit-data-type') || 'json';
-                var method = $elm.attr('ic-submit-method') || 'post';
-                var done = $elm.attr('ic-submit-on-done');
-                var always = $elm.attr('ic-submit-on-always');
-                var failed = $elm.attr('ic-submit-on-failed');
-                var before = $elm.attr('ic-submit-before');
+            var $elm = $(this);
+            var namespace = $elm.attr('ic-ajax');
 
-                always = $elm.icParseProperty(always) || function () {
-                    //console.log('always is undefined;')
-                };
-                done = $elm.icParseProperty(done) || function () {
-                    //console.info('done is undefined;')
-                };
-                failed = $elm.icParseProperty(failed) || function (msg) {
-                    //console.info('failed is undefined;')
-                };
-                before = $elm.icParseProperty(before) || function () {
-                    //console.info('before is undefined;')
-                };
+            var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
-                if (before.apply(that) === false) return;
-                if ($elm.attr('ic-ajax-disabled') === 'true') return;
+            var defaultCall = function () {
+                console.log(arguments)
+            };
 
-                var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+            var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
+            var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
+            var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
+            var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-                $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+            if (before.apply(that) === false) return;
 
-                $.ajax({
-                    url: url,
-                    type: method,
-                    dataType: dataType,
-                    data: data
-                }).done(function (data) {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        done.apply(that, [data]);
-                    }
-                ).fail(function (msg) {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        failed.apply(that, [msg]);
-                    }
-                ).always(function () {
-                        $elm.clearLoading() && $loading.hide() && $elm.show();
-                        always.apply(that);
-                        $elm.removeData('ic-submit-data');
-                    });
-            }
+            var domain = brick.get('ajax.domain') || '';
+            var url = domain + $elm.attr('ic-submit-action');
+            var dataType = $elm.attr('ic-submit-data-type') || 'json';
+            var method = $elm.attr('ic-submit-method') || 'post';
 
+            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
+            $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+
+            $elm.attr('ic-ajax-disabled', true);
+
+            $.ajax({
+                url: url,
+                type: method,
+                dataType: dataType,
+                data: data
+            }).done(function (data) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    done.apply(that, [data]);
+                }
+            ).fail(function (msg) {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    failed.apply(that, [msg]);
+                }
+            ).always(function () {
+                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    always.apply(that);
+                    $elm.removeData('ic-submit-data');
+                    $elm.removeAttr('ic-ajax-disabled');
+                });
         }
+
+    },
+    {
+        selfExec: true,
+        once: true
     }
 );
 

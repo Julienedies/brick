@@ -33,14 +33,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             });
         }
 
-        var interval = th.attr('ic-tabs-interval');
-        var timer;
-
-        if (interval) {
-
-        }
-
-        th.on(eventAction, '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
 
 
         function call_1(e) {
@@ -64,7 +57,7 @@ directives.reg('ic-tabs', function ($elm, attrs) {
             activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
         }
 
-        activeTab.trigger(eventAction);
+        activeTab.trigger('click');
 
         //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
 

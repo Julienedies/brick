@@ -32,6 +32,9 @@ var directives = {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {
             definition.fn.apply(null, [$elm, attrs]);
+            if(definition.once){
+                delete _pool[i];
+            }
         }
     },
 
@@ -43,13 +46,12 @@ var directives = {
 
             if(definition.selfExec){
                 definition.fn && definition.fn();
+                if(definition.once){
+                    delete _pool[i];
+                }
             }
 
-            if(definition.once){
-                delete _pool[i];
-            }
         }
-
     },
 
     _init: function (name) {
@@ -61,7 +63,6 @@ var directives = {
             } else if (definition.fn) {
                 definition.fn();
             }
-
         }
     }
 
