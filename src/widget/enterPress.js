@@ -5,7 +5,7 @@
 
 directives.reg('ic-enter-press', function ($elm, attrs) {
 
-    $(document.body).on('focus', '[ic-enter-press]', function(e){alert(1)
+    $(document.body).on('focus', '[ic-enter-press]', function(e){
 
         var $elm = $(this);
         var call = $elm.attr('ic-enter-press');
@@ -15,10 +15,10 @@ directives.reg('ic-enter-press', function ($elm, attrs) {
             e.which == 13  && call(e);
         };
 
-        $elm.keypress(fn);
+        $elm.on('keypress', fn);
 
         $elm.on('blur', function(e){
-            $elm.unbind('keypress', fn);
+            $elm.off('keypress', fn);
         });
 
     });
