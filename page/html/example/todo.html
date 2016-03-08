@@ -315,7 +315,7 @@
 
         scope.clear = function (e) {
             tasksModel.find(true, 'complete').remove();
-        }
+        };
 
 
         scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function (e, msg) {
