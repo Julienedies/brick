@@ -2,6 +2,9 @@
  * js framework brick by Julien.
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
+ *
+ * __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
+ * 最终文件请查看目录 /dist/{{version}}/
  */
 ;
 (function (root, undefined) {
@@ -20,7 +23,7 @@
     __inline('src/directives/event.js');
     __inline('src/$extension.js');
 
-    //以下都是可选的内置的services、directives、brick扩展
+    //以下是可选的内置的services、directives、brick扩展
     __inline('src/recordManager.js');
 
     __inline('src/widget/tpl.js');
