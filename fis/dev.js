@@ -3,6 +3,9 @@
  * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
+var p = require('../package.json');
+var version = p.version;
+
 //处理sass
 fis.config.set('modules.parser.scss', 'sass');
 fis.config.set('modules.parser.sass', 'sass');
@@ -21,7 +24,6 @@ fis.config.merge({
     }
 });
 
-var version = 0.7;
 
 fis.config.set('roadmap.path', [
 
@@ -45,7 +47,8 @@ fis.config.set('roadmap.path', [
     //brick源码
     {
         reg: /^\/src\/(.+\.js)/i,
-        release: 'src/$1',
+        //release: 'src/$1',
+        release:false,
         isJsLike: true
     },
 

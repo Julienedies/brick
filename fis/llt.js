@@ -2,13 +2,14 @@
  * Created by julien.zhang on 2015/8/20.
  */
 
+var p = require('../package.json');
+var version = p.version;
+
 //处理sass
 fis.config.set('modules.parser.scss', 'sass');
 fis.config.set('modules.parser.sass', 'sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
-
-var version = 0.7;
 
 fis.config.set('roadmap.path', [
 
