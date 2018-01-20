@@ -8,7 +8,7 @@
         "fis":"1.8.6",
         "fis-parser-sass":"0.3.16",
         "yog-devtools":"0.0.4",
-        "serve-index":"1.5.0",
+        "serve-index":"1.6.3",
         "express":"4.10.1"
     },
     "scripts": {}
