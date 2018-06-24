@@ -4,7 +4,9 @@
 @charset "UTF-8";
 /* 转场动画 */
 html, body {
-  min-height: 100%; }
+  height: 100%;
+  min-height: 100%;
+}
 
 [ic-view-stage] {
   position: relative;
@@ -15,7 +17,8 @@ html, body {
   overflow-x: hidden;
   -webkit-perspective: 1200px;
   -moz-perspective: 1200px;
-  perspective: 1200px; }
+  perspective: 1200px;
+}
 
 .ic-animating {
   -webkit-backface-visibility: hidden;
@@ -29,7 +32,8 @@ html, body {
   transform-style: preserve-3d;
   display: block !important;
   position: absolute !important;
-  pointer-events: none; }
+  pointer-events: none;
+}
 
 [ic-view], [ic-panel] {
   position: relative;
@@ -52,7 +56,8 @@ html, body {
       overflow-y: auto;
       overflow-x: hidden;
       touch-action: pan-y;
-      -webkit-overflow-scrolling: touch;*/ }
+      -webkit-overflow-scrolling: touch;*/
+}
 
 [ic-view] {
   position: relative;
@@ -64,26 +69,31 @@ html, body {
   overflow-y: auto;
   overflow-x: hidden;
   touch-action: pan-y;
-  -webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: touch;
+}
 
 [ic-view]:not([ic-active]), [ic-panel]:not([ic-active]) {
   position: absolute;
   z-index: -2;
   left: 0;
-  top: -10000px; }
+  top: -10000px;
+}
 
 [ic-view][ic-active], [ic-panel][ic-active] {
   position: relative;
   z-index: auto;
   left: 0;
-  top: 0; }
+  top: 0;
+}
 
 [ic-aniOut] {
   position: absolute;
-  /*display: none !important;*/ }
+  /*display: none !important;*/
+}
 
 [ic-aniIn] {
-  display: block !important; }
+  display: block !important;
+}
 
 
 /* */

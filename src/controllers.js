@@ -142,6 +142,7 @@ var controllers = (function (){
                 //console.log(html)
                 if(tple.length){
                     tple.show();
+                    tple.removeAttr('ic-tpl');
                     return tple.html(html);
                 }
             }

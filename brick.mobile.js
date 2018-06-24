@@ -2,13 +2,13 @@
  * js framework brick by Julien.
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
- *
- * __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
- * 最终文件请查看目录 /dist/{{version}}/
+ * {{timestamp}}
+ * {{timestamp2}}
  */
 ;
 (function (root, undefined) {
 
+    //__inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
     //core
     __inline('src/config.js');
     __inline('src/compile.js');
