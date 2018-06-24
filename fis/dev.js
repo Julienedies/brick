@@ -1,14 +1,14 @@
 /**
  * Created by julien.zhang on 2014/10/10.
- * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
+ * data-swf="<<<u-r-i: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
 var p = require('../package.json');
 var version = p.version;
 
 //处理sass
-fis.config.set('modules.parser.scss', 'sass');
-fis.config.set('modules.parser.sass', 'sass');
+fis.config.set('modules.parser.scss', 'node-sass');
+fis.config.set('modules.parser.sass', 'node-sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
 
@@ -21,6 +21,21 @@ fis.config.merge({
     roadmap : {
         //domain : 'http://julienedies.github.io/brick'
         domain:''
+    },
+    modules: {
+        preprocessor: {
+            js: 'defines'
+        }
+    },
+    settings: {
+        preprocessor: {
+            defines: {
+                strings: {
+                    '{{timestamp}}': JSON.stringify(new Date + ' '),
+                    '{{timestamp2}}': JSON.stringify(new Date)
+                }
+            }
+        }
     }
 });
 

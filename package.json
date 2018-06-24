@@ -6,7 +6,8 @@
     "repository": "http://github.com/Julienedies/brick.git",
     "devDependencies": {
         "fis":"1.8.6",
-        "fis-parser-sass":"0.3.16",
+        "fis-preprocessor-defines":"1.0.0",
+        "fis-parser-node-sass":"1.0.3",
         "yog-devtools":"0.0.4",
         "serve-index":"1.6.3",
         "express":"4.10.1"
