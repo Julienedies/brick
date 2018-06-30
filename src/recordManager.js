@@ -178,7 +178,31 @@ function recordManager() {
             return this;
 
         },
+        /**
+         * 调整记录位置,在队列里向前移动
+         * @return
+         * @example
+         *
+         * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').prev();
+         */
+        prev: function(){
+            var pool = this._pool;
+            var find = this._find || [];
+            for(var i in find){
+                var record = find[i];
+                var id = this._queryKeyValue(record);
+                var index = this._getIndex(id);
 
+                if(pool.splice){
+                    pool.splice(index, 1);
+                    pool.splice(--index, 0, record);
+                }
+
+                this.fire('order', {target: record});
+            }
+
+            this.end();
+        },
         /**
          * 删除一条记录
          * @return   {Array}   被删除的记录集合

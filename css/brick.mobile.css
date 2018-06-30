@@ -1,5 +1,7 @@
 /*
 ==============================================
+ * {{timestamp}}
+ * {{timestamp2}}
 */
 @import url(ic-view.scss?__inline);
 
@@ -55,11 +57,11 @@
     cursor: pointer;
 }
 
-[ic-role-tab] {
+[ic-tab] {
     cursor: pointer;
 }
 
-[ic-role-con] {
+[ic-tab-con] {
     display: none;
 }
 
