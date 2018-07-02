@@ -1,0 +1,203 @@
+/*
+==============================================
+*/
+@charset "UTF-8";
+/* 转场动画 */
+html, body {
+  height: 100%;
+  min-height: 100%;
+}
+
+[ic-view-stage] {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-perspective: 1200px;
+  -moz-perspective: 1200px;
+  perspective: 1200px;
+}
+
+.ic-animating {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  display: block !important;
+  position: absolute !important;
+  pointer-events: none;
+}
+
+[ic-view], [ic-panel] {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background: #fff;
+  /*    -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translate3d(0, 0, 0);
+      -moz-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transform-style: preserve-3d;
+      -moz-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      min-height: 100%;
+      background: #fff;
+      overflow-y: auto;
+      overflow-x: hidden;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;*/
+}
+
+[ic-view] {
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+[ic-view]:not([ic-active]), [ic-panel]:not([ic-active]) {
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  top: -10000px;
+}
+
+[ic-view][ic-active], [ic-panel][ic-active] {
+  position: relative;
+  z-index: auto;
+  left: 0;
+  top: 0;
+}
+
+[ic-aniOut] {
+  position: absolute;
+  /*display: none !important;*/
+}
+
+[ic-aniIn] {
+  display: block !important;
+}
+
+
+/* */
+[ic-upload] [type=file] {
+    position: absolute;
+    opacity: 0;
+}
+
+[ic-accordion] [ic-accordion-con] {
+    display: none;
+}
+
+[ic-accordion] [ic-accordion-item][ic-accordion-active] [ic-accordion-con],
+[ic-accordion] [ic-accordion-item]:nth-child(1) [ic-accordion-con] {
+    display: block;
+}
+
+[ic-accordion] [ic-accordion-item][ic-accordion-active] [ic-accordion-title],
+[ic-accordion] [ic-accordion-item]:nth-child(1) [ic-accordion-title] {
+    display: none;
+}
+
+[ic-upload][type=file] {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+[ic-tpl] {
+    display: none!important;
+}
+
+[ic-drag-view] {
+    position: relative;
+    overflow: hidden;
+}
+
+[ic-role-drag-handle] {
+    cursor: move;
+}
+
+[ic-role-loading] {
+    display: none;
+}
+
+[ic-slider] {
+    position: relative;
+    overflow: hidden;
+}
+
+[ic-role-slider-pagination] {
+    cursor: pointer;
+}
+
+[ic-role-tab] {
+    cursor: pointer;
+}
+
+[ic-role-con] {
+    display: none;
+}
+
+
+
+/*输入提示列表*/
+[ic-role-list] {
+    display: none;
+    position: absolute;
+    z-index: 100;
+}
+
+/* 对话框 */
+[ic-dialog], [ic-prompt] {
+    display: none;
+    z-index: -2;
+}
+[ic-dialog][ic-active], [ic-prompt][ic-active]{
+    z-index: 1000;
+}
+[ic-dialog][ic-active]{
+    z-index: 1200;
+}
+
+[ic-loader]{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack:center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align:center;
+    -webkit-align-items: center;
+    align-items: center;
+
+}
+/*
+iOS 上，屏幕是触碰的，所以页面元素默认会有 touch 一类事件，而不是 click。也就是说，
+点击一个元素时，iOS 上的 Safari 冒泡的是 touch 一类事件，而不是 click。
+只有两类元素，链接与 input 输入域才有 click 事件。
+但通过 cursor: pointer 及 onclick= 代码我们又可以让其它元素变得可点击。
+这是 iPhone 上的 Safari 有别与其它浏览器的地方。
+*/
+[ic-view-to],[ic-view-back],[ic-ajax],[ic-form-submit],[ic-dialog-cancel],[ic-dialog-confirm],[ic-dialog-close],[ic-prompt-close],[ic-date-next-m],[ic-date-prev-m],[ic-click],[ic-clone],[ic-input-add],[ic-input-lessen]{
+    cursor: pointer;
+}
