@@ -78,8 +78,8 @@ fis.config.set('roadmap.path', [
 //使用fis release --dest local来使用这个配置
 fis.config.merge({
     deploy : {
-        l : {
-            to : './dist/'+ version
+        ls : {
+            to :  '../gushenwei.github.io/static/js/vendor/brick/' + version
         },
         local : {
             to : '../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
@@ -93,7 +93,7 @@ fis.config.merge({
         },
         //car.lulutrip.com
         gushenwei : {
-            to : '../gushenwei.github.io/static/js/brick/' + version
+            to : '../gushenwei.github.io/static/js/vendor/brick/' + version
         }
     }
 });
