@@ -14,6 +14,8 @@ directives.add('ic-form', function ($elm, attrs) {
      */
 
     var debug =  brick.get('debug');
+    var eventAction =  brick.get('event.action');
+    var customRule = brick.get('ic-form.rule');
 
     var presetRule = {
         id: /[\w_]{4,18}/,
@@ -24,8 +26,6 @@ directives.add('ic-form', function ($elm, attrs) {
         desc: /.{4,32}/,
         plate: /^[\u4e00-\u9fa5]{1}[A-Z]{1}[\s-]?[A-Z_0-9]{5}$/i
     };
-
-    var customRule = brick.config.get('ic-form.rule');
 
     if (_.isObject(customRule)) {
         _.extend(presetRule, customRule);
@@ -66,7 +66,7 @@ directives.add('ic-form', function ($elm, attrs) {
             return m + '.test("?")';
         });
 
-        debug && !console.count('解析规则：') && console.info(rule);
+        debug && console.info('解析规则：', rule);
         return rule;
     }
 
@@ -113,14 +113,11 @@ directives.add('ic-form', function ($elm, attrs) {
 
     }
 
-    /**
-     * 对外js调用接口
-     */
    /* $.fn.icForm = $.fn.icForm || function (call, msg) {
         $submit.trigger('mousedown');
     };*/
 
-    $.fn.icVerify = $.fn.icVerify || function () {
+    $.fn.icFormVerify = $.fn.icFormVerify || function () {
 
         var isSubmit = this.attr('ic-form-submit');
 
@@ -139,20 +136,78 @@ directives.add('ic-form', function ($elm, attrs) {
         return false;
     };
 
+    function defaultCall () {}
+
+    var fields = {};
+
     // 执行指令
     var namespace = $elm.attr('ic-form');
     var $fields = $elm.find('[ic-form-field]').not($elm.find('[ic-form] [ic-form-field]'));
     var $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
     var $loading = $elm.find('[ic-role-loading]');
 
-    var fields = {};
+    // 对每个字段dom绑定事件监听
+    $fields.each(function (i) {
 
-    //处理js调用
+        var $th = $(this);
+        var name = $th.attr('ic-form-field');
+        var submitName = $th.attr('name') || name;
+        var rules = $th.attr('ic-field-rule');
+
+        if (!rules) return;
+        //if ($th.attr('type') === 'hidden') return;
+
+        var errTips = $th.attr('ic-field-err-tip');
+        var $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
+        var $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
+        var foucsTip = $errTip.text();
+
+        rules = compileRule(rules, $elm);
+
+        $th.on('change', function (e) {
+
+            var val = $th.val();
+            var tip;
+
+            console.log(this, val, errTips);
+
+            if (tip = _verify(val, rules, errTips, $th)) {
+                //验证失败
+                $fieldBox.addClass('error');
+                $errTip.addClass('error').text(tip);
+                $th.removeAttr('ic-verification');
+                fields[name] = false;
+                $th.trigger('ic-form-field.error', tip);
+            } else {
+                //验证通过
+                $fieldBox.removeClass('error');
+                $errTip.removeClass('error');
+                $th.attr('ic-verification', 1);
+                if ($th[0].hasAttribute('ic-field-placeholder')) {
+
+                } else {
+                    fields[submitName] = val;
+                }
+                $th.trigger('ic-form-field.ok', val);
+            }
+
+        });
+
+
+        $th.on('focus', function () {
+            $fieldBox.removeClass('error');
+            $errTip.removeClass('error').text(foucsTip);
+        });
+
+    });
+
+    // 提交触发后先进行字段校验
     $submit.on('ic-form.verify', function (e, field) {
 
         fields = {};
-
+        // 没有验证规则的字段
         $fields.filter(':not("[ic-field-rule]")').each(function (i) {
+
             var $th = $(this);
             var tag = this.tagName;
             var type = $th.attr('type');
@@ -164,11 +219,8 @@ directives.add('ic-form', function ($elm, attrs) {
 
                 if (/^checkbox|radio$/i.test(type)) {
 
-                    if ($th.is(':checked')) {
-                        val = $th.val();
-                    } else {
-                        return;
-                    }
+                    $th = $('[name=*]:checked'.replace('*', submitName));
+                    val = $th.val() || '';
 
                 } else {
                     val = $th.val();
@@ -189,7 +241,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
         });
 
-
+        // 占位字段
         $fields.filter('[ic-field-placeholder][ic-field-rule]').each(function (i) {
             $(this).change();
         });
@@ -210,40 +262,23 @@ directives.add('ic-form', function ($elm, attrs) {
 
     });
 
+    //
     $submit.on('ic-form.submit', function(e){
         toSubmit(e);
     });
 
-
-    var defaultCall = function () {
-        console.info(arguments);
-    };
-    //提交
-    var domain = brick.get('ajax.domain') || '';
-    var method = $submit.attr('ic-submit-method') || 'post';
-    var action = $submit.attr('ic-submit-action');
-    var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
-    var failed = $submit.icParseProperty2('ic-submit-on-fail') || defaultCall;
-    var done = $submit.icParseProperty2('ic-submit-on-done') || defaultCall;
-    var always = $submit.icParseProperty2('ic-submit-on-always') || defaultCall;
-
-    var dataType = $submit.attr('ic-submit-data-type') || 'json';
-
-    var submitType = (function () {
-        //函数调用
-        if (/[\w_.]+\(\)\;?$/i.test(action)) {
-            action = $submit.icParseProperty(action.replace(/[();]/g, ''), true);
-            return 1;
-        }
-        //普通提交
-        return 3;
-    })();
+    // 提交触发
+    $submit.on(eventAction, toSubmit);
+   // 回车提交触发
+    $fields.icEnterPress(function () {
+        $submit.trigger(eventAction);
+    });
 
     function toSubmit(e){
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
-        if (!$submit.icVerify()) return $elm.trigger('ic-form.error');
+        if (!$submit.icFormVerify()) return $elm.trigger('ic-form.error');
 
         //函数调用
         if (submitType === 1) {
@@ -284,68 +319,26 @@ directives.add('ic-form', function ($elm, attrs) {
         }
     }
 
+    //提交
+    var domain = brick.get('ajax.domain') || '';
+    var method = $submit.attr('ic-submit-method') || 'post';
+    var action = $submit.attr('ic-submit-action');
+    var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
+    var failed = $submit.icParseProperty2('ic-submit-on-fail') || defaultCall;
+    var done = $submit.icParseProperty2('ic-submit-on-done') || defaultCall;
+    var always = $submit.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-    var eventAction = 'click' || brick.get('event.action');
+    var dataType = $submit.attr('ic-submit-data-type') || 'json';
 
-    $submit.on(eventAction, toSubmit);
-
-    $fields.icEnterPress(function () {
-        $submit.trigger(eventAction);
-    });
-
-    $fields.each(function (i) {
-
-        var $th = $(this);
-        var name = $th.attr('ic-form-field');
-        var submitName = $th.attr('name') || name;
-        var rules = $th.attr('ic-field-rule');
-
-        if (!rules) return;
-        //if ($th.attr('type') === 'hidden') return;
-
-        var errTips = $th.attr('ic-field-err-tip');
-        var $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
-        var $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
-        var foucsTip = $errTip.text();
-
-        rules = compileRule(rules, $elm);
-
-        $th.on('change', function (e) {
-
-            var val = $th.val();
-            var tip;
-
-            //console.log(this, val, errTips);
-
-            if (tip = _verify(val, rules, errTips, $th)) {
-                //验证失败
-                $fieldBox.addClass('error');
-                $errTip.addClass('error').text(tip);
-                $th.removeAttr('ic-verification');
-                fields[name] = false;
-                $th.trigger('ic-form-field.error', tip);
-            } else {
-                //验证通过
-                $fieldBox.removeClass('error');
-                $errTip.removeClass('error');
-                $th.attr('ic-verification', 1);
-                if ($th[0].hasAttribute('ic-field-placeholder')) {
-
-                } else {
-                    fields[submitName] = val;
-                }
-                $th.trigger('ic-form-field.ok', val);
-            }
-
-        });
-
-
-        $th.on('focus', function () {
-            $fieldBox.removeClass('error');
-            $errTip.removeClass('error').text(foucsTip);
-        });
-
-    });
+    var submitType = (function () {
+        //函数调用
+        if (/[\w_.]+\(\)\;?$/i.test(action)) {
+            action = $submit.icParseProperty(action.replace(/[();]/g, ''), true);
+            return 1;
+        }
+        //普通提交
+        return 3;
+    })();
 
 });
 
