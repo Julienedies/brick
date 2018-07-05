@@ -2,7 +2,7 @@
  * Created by Julien on 2015/8/10.
  */
 
-
+;
 !function(){
 
     brick.cache = function(_conf){

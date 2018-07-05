@@ -1,9 +1,7 @@
 /*
-==============================================
  * {{timestamp}}
- * {{timestamp2}}
 */
-@import url(ic-view.scss?__inline);
+/*@import url(ic-view.scss?__inline);*/
 
 /* */
 [ic-upload] [type=file] {

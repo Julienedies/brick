@@ -31,8 +31,7 @@ fis.config.merge({
         preprocessor: {
             defines: {
                 strings: {
-                    '{{timestamp}}': JSON.stringify(new Date + ' '),
-                    '{{timestamp2}}': JSON.stringify(new Date)
+                    '{{timestamp}}': JSON.stringify((new Date).toLocaleString())
                 }
             }
         }
@@ -48,15 +47,22 @@ fis.config.set('roadmap.path', [
         release: '$&',
         isJsLike: true
     },
+    // brick directives
     {
-        reg: /^\/src\/plugins\/([\w]+\.js)$/i,
-        release: 'brick.$1',
+        reg: /^\/src\/(directives\/.+\.js)$/i,
+        release: '$1',
         isJsLike: true
     },
-
+    // brick services
     {
-        reg: /^\/css\/(brick(?:\.mobile)?\.css)$/i,
-        release: '$1'
+        reg: /^\/src\/(services\/.+\.js)$/i,
+        release: '$1',
+        isJsLike: true
+    },
+    // css
+    {
+        reg: /^\/css\/.+\.s?css$/i,
+        release: '$&'
     },
 
     //brick源码

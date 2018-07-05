@@ -2,6 +2,8 @@
  * Created by julien.zhang on 2014/10/30.
  * 扩展 jquery
  */
+
+;
 (function ($) {
 
     $.fn.icRender = function(tpl, model, callback){

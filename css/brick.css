@@ -1,7 +1,5 @@
 /*
-==========================================
  * {{timestamp}}
- * {{timestamp2}}
  */
 html,body{
     height: 100%;
@@ -53,6 +51,16 @@ html,body{
     left:0;
     top:0;
 }
+
+[ic-tab]{
+    cursor: pointer;
+}
+[ic-tab-con]{
+    display: none;
+}
+
+
+
 [ic-accordion] [ic-accordion-con]{
     display: none;
 }
@@ -91,12 +99,7 @@ html,body{
 [ic-role-slider-pagination]{
     cursor: pointer;
 }
-[ic-role-tab]{
-    cursor: pointer;
-}
-[ic-role-con]{
-    display: none;
-}
+
 
 [ic-dropdown]{
     position: relative;

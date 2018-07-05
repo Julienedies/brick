@@ -1,51 +1,52 @@
 /*!
- * js framework brick by Julien.
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * {{timestamp}}
- * {{timestamp2}}
  */
 ;
 (function (root, undefined) {
 
-    //__inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
-    //core
-    __inline('src/config.js');
-    __inline('src/compile.js');
-    __inline('src/eventManager.js');
-    __inline('src/controllers.js');
-    __inline('src/services.js');
-    __inline('src/directives.js');
-    __inline('src/parser.js');
-    __inline('src/createRender.js');
-    __inline('src/init.js');
-    __inline('src/directives/ctrl.js');
-    __inline('src/directives/event.js');
-    __inline('src/$extend/$extension.js');
+    // __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
 
-    //以下是可选的内置的services、directives、brick扩展
-    __inline('src/recordManager.js');
+    // core架构 必选
+    __inline('src/core/config.js')
+    __inline('src/core/compile.js')
+    __inline('src/core/eventManager.js')
+    __inline('src/core/controllers.js')
+    __inline('src/core/services.js')
+    __inline('src/core/directives.js')
+    __inline('src/core/parser.js')
+    __inline('src/core/createRender.js')
+    __inline('src/core/init.js')
 
-    __inline('src/util.js');
-    __inline('src/extend/transition.js');
-    __inline('src/extend/route.js');
-    __inline('src/extend/cache.js');
+    // core指令 必选
+    __inline('src/core/directives/ctrl.js')
+    __inline('src/core/directives/event.js')
+    __inline('src/core/directives/tpl.js')
 
-    __inline('src/widget/tpl.js');
-    __inline('src/widget/tabs.js');
-    __inline('src/widget/tabs2.js');
-    __inline('src/widget/ajax.js');
-    __inline('src/widget/form.js');
+    // jQuery扩展 必选
+    __inline('src/$extend/$extension.js')
 
-    __inline('src/widget/scroll.js');
-    __inline('src/widget/mobile/dialog.js');
+    // 内置services 可选
+    __inline('src/services/recordManager.js')
+    __inline('src/services/transition.js')
+    __inline('src/services/route.js')
+    __inline('src/services/cache.js')
+
+    // 内置directives 可选
+    __inline('src/directives/tabs.js')
+    __inline('src/directives/tabs2.js')
+    __inline('src/directives/ajax.js')
+    __inline('src/directives/form.js')
+    __inline('src/directives/scroll.js')
+    __inline('src/directives/mobile/dialog.js')
 
     //bootstrap
     $(function () {
         setTimeout(function () {
             if(brick.get('bootstrap.auto') === false) return;
             brick.bootstrap(document.body);
-        }, 10);
+        }, 30);
     });
 
 })(window);
