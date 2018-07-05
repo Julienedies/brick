@@ -58,10 +58,10 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     //更新html
     function render(date, flag) {
         var dateModel = model(date);
-        if(onRender && !flag){
+        if (onRender && !flag) {
             onRender(dateModel);
-        }else{
-            $elm.icRender(tpl, {vm:dateModel});
+        } else {
+            $elm.icRender(tpl, {vm: dateModel});
             $elm.trigger('ic-date-picker.init');
         }
     }
@@ -70,27 +70,27 @@ brick.directives.reg('ic-date-picker', function ($elm) {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //对外js接口
-    $elm.on('ic-date-picker.render', function(e, msg){
-        try{
+    $elm.on('ic-date-picker.render', function (e, msg) {
+        try {
             $elm.icRender(tpl, msg);
             $elm.trigger('ic-date-picker.init');
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     });
 
-    $elm.on('ic-date-picker.recover', function(e, msg){
+    $elm.on('ic-date-picker.recover', function (e, msg) {
         _date = old_date;
     });
 
-    $elm.on('ic-date-picker.next', function(e, msg){
+    $elm.on('ic-date-picker.next', function (e, msg) {
         old_date = _date;
         _date = moment(_date, _format).add(1, 'months').format(_format);
         render(_date);
     });
 
     //取消一个日期选择, msg == YYYY-MM-DD
-    $elm.on('ic-date-picker.cancel', function(e, msg){
+    $elm.on('ic-date-picker.cancel', function (e, msg) {
         $elm.find('[ic-date=?]'.replace('?', msg)).removeClass(cla);
         selectedDateArr = _.without(selectedDateArr, msg);
     });
@@ -108,7 +108,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         render(_date);
     });
 
-    $elm.on(eventAction, '[ic-date]'+enabled, multiple ? function (e) {
+    $elm.on(eventAction, '[ic-date]' + enabled, multiple ? function (e) {
         var bindDate = this.getAttribute('ic-date');
         if (this.classList.contains(cla)) {
             this.classList.remove(cla);
@@ -136,11 +136,11 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     /////////////////////////////////////////////////////
 
     //计算一个月的天数
-    function _countDays(current){
+    function _countDays(current) {
         var year = current.year();
         var month = current.month();
         var days = _.range(1, current.daysInMonth() + 1);
-        return days.map(function(day){
+        return days.map(function (day) {
             return moment([year, month, day]).format(_format);
         });
     }
@@ -178,21 +178,21 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             _start--;
         }
 
-        var end = Math.ceil(days.length/7) * 7 - days.length;
+        var end = Math.ceil(days.length / 7) * 7 - days.length;
         //var end = 42 - days.length;
         while (end > 0) {
             days.push(nextDays.shift());
             end--;
         }
 
-        days = days.map(function(v, i){
+        days = days.map(function (v, i) {
             var m = moment(v, _format);
             var diff = m.diff(now, 'days');
             var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
-            var position = i < start ? 'prev' : i > (len+start-1) ? 'next' : 'current';
+            var position = i < start ? 'prev' : i > (len + start - 1) ? 'next' : 'current';
             var isSelected = _.indexOf(selectedDateArr, v) > -1;
-            var n = v.replace(/^\d\d\d\d-\d\d-0?/i,'');
-            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom:{}};
+            var n = v.replace(/^\d\d\d\d-\d\d-0?/i, '');
+            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom: {}};
             calendar.push(day);
             return day;
         });
@@ -204,7 +204,14 @@ brick.directives.reg('ic-date-picker', function ($elm) {
             week = days.splice(0, 7);
         }
 
-        return {current: current.format('YYYY-MM'), weeks: weeks, calendar:calendar, year:current.format('YYYY'), month:current.format('MM'), x: current.diff(now,'months') };
+        return {
+            current: current.format('YYYY-MM'),
+            weeks: weeks,
+            calendar: calendar,
+            year: current.format('YYYY'),
+            month: current.format('MM'),
+            x: current.diff(now, 'months')
+        };
     }
 
 });

@@ -3,7 +3,7 @@
  */
 
 
-directives.add('ic-ajax', function () {
+directives.reg('ic-ajax', function () {
 
         var eventAction = brick.get('event.action');
 
@@ -12,7 +12,6 @@ directives.add('ic-ajax', function () {
         $doc.on('ic-ajax', '[ic-ajax]', _call);
 
         function _call(e) {
-
             var that = this;
 
             if (this.hasAttribute('ic-ajax-disabled')) return;
@@ -23,7 +22,7 @@ directives.add('ic-ajax', function () {
             var $loading = $('[ic-role-loading=?]'.replace('?', namespace || +(new Date)));
 
             var defaultCall = function () {
-                console.log(arguments)
+                //console.log(arguments)
             };
 
             var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;

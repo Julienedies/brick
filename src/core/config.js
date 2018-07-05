@@ -1,7 +1,6 @@
 /**
  * Created by julien.zhang on 2014/9/16.
- *
- * 框架配置
+ * 用于管理配置
  */
 
 var config = (function () {

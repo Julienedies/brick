@@ -3,13 +3,11 @@
  */
 
 
-directives.add('ic-checkbox', {
+directives.reg({
+    name: 'ic-checkbox',
     selfExec: true,
     once: true,
     fn: function ($elm, attrs) {
-
-        var th = $elm;
-        var name = th.attr('ic-checkbox');
 
         $('[ic-checkbox][ic-checkbox-selected=true]').addClass('selected');
 
@@ -17,20 +15,20 @@ directives.add('ic-checkbox', {
             $(this).addClass('selected');
         });
 
-        $.fn.icCheckbox = function(call, param){
-             return map[call] && map[call].apply(this, [param]);
+        $.fn.icCheckbox = function (call, param) {
+            return map[call] && map[call].apply(this, [param]);
         };
 
         var map = {
-            val: function(){
+            val: function () {
                 var name = this.attr('ic-checkbox');
                 var arr = [];
-                this.sibling().filter('[ic-checkbox=?]'.replace('?',name)).each(function(i){
-                        arr.push(this['ic-checkbox-val']);
+                this.sibling().filter('[ic-checkbox=?]'.replace('?', name)).each(function (i) {
+                    arr.push(this['ic-checkbox-val']);
                 });
                 return arr;
             }
-        }
+        };
 
     }
 

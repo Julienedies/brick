@@ -2,9 +2,6 @@
  * Created by julien.zhang on 2014/9/15.
  */
 
-//内置服务
-services.fill('eventManager', eventManager);
-
 //对外接口
 var brick = root.brick = {
     config: config,
@@ -21,10 +18,6 @@ var brick = root.brick = {
     get: function(k){
       return this.config.get(k);
     },
-    broadcast: function (e, msg) {
-        this.eventManager.fire(e, msg);
-        return this;
-    },
     on: function (e, fn) {
         this.eventManager.bind(e, fn);
         return this;
@@ -33,12 +26,23 @@ var brick = root.brick = {
         this.eventManager.unbind(e, fn);
         return this;
     },
+    broadcast: function (e, msg) {
+        this.eventManager.fire(e, msg);
+        return this;
+    },
     fire: function (e, msg) {
         this.eventManager.fire(e, msg);
         return this;
     },
     getTpl: function (name) {
         return this.__tpl[name];
+    },
+    reg: function(name, factory, conf){
+        if(/ctrl$/i.test(name)){
+            controllers.reg(name, factory, conf);
+        }else{
+            services.reg(name, factory, conf);
+        }
     },
     bootstrap: function (node) {
         console.info('brick start');

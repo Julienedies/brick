@@ -7,17 +7,20 @@ var directives = {
     _pool: {},
 
     add: function (name, definition, conf) {
-        if(conf){
-            conf.fn = definition;
-        }
-        this._pool[name] = definition;
+        this.reg(name, definition, conf);
     },
 
-    reg: function(name, definition, conf){
-        if(conf){
+    reg: function (name, definition, conf) {
+        if(typeof name == 'object'){
+            conf = name;
+            name = conf.name;
+        }else if(typeof definition == 'object') {
+            conf = definition;
+        }else{
+            conf = conf || {};
             conf.fn = definition;
         }
-        this._pool[name] = conf || definition;
+        this._pool[name] = conf;
     },
 
     get: function (name) {
@@ -32,36 +35,21 @@ var directives = {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {
             definition.fn.apply(null, [$elm, attrs]);
-            if(definition.once){
+            if (definition.once) {
                 delete _pool[i];
             }
         }
     },
 
-    init: function(){
-        var _pool = this._pool;
-        for(var i in _pool){
-
-            var definition = _pool[i];
-
-            if(definition.selfExec){
-                definition.fn && definition.fn();
-                if(definition.once){
-                    delete _pool[i];
-                }
-            }
-
-        }
-    },
-
-    _init: function (name) {
+    init: function () {
         var _pool = this._pool;
         for (var i in _pool) {
             var definition = _pool[i];
-            if (typeof definition === 'function') {
-                definition();
-            } else if (definition.fn) {
-                definition.fn();
+            if (definition.selfExec) {
+                definition.fn && definition.fn();
+                if (definition.once) {
+                    delete _pool[i];
+                }
             }
         }
     }

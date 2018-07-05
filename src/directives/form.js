@@ -3,7 +3,7 @@
  */
 
 
-directives.add('ic-form', function ($elm, attrs) {
+directives.reg('ic-form', function ($elm, attrs) {
 
     /**
      * 要验证的字段 ic-form-field
@@ -13,8 +13,8 @@ directives.add('ic-form', function ($elm, attrs) {
      * ic-submit-disabled
      */
 
-    var debug =  brick.get('debug');
-    var eventAction =  brick.get('event.action');
+    var debug = brick.get('debug');
+    var eventAction = brick.get('event.action');
     var customRule = brick.get('ic-form.rule');
 
     var presetRule = {
@@ -33,7 +33,7 @@ directives.add('ic-form', function ($elm, attrs) {
 
     var keys = _.keys(presetRule);
 
-    keys.sort(function(a, b){
+    keys.sort(function (a, b) {
         return b.length - a.length;
     });
 
@@ -57,8 +57,8 @@ directives.add('ic-form', function ($elm, attrs) {
         for (var i in keys) {
             i = keys[i];
             v = presetRule[i];
-            rule = rule.replace(new RegExp(i+'(?![^|&])','g'), function(m){
-                return _.isFunction(v) ? m+'()' : _.isRegExp(v) ? v : m;
+            rule = rule.replace(new RegExp(i + '(?![^|&])', 'g'), function (m) {
+                return _.isFunction(v) ? m + '()' : _.isRegExp(v) ? v : m;
             });
         }
 
@@ -96,13 +96,13 @@ directives.add('ic-form', function ($elm, attrs) {
         try {
             result = eval(_script);
             //如果result是一个字符串，表示一个错误提示
-            if(typeof result === 'string'){
+            if (typeof result === 'string') {
                 return result;
             }
             //如果为result===true,表示验证通过
             if (result === true) {
                 return false;
-            } else if(result){
+            } else if (result) {
                 return result;
             } else {
                 return tips;
@@ -113,9 +113,9 @@ directives.add('ic-form', function ($elm, attrs) {
 
     }
 
-   /* $.fn.icForm = $.fn.icForm || function (call, msg) {
-        $submit.trigger('mousedown');
-    };*/
+    /* $.fn.icForm = $.fn.icForm || function (call, msg) {
+     $submit.trigger('mousedown');
+     };*/
 
     $.fn.icFormVerify = $.fn.icFormVerify || function () {
 
@@ -136,7 +136,8 @@ directives.add('ic-form', function ($elm, attrs) {
         return false;
     };
 
-    function defaultCall () {}
+    function defaultCall() {
+    }
 
     var fields = {};
 
@@ -263,18 +264,18 @@ directives.add('ic-form', function ($elm, attrs) {
     });
 
     //
-    $submit.on('ic-form.submit', function(e){
+    $submit.on('ic-form.submit', function (e) {
         toSubmit(e);
     });
 
     // 提交触发
     $submit.on(eventAction, toSubmit);
-   // 回车提交触发
+    // 回车提交触发
     $fields.icEnterPress(function () {
         $submit.trigger(eventAction);
     });
 
-    function toSubmit(e){
+    function toSubmit(e) {
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 

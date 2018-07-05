@@ -2,7 +2,6 @@
  * Created by julien on 2015/7/13.
  */
 
-//ic-select-list
 
 brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
@@ -29,12 +28,12 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
             console.log(eventSpace + action);
 
-            if(action == 'val') {
+            if (action == 'val') {
                 this.trigger(eventSpace + 'val', msg);
                 return this.data('ic-selected-val');
             }
 
-            return this.each(function(i){
+            return this.each(function (i) {
                 $(this).trigger(eventSpace + action, msg);
             });
 
@@ -91,11 +90,11 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
                 }
             }
         },
-        get:function(){
+        get: function () {
             var result = [];
             var items = this.items;
-            for(var i in items){
-                if(items[i] === true){
+            for (var i in items) {
+                if (items[i] === true) {
                     result.push(i);
                 }
             }
@@ -111,7 +110,7 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
     $elm = $elm || $(this);
     var name = $elm.attr(list);
     var handle = $elm.is('[ic-select-handle]') ? ' [ic-select-handle]' : '';
-    var isMultiple = $elm.attr('ic-select-multiple')*1;
+    var isMultiple = $elm.attr('ic-select-multiple') * 1;
     var isReadonly = $elm.attr('ic-select-readonly');
     var isOptional = $elm.is('[ic-select-optional]');
     var isAll = $elm.find('ic-select-all');
@@ -136,17 +135,17 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
     var $active = $elm.find('[ic-selected]').addClass(cla);
 
     //对外接口
-    $elm.on(eventSpace + 'val', function(e, msg){
+    $elm.on(eventSpace + 'val', function (e, msg) {
         var val = model.get();
         $elm.data('ic-selected-val', val);
     });
 
     $elm.on(eventSpace + 'cancel', function (e, msg) {
-        if(msg){
+        if (msg) {
             $elm.find('[ic-select-val="?"]'.replace('?', msg)).removeClass(cla);
             model.set(msg, false);
-        }else{
-            $elm.find('[ic-select-val]').not('[ic-selected]').each(function(i){
+        } else {
+            $elm.find('[ic-select-val]').not('[ic-selected]').each(function (i) {
                 var $th = $(this).removeClass(cla);
                 var val = $th.attr('ic-select-val');
                 model.set(val, false);
@@ -155,22 +154,29 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
         $elm.trigger(eventSpace + 'change', getVal());
     });
 
-    function getVal(){
+    function getVal() {
 
         var result = [];
         var extra = false;
 
-        var $filter = $items.filter('.'+cla).each(function(i){
+        var $filter = $items.filter('.' + cla).each(function (i) {
             var $th = $(this);
             extra = this.hasAttribute('ic-select-extra');
-            result.push({name: name, text:$th.text(), val:$th.attr('ic-select-val')});
+            result.push({name: name, text: $th.text(), val: $th.attr('ic-select-val')});
         });
 
-        return {name:name, result:result, over: result.length-isMultiple, all: $items.length == $filter.length, extra:extra, __size:$items.length};
+        return {
+            name: name,
+            result: result,
+            over: result.length - isMultiple,
+            all: $items.length == $filter.length,
+            extra: extra,
+            __size: $items.length
+        };
     }
 
 
-    if(isReadonly) return;
+    if (isReadonly) return;
 
     //bind event
 //    $elm.on('click', '[ic-select-ignore]', function(e){
@@ -183,9 +189,9 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
         $all.removeClass(cla);
 
-        if(isNaN(isMultiple) || isMultiple === 1){
-            if ($th.hasClass(cla)){
-                if(isOptional){
+        if (isNaN(isMultiple) || isMultiple === 1) {
+            if ($th.hasClass(cla)) {
+                if (isOptional) {
                     $th.toggleClass(cla);
                     model.toggle(_val);
                     $elm.trigger(eventSpace + 'change', getVal());
@@ -196,7 +202,7 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
             $th.addClass(cla);
             model.clear();
             model.set(_val, true);
-        }else{
+        } else {
             $th.toggleClass(cla);
             model.toggle(_val);
         }
@@ -205,26 +211,26 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
 
     }).on('click', all, function (e) {
 
-        if( $all.hasClass(cla)) return;
+        if ($all.hasClass(cla)) return;
 
         var th = $all.addClass(cla);
         $items.removeClass(cla);
 
-        $elm.trigger(eventSpace+'change',{name:name, all: true});
+        $elm.trigger(eventSpace + 'change', {name: name, all: true});
 
     }).on('click', more, function (e) {
 
         $more.hide().nextAll().show();
-        $elm.trigger('ic-more.show', {form:shirkHeight, to:expandHeight});
+        $elm.trigger('ic-more.show', {form: shirkHeight, to: expandHeight});
 
     }).on('click', shirk, function (e) {
 
         $more.show().nextAll().hide();
-        $elm.trigger('ic-more.hide', {form:expandHeight, to:shirkHeight});
+        $elm.trigger('ic-more.hide', {form: expandHeight, to: shirkHeight});
 
     });
 
-    if($active.index() > $more.index()){
+    if ($active.index() > $more.index()) {
         $more.click();
     }
 

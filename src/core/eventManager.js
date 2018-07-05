@@ -1,11 +1,10 @@
 /**
  * Created by julien.zhang on 2014/9/15.
- *
  * 事件管理器
  */
 
 
-var eventManager = (function() {
+var eventManager = (function () {
 
     var _events = {};
 
@@ -19,11 +18,11 @@ var eventManager = (function() {
          */
         bind: function (e, f, context) {
             e = e.split(/[,\s]+/g);
-            for(var i in e){
+            for (var i in e) {
                 this._bind(e[i], f, context);
             }
         },
-        _bind: function(e, f, context){
+        _bind: function (e, f, context) {
 
             var handle = {f: f};
 
@@ -45,11 +44,11 @@ var eventManager = (function() {
          */
         unbind: function (e, f) {
             e = e.split(/[,\s]+/g);
-            for(var i in e){
+            for (var i in e) {
                 this._unbind(e[i], f);
             }
         },
-        _unbind: function(e, f){
+        _unbind: function (e, f) {
             var event = this._getNamespace(e);
             var callback = event && event._callback;
             var handle;
@@ -128,8 +127,6 @@ var eventManager = (function() {
             var f;
 
             if (callback) {
-
-                // _cc('fire=> ', e, msg);
 
                 for (var i = 0, len = callback.length; i < len; i++) {
 

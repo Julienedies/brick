@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/20.
  */
 
-directives.add('ic-pagination', function ($elm, attrs) {
+directives.reg('ic-pagination', function ($elm, attrs) {
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -45,9 +45,9 @@ directives.add('ic-pagination', function ($elm, attrs) {
                 var html = brick.getTpl(namespace)({model: list});
                 $tpl.html(html).show();
             };
-        }else{
+        } else {
             pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            if(pool.length){
+            if (pool.length) {
                 total = Math.ceil(pool.length / rows);
                 onchange = function (page) {
                     --page;

@@ -1,12 +1,9 @@
 /**
- *
  * Created by julien.zhang on 2014/11/13.
- *
  * 定义输入提示指令
- *
  */
 
-directives.add('ic-type-ahead', function ($elm, attrs) {
+directives.reg('ic-type-ahead', function ($elm, attrs) {
 
     var $doc = $('body');
 

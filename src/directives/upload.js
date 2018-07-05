@@ -2,7 +2,7 @@
  * Created by Julien on 2015/7/23.
  */
 
-brick.directives.reg('ic-upload', function($elm, attrs){
+brick.directives.reg('ic-upload', function ($elm, attrs) {
 
     var nameSpace = $elm.attr('ic-upload');
     var uploadUrl = $elm.attr('ic-upload-action');
@@ -13,16 +13,16 @@ brick.directives.reg('ic-upload', function($elm, attrs){
     var before = $elm.attr('ic-upload-before');
 
     var $placeholderImg = $elm.find('[ic-upload-placeholder]');
-    var $btn = $elm.find('[ic-upload-btn]').css({position:'relative'});
+    var $btn = $elm.find('[ic-upload-btn]').css({position: 'relative'});
     var $ok = $elm.find('[ic-upload-ok]');
 
     var $file = $elm.find('[type=file]');
 
     $file.closest('form').appendTo($btn);
 
-    $file.css({position:'absolute',bottom:0,right:0,top:0,left:0,opacity:0});
+    $file.css({position: 'absolute', bottom: 0, right: 0, top: 0, left: 0, opacity: 0});
 
-    $file.change(function(){
+    $file.change(function () {
 
         always = $elm.icParseProperty(always) || function () {
             //console.log('always is undefined;')

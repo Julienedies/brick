@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-slider', function ($elm, attr) {
+directives.reg('ic-slider', function ($elm, attr) {
 
     var th = $elm;
 
@@ -31,7 +31,7 @@ directives.add('ic-slider', function ($elm, attr) {
 
     var broadcast = function () {
         th.trigger('ic-slider.change', items.eq(current - 1));
-    }
+    };
 
     broadcast();
 
@@ -122,7 +122,7 @@ directives.add('ic-slider', function ($elm, attr) {
             }
 
             return false;
-        }
+        };
 
     var interval = th.attr('ic-slider-interval');
     var timer;

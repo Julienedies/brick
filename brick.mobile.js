@@ -10,14 +10,14 @@
 
     // core架构 必选
     __inline('src/core/config.js')
-    __inline('src/core/compile.js')
     __inline('src/core/eventManager.js')
     __inline('src/core/controllers.js')
     __inline('src/core/services.js')
     __inline('src/core/directives.js')
     __inline('src/core/parser.js')
     __inline('src/core/createRender.js')
-    __inline('src/core/init.js')
+    __inline('src/core/compile.js')
+    __inline('src/core/export.js')
 
     // core指令 必选
     __inline('src/core/directives/ctrl.js')
