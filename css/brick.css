@@ -81,6 +81,9 @@ html,body{
 [ic-tpl]{
     display: none;
 }
+[ic-tpl] [ic-tpl]{
+    display:auto;
+}
 [ic-drag-view]{
     position: relative;
     overflow: hidden;
