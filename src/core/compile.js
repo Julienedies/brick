@@ -20,6 +20,7 @@ function compile(node){
 
 function __compile(node){
 
+    node = node[0] || node;  //jquery对象
     if(node.nodeType != 1) return console.info('compile exit', node);
 
     var $elm = $(node);
