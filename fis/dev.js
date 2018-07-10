@@ -49,14 +49,14 @@ fis.config.set('roadmap.path', [
     },
     // brick directives
     {
-        reg: /^\/src\/(directives\/.+\.js)$/i,
-        release: '$1',
+        reg: /^\/directives\/.+\.js$/i,
+        release: '$&',
         isJsLike: true
     },
     // brick services
     {
-        reg: /^\/src\/(services\/.+\.js)$/i,
-        release: '$1',
+        reg: /^\/services\/.+\.js$/i,
+        release: '$&',
         isJsLike: true
     },
     // css
@@ -67,7 +67,7 @@ fis.config.set('roadmap.path', [
 
     //brick源码
     {
-        reg: /^\/src\/(.+\.js)/i,
+        reg: /^\/(.+\.js)/i,
         //release: 'src/$1',
         release:false,
         isJsLike: true
@@ -85,21 +85,21 @@ fis.config.set('roadmap.path', [
 fis.config.merge({
     deploy : {
         ls : {
-            to :  '../gushenwei.github.io/static/js/vendor/brick/' + version
+            to :  '../dist/' + version
         },
         local : {
-            to : '../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
+            to : '../dist/' + version
         },
         cs : {
-            to : '../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
+            to : '../../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
         },
         //hybrid app
         jhandy : {
-            to : '../jHandy/js/brick/' + version
+            to : '../../jHandy/js/brick/' + version
         },
         //car.lulutrip.com
         gushenwei : {
-            to : '../gushenwei.github.io/static/js/vendor/brick/' + version
+            to : '../../gushenwei.github.io/static/js/vendor/brick/' + version
         }
     }
 });

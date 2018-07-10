@@ -1,3 +1,4 @@
 #! /bin/bash
 
-fis release --file fis/dev.js --dest ls local cs jhandy gushenwei -D  --clean --watch
+cd src/
+fis release --file ../fis/dev.js --dest ls -D  --clean --watch
