@@ -231,14 +231,16 @@ directives.reg('ic-form', function ($elm, attrs) {
                 val = $th.attr('ic-val');
             }
 
-            var prev = fields[submitName];
+            fields[submitName] = val;
+
+            /*var prev = fields[submitName];
             if (prev) {
-                prev = _.isArray(prev) ? prev : [prev];
+                prev =  ? prev : [prev];
                 prev.push(val);
                 fields[submitName] = prev;
             } else {
                 fields[submitName] = val;
-            }
+            }*/
 
         });
 

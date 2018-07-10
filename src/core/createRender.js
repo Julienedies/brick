@@ -32,16 +32,14 @@ function createRender(root) {
         .replace(/\bic-(\w+-)?(checked|disabled|selected|enabled)\s*=\s*"\s*((?:[^"]|\\")+)["]/g,function(m, $1, $2, $3){
             if($1 == 'has-') return m;
             $1 = $1 ? 'ic-'+ $1 : '';
-            $3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
+            //$3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + $2);
         })
         //实现ic-has-[prop]指令
-        .replace(/\bic-has-+([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
+        .replace(/\bic-has-([-_\w]+)\s*=\s*(['"]?)((?:[^\2]|\\\2)+)\2/img, function(m, $1, $2, $3){
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3',$3).replace('?2',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
         })
         .replace(/&amp;&amp;/g,'&&');
-
-    brick.get('debug') && console.info(_tpl);
 
     var tpl = _.template(_tpl);
     tpl._tpl_ = _tpl;

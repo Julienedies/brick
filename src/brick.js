@@ -9,41 +9,41 @@
     // __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
 
     // core架构 必选
-    __inline('src/core/config.js')
-    __inline('src/core/eventManager.js')
-    __inline('src/core/controllers.js')
-    __inline('src/core/services.js')
-    __inline('src/core/directives.js')
-    __inline('src/core/parser.js')
-    __inline('src/core/createRender.js')
-    __inline('src/core/compile.js')
-    __inline('src/core/export.js')
+    __inline('core/config.js')
+    __inline('core/eventManager.js')
+    __inline('core/controllers.js')
+    __inline('core/services.js')
+    __inline('core/directives.js')
+    __inline('core/parser.js')
+    __inline('core/createRender.js')
+    __inline('core/compile.js')
+    __inline('core/export.js')
 
     // core指令 必选
-    __inline('src/core/directives/ctrl.js')
-    __inline('src/core/directives/event.js')
-    __inline('src/core/directives/tpl.js')
+    __inline('core/directives/ctrl.js')
+    __inline('core/directives/event.js')
+    __inline('core/directives/tpl.js')
 
     // jQuery扩展 必选
-    __inline('src/$extend/$extension.js')
+    __inline('$extend/$extension.js')
 
     // 内置services 可选
-    __inline('src/services/recordManager.js')
-    __inline('src/services/transition.js')
-    __inline('src/services/route.js')
-    __inline('src/services/cache.js')
+    __inline('services/recordManager.js')
+    __inline('services/transition.js')
+    __inline('services/route.js')
+    __inline('services/cache.js')
 
     // 内置directives 可选
-    __inline('src/directives/ajax.js')
-    __inline('src/directives/tabs.js')
-    __inline('src/directives/form.js')
-    __inline('src/directives/enterPress.js')
-    __inline('src/directives/slider.js')
-    __inline('src/directives/dropdown.js')
-    __inline('src/directives/pagination.js')
-    __inline('src/directives/dialog.js')
-    __inline('src/directives/drag.js')
-    __inline('src/directives/typeAhead.js')
+    __inline('directives/ajax.js')
+    __inline('directives/tabs.js')
+    __inline('directives/form.js')
+    __inline('directives/enterPress.js')
+    __inline('directives/slider.js')
+    __inline('directives/dropdown.js')
+    __inline('directives/pagination.js')
+    __inline('directives/dialog.js')
+    __inline('directives/drag.js')
+    __inline('directives/typeAhead.js')
 
     // bootstrap
     $(function () {

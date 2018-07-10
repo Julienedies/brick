@@ -1,12 +1,9 @@
 /**
  * Created by julien.zhang on 2014/9/12.
- *
- * 主要用于解析一个dom节点上绑定的操作
- *
+ * 主要用于解析一个dom节点上绑定的tpl指令
  */
 
 function parser(node) {
-
 
     if (node.nodeType == 1) {
 
