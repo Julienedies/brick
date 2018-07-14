@@ -18,9 +18,9 @@ fis.config.set('roadmap.ext.sass', 'css');
 //静态资源文件域名设置;
 //线上部署前domain设为http://julienedies.github.io/brick;
 fis.config.merge({
-    roadmap : {
+    roadmap: {
         //domain : 'http://julienedies.github.io/brick'
-        domain:''
+        domain: ''
     },
     modules: {
         preprocessor: {
@@ -31,7 +31,8 @@ fis.config.merge({
         preprocessor: {
             defines: {
                 strings: {
-                    '{{timestamp}}': JSON.stringify((new Date).toLocaleString())
+                    '{{timestamp}}': JSON.stringify((new Date).toLocaleString()),
+                    '{{version}}': JSON.stringify('V ' + version)
                 }
             }
         }
@@ -69,7 +70,7 @@ fis.config.set('roadmap.path', [
     {
         reg: /^\/(.+\.js)/i,
         //release: 'src/$1',
-        release:false,
+        release: false,
         isJsLike: true
     },
 
@@ -83,23 +84,23 @@ fis.config.set('roadmap.path', [
 
 //使用fis release --dest local来使用这个配置
 fis.config.merge({
-    deploy : {
-        ls : {
-            to :  '../dist/' + version
+    deploy: {
+        ls: {
+            to: '../../gushenwei.github.io/static/js/vendor/brick/' + version
         },
-        local : {
-            to : '../dist/' + version
+        local: {
+            to: '../dist/' + version
         },
-        cs : {
-            to : '../../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
+        cs: {
+            to: '../../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
         },
         //hybrid app
-        jhandy : {
-            to : '../../jHandy/js/brick/' + version
+        jhandy: {
+            to: '../../jHandy/js/brick/' + version
         },
         //car.lulutrip.com
-        gushenwei : {
-            to : '../../gushenwei.github.io/static/js/vendor/brick/' + version
+        gushenwei: {
+            to: '../../gushenwei.github.io/static/js/vendor/brick/' + version
         }
     }
 });
