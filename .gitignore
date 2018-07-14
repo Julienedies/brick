@@ -5,7 +5,8 @@ Thumbs.db
 #IDE创建
 .idea/
 .settings/
-.project
+.project/
+*~
 
 #外部类库
 bower_components/
@@ -14,6 +15,11 @@ node_modules/
 #其它
 *.log
 *map.json
+server.js
+
+#根目录下fis相关的sh和cmd脚本文件忽略
+/*.sh
+/*.cmd
 
 #临时使用
 fis-llt.cmd

@@ -2,6 +2,8 @@
  * Created by julien.zhang on 2014/10/30.
  * 扩展 jquery
  */
+
+;
 (function ($) {
 
     $.fn.icRender = function(tpl, model, callback){
@@ -173,7 +175,6 @@
     $.fn.icDatePicker = function(call, options){
         return this.trigger('ic-date-picker.'+call, options);
     };
-
 
     //监听enter键
     $.fn.icEnterPress = function (call) {
