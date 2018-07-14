@@ -7,17 +7,15 @@ directives.reg('ic-tpl', {
     once: true,
     fn: function ($elm) {
 
-        ($elm || $('[ic-tpl]')).each(function (i) {
+        var __tpl = brick.__tpl = brick.__tpl || {};
 
-            var th = $(this);
+        ($elm || $('[ic-tpl]')).each(function () {
 
-            var name = th.attr('ic-tpl');
-            th.attr('ic-tpl-name', name);
+            var $th = $(this);
+            var name = $th.attr('ic-tpl');
 
-            var compiled = createRender(this);
-
-            var __tpl = brick.__tpl = brick.__tpl || {};
-            __tpl[name] = compiled;
+            $th.attr('ic-tpl-name', name);
+            __tpl[name] = createRender(this);
 
         });
 

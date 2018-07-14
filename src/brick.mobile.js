@@ -2,6 +2,7 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * {{timestamp}}
+ * {{version}}
  */
 ;
 (function (root, undefined) {
@@ -30,16 +31,15 @@
     // 内置services 可选
     __inline('services/recordManager.js')
     __inline('services/transition.js')
-    __inline('services/route.js')
     __inline('services/cache.js')
 
     // 内置directives 可选
-    __inline('directives/tabs.js')
-    __inline('directives/tabs2.js')
     __inline('directives/ajax.js')
+    __inline('directives/tabs.js')
     __inline('directives/form.js')
+    __inline('directives/enterPress.js')
     __inline('directives/scroll.js')
-    __inline('directives/mobile/dialog.js')
+    __inline('directives/dialog.js')
 
     //bootstrap
     $(function () {

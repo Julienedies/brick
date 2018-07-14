@@ -2,65 +2,48 @@
  * Created by julien.zhang on 2014/10/29.
  */
 
+//ic-dialog
+directives.reg('ic-dialog', function ($elm, attrs) {
 
-directives.add('ic-dialog', function ($elm, attrs) {
+    var eventAction = brick.get('event.action');
 
-    var html = "<div class=\"t\" style=\"position:fixed; z-index: 100000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
+    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
 
-    //只执行一次绑定
-    if (!arguments.callee._run) {
+        var $th = $(this);
+        var type = this.hasAttribute('ic-dialog-confirm');
 
-        arguments.callee._run = 1;
+        var $dialog = $th.closest('[ic-dialog]');
 
-        $(document).on('click', '[ic-dialog-href]', function (e) {
-            var target = $(this).attr('ic-dialog-href');
-            $('[ic-dialog=?]'.replace('?', target)).icDialog();
-            return false;
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-dialog.close', type);
+            $dialog.trigger('ic-dialog.hide', type);
         });
 
-    }
-
-
-    var $dialogContainer = $(html).appendTo('body').hide();
-
-    var id = $elm.attr('ic-dialog');
-
-    $elm.appendTo($dialogContainer);
-
-    //处理js调用
-    $elm.on('ic-dialog.call', function (e, param) {
-
-        if(param === void(0)) return onShow(e);
-        if (param === 'hide' || param == false) return onClose(e);
-        onShow(e);
+    }).on(eventAction, '[ic-dialog-href]', function (e) {
+        var target = $(this).attr('ic-dialog-href');
+        $('[ic-dialog=?]'.replace('?', target)).icDialog();
+        return false;
     });
 
-    $elm.on('click', '[ic-role-dialog-confirm]', function (e) {
-        onClose(e, 1);
+}, {selfExec: true, once: true });
+
+
+//ic-prompt
+directives.reg('ic-prompt', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
+
+    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
+
+        var $th = $(this);
+        var type = this.hasAttribute('ic-prompt-confirm');
+
+        var $dialog = $th.closest('[ic-prompt]');
+
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-prompt.hide', type);
+        });
+
     });
 
-
-    $elm.on('click', '[ic-role-dialog-cancel], [ic-role-dialog-close]', function (e) {
-        onClose(e, 0);
-    });
-
-
-    function onShow(e) {
-        $dialogContainer.show();
-        var width = $elm.width();
-        $elm.css('margin-left', -width / 2);
-        $elm.show();
-        $elm.trigger('ic-dialog.show');
-    }
-
-    function onClose(e, type) {
-        $dialogContainer.hide();
-        $elm.hide();
-        $elm.trigger('ic-dialog.close', type);
-    }
-
-
-
-
-});
-
+}, {selfExec: true, once: true });

@@ -176,7 +176,6 @@
         return this.trigger('ic-date-picker.'+call, options);
     };
 
-
     //监听enter键
     $.fn.icEnterPress = function (call) {
 
