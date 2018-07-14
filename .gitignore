@@ -14,6 +14,7 @@ node_modules/
 #其它
 *.log
 *map.json
+server.js
 
 #临时使用
 fis-llt.cmd
