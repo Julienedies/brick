@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.add('ic-event', {
+directives.reg('ic-event', {
     selfExec: true,
     once: true,
     fn: function () {

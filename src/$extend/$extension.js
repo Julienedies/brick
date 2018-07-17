@@ -6,16 +6,16 @@
 ;
 (function ($) {
 
-    $.fn.icRender = function(tpl, model, callback){
-        if(typeof tpl == 'object'){
+    $.fn.icRender = function (tpl, model, callback) {
+        if (typeof tpl == 'object') {
             callback = model;
             model = tpl;
             tpl = this.attr('ic-tpl-name');
         }
         var tplFn = brick.getTpl(tpl);
-        if(!tplFn) return console.info('not find tpl: '+ tpl);
-        var html = tplFn(model);
-        return this.each(function(){
+        if (!tplFn) return console.info('not find tpl: ' + tpl);
+        var html = tplFn({model: model});
+        return this.each(function () {
             var $th = $(this);
             $th.removeAttr('ic-tpl');
             $th.html(html);
@@ -79,15 +79,15 @@
         return this;
     };
 
-    $.fn.icForm = function(call, options){
-        return this.trigger('ic-form.'+call, options);
+    $.fn.icForm = function (call, options) {
+        return this.trigger('ic-form.' + call, options);
     };
 
     $.fn.icDialog = function (options, callback) {
 
-        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
+        options = _.isObject(options) ? _.extend({desc: '', title: ''}, options) : {desc: options, title: ''};
 
-        if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
+        if (!(this[0] && this[0].hasAttribute('ic-dialog'))) {
             console.error('not is ic-dialog');
             return this;
         }
@@ -97,7 +97,7 @@
 
         callback && this.one('ic-dialog.close', callback);
 
-        setTimeout(function(){
+        setTimeout(function () {
 
             if (options === void(0)) {
                 options = true;
@@ -115,13 +115,13 @@
                 that.trigger('ic-dialog.show');
             });
 
-        },30);
+        }, 30);
 
         return this;
     };
 
-    $.icDialog = function(msg, callback){
-        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
+    $.icDialog = function (msg, callback) {
+        var options = _.isObject(msg) ? _.extend({desc: '', title: ''}, msg) : {desc: msg, title: ''};
         $('[ic-dialog]:first').icDialog(options, callback);
     };
 
@@ -137,7 +137,7 @@
 
         clearTimeout(that.data('ic-prompt-timer'));
 
-        setTimeout(function(){
+        setTimeout(function () {
 
             if (options === void(0)) {
                 options = true;
@@ -154,7 +154,7 @@
             that.icAniIn(21, function () {
                 that.trigger('ic-prompt.show');
 
-                var timer = setTimeout(function(){
+                var timer = setTimeout(function () {
                     that.icAniOut();
                 }, 2400);
 
@@ -162,18 +162,18 @@
 
             });
 
-        },30);
+        }, 30);
 
         return this;
     };
 
-    $.icPrompt = function(msg){
-        var options = _.isObject(msg) ? msg : {desc:msg};
+    $.icPrompt = function (msg) {
+        var options = _.isObject(msg) ? msg : {desc: msg};
         $('[ic-prompt]:first').icPrompt(options);
     };
 
-    $.fn.icDatePicker = function(call, options){
-        return this.trigger('ic-date-picker.'+call, options);
+    $.fn.icDatePicker = function (call, options) {
+        return this.trigger('ic-date-picker.' + call, options);
     };
 
     //监听enter键
@@ -219,7 +219,14 @@
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
+                var $loading = $(_loading || loading).css({
+                    width: w,
+                    height: h,
+                    position: 'absolute',
+                    top: top,
+                    left: left,
+                    'z-index': 1999
+                }).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 

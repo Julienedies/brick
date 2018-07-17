@@ -406,11 +406,11 @@ var controllers = (function (){
         render: function(tplName, model, call){
             var that = this;
             setTimeout(function(){
-                var tple = that._render_(tplName, model);
+                var tple = that._render(tplName, model);
                 call && tple && call.apply(tple, []);
             },30);
         },
-        _render_: function(tplName, model){
+        _render: function(tplName, model){
             var $elm = this.$elm;
             var tplf = brick.getTpl(tplName);  //模板函数
             var tple; //dom元素

@@ -2,17 +2,18 @@
  * Created by j on 18/2/16.
  */
 
-brick.directives.reg('ic-show-img', function($elm){
+brick.directives.reg('ic-show-img', function ($elm) {
 
-    var html = '<div style="position: fixed;width:100%;height:100%;left:0;top:0;z-index: 999;background-color: rgba(0,0,0,0.4);display:none;"><div id="ic-show-img-box"></div><div id="ic-show-img-box-close" style="position:absolute;top:0;right:0;padding:20px;background-color: rgba(0,0,0,0.0);color:#fff;line-height:1;"></div></div>';
+    var html = '<div style="position: fixed;width:100%;height:100%;left:0;top:0;z-index: 999;background-color: rgba(0,0,0,0.4);display:none;"><div id="ic-show-img-box"></div><div id="ic-show-img-box-close" style="position:absolute;top:0;right:0;padding:20px;background-color: rgba(0,0,0,0.7);color:#fff;line-height:1;font-size:1.6em;">X</div></div>';
+    
+    var s_box = 'ic-show-img-box';
+    var s_item = 'ic-show-img-item';
 
-    var $imgBox = $($elm.attr('ic-show-img-box'));
+    var $imgBox = $($elm.attr(s_box));
     $imgBox = $imgBox.length ? $imgBox : $(html).appendTo($(document.body));
-    var _img = $elm.attr('ic-show-img-item') || brick.get('ic-show-img-item') || 'img';
+    var _img = $elm.attr(s_item) || brick.get(s_item) || 'img';
     var $imgs = $elm.find(_img);
     var _url = $elm.attr('ic-show-img-url') || brick.get('ic-show-img-url') || 'src';
-
-    //console.log($imgs);
 
     var index = 0;
     var max = $imgs.length - 1;
@@ -31,15 +32,9 @@ brick.directives.reg('ic-show-img', function($elm){
             index = 0;
         }
         $imgBox.find('img').attr('src', $imgs.eq(index).attr(_url));
-    }, 250);
+    }, 200);
 
-    $imgBox.on('click',function(e){
-        $(this).fadeToggle();
-        $elm.trigger('ic-show-img.hide');
-        $(document.body).off('mousewheel', callback);
-    });
-
-    $imgs.on('click', function(e){
+    $imgs.on('click', function (e) {
         var $th = $(this);
         index = $th.index($imgs);
         var $box = $imgBox.find('#ic-show-img-box').empty();
@@ -52,5 +47,13 @@ brick.directives.reg('ic-show-img', function($elm){
         $(document.body).on('mousewheel', callback);
         return false;
     });
+
+    $imgBox.on('click','#ic-show-img-box-close', function (e) {
+        $imgBox.fadeToggle();
+        $elm.trigger('ic-show-img.hide');
+        $(document.body).off('mousewheel', callback);
+    });
+
+
 
 });

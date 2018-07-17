@@ -86,7 +86,7 @@ fis.config.set('roadmap.path', [
 fis.config.merge({
     deploy: {
         ls: {
-            to: '../../gushenwei.github.io/static/js/vendor/brick/' + version
+            to: '../../jHandy/js/vendor/brick/' + version
         },
         local: {
             to: '../dist/' + version

@@ -1,6 +1,9 @@
 /*
  * {{timestamp}}
  */
+
+@import url(directives/dropdown.scss?__inline);
+
 html,body{
     height: 100%;
 }
@@ -104,18 +107,7 @@ html,body{
 }
 
 
-[ic-dropdown]{
-    position: relative;
-}
-[ic-role-dropdown-menu]{
-    position: absolute;
-    left:0;
-    z-index: 10;
-    display: none;
-}
-[ic-role-dropdown-con]{
-    overflow: hidden;
-}
+
 
 [ic-scene]{
     display: none;

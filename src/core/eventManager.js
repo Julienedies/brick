@@ -16,7 +16,7 @@ var eventManager = (function () {
          * @param f {Function} 回调函数
          * @param context {Object} 调用watch方法的scope
          */
-        bind: function (e, f, context) {
+        on: function (e, f, context) {
             e = e.split(/[,\s]+/g);
             for (var i in e) {
                 this._bind(e[i], f, context);
@@ -42,7 +42,7 @@ var eventManager = (function () {
          * @param e {String} 事件名
          * @param f {Function} 回调函数，可选，如果没有传递，则取消该事件下的所有监听
          */
-        unbind: function (e, f) {
+        off: function (e, f) {
             e = e.split(/[,\s]+/g);
             for (var i in e) {
                 this._unbind(e[i], f);
@@ -80,7 +80,7 @@ var eventManager = (function () {
          * @example
          * e = 'a.b.c';   会触发 ["a.b.c", "a.*.c", "a.*", "a.b.*"]
          */
-        fire: function (e, msg, that) {
+        emit: function (e, msg, that) {
 
             var namespace = e.split(/\.|\:/);
 

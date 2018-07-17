@@ -1,0 +1,11 @@
+[ic-dropdown]{
+  position:relative;
+}
+[ic-dropdown-menu]{
+  position:absolute;
+  left:0;
+  z-index: 10;
+}
+[ic-dropdown-con]{
+  overflow:hidden;
+}

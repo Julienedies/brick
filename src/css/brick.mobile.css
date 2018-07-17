@@ -1,7 +1,9 @@
 /*
+ * {{version}}
  * {{timestamp}}
 */
-/*@import url(ic-view.scss?__inline);*/
+
+@import url(directives/dropdown.scss?__inline);
 
 /* */
 [ic-upload] [type=file] {

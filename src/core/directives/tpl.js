@@ -4,7 +4,7 @@
 
 directives.reg('ic-tpl', {
     selfExec: true,
-    once: true,
+    //once: true,
     fn: function ($elm) {
 
         var __tpl = brick.__tpl = brick.__tpl || {};
@@ -13,6 +13,13 @@ directives.reg('ic-tpl', {
 
             var $th = $(this);
             var name = $th.attr('ic-tpl');
+
+            var $parent;
+
+            if(!name){
+                $parent = $th.closest('[ic-ctrl]');
+                name = $parent.attr('ic-ctrl');
+            }
 
             $th.attr('ic-tpl-name', name);
             __tpl[name] = createRender(this);

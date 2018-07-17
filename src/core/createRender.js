@@ -41,8 +41,8 @@ function createRender(root) {
         })
         .replace(/&amp;&amp;/g,'&&');
 
-    var tpl = _.template(_tpl);
-    tpl._tpl_ = _tpl;
-    return tpl;
+    var tpl_fn = _.template(_tpl);
+    tpl_fn._tpl_ = _tpl;
+    return tpl_fn;
 
 }

@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/12/9.
  */
 
-directives.add('ic-ctrl', function ($elm, attrs) {
+directives.reg('ic-ctrl', function ($elm, attrs) {
 
     var ctrlName = $elm.attr('ic-ctrl');
 

@@ -19,19 +19,15 @@ var brick = root.brick = {
       return this.config.get(k);
     },
     on: function (e, fn) {
-        this.eventManager.bind(e, fn);
+        this.eventManager.on(e, fn);
         return this;
     },
     off: function (e, fn) {
-        this.eventManager.unbind(e, fn);
+        this.eventManager.off(e, fn);
         return this;
     },
-    broadcast: function (e, msg) {
-        this.eventManager.fire(e, msg);
-        return this;
-    },
-    fire: function (e, msg) {
-        this.eventManager.fire(e, msg);
+    emit: function (e, msg) {
+        this.eventManager.emit(e, msg);
         return this;
     },
     getTpl: function (name) {
