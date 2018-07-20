@@ -15,10 +15,10 @@
         var tplFn = brick.getTpl(tpl);
         if (!tplFn) return console.info('not find tpl: ' + tpl);
         // 如果数据模型不是对象类型,则对其包装
-        if(typeof model != 'object' || Array.isArray(model)){
+        /*if(typeof model != 'object' || Array.isArray(model)){
             model = {model : model};
-        }
-        var html = tplFn({model: model});
+        }*/
+        var html = tplFn({model : model});
         return this.each(function () {
             var $th = $(this);
             $th.removeAttr('ic-tpl');
@@ -42,8 +42,8 @@
         if (name === void(0)) return void(0);
         var $ctrl = this.closest('[ic-ctrl]');
         var ctrl = $ctrl.attr('ic-ctrl');
-        var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
-        //var namespace = ctrl ? brick.controllers.get(ctrl) : window;
+        //var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : window;
+        var namespace = ctrl ? brick.controllers.get(ctrl) : window;
 
         var chain = name.split('.');
 

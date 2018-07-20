@@ -56,13 +56,10 @@
     overflow: hidden;
 }
 
-[ic-role-slider-pagination] {
+[ic-role-slider-pagination], [ic-select-item],[ic-tab] {
     cursor: pointer;
 }
 
-[ic-tab] {
-    cursor: pointer;
-}
 
 [ic-tab-con] {
     display: none;

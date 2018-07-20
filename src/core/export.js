@@ -12,6 +12,7 @@ var brick = root.brick = {
     createRender:createRender,
     eventManager: eventManager,
     __tpl: {},
+    debug: cc,
     set: function(k, v){
         return this.config.set(k, v);
     },

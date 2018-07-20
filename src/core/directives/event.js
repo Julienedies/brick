@@ -33,7 +33,6 @@ directives.reg('ic-event', {
             var type = e.type;
             var fn = th.attr('ic-' + type);
             fn = th.icParseProperty(fn);
-
             return fn.apply(this, [e]);
         }
 

@@ -1,8 +1,6 @@
 /**
  * Created by julien.zhang on 2014/9/15.
- *
  * 遍历dom节点，根据指令生成一个编译过的模板渲染函数
- *
  */
 
 function createRender(root) {

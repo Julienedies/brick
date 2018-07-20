@@ -1,6 +1,5 @@
 /**
  * Created by julien.zhang on 2014/9/15.
- *
  * 控制器管理器
  */
 
@@ -9,11 +8,12 @@ var controllers = (function () {
 
     // 存储控制器
     var _ctrls = {};
-    var _bind = {};
 
     function extend(dist, o) {
-        for (var i in o) {
-            dist[i] = o[i];
+        if(typeof o == 'object') {
+            for (var i in o) {
+                dist[i] = o[i];
+            }
         }
         return dist;
     }
@@ -32,7 +32,8 @@ var controllers = (function () {
         get: function (key) {
             return this[key];
         },
-
+        // 用于存储数据模型
+        _model : {},
         /**
          * 用于触发事件
          * @param e {String} 事件名
@@ -73,67 +74,51 @@ var controllers = (function () {
             }
             setTimeout(function () {
                 var $tpl_dom = that._render(tplName, model);
-                call && $tpl_dom && call.apply($tpl_dom, []);
+                if($tpl_dom){
+                    brick.compile($tpl_dom);
+                    call && call.apply($tpl_dom, []);
+                }
             }, 30);
         },
         _render: function (tplName, model) {
             var $elm = this.$elm;
             var tpl_fn = brick.getTpl(tplName);  //模板函数
-            var $tpl_dom; //dom元素
+            var selector = '[ic-tpl=?]'.replace('?', tplName);
+            var $tpl_dom; // 有ic-tpl属性的dom元素
             var html;
-            if ($elm && tpl_fn) {
-                $tpl_dom = $elm.filter('[ic-tpl=?]'.replace('?', tplName));
-                $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find('[ic-tpl=?]'.replace('?', tplName));
-                html = tpl_fn(model ? {model: model} : this);
-                if ($tpl_dom.length) {
-                    $tpl_dom.show();
-                    $tpl_dom.removeAttr('ic-tpl');
-                    return $tpl_dom.html(html);
-                }
-            }
+            // 如果数据模型不是对象类型,则对其包装
+            /*if(typeof model != 'object' || Array.isArray(model)){
+                model = {model : model};
+            }*/
+            $tpl_dom = $elm.filter(selector);  // <div ic-ctrl="a" ic-tpl="a"></div>
+            $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);
+            html = tpl_fn({model : model});
+            $tpl_dom.show();
+            $tpl_dom.removeAttr('ic-tpl');
+            return $tpl_dom.html(html);
         }
 
     });
 
-
+    // scope对象
+    function F(name) {
+        this._name = name;
+    }
     function f(name, o) {
-        function F() {
-            this._name = name;
-        }
-
-        F.prototype = new _F();
-        extend(F.prototype, o || {});
-        return new F;
+        F.prototype = new _F();  // 继承scope原型对象
+        extend(F.prototype, o);  // 继承parent scope
+        return new F(name);
     }
 
 
     return {
         /**
-         * 获取一个控制器的对外接口对象
+         * 获取一个控制器的scope对象
          * @param name {String} 控制器ID
          */
         get: function (name) {
-            return _ctrls[name] && _ctrls[name].scope;
+            return name && _ctrls[name] && _ctrls[name].scope;
         },
-
-        /**
-         * 注册控制器
-         * @param name {String}   控制器ID
-         * @param ctrl {Function} 控制器的工厂函数
-         * @param conf {Object}   可选，控制器config (可以定义依赖，是否注册为global变量，是否做为service)
-         */
-        add: function (name, ctrl, conf) {
-            conf = conf || {};
-            var parent = conf.parent;
-            var depend = conf.depend || [];
-            var scope;
-            scope = parent ? f(name, _ctrls[parent]) : f(name);
-            if (conf.global) {
-                window[name] = scope;
-            }
-            _ctrls[name] = {fn: ctrl, scope: scope, depend: depend, service: conf.service, conf: conf};
-        },
-
         /**
          * 注册控制器
          * @param name {String}   控制器ID
@@ -143,64 +128,41 @@ var controllers = (function () {
         reg: function (name, ctrl, conf) {
             conf = conf || {};
             var depend = conf.depend || [];
-            _ctrls[name] = {fn: ctrl, conf: conf, depend: depend, service: conf.service, scope: []};
+            _ctrls[name] = {fn: ctrl, depend: depend, service: conf.service, conf: conf};
         },
 
         /**
          * 运行控制器
          * @param name
+         * @param parent {scope} 父scope对象
+         * @param $elm  {jQuery} 绑定scope对象的dom
          */
         exec: function (name, parent, $elm) {
-            var ctrl = _ctrls[name];
 
+            var ctrl = _ctrls[name];
             if (!ctrl) return console.log('not find controller ' + name);
 
             var conf = ctrl.conf;
             var scope;
-            var depend = conf.depend || [];
+            var depend = ctrl.depend;
 
             scope = parent ? f(name, parent) : f(name);
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
-            ctrl.scope = scope; //如果有多个控制器实例，则改名下控制器的作用域对象引用的会是最后一个实例化控制器的作用域对象
-            $elm.data('ic-ctrl-scope', scope);
+            ctrl.scope = scope; // 如果有多个控制器实例，则该名下控制器的作用域对象引用的会是最后一个实例化控制器的作用域对象
+            //$elm.data('ic-ctrl-scope', scope);
 
             depend = services.get(depend) || [];
             depend = depend.constructor !== Array ? [depend] : depend;
             depend.unshift(scope);
 
-            ctrl.fn.apply(scope, depend);
-            ctrl.exec = (ctrl.exec || 0) + 1;
+            console.log('exec controller factory: ', name );
+            ctrl.fn.apply(scope, depend);  // 注入scope和依赖,执行factory
+
+            //ctrl.exec = (ctrl.exec || 0) + 1;
 
             //if(conf.global) window[name] = scope;
             return scope;
-        },
-
-        /**
-         * 初始化控制器
-         */
-        init: function (name) {
-            var ctrls = _ctrls;
-            var ctrl;
-            var depend;
-            var service;
-            for (var i in ctrls) {
-                ctrl = ctrls[i];
-                if (ctrl.exec) continue;
-                depend = services.get(ctrl.depend) || [];
-                if (depend.constructor !== Array) {
-                    depend = [depend];
-                }
-                depend.unshift(ctrl.scope);
-                service = ctrl.fn.apply(ctrl.scope, depend);
-                ctrl.fn = function () {
-                };
-
-                if (ctrl.service) {
-                    services.fill(i, service);
-                }
-
-            }
         },
 
         _look: function () {
