@@ -14,11 +14,16 @@
         }
         var tplFn = brick.getTpl(tpl);
         if (!tplFn) return console.info('not find tpl: ' + tpl);
+        // 如果数据模型不是对象类型,则对其包装
+        if(typeof model != 'object' || Array.isArray(model)){
+            model = {model : model};
+        }
         var html = tplFn({model: model});
         return this.each(function () {
             var $th = $(this);
             $th.removeAttr('ic-tpl');
             $th.html(html);
+            $th.icCompile();
             callback && callback.apply(this, [$th.children()]);
         });
     };

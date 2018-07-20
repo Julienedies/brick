@@ -3,17 +3,17 @@
  */
 
 
-brick.directives.reg('ic-select-list', function ($elm, attrs) {
+brick.directives.reg('ic-select', function ($elm, attrs) {
 
     /*
-     ic-select-list
+     ic-select
      ic-select-item
      ic-select-all
      ic-select-more
      */
 
     var cla = 'selected';
-    var list = 'ic-select-list';
+    var list = 'ic-select';
     var item = '[ic-select-item]';
     var all = '[ic-select-all]';
     var more = '[ic-select-more]';
@@ -22,9 +22,9 @@ brick.directives.reg('ic-select-list', function ($elm, attrs) {
     var val = 'ic-select-val';
     var eventSpace = list + '.';
 
-    if (!$.fn.icSelectList) {
+    if (!$.fn.icSelect) {
 
-        $.fn.icSelectList = function (action, msg) {
+        $.fn.icSelect = function (action, msg) {
 
             console.log(eventSpace + action);
 
