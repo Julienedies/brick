@@ -48,7 +48,8 @@ brick.directives.reg('ic-show-img', function ($elm) {
         return false;
     });
 
-    $imgBox.on('click','#ic-show-img-box-close', function (e) {
+    //'#ic-show-img-box-close',
+    $imgBox.on('click', function (e) {
         $imgBox.fadeToggle();
         $elm.trigger('ic-show-img.hide');
         $(document.body).off('mousewheel', callback);
