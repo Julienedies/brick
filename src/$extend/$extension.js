@@ -186,6 +186,8 @@
 
         return this.each(function (i) {
 
+            if(/^textarea$/img.test(this.tagName)) return this;
+
             call = $.proxy(call, this);
 
             var fn = function (e) {

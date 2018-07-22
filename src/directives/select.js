@@ -17,7 +17,7 @@ var type = $elm.attr('ic-select-type') || 'radio';
 var $items =  $elm.find(s_item);
 
     if(!$items.size()){
-        $elm.find('>*').each(function(){
+        $items = $elm.find('>*').each(function(){
             $(this).attr('ic-select-item', +new Date);
         });
     }
@@ -29,9 +29,9 @@ var callback = type == 'checkbox' ?
     }
     :
     function(){
+        $items.removeClass(cla);
         var $th = $(this).addClass(cla);
-        $(this).siblings().removeClass(cla);
-        $elm.trigger('ic-select.change', {name:name});
+        $elm.trigger('ic-select.change', {name:name, value: $th.attr('ic-val')});
     };
 
     $elm.on('click', s_item, callback);

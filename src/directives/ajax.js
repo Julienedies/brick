@@ -30,14 +30,15 @@ directives.reg('ic-ajax', function () {
             var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
             var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-            if (before.apply(that) === false) return;
+            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+            var _data = before.call(that, data);
+            if (_data === false) return;
+            data = _data || data;
 
             var domain = brick.get('ajax.domain') || '';
             var url = domain + $elm.attr('ic-submit-action');
             var dataType = $elm.attr('ic-submit-data-type') || 'json';
             var method = $elm.attr('ic-submit-method') || 'post';
-
-            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
 
             $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
 

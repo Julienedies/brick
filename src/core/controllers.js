@@ -39,9 +39,9 @@ var controllers = (function () {
          * @param e {String} 事件名
          * @param msg {*}    任意要传递的数据
          */
-        fire: function (e, msg) {
+        emit: function (e, msg) {
             var that = this;
-            eventManager.fire(e, msg, that);
+            eventManager.emit(e, msg, that);
         },
         /**
          * 用于订阅事件
@@ -50,7 +50,7 @@ var controllers = (function () {
          */
         on: function (e, f) {
             var that = this;
-            eventManager.bind(e, f, that);
+            eventManager.on(e, f, that);
         },
         /**
          * 取消事件监听
@@ -58,19 +58,25 @@ var controllers = (function () {
          * @param f {Function} 回调函数
          */
         off: function (e, f) {
-            eventManager.unbind(e, f);
+            eventManager.off(e, f);
         },
         render: function (tplName, model, call) {
             var that = this;
+            if(tplName == undefined){
+                tplName = this._name;
+                model = this._model;
+            }
+            else
             if (typeof tplName == 'function') {
                 call = tplName;
                 tplName = that._name;
                 model = that;
             }
+            else
             if (typeof tplName == 'object') {
+                call = model;
                 model = tplName;
                 tplName = that._name;
-                call = model;
             }
             setTimeout(function () {
                 var $tpl_dom = that._render(tplName, model);
@@ -83,7 +89,7 @@ var controllers = (function () {
         _render: function (tplName, model) {
             var $elm = this.$elm;
             var tpl_fn = brick.getTpl(tplName);  //模板函数
-            var selector = '[ic-tpl=?]'.replace('?', tplName);
+            var selector = '[ic-tpl=?],[ic-tpl-name=?]'.replace(/[?]/img, tplName);
             var $tpl_dom; // 有ic-tpl属性的dom元素
             var html;
             // 如果数据模型不是对象类型,则对其包装
@@ -93,7 +99,7 @@ var controllers = (function () {
             $tpl_dom = $elm.filter(selector);  // <div ic-ctrl="a" ic-tpl="a"></div>
             $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);
             html = tpl_fn({model : model});
-            $tpl_dom.show();
+            $tpl_dom.show(); // 渲染模板后进行编译
             $tpl_dom.removeAttr('ic-tpl');
             return $tpl_dom.html(html);
         }
@@ -140,7 +146,7 @@ var controllers = (function () {
         exec: function (name, parent, $elm) {
 
             var ctrl = _ctrls[name];
-            if (!ctrl) return console.log('not find controller ' + name);
+            if (!ctrl) return console.info('not find controller ' + name);
 
             var conf = ctrl.conf;
             var scope;

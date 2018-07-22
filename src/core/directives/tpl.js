@@ -21,7 +21,9 @@ directives.reg('ic-tpl', {
                 name = $parent.attr('ic-ctrl');
             }
 
+            $th.attr('ic-tpl', name);
             $th.attr('ic-tpl-name', name);
+
             __tpl[name] = createRender(this);
 
         });

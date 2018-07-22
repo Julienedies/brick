@@ -273,7 +273,8 @@ directives.reg('ic-form', function ($elm, attrs) {
     // 提交触发
     $submit.on(eventAction, toSubmit);
     // 回车提交触发
-    $fields.icEnterPress(function () {
+    $fields.not('textarea').icEnterPress(function () {
+        console.info(this);
         $submit.trigger(eventAction);
     });
 
