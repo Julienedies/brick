@@ -476,7 +476,7 @@ var controllers = (function (){
             }
         },
 
-        _render: function(){
+        _render_: function(){
             var html = this.tmplFn({data: this});
 
             if(this.htmlList){
