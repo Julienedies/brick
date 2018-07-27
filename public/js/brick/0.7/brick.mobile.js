@@ -2,10 +2,13 @@
  * js framework brick by Julien.
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
+ * "Sun Jun 24 2018 17:46:21 GMT+0800 (CST) "
+ * "2018-06-24T09:46:21.922Z"
  */
 ;
 (function (root, undefined) {
 
+    //__inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
     //core
     /**
  * Created by julien.zhang on 2014/9/16.
@@ -471,6 +474,7 @@ var controllers = (function (){
                 //console.log(html)
                 if(tple.length){
                     tple.show();
+                    tple.removeAttr('ic-tpl');
                     return tple.html(html);
                 }
             }
@@ -1339,7 +1343,7 @@ directives.add('ic-event', {
 
 ;
 
-    //以下都是可选的内置的services、directives、brick扩展
+    //以下是可选的内置的services、directives、brick扩展
     /**
  * Created by Julien on 2014/8/13.
  *
