@@ -32,11 +32,11 @@ brick使用[fis](https://github.com/fex-team/fis)做为项目构建工具。
 1.  本机安装nodejs;
 2.  命令行执行以下命令，类Unix系统请将&替换为&&
 ```
-npm install -g fis & npm install -g fis-parser-sass 
+npm install -g fis & npm install -g fis-parser-node-sass
 ```
 ###开发相关命令:
 ```
-git clone git@github.com:Julienedies/brick.git
+git clone https://github.com/Julienedies/brick.git
 cd brick
 fis release --file fis/dev.js --dest local -D  --clean --watch  
 ```
