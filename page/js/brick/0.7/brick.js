@@ -480,7 +480,7 @@ var controllers = (function (){
             }
         },
 
-        _render_: function(){
+        _render: function(){
             var html = this.tmplFn({data: this});
 
             if(this.htmlList){

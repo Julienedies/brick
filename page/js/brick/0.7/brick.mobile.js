@@ -8,7 +8,7 @@
 ;
 (function (root, undefined) {
 
-    // __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
+    //__inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
     //core
     /**
  * Created by julien.zhang on 2014/9/16.
@@ -480,7 +480,7 @@ var controllers = (function (){
             }
         },
 
-        _render_: function(){
+        _render: function(){
             var html = this.tmplFn({data: this});
 
             if(this.htmlList){
@@ -1096,18 +1096,33 @@ directives.add('ic-event', {
  */
 (function ($) {
 
-    $.fn.icCompile = function(){
-
-        if(!this.length) return;
-
-        return this.each(function(i){
-
-            brick.compile(this);
-
+    $.fn.icRender = function(tpl, model, callback){
+        if(typeof tpl == 'object'){
+            callback = model;
+            model = tpl;
+            tpl = this.attr('ic-tpl-name');
+        }
+        var tplFn = brick.getTpl(tpl);
+        if(!tplFn) return console.info('not find tpl: '+ tpl);
+        var html = tplFn(model);
+        return this.each(function(){
+            var $th = $(this);
+            $th.removeAttr('ic-tpl');
+            $th.html(html);
+            callback && callback.apply(this, [$th.children()]);
         });
     };
 
-    $.fn.icParseProperty = function (name) {
+    $.fn.icCompile = function () {
+
+        if (!this.length) return this;
+
+        return this.each(function (i) {
+            brick.compile(this);
+        });
+    };
+
+    $.fn.icParseProperty = function (name, debug) {
 
         if (name === void(0)) return void(0);
         var $ctrl = this.closest('[ic-ctrl]');
@@ -1120,7 +1135,7 @@ directives.add('ic-event', {
         return (function (root, chain) {
 
             var k = chain.shift();
-            var v = root[k];
+            var v = root && root[k];
 
             if (!v) return;
 
@@ -1134,19 +1149,19 @@ directives.add('ic-event', {
 
     };
 
-    $.fn.icParseProperty2 = function(name){
+    $.fn.icParseProperty2 = function (name) {
         name = this.attr(name);
         return this.icParseProperty(name);
     };
 
-    $.fn.icTabActive = $.fn.icTabs = function(options){
+    $.fn.icTabs = function (options) {
         var active = options.active;
         active && this.attr('ic-tab-active', active);
         return this;
     };
 
     $.fn.icAjax = function (options) {
-        if(options === void(0)) return this.trigger('ic-ajax');
+        if (options === void(0)) return this.trigger('ic-ajax');
         options.data && this.data('ic-submit-data', options.data);
 
         options.disabled !== void(0) && this.attr('ic-ajax-disabled', !!options.disabled);
@@ -1154,107 +1169,108 @@ directives.add('ic-event', {
         return this;
     };
 
-    $.fn.icDialog = function (options) {
-
-        this.show();
-        var that = this;
-        setTimeout(function () {
-            var id = that.attr('ic-dialog');
-            if (id !== void(0)) {
-                that.trigger('ic-dialog.call', options);
-            }
-        }, 30);
-
-        return this;
+    $.fn.icForm = function(call, options){
+        return this.trigger('ic-form.'+call, options);
     };
 
-//定时器
-    $.fn.icTimer = function () {
-        var th = this;
-        var count = th.attr('ic-timer-count') * 1;
+    $.fn.icDialog = function (options, callback) {
 
-        var timer = setInterval(function () {
-            if (count--) {
-                th.text(count);
-            } else {
-                clearInterval(timer);
-                th.trigger('ic-timer.' + 'end');
-            }
-        }, 1000);
+        options = _.isObject(options) ? _.extend({desc:'', title:''}, options) : {desc:options, title:''};
 
-        return this;
-    };
-    //切换场景
-    $.icNextScene = function () {
-        var current = $('[ic-scene]').filter('[ic-scene-active=1]');
-
-        if (current.size) current.nextScene();
-    };
-
-    $.fn.nextScene = function () {
-        var next = this.attr('ic-scene-next');
-        if (next) {
-            this.hide().removeAttr('ic-scene-active');
-            $('[ic-scene=?]'.replace('?', next)).show().attr('ic-scene-active', 1);
+        if (!(this[0] && this[0].hasAttribute('ic-dialog'))){
+            console.error('not is ic-dialog');
+            return this;
         }
 
-        return this;
-    };
+        var that = this;
+        var tpl = that.attr('ic-tpl-name');
 
-// 操作提示
-    var tipSize=0;
-    $.fn.tips = function (parent) {
-        ++tipSize;
-        var $parent = $(parent || 'body');
-        var w = $parent.innerWidth() * 0.4 + 'px';
-        var h;
-        var top;
-        var left;
-        var wraper = $('<div class="tipsBox"></div>');
+        callback && this.one('ic-dialog.close', callback);
 
-        this.addClass('tips1').css({
-            'width': w
-        });
-        this.appendTo(wraper);
-        wraper.appendTo($parent);
+        setTimeout(function(){
 
-        w = this.width()
-        h = this.height();
-        top = '-' + h / 2 + 'px';
-        left = '-' + w / 2 + 'px';
-        this.css({
-            'top': 40 * tipSize,
-            'left': left
-        });
+            if (options === void(0)) {
+                options = true;
+            }
 
-        wraper.animate({
-            top: 0,
-            'opacity': '1'
-        }, 500, function () {
-            $(this).addClass('animated wobble');
-        });
+            if (!options) {
+                that.icAniOut(21);
+            }
 
-        setTimeout(function () {
-            wraper.animate({
-                'top': -300,
-                'opacity': '0'
-            }, 500, function () {
-                --tipSize;
-                wraper.remove();
+            if (tpl && _.isObject(options)) {
+                that.icRender(tpl, options.vm || options);
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-dialog.show');
             });
-        }, 2000 * tipSize);
+
+        },30);
 
         return this;
     };
 
-    $.tips = function (massge) {
-        $('<div>' + massge + '</div>').tips();
+    $.icDialog = function(msg, callback){
+        var options = _.isObject(msg) ? _.extend({desc:'', title:''}, msg) : {desc:msg, title:''};
+        $('[ic-dialog]:first').icDialog(options, callback);
     };
 
-//监听enter键
+    $.fn.icPrompt = function (options) {
+
+        if (!(this[0] && this[0].hasAttribute('ic-prompt'))) {
+            console.error('not is ic-prompt');
+            return this;
+        }
+
+        var that = this;
+        var tpl = that.attr('ic-tpl-name');
+
+        clearTimeout(that.data('ic-prompt-timer'));
+
+        setTimeout(function(){
+
+            if (options === void(0)) {
+                options = true;
+            }
+
+            if (!options) {
+                that.icAniOut();
+            }
+
+            if (tpl && _.isObject(options)) {
+                that.icRender(tpl, options.vm || options);
+            }
+
+            that.icAniIn(21, function () {
+                that.trigger('ic-prompt.show');
+
+                var timer = setTimeout(function(){
+                    that.icAniOut();
+                }, 2400);
+
+                that.data('ic-prompt-timer', timer);
+
+            });
+
+        },30);
+
+        return this;
+    };
+
+    $.icPrompt = function(msg){
+        var options = _.isObject(msg) ? msg : {desc:msg};
+        $('[ic-prompt]:first').icPrompt(options);
+    };
+
+    $.fn.icDatePicker = function(call, options){
+        return this.trigger('ic-date-picker.'+call, options);
+    };
+
+
+    //监听enter键
     $.fn.icEnterPress = function (call) {
 
-        return this.each(function(i){
+        return this.each(function (i) {
 
             call = $.proxy(call, this);
 
@@ -1266,26 +1282,19 @@ directives.add('ic-event', {
 
             $(this)
                 .on('focus', function () {
-                    $(this).keypress(fn);
+                    $(this).on('input keypress', fn);
                 })
                 .on('blur', function () {
-                    $(this).unbind('keypress', fn);
+                    $(this).off('input keypress', fn);
                 });
         });
 
     };
 
-//设置loading
+    //设置loading
     (function ($) {
 
-        var loading = '<span style="margin:0.2em auto;display:inline-block;text-align:center;" role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
-
-        if (window.ActiveXObject) {
-
-            loading = 'data:image/gif;base64,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';
-            loading = '<span style="margin:0.2em; auto;display:inline-block;text-align:center;" role="_loading_"><img src="?"></span>'.replace('?', loading);
-
-        }
+        var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
 
         $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
@@ -1293,7 +1302,7 @@ directives.add('ic-event', {
 
             this.icClearLoading();
 
-            return this.each(function(){
+            return this.each(function () {
                 //this.parent().css({position:'relative'});
                 var $th = $(this);
                 var w = $th.outerWidth();
@@ -1301,7 +1310,7 @@ directives.add('ic-event', {
                 var offset = $th.offset();
                 var top = offset.top;
                 var left = offset.left;
-                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top:top, left:left,'z-index':999}).appendTo('body');
+                var $loading = $(_loading || loading).css({width: w, height: h, position: 'absolute', top: top, left: left, 'z-index': 1999}).appendTo('body');
 
                 //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
 
@@ -1312,13 +1321,13 @@ directives.add('ic-event', {
 
         };
 
-    })(jQuery);
+    })($);
 
 
-//清除loading
+    //清除loading
     $.fn.icClearLoading = $.fn.clearLoading = function () {
 
-        return this.each(function(){
+        return this.each(function () {
             var $th = $(this);
             var $loading = $th.data('_ic-role-loading');
             $loading && $loading.remove();
@@ -1684,6 +1693,737 @@ function recordManager() {
 services.reg('recordManager', recordManager);;
 
     /**
+ * Created by Juien on 2015/8/10.
+ */
+
+
+/**
+ * 虚构进度数字
+ * @type {{current: number, get: get, init: init}}
+ */
+brick.progress = {
+    current: 1,
+    get: function () {
+        var current = this.current;
+        var add = current > 97 ? 0 : current > 72 ? Math.random() : Math.round(Math.random() * 16);
+        current = this.current += add;
+        return (current.toFixed(2) + '%').replace(/\.00/i, '');
+    },
+    init: function () {
+        this.current = 1;
+        return this;
+    }
+};
+
+/**
+ * 封装location.search为一个对象，如果不存在，返回undefined
+ * @returns {*}
+ */
+brick.getQuery = function (str) {
+    var result;
+    var k;
+    if(str && /^[-_\w]+$/i.test(str)){
+        k = str;
+        str = '';
+    }
+    str = str && str.split('?').length > 1 ? str.split('?')[1] : str;
+    //var query = location.search.replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'').replace(/([^=,\s]+)\=([^=,\s]*)/img, '"$1":"$2"');
+    var query = (str || location.search).replace(/^\?/i, '').replace(/\&/img, ',').replace(/^\,+/img,'');
+    query.replace(/([^=,\s]+)\=([^=,\s]*)/img, function($, $1, $2){
+        result = result || {};
+        var k;
+        var arr;
+        $2 = decodeURIComponent($2);
+        if(/\[\]$/i.test($1)){
+            k = $1.replace(/\[\]$/i, '');
+            arr = result[k] = result[k] || [];
+            arr.push($2);
+        }else{
+            result[$1] = $2;
+        }
+    });
+//    if(!query) return result;
+//    try {
+//        result = JSON.parse('{' + query + '}');
+//    } catch (e) {
+//        console.error(e);
+//        return;
+//    }
+
+//    for(var i in result){
+//        result[i] = decodeURIComponent(result[i]);
+//    }
+
+    return k ? (result && result[k]) : result;
+};
+
+/**
+ * 恢复被转义的html
+ * @param text
+ * @returns {*}
+ */
+brick.toHtml = function (text) {
+    var c = $('<div></div>');
+    c.html(text);
+    return c.text();
+};
+
+
+
+
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
+/**
+ * 获取一个动画类
+ * @param animation {Number} 1-67
+ * @returns {{inClass: string, outClass: string}}
+ */
+brick.getAniMap = function (animation) {
+
+    animation = animation*1 > 67 ? 0 : animation*1;
+    animation = animation || Math.round(Math.random() * 66 + 1);
+
+    console.info('animation id is ' + animation);
+
+    var outClass = '', inClass = '';
+
+    switch (animation) {
+
+        case 1:
+            outClass = 'pt-page-moveToLeft';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 2:
+            outClass = 'pt-page-moveToRight';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 3:
+            outClass = 'pt-page-moveToTop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 4:
+            outClass = 'pt-page-moveToBottom';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 5:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromRight pt-page-ontop';
+            break;
+        case 6:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromLeft pt-page-ontop';
+            break;
+        case 7:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromBottom pt-page-ontop';
+            break;
+        case 8:
+            outClass = 'pt-page-fade';
+            inClass = 'pt-page-moveFromTop pt-page-ontop';
+            break;
+        case 9:
+            outClass = 'pt-page-moveToLeftFade';
+            inClass = 'pt-page-moveFromRightFade';
+            break;
+        case 10:
+            outClass = 'pt-page-moveToRightFade';
+            inClass = 'pt-page-moveFromLeftFade';
+            break;
+        case 11:
+            outClass = 'pt-page-moveToTopFade';
+            inClass = 'pt-page-moveFromBottomFade';
+            break;
+        case 12:
+            outClass = 'pt-page-moveToBottomFade';
+            inClass = 'pt-page-moveFromTopFade';
+            break;
+        case 13:
+            outClass = 'pt-page-moveToLeftEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 14:
+            outClass = 'pt-page-moveToRightEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 15:
+            outClass = 'pt-page-moveToTopEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 16:
+            outClass = 'pt-page-moveToBottomEasing pt-page-ontop';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 17:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromRight pt-page-ontop';
+            break;
+        case 18:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromLeft pt-page-ontop';
+            break;
+        case 19:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromBottom pt-page-ontop';
+            break;
+        case 20:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-moveFromTop pt-page-ontop';
+            break;
+        case 21:
+            outClass = 'pt-page-scaleDown';
+            inClass = 'pt-page-scaleUpDown pt-page-delay300';
+            break;
+        case 22:
+            outClass = 'pt-page-scaleDownUp';
+            inClass = 'pt-page-scaleUp pt-page-delay300';
+            break;
+        case 23:
+            outClass = 'pt-page-moveToLeft pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 24:
+            outClass = 'pt-page-moveToRight pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 25:
+            outClass = 'pt-page-moveToTop pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 26:
+            outClass = 'pt-page-moveToBottom pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 27:
+            outClass = 'pt-page-scaleDownCenter';
+            inClass = 'pt-page-scaleUpCenter pt-page-delay400';
+            break;
+        case 28:
+            outClass = 'pt-page-rotateRightSideFirst';
+            inClass = 'pt-page-moveFromRight pt-page-delay200 pt-page-ontop';
+            break;
+        case 29:
+            outClass = 'pt-page-rotateLeftSideFirst';
+            inClass = 'pt-page-moveFromLeft pt-page-delay200 pt-page-ontop';
+            break;
+        case 30:
+            outClass = 'pt-page-rotateTopSideFirst';
+            inClass = 'pt-page-moveFromTop pt-page-delay200 pt-page-ontop';
+            break;
+        case 31:
+            outClass = 'pt-page-rotateBottomSideFirst';
+            inClass = 'pt-page-moveFromBottom pt-page-delay200 pt-page-ontop';
+            break;
+        case 32:
+            outClass = 'pt-page-flipOutRight';
+            inClass = 'pt-page-flipInLeft pt-page-delay500';
+            break;
+        case 33:
+            outClass = 'pt-page-flipOutLeft';
+            inClass = 'pt-page-flipInRight pt-page-delay500';
+            break;
+        case 34:
+            outClass = 'pt-page-flipOutTop';
+            inClass = 'pt-page-flipInBottom pt-page-delay500';
+            break;
+        case 35:
+            outClass = 'pt-page-flipOutBottom';
+            inClass = 'pt-page-flipInTop pt-page-delay500';
+            break;
+        case 36:
+            outClass = 'pt-page-rotateFall pt-page-ontop';
+            inClass = 'pt-page-scaleUp';
+            break;
+        case 37:
+            outClass = 'pt-page-rotateOutNewspaper';
+            inClass = 'pt-page-rotateInNewspaper pt-page-delay500';
+            break;
+        case 38:
+            outClass = 'pt-page-rotatePushLeft';
+            inClass = 'pt-page-moveFromRight';
+            break;
+        case 39:
+            outClass = 'pt-page-rotatePushRight';
+            inClass = 'pt-page-moveFromLeft';
+            break;
+        case 40:
+            outClass = 'pt-page-rotatePushTop';
+            inClass = 'pt-page-moveFromBottom';
+            break;
+        case 41:
+            outClass = 'pt-page-rotatePushBottom';
+            inClass = 'pt-page-moveFromTop';
+            break;
+        case 42:
+            outClass = 'pt-page-rotatePushLeft';
+            inClass = 'pt-page-rotatePullRight pt-page-delay180';
+            break;
+        case 43:
+            outClass = 'pt-page-rotatePushRight';
+            inClass = 'pt-page-rotatePullLeft pt-page-delay180';
+            break;
+        case 44:
+            outClass = 'pt-page-rotatePushTop';
+            inClass = 'pt-page-rotatePullBottom pt-page-delay180';
+            break;
+        case 45:
+            outClass = 'pt-page-rotatePushBottom';
+            inClass = 'pt-page-rotatePullTop pt-page-delay180';
+            break;
+        case 46:
+            outClass = 'pt-page-rotateFoldLeft';
+            inClass = 'pt-page-moveFromRightFade';
+            break;
+        case 47:
+            outClass = 'pt-page-rotateFoldRight';
+            inClass = 'pt-page-moveFromLeftFade';
+            break;
+        case 48:
+            outClass = 'pt-page-rotateFoldTop';
+            inClass = 'pt-page-moveFromBottomFade';
+            break;
+        case 49:
+            outClass = 'pt-page-rotateFoldBottom';
+            inClass = 'pt-page-moveFromTopFade';
+            break;
+        case 50:
+            outClass = 'pt-page-moveToRightFade';
+            inClass = 'pt-page-rotateUnfoldLeft';
+            break;
+        case 51:
+            outClass = 'pt-page-moveToLeftFade';
+            inClass = 'pt-page-rotateUnfoldRight';
+            break;
+        case 52:
+            outClass = 'pt-page-moveToBottomFade';
+            inClass = 'pt-page-rotateUnfoldTop';
+            break;
+        case 53:
+            outClass = 'pt-page-moveToTopFade';
+            inClass = 'pt-page-rotateUnfoldBottom';
+            break;
+        case 54:
+            outClass = 'pt-page-rotateRoomLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomLeftIn';
+            break;
+        case 55:
+            outClass = 'pt-page-rotateRoomRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomRightIn';
+            break;
+        case 56:
+            outClass = 'pt-page-rotateRoomTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomTopIn';
+            break;
+        case 57:
+            outClass = 'pt-page-rotateRoomBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateRoomBottomIn';
+            break;
+        case 58:
+            outClass = 'pt-page-rotateCubeLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeLeftIn';
+            break;
+        case 59:
+            outClass = 'pt-page-rotateCubeRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeRightIn';
+            break;
+        case 60:
+            outClass = 'pt-page-rotateCubeTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeTopIn';
+            break;
+        case 61:
+            outClass = 'pt-page-rotateCubeBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateCubeBottomIn';
+            break;
+        case 62:
+            outClass = 'pt-page-rotateCarouselLeftOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselLeftIn';
+            break;
+        case 63:
+            outClass = 'pt-page-rotateCarouselRightOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselRightIn';
+            break;
+        case 64:
+            outClass = 'pt-page-rotateCarouselTopOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselTopIn';
+            break;
+        case 65:
+            outClass = 'pt-page-rotateCarouselBottomOut pt-page-ontop';
+            inClass = 'pt-page-rotateCarouselBottomIn';
+            break;
+        case 66:
+            outClass = 'pt-page-rotateSidesOut';
+            inClass = 'pt-page-rotateSidesIn pt-page-delay200';
+            break;
+        case 67:
+            outClass = 'pt-page-rotateSlideOut';
+            inClass = 'pt-page-rotateSlideIn';
+            break;
+
+    }
+
+    return {inClass: inClass, outClass: outClass};
+};
+
+/**
+ * 扩展jquery，添加转场动画支持
+ * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
+ * 一个元素css display:none  不能做css3动画
+ */
+;
+(function () {
+
+    var $doc = $('body');
+    var animEndEventName = 'webkitAnimationEnd';
+
+    function initStatus($elm) {
+        $elm.attr('ic-isAnimating', false);
+        $elm.addClass('ic-animating');
+        $elm.attr('ic-aniEnd', false);
+        $elm.removeAttr('ic-aniIn');
+    }
+
+    function onEndAnimation($elm, call) {
+        $elm.removeClass('ic-animating');
+        $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
+        call && call.call($elm[0]);
+    }
+
+    //out
+    $.fn.icAniOut = function (aniId, $next, call) {
+
+        var args = [].slice.call(arguments);
+
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
+
+        $next = $($next);
+
+        var $current = this;
+
+        $current = $current[0] && $current[0].hasAttribute ? $current : false;
+        $next = $next[0] && $next[0].hasAttribute ? $next : false;
+
+        if(!$next){
+
+            if(!aniId){
+                aniId = aniId || this.attr('ic-aniId');
+                aniId = aniId && aniId * 1;
+                aniId = aniId && aniId % 2 ? aniId + 1 : aniId - 1;
+            }
+
+        }
+
+        var cla = brick.getAniMap(aniId);
+        var inClass = cla.inClass;
+        var outClass = cla.outClass;
+
+        // $doc.animate({scrollTop: 0}, 150);
+        //$doc.scrollTop(0);
+
+        if ($current && !$current.hasClass('ic-animating')) {
+
+            initStatus($current);
+
+            $current.addClass(outClass).on(animEndEventName, function () {
+
+                $current.removeClass(outClass);
+                $current.removeAttr('ic-active');
+                $current.removeAttr('ic-aniIn');
+                $current.attr('ic-aniOut', true);
+                onEndAnimation($current, call);
+
+                if (!$next || $next && $next.attr('ic-aniEnd')) {
+                    //_onEndAnimation($current);
+                }
+
+            });
+
+        }
+
+
+        if ($next && !$next.hasClass('ic-animating')) {
+
+            initStatus($next);
+
+            $next.attr('ic-aniId', aniId);
+            $next.attr('ic-active', true);
+            $next.attr('ic-aniIn', true);
+            $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
+
+                $next.removeClass(inClass);
+                onEndAnimation($next, call);
+
+                if (!$current || $current && $current.attr('ic-aniEnd')) {
+                    //_onEndAnimation($next);
+                }
+
+            });
+
+        }
+
+        return this;
+
+    };
+
+    //in
+    $.fn.icAniIn = function (aniId, $next, call) {
+
+        var args = [].slice.call(arguments);
+
+        aniId = $next = call = void(0);
+
+        args.forEach(function (v) {
+            if (_.isFunction(v)) {
+                call = v;
+            } else if (_.isObject(v)) {
+                $next = v;
+            } else if (_.isNumber(v)) {
+                aniId = v;
+            }
+        });
+
+        $next = $next || $({});
+
+        return $next.icAniOut(aniId, this, call);
+    }
+
+})();
+
+
+;
+(function () {
+
+    function Transition(conf) {
+        _.extend(this, conf || {});
+        this.history = [];
+        this.pool = {};
+        this.conf = {};
+        this.currentView = '';
+        this.$current = $({});
+        //this.current();
+    }
+
+    var proto = {
+        cache: function (name, $view) {
+            var viewProp = this.pool[name] = this.pool[name] || {};
+            if ($view) {
+                viewProp.$view = $view;
+                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
+            }
+            $view = viewProp.$view;
+            if (!$view) {
+                $view = $('[ic-view=?]'.replace('?', name));
+                return this.cache(name, $view);
+            }
+            return viewProp;
+        },
+        current: function () {
+            var currentView = this.currentView;
+            if (!currentView) {
+                var $view = $('[ic-view][ic-active]');
+                currentView = $view.attr('ic-view');
+                this.currentView = currentView;
+                this.$current = $view;
+                this.cache(currentView, $view);
+            }
+            return currentView;
+        },
+        to: function (name, reverse) {
+            if(!name) throw 'must to provide name of view.';
+            var that = this;
+            var currentView = this.current();
+            if(currentView == name) return;
+            var nextViewProp = this.cache(name);
+            var currentViewProp = this.cache(currentView);
+            var aniId = currentViewProp.aniId;
+            aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
+            nextViewProp.$view.trigger('ic-view.active', nextViewProp);
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
+                !reverse && that.history.push(currentView);
+                that.currentView = name;
+                that.$current = nextViewProp.$view;
+            });
+        },
+        back: function () {
+            var prev = this.history.pop();
+            prev && this.to(prev, true);
+        }
+    };
+
+    for (var i in proto) {
+        Transition.prototype[i] = proto[i];
+    }
+
+
+    var transition = brick.view = new Transition;
+    var eventAction = brick.get('event.action');
+
+    $(document.body).on(eventAction, '[ic-view-to]', function (e) {
+        var name = $(this).attr('ic-view-to');
+        transition.to(name);
+    }).on('click', '[ic-view-back]', function (e) {
+        transition.back();
+    });
+
+})();
+;
+    /**
+ * Created by Julien on 2015/9/1.
+ */
+
+
+/**
+ *
+ * @param hash
+ * @param handler
+ * @returns {Window.brick|*}
+ */
+brick.addRoute = function (hash, handler) {
+
+    if(hash == '') {
+        hash = '/';
+    }
+
+    function f(hash, handler) {
+        return brick.on('ic-hashChange.' + hash, handler);
+    }
+
+    //开启hashchange事件监听
+    brick.config.set('ic-hashChange.enable', true);
+
+    f(hash, handler);
+
+    brick.addRoute = f;
+
+    return brick;
+
+};
+
+/**
+ *
+ * @param hash
+ * @param handler
+ * @returns {*}
+ */
+brick.removeRoute = function (hash, handler) {
+    return brick.off('ic-hashChange.' + hash, handler);
+};;
+    /**
+ * Created by Julien on 2015/8/10.
+ */
+
+
+!function(){
+
+    brick.cache = function(_conf){
+
+        _conf = _.extend({
+            expire : brick.config.get('cache.expire') ||  1 * 24 * 60 * 60 * 1000,
+            namespace : brick.config.get('cache.namespace') || '__ic__'
+        }, _conf || {});
+
+        return function _cache(k, v, conf){
+
+            if(_.isUndefined(k)) return console.log('return for undefined k.');
+
+            var base = JSON.parse(JSON.stringify(_conf));
+
+            if(_.isNumber(conf)){
+                base.expire = conf;
+            }
+
+            conf = _.isObject(conf) ? _.extend(base, conf) : base;
+
+            var namespace = conf.namespace ? conf.namespace + '.' : '';
+            var key = namespace + k;
+
+            var expire = conf.expire;
+
+            var data;
+
+            //清空localStorage
+            if(k === false){
+                localStorage.clear();
+                return;
+            }
+
+            //返回所有的key
+            if(k === true){
+
+                for(var i = 0, keys = []; i < localStorage.length; i++){
+                    keys.push(localStorage.key(i));
+                }
+
+                return keys;
+            }
+
+            //清空localStorage对应的key
+            if(v === false){
+                localStorage.removeItem(key);
+                return;
+            }
+
+            //从localStorage获取对应的key或者设置对应的键值对
+            if(_.isUndefined(v)) {
+
+                data = JSON.parse(localStorage.getItem(key));
+
+                if(!data) return void(0);
+
+                if(+new Date - data.__ic_start > data.__ic_expire){
+
+                    localStorage.removeItem(key);
+                    return void(0);
+
+                }else{
+                    return data.__ic_data;
+                }
+
+            }else{
+
+                data = {};
+                data.__ic_start = + new Date;
+                data.__ic_data = v;
+                data.__ic_expire = expire;
+
+                try{
+
+                    localStorage.setItem(key, JSON.stringify(data));
+
+                }catch(e){
+
+                    if(e.name == 'QuotaExceededError'){
+
+                        console.error('存储溢出.');
+                        localStorage.clear();
+                        localStorage.setItem(key, JSON.stringify(data));
+
+                    }
+
+                }
+
+            }
+
+        };
+    };
+
+}();
+
+
+;
+
+    /**
  * Created by julien.zhang on 2014/10/11.
  */
 
@@ -1710,6 +2450,101 @@ directives.reg('ic-tpl', {
 
 });
 ;
+    /**
+ * Created by julien.zhang on 2014/10/11.
+ */
+
+directives.reg('ic-tabs', function ($elm, attrs) {
+
+    var eventAction = brick.get('event.action');
+
+        var th = $elm;
+        var name = th.attr('ic-tabs');
+        var disabled = th.attr('ic-tab-disabled');
+        var tabSelect = th.attr('ic-tab-select');
+        var conSelect = th.attr('ic-con-select');
+        var activeTab = th.attr('ic-tab-active');
+        var activeCon;
+        var $tabSelect;
+
+        if (tabSelect) {
+            $tabSelect = th.find(tabSelect).each(function (i) {
+                var th = $(this);
+                th.attr('ic-role-tab', i);
+            });
+        }else{
+            $tabSelect = $elm.find('[ic-role-tab]');
+        }
+
+        var tabc = $('[ic-role-tabc=' + name + ']');
+
+        if (tabc) {
+            tabc.find(conSelect || '[ic-role-con]').each(function (i) {
+                i = $tabSelect.eq(i).attr('ic-role-tab');
+                $(this).attr('ic-role-con', i);
+            });
+        }
+
+        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
+
+
+        function call_1(e) {
+            call_2(e, this);
+
+            var con = activeTab.attr('ic-role-tab');
+            activeCon && activeCon.hide();
+            activeCon = tabc.find('[ic-role-con=' + con + ']').show();
+        }
+
+        function call_2(e, that) {
+            activeTab && activeTab.removeClass('active');
+            activeTab = $(that || this).addClass('active');
+            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val'), index:activeTab.index()});
+        }
+
+        //fire
+        if (activeTab) {
+            activeTab = th.find('[ic-role-tab=?]'.replace('?', activeTab));
+        } else {
+            activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
+        }
+
+        activeTab.trigger('click');
+
+        //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
+
+        //activeCon = tabc.length && tabc.find('[ic-role-con]').hide().filter('[ic-role-con=' + activeCon + ']').show();
+
+
+});
+
+;
+    /**
+ * Created by Julien on 2016/1/12.
+ */
+
+directives.reg('ic-tabs2', function ($elm, attrs) {
+
+    var th = $elm;
+    var name = th.attr('ic-tabs2');
+    var disabled = th.attr('ic-tab-disabled');
+    var tabSelect = th.attr('ic-tab-select');
+    var conSelect = th.attr('ic-con-select');
+    var activeTab = th.attr('ic-tab-active');
+    var $tabSelect;
+    var cla = 'active';
+    var s_tab = '[ic-role-tab]';
+
+    $elm.on('click', s_tab, function(e){
+        if(this.hasAttribute('ic-tab-disabled')) return;
+        var $th = $(this);
+        if($th.hasClass(cla)) return;
+        var $siblings = $th.siblings().removeClass(cla);
+        $th.addClass(cla);
+        $elm.trigger('ic-tabs.change', {target:this, val: $th.attr('ic-tab-val'), index:$th.index()});
+    });
+
+});;
     /**
  * Created by julien.zhang on 2014/10/31.
  */
@@ -1783,75 +2618,6 @@ directives.add('ic-ajax', function () {
         once: true
     }
 );
-
-;
-    /**
- * Created by julien.zhang on 2014/10/11.
- */
-
-directives.reg('ic-tabs', function ($elm, attrs) {
-
-    var eventAction = brick.get('event.action');
-
-        var th = $elm;
-        var name = th.attr('ic-tabs');
-        var disabled = th.attr('ic-tab-disabled');
-        var tabSelect = th.attr('ic-tab-select');
-        var conSelect = th.attr('ic-con-select');
-        var activeTab = th.attr('ic-tab-active');
-        var activeCon;
-        var $tabSelect;
-
-        if (tabSelect) {
-            $tabSelect = th.find(tabSelect).each(function (i) {
-                var th = $(this);
-                th.attr('ic-role-tab', i);
-            });
-        }else{
-            $tabSelect = $elm.find('[ic-role-tab]');
-        }
-
-        var tabc = $('[ic-role-tabc=' + name + ']');
-
-        if (tabc) {
-            tabc.find(conSelect || '[ic-role-con]').each(function (i) {
-                i = $tabSelect.eq(i).attr('ic-role-tab');
-                $(this).attr('ic-role-con', i);
-            });
-        }
-
-        th.on('click', '[ic-role-tab]:not([ic-tab-disabled=1])', tabc.length ? call_1 : call_2);
-
-
-        function call_1(e) {
-            call_2(e, this);
-
-            var con = activeTab.attr('ic-role-tab');
-            activeCon && activeCon.hide();
-            activeCon = tabc.find('[ic-role-con=' + con + ']').show();
-        }
-
-        function call_2(e, that) {
-            activeTab && activeTab.removeClass('active');
-            activeTab = $(that || this).addClass('active');
-            th.trigger('ic-tabs.change', {activeTab: activeTab, target:activeTab[0], val: activeTab.attr('ic-tab-val'), index:activeTab.index()});
-        }
-
-        //fire
-        if (activeTab) {
-            activeTab = th.find('[ic-role-tab=?]'.replace('?', activeTab));
-        } else {
-            activeTab = th.find('[ic-role-tab]:not([ic-tab-disabled=1])').first();
-        }
-
-        activeTab.trigger('click');
-
-        //var activeCon = activeTab.addClass('active').attr('ic-role-tab');
-
-        //activeCon = tabc.length && tabc.find('[ic-role-con]').hide().filter('[ic-role-con=' + activeCon + ']').show();
-
-
-});
 
 ;
     /**
@@ -2208,681 +2974,83 @@ directives.add('ic-form', function ($elm, attrs) {
 ;
 
     /**
- * 回车键按下监听指令
- * Created by julien.zhang on 2015/3/23.
+ * Created by julien on 2015/11/30.
  */
 
-directives.reg('ic-enter-press', function ($elm, attrs) {
+brick.directives.reg('ic-scroll', function ($elm) {
 
-    $(document.body).on('focus', '[ic-enter-press]', function(e){
+    var $th = $elm || $(this);
 
-        var $elm = $(this);
-        var call = $elm.attr('ic-enter-press');
-        call = $elm.icParseProperty(call);
-        call = $.proxy(call, this);
-        var fn = function(e){
-            e.which == 13  && call(e);
-        };
+    var onScroll = $elm.icParseProperty2('ic-scroll');
 
-        $elm.on('keypress', fn);
+    var prevScrollTop = 0;
+    var scrollDirection = 'down';
 
-        $elm.on('blur', function(e){
-            $elm.off('keypress', fn);
-        });
+    onScroll && $th.on('ic-scroll', onScroll);
 
-    });
-
-}, {selfExec: true, once: true });;
-    /**
- * Created by julien.zhang on 2014/10/11.
- */
-
-directives.add('ic-slider', function ($elm, attr) {
-
-    var th = $elm;
-
-    var direction = th.attr('ic-slider-direction');
-
-    var vw = th.width();
-    var vh = th.height();
-
-    th.css({position: 'relative', overflow: 'hidden'});
-
-    var style1 = {width: vw + 'px', height: vh + 'px'};
-    if (!direction) {
-        style1.float = 'left';
-    }
-
-    var items = th.find('[ic-role-slider-item]').css(style1);
-    var len = items.size();
-
-    var style2 = direction ? {height: len * vh + 'px'} : { width: len * vw + 'px'};
-    style2.position = 'absolute';
-    var view = th.find('[ic-role-slider-view]').css(style2);
-
-    var current = 1;
-
-    var currentPagination = th.find('[ic-role-slider-pagination]').first().addClass('active');
-
-    var broadcast = function () {
-        th.trigger('ic-slider.change', items.eq(current - 1));
-    }
-
-    broadcast();
-
-    var onPagination = function () {
-        broadcast();
-    };
-
-    if (currentPagination) {
-        onPagination = function () {
-            currentPagination && currentPagination.removeClass('active');
-            currentPagination = th.find('[ic-role-slider-pagination=' + current + ']').addClass('active');
-            broadcast();
+    $th.on('scroll', _.throttle(function (e) {
+        var scrollTop = $th.scrollTop();
+        var end;
+        scrollDirection = (scrollTop - prevScrollTop > 1) ? 'down' : 'up';
+        prevScrollTop = scrollTop;
+        if (scrollDirection == 'down' && $th[0].scrollHeight <= $th[0].clientHeight + scrollTop) {
+            console.log('trigger ic-scroll.end');
+            $th.trigger('ic-scroll-end');
+            end = true;
         }
-    }
-
-
-    var prev = direction ?
-        function (e) {
-
-            if (current <= 1) {
-                current = len;
-                view.animate({
-                    top: (-len + 1) * vh
-                }, 300, onPagination);
-            } else {
-                view.animate({
-                    top: (2 - current) * vh
-                }, 300, function () {
-                    current -= 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        } :
-        function (e) {
-
-            if (current <= 1) {
-                current = len;
-                view.animate({
-                    left: (-len + 1) * vw
-                }, 500, onPagination);
-            } else {
-                view.animate({
-                    left: (2 - current) * vw
-                }, 500, function () {
-                    current -= 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        };
-
-    var next = direction ?
-        function (e) {
-
-            if (current >= len) {
-                current = 1;
-                view.animate({
-                    top: 0
-                }, 300, onPagination);
-            } else {
-                view.animate({
-                    top: -current * vh
-                }, 300, function () {
-                    current += 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        } :
-        function (e) {
-
-            if (current >= len) {
-                current = 1;
-                view.animate({
-                    left: 0
-                }, 500, onPagination);
-            } else {
-                view.animate({
-                    left: -current * vw
-                }, 500, function () {
-                    current += 1;
-                    onPagination();
-                });
-            }
-
-            return false;
-        }
-
-    var interval = th.attr('ic-slider-interval');
-    var timer;
-
-    if (interval) {
-
-        timer = setInterval(next, interval);
-
-        th.hover(function (e) {
-            clearInterval(timer);
-        }, function (e) {
-            timer = setInterval(next, interval);
-        });
-    }
-
-    /* event */
-    th.delegate('[ic-role-slider-prev]', 'click', prev);
-
-    th.delegate('[ic-role-slider-next]', 'click', next);
-
-    th.delegate('[ic-role-slider-pagination]', 'click', function (e) {
-        currentPagination && currentPagination.removeClass('active');
-        var th = $(this).addClass('active');
-        var pagination = th.attr('ic-role-slider-pagination');
-        current = pagination - 1;
-        next();
-    });
-
-
-});
-;
-    /**
- * Created by julien.zhang on 2014/10/15.
- */
-
-directives.add('ic-dropdown', function ($elm, attrs) {
-
-
-    var th = $elm;
-
-    th.css({position: 'relative'});
-
-    var h = th.height();
-
-    var menu = th.find('[ic-role-dropdown-menu]').css({position: 'absolute', top: h + 'px'});
-
-    var timer;
-    if (menu.size()) {
-        th.hover(function (e) {
-            timer = setTimeout(function () {
-                menu.show(300);
-            }, 200);
-        }, function () {
-            clearTimeout(timer);
-            menu.slideUp(200);
-        });
-    }
-
-    var con = th.find('[ic-role-dropdown-con]').css({position: 'absolute', overflow: 'hidden'});
-
-    if (con.size()) {
-
-        var ch = con.height();
-
-        //th.css({overflow:'hidden',height:h+'px'});
-
-        var flag = 1;
-
-        th.find('[ic-role-dropdown-toggle]').click(function (e) {
-            if (flag) {
-                //con.slideDown();
-                con.css({height: 'auto'});
-                flag = 0;
-            } else {
-                con.css({height: ch + 'px'});
-                flag = 1;
-            }
-        });
-
-
-    }
-
-
-});
-;
-    /**
- * Created by julien.zhang on 2014/10/20.
- */
-
-directives.add('ic-pagination', function ($elm, attrs) {
-
-    var th = $elm;
-    var namespace = th.attr('ic-pagination');
-    var rows = $elm.attr('ic-pagination-rows') * 1 || 10;
-    var onChangeCall = th.attr('ic-pagination-on-change');
-    var total = $elm.attr('ic-pagination-total') * 1;
-    var step = $elm.attr('ic-pagination-step') * 1 || 10;
-    var current = $elm.attr('ic-pagination-current') || 1;
-    var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
-    var placeholder = /\{\{\}\}/g;
-    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
-    var tplf;
-
-    var pool;
-    var onchange;
-    var source = $elm.attr('ic-source-ajax');
-
-    if (source) {
-        /*$.ajax({
-         url:source
-         }).done(function(data){
-         var html = brick._tplfs[namespace]({model:data});
-         $tpl.html(html);
-         });*/
-    } else {
-        source = $elm.attr('ic-source');
-        if (source) {
-            pool = $elm.icParseProperty(source);
-            total = Math.ceil(pool.length / rows);
-            onchange = function (page) {
-                --page;
-                var start = page * rows - 1 < 0 ? 0 : page * rows;
-                var end = start + rows;
-                var _list = pool.slice(start, end);
-                var list = [];
-                var item;
-                for (; item = _list.shift(); start++) {
-                    list[start] = item;
-                }
-                var html = brick.getTpl(namespace)({model: list});
-                $tpl.html(html).show();
-            };
-        }else{
-            pool = $('[ic-role-pagination-page=?]'.replace('?', namespace)).children();
-            if(pool.length){
-                total = Math.ceil(pool.length / rows);
-                onchange = function (page) {
-                    --page;
-                    var start = page * rows - 1 < 0 ? 0 : page * rows;
-                    var end = start + rows;
-                    pool.hide();
-                    pool.slice(start, end).show();
-                };
-            }
-        }
-    }
-
-    var prev = th.find('[ic-role-pagination-prev]').on('click', function (e) {
-        if (current < 2) return;
-        --current;
-        createNums();
-    });
-    var next = th.find('[ic-role-pagination-next]').on('click', function (e) {
-        if (current >= total) return;
-        ++current;
-        createNums();
-    });
-    var num = th.find('[ic-role-pagination-num]');
-    var html = num[0].outerHTML;
-
-    function createNums() {
-
-        var j = Math.floor(step / 2);
-        var k;
-        var r = [];
-
-        j = current - j;
-
-        var i = j = j < 1 ? 1 : j;
-        k = j + step - 1;
-        k = k >= total ? total : k;
-        i = j = k + step >= total ? k - step < 1 ? 1 : k - step : i;
-
-        for (; j <= k; j++) {
-            r.push(html.replace(placeholder, j));
-        }
-
-        if (i > 1) {
-            r.unshift(ellipsis);
-            r.unshift(html.replace(placeholder, 1));
-        }
-
-        if (total - k > 2) {
-            r.push(ellipsis);
-            r.push(html.replace(placeholder, total));
-        }
-
-        current == 1 ? prev.addClass('disabled') : prev.removeClass('disabled');
-        current == total ? next.addClass('disabled') : next.removeClass('disabled');
-        prev.siblings().not(next).remove();
-
-        $(r.join('')).insertAfter(prev).filter('[ic-role-pagination-num=' + current + ']').addClass('active');
-
-        onchange && onchange(current);
-        $elm.trigger('ic-pagination.change', current);
-
-    }
-
-
-    setTimeout(createNums, 30);
-
-    th.on('click', '[ic-role-pagination-num]', function (e) {
-
-        var num = $(this).attr('ic-role-pagination-num') * 1;
-        if (current == num) return;
-        current = num * 1;
-        createNums();
-
-    });
-
+        $th.trigger('ic-scroll', {direction: scrollDirection, end: end});
+    }, 300));
 
 });;
     /**
  * Created by julien.zhang on 2014/10/29.
  */
 
+//ic-dialog
+directives.reg('ic-dialog', function ($elm, attrs) {
 
-directives.add('ic-dialog', function ($elm, attrs) {
+    var eventAction = brick.get('event.action');
 
-    var html = "<div class=\"t\" style=\"position:fixed; z-index: 100000; left:0; top:0; width:100%; height: 100%; overflow: auto; background: rgba(0,34,89,0.2);\"></div>";
+    $(document.body).on(eventAction, '[ic-dialog-cancel], [ic-dialog-close], [ic-dialog-confirm]', function(e){
 
-    //只执行一次绑定
-    if (!arguments.callee._run) {
+        var $th = $(this);
+        var type = this.hasAttribute('ic-dialog-confirm');
 
-        arguments.callee._run = 1;
+        var $dialog = $th.closest('[ic-dialog]');
 
-        $(document).on('click', '[ic-dialog-href]', function (e) {
-            var target = $(this).attr('ic-dialog-href');
-            $('[ic-dialog=?]'.replace('?', target)).icDialog();
-            return false;
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-dialog.close', type);
+            $dialog.trigger('ic-dialog.hide', type);
         });
 
-    }
-
-
-    var $dialogContainer = $(html).appendTo('body').hide();
-
-    var id = $elm.attr('ic-dialog');
-
-    $elm.appendTo($dialogContainer);
-
-    //处理js调用
-    $elm.on('ic-dialog.call', function (e, param) {
-
-        if(param === void(0)) return onShow(e);
-        if (param === 'hide' || param == false) return onClose(e);
-        onShow(e);
-    });
-
-    $elm.on('click', '[ic-role-dialog-confirm]', function (e) {
-        onClose(e, 1);
-    });
-
-
-    $elm.on('click', '[ic-role-dialog-cancel], [ic-role-dialog-close]', function (e) {
-        onClose(e, 0);
-    });
-
-
-    function onShow(e) {
-        $dialogContainer.show();
-        var width = $elm.width();
-        $elm.css('margin-left', -width / 2);
-        $elm.show();
-        $elm.trigger('ic-dialog.show');
-    }
-
-    function onClose(e, type) {
-        $dialogContainer.hide();
-        $elm.hide();
-        $elm.trigger('ic-dialog.close', type);
-    }
-
-
-
-
-});
-
-;
-    /**
- * Created by julien.zhang on 2014/11/5.
- */
-
-directives.add('ic-drag-view', function ($elm, attrs) {
-
-    var $document = $(document);
-
-    var startX = 0, startY = 0, x = 0, y = 0;
-    var vw, vh;
-    var w, h;
-
-    $document.on('click', '[ic-role-drag-key]', function (e) {
-
-        var th = $(this);
-        var drag = th.attr('ic-role-drag-key');
-        var d = th.attr('ic-drag-direction');
-        var m = 140;
-        $elm = $('[ic-role-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
-        w = $elm.width();
-        h = $elm.height();
-        vw = $elm.closest('[ic-drag-view]').css({position: 'relative'}).width();
-        vh = $elm.closest('[ic-drag-view]').width();
-        var position = $elm.position();
-        x = position.left;
-        y = position.top;
-
-        if (d === 'left') {
-            x -= m;
-            x = x < -(w - vw) ? -(w - vw) : x;
-            $elm.animate({left: x}, 500);
-        }
-
-        if (d === 'right') {
-            x += m;
-            x = x >= 0 ? 0 : x;
-            $elm.animate({left: x}, 500);
-        }
-
-    });
-
-
-    $document.on('mousedown', '[ic-role-drag-handle]', function (e) {
-
-        e.preventDefault();
-
-        startX = e.pageX;
-        startY = e.pageY;
-
-        $elm = $(this).css({position: 'relative'});
-
-        vw = $elm.closest('[ic-drag-view]').width();
-        vh = $elm.closest('[ic-drag-view]').height();
-
-        var position = $elm.position();
-        x = position.left;
-        y = position.top;
-
-        w = $elm.width();
-        h = $elm.height();
-
-        $document.on('mousemove', mousemove);
-        $document.on('mouseup', mouseup);
-
+    }).on(eventAction, '[ic-dialog-href]', function (e) {
+        var target = $(this).attr('ic-dialog-href');
+        $('[ic-dialog=?]'.replace('?', target)).icDialog();
         return false;
-
     });
 
+}, {selfExec: true, once: true });
 
-    function mousemove(e) {
 
-        var moveX = e.pageX - startX;
-        var moveY = e.pageY - startY;
+//ic-prompt
+directives.reg('ic-prompt', function ($elm, attrs) {
 
-        startX = e.pageX;
-        startY = e.pageY;
+    var eventAction = brick.get('event.action');
 
-        x += moveX;
-        y += moveY;
+    $(document.body).on(eventAction, '[ic-prompt-cancel], [ic-prompt-close], [ic-prompt-confirm]', function(e){
 
-        x = x < -(w - vw) ? -(w - vw) : x;
-        x = x >= 0 ? 0 : x;
+        var $th = $(this);
+        var type = this.hasAttribute('ic-prompt-confirm');
 
-        y = y < -(h - vh) ? -(h - vh) : y;
-        y = y >= 0 ? 0 : y;
+        var $dialog = $th.closest('[ic-prompt]');
 
-        $elm.css({
-            top: y + 'px',
-            left: x + 'px'
+        $dialog.icAniOut(21, function(){
+            $dialog.trigger('ic-prompt.hide', type);
         });
 
-        return false;
-    }
-
-    function mouseup() {
-        $document.unbind('mousemove', mousemove);
-        $document.unbind('mouseup', mouseup);
-    }
-
-
-});;
-    /**
- *
- * Created by julien.zhang on 2014/11/13.
- *
- * 定义输入提示指令
- *
- */
-
-directives.add('ic-type-ahead', function ($elm, attrs) {
-
-    var $doc = $('body');
-
-    var namespace = $elm.attr('ic-type-ahead');
-    var onTypeComplete = $elm.attr('ic-on-type-complete');
-    onTypeComplete = $elm.icParseProperty(onTypeComplete);
-    var source = $elm.attr('ic-source-ajax');
-
-    var offset = $elm.offset();
-    var left = offset.left;
-    var top = offset.top;
-    var w = $elm.outerWidth();
-    var h = $elm.outerHeight();
-
-    var $selectList = $('[ic-role-list=?]'.replace('?', namespace));
-    var tplf = brick.getTpl($selectList.attr('ic-tpl'));
-
-    $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
-
-    var _pool;
-    var pool;
-    var ajax;
-    var queryStr;
-    var query;
-    var keydownActive = 0;
-    var keydownList;
-
-    var done = function (data) {
-        if (!data) return;
-        if (!data.length) return $selectList.hide();
-        pool = data;
-        var html = tplf({model: data}); //ie7模板函数会报错，有时间fix;
-        $selectList.show().html(html);
-    };
-
-    if (source) {
-        query = function (queryStr) {
-            ajax = $.ajax({
-                dataType: 'json',
-                type: 'post',
-                url: source,
-                data: {query: queryStr}
-            }).done(done);
-        }
-    } else {
-        source = $elm.attr('ic-source');
-        _pool = $elm.icParseProperty(source);
-        query = function (queryStr) {
-            var reg = new RegExp(queryStr, 'img');
-            var result = _.filter(_pool, function (item, i, list) {
-                if (_.isObject(item)) {
-                    var result = _.filter(item, function (item) {
-                        return reg.test(item);
-                    });
-                    return result.length;
-                } else {
-                    return reg.test(item);
-                }
-            });
-
-            done(result);
-        };
-
-    }
-
-//////////////////////////////////
-    //event
-    ////////////////////////////////////
-
-    $elm.on('focus', function (e) {
-        var offset = $elm.offset();
-        var left = offset.left;
-        var top = offset.top;
-        $selectList.css({top: top + h + 1, left: left});
-
-    }).on('keyup', function (e) {
-
-        var val = $elm.val();
-        if (!val) return $selectList.hide();
-        if (val == queryStr) return;
-
-        queryStr = val;
-
-        //取消上个请求
-        ajax && ajax.abort();
-
-        //新请求
-        query(queryStr);
-
-    }).on('keydown', function (e) {
-
-        var keyCode = e.keyCode;
-        if (!(keyCode == 38 || keyCode == 40 || keyCode == 13)) {
-            keydownActive = 0;
-            return
-        }
-
-        var list = $selectList.find('[ic-role-type-item]');
-        if (!list.length) return;
-        var max = list.length - 1;
-
-        if (e.keyCode == 38) {
-            keydownActive = --keydownActive < 0 ? max : keydownActive;
-            list.eq(keydownActive).addClass('active').siblings().removeClass('active');
-            return;
-        }
-
-        if (e.keyCode == 40) {
-            keydownActive = ++keydownActive > max ? 0 : keydownActive;
-            list.eq(keydownActive).addClass('active').siblings().removeClass('active');
-            return;
-        }
-
-        if (e.keyCode == 13) {
-            list.eq(keydownActive).trigger('mousedown');
-            $elm.blur();
-        }
-
-    }).on('blur', function (e) {
-        $selectList.fadeOut(function () {
-            $selectList.hide();
-        });
     });
 
-
-    $selectList.on('mousedown', '[ic-role-type-item]', function (e) {
-        var index = $(this).index();
-        var item = pool[index];
-        var val = $(this).attr('ic-role-type-item');
-        $elm.val(val);
-        $elm.trigger('type.complete', item);
-        onTypeComplete && onTypeComplete.apply($elm[0], [e,item])
-    });
-
-
-});;
+}, {selfExec: true, once: true });;
 
     //bootstrap
     $(function () {
