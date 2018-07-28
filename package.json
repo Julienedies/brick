@@ -1,16 +1,16 @@
 {
-    "name": "brick",
-    "version": "0.8",
-    "author": "Julienedies",
-    "description": "前端开发框架",
-    "repository": "http://github.com/Julienedies/brick.git",
-    "devDependencies": {
-        "fis":"1.8.6",
-        "fis-preprocessor-defines":"1.0.0",
-        "fis-parser-node-sass":"1.0.3",
-        "yog-devtools":"0.0.4",
-        "serve-index":"1.6.3",
-        "express":"4.10.1"
-    },
-    "scripts": {}
+  "name": "brick",
+  "version": "0.8",
+  "author": "Julienedies",
+  "description": "前端开发框架",
+  "repository": "http://github.com/Julienedies/brick.git",
+  "devDependencies": {
+    "express": "4.16.3",
+    "fis": "1.8.6",
+    "fis-parser-node-sass": "1.0.3",
+    "fis-preprocessor-defines": "1.0.0",
+    "serve-index": "1.6.3",
+    "yog-devtools": "^0.1.1"
+  },
+  "scripts": {}
 }

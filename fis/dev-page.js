@@ -7,13 +7,13 @@ var p = require('../package.json');
 var version = p.version;
 
 //处理sass
-fis.config.set('modules.parser.scss', 'sass');
-fis.config.set('modules.parser.sass', 'sass');
+fis.config.set('modules.parser.scss', 'node-sass');
+fis.config.set('modules.parser.sass', 'node-sass');
 fis.config.set('roadmap.ext.scss', 'css');
 fis.config.set('roadmap.ext.sass', 'css');
 
 //开启simple插件，注意需要先进行插件安装 npm install -g fis-postpackager-simple
-fis.config.set('modules.postpackager', 'simple');
+//fis.config.set('modules.postpackager', 'simple');
 
 
 //通过pack设置干预自动合并结果，将公用资源合并成一个文件，更加利于页面间的共用
@@ -43,61 +43,32 @@ fis.config.merge({
 
 fis.config.set('roadmap.path', [
 
-    //制作主页用
-    {
-        reg: /^\/brick(?:\.mobile)?\.js$/i,
-        release: 'brick/'+version+'$&',
-        url: '/public/brick/'+version+'$&',
-        isJsLike: true
-    },
-    {
-        reg: /^\/src\/plugins\/([\w]+\.js)$/i,
-        release: 'brick/'+version+'/brick.$1',
-        url: '/public/brick/'+version+'/brick.$1',
-        isJsLike: true
-    },
-    {
-        reg: /^\/css\/(.+\.css)$/i,
-        release: 'brick/'+version+'/$1',
-        url: '/public/brick/'+version+'/$1'
-    },
-
-    //brick源码
-    {
-        reg: /^\/src\/(.+\.js)/i,
-        //release: 'brick/'+ version +'/src/$1',
-        release:false,
-        url: '/public/brick/'+ version +'/src/$1',
-        isJsLike: true,
-        useHash: true
-    },
-
     //主页相关内容
     {
         reg: /include\/.*$/i,
         release: false
     },
     {
-        reg: /^\/page\/(css\/.+\.css)$/i,
-        release: '/$1',
-        url: '/public/$1',
+        reg: /^\/(?:html|css)\/.+\.css$/i,
+        release: '/$&',
+        url: '/public/$&',
         useSprite: true,
         useHash: true
     },
     {
-        reg: /^\/page\/(img\/.+)/i,
-        release: '/$1',
-        url: '/public/$1'
+        reg: /^\/img\/.+/i,
+        release: '/$&',
+        url: '/public/$&'
     },
     {
-        reg: /^\/page\/(js\/.+\.js)/i,
-        release: '/$1',
-        url: '/public/$1',
+        reg: /^\/js\/.+\.(css|js)$/i,
+        release: '/$&',
+        url: '/public/$&',
         isJsLike: true,
         useHash: true
     },
     {
-        reg: /^\/page\/html\/(.+\.html)/i,
+        reg: /^\/html\/(.+\.html)/i,
         release: '/$1',
         url: '/public/$1',
         useSprite: true,
@@ -125,7 +96,7 @@ fis.config.set('settings.spriter.csssprites.styleReg', /(<style(?:(?=\s)[\s\S]*?
 fis.config.merge({
     deploy : {
         local : {
-            to : './public'
+            to : '../public'
         }
     }
 });

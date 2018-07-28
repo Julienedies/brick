@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div ic-ctrl="tasksCtrl">
+    <div>
+        <input type="text" placeholder="What needs to be done?" ic-enter-press="add"/>
+    </div>
+    <div>
+        <ul ic-tpl="task-list">
+            <li ic-for="i,v in model" data-id="{{v.id}}">
+                <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
+                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" disabled
+                       ic-enter-press="change"/>
+                <button class="btn" ic-click="remove" data-id="{{v.id}}">X</button>
+                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+            </li>
+        </ul>
+        <div class="inline hr" ic-tabs="b" ic-tab-select="span">
+            <span>All</span>&nbsp;&nbsp;
+            <span>Active</span>&nbsp;&nbsp;
+            <span>Completed</span>&nbsp;&nbsp;
+            <a href="javascript:void(0)" ic-click="clear">Clear completed</a>
+        </div>
+    </div>
+</div>
