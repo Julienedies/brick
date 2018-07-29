@@ -1,10 +1,8 @@
 /**
  * Created by Julien on 2014/8/13.
- *
- *
  * 记录管理器
- *
- * var serv = new recordManager(
+ * var recordManager = brick.services.get('recordManager');
+ * var serv = recordManager(
  *                              {
  *                                  scope:scope,
  *                                  broadcast:true, //是否广播事件
@@ -13,13 +11,11 @@
  *                                  beforeSave:function(record,index){}
  *                              }
  *                              );
- *
- *
  */
 
 function recordManager() {
 
-    function fn(conf) {
+    function RecordManager(conf) {
 
         if (conf && conf.constructor === Object) {
 
@@ -354,15 +350,18 @@ function recordManager() {
 
     };
 
-
     for (var i in proto) {
 
-        fn.prototype[i] = proto[i];
+        RecordManager.prototype[i] = proto[i];
 
     }
 
 
-    return fn;
+    function f(conf){
+        return new RecordManager(conf);
+    }
+
+    return f;
 
 }
 

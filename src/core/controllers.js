@@ -87,6 +87,7 @@ var controllers = (function () {
             }, 30);
         },
         _render: function (tplName, model) {
+            console.log('render => ', tplName, model);
             var $elm = this.$elm;
             var tpl_fn = brick.getTpl(tplName);  //模板函数
             var selector = '[ic-tpl=?],[ic-tpl-name=?]'.replace(/[?]/img, tplName);

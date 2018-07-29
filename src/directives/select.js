@@ -13,27 +13,36 @@ var cla = $elm.attr('ic-select-cla') || brick.get('ic-select-cla') || 'selected'
 var name = $elm.attr('ic-select');
 var s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
 var type = $elm.attr('ic-select-type') || 'radio';
-
 var $items =  $elm.find(s_item);
 
-    if(!$items.size()){
-        $items = $elm.find('>*').each(function(){
-            $(this).attr('ic-select-item', +new Date);
-        });
-    }
+if(!$items.size()){
+    $items = $elm.find('>*').each(function(){
+        $(this).attr('ic-select-item', +new Date);
+    });
+}
+
+var $selected = $items.filter('[selected]');
 
 var callback = type == 'checkbox' ?
     function(){
         $(this).toggleClass(cla);
-        $elm.trigger('ic-select.change', {name:name});
+        var val = $items.filter('.'+cla).map(function(){
+            return $(this).attr('ic-val');
+        });
+        $elm.attr('ic-val', JSON.stringify(val));
+        $elm.trigger('ic-select.change', {name:name, value: val});
     }
     :
     function(){
         $items.removeClass(cla);
         var $th = $(this).addClass(cla);
-        $elm.trigger('ic-select.change', {name:name, value: $th.attr('ic-val')});
+        var val = $th.attr('ic-val');
+        $elm.attr('ic-val', val);
+        $elm.trigger('ic-select.change', {name:name, value: val});
     };
 
     $elm.on('click', s_item, callback);
+
+    $selected.click();
 
 });
