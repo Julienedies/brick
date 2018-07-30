@@ -37,10 +37,8 @@
         });
     };
 
-    $.fn.icParseProperty = function (name) {
+    $.fn.icParseProperty = function (name, isLiteral) {
         //console.info('icParseProperty => ', name);
-        var params = name.split(':');
-        name = params.shift();
         var match;
         // js直接量  <div ic-tpl-init="{}">  object {}
         if (match = name.match(/^\s*(([{\[])([^{\[]*)[}\]])\s*$/)) {
@@ -59,6 +57,11 @@
             return match[1];
         }
 
+        if(isLiteral) return name;  //按直接量解析
+
+        var params = name.split(':');
+        name = params.shift();
+
         // 从控制器scope里获取或者全局window
         var $ctrl = this.closest('[ic-ctrl]');
         var ctrl = $ctrl.attr('ic-ctrl');
@@ -76,10 +79,6 @@
         }
 
         var v = f(namespace, name.split('.'));
-
-        if(v){
-
-        }
 
         v = v || f(window, name.split('.'));
 
@@ -101,11 +100,10 @@
 
     };
 
-    $.fn.icParseProperty2 = function (name) {
+    $.fn.icParseProperty2 = function (name, isLiteral) {
         name = this.attr(name);
-        //console.info('icParseProperty2 => ', this[0], name);
-        if (name === undefined || name == '') return;
-        return this.icParseProperty(name);
+        if (name === undefined || name == '') return name;
+        return this.icParseProperty(name, isLiteral);
     };
 
     $.fn.icTabs = function (options) {
@@ -230,7 +228,9 @@
             call = $.proxy(call, this);
 
             var fn = function (e) {
+
                 if (e.which == 13) {
+                    //console.info('ic-enter-press emit.');
                     call(e);
                 }
             };
