@@ -19,7 +19,7 @@ directives.reg('ic-form', function ($elm, attrs) {
 
     var presetRule = {
         id: /[\w_]{4,18}/,
-        required: /.+/,
+        required: /.+/img,
         phone: /^\d[\d-]{5,16}$/,
         email: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
         password: /(?:[\w]|[!@#$%^&*]){6,16}/,
@@ -227,12 +227,13 @@ directives.reg('ic-form', function ($elm, attrs) {
                 }
 
             } else {
-                val = $th.attr('ic-val');
+                //val = $th.icParseProperty2('ic-val', true);
+                val = $th.data('ic-val') || $th.attr('ic-val');
             }
 
             fields[submitName] = val;
 
-            /*var prev = fields[submitName];
+            /*var prev = fields[submitName];true
             if (prev) {
                 prev =  ? prev : [prev];
                 prev.push(val);
