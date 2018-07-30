@@ -26,11 +26,13 @@ var $selected = $items.filter('[selected]');
 var callback = type == 'checkbox' ?
     function(){
         $(this).toggleClass(cla);
-        var val = $items.filter('.'+cla).map(function(){
-            return $(this).attr('ic-val');
+        var values = [];
+        $items.filter('.'+cla).each(function(){
+            values.push($(this).attr('ic-val'));
         });
-        $elm.attr('ic-val', JSON.stringify(val));
-        $elm.trigger('ic-select.change', {name:name, value: val});
+        $elm.attr('ic-val', JSON.stringify(values));
+        $elm.data('ic-val', values);
+        $elm.trigger('ic-select.change', {name:name, value: values});
     }
     :
     function(){
