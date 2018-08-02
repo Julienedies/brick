@@ -147,6 +147,8 @@ directives.reg('ic-form', function ($elm, attrs) {
     var $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
     var $loading = $elm.find('[ic-role-loading]');
 
+    var err_cla = brick.get('cla.error') || 'error';
+
     // 对每个字段dom绑定事件监听
     $fields.each(function (i) {
 
@@ -174,15 +176,17 @@ directives.reg('ic-form', function ($elm, attrs) {
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
-                $fieldBox.addClass('error');
-                $errTip.addClass('error').text(tip);
+                $th.addClass(err_cla);
+                $fieldBox.addClass(err_cla);
+                $errTip.addClass(err_cla).text(tip);
                 $th.removeAttr('ic-verification');
                 fields[name] = false;
                 $th.trigger('ic-form-field.error', tip);
             } else {
                 //验证通过
-                $fieldBox.removeClass('error');
-                $errTip.removeClass('error');
+                $th.removeClass(err_cla);
+                $fieldBox.removeClass(err_cla);
+                $errTip.removeClass(err_cla);
                 $th.attr('ic-verification', 1);
                 if ($th[0].hasAttribute('ic-field-placeholder')) {
 
@@ -195,8 +199,8 @@ directives.reg('ic-form', function ($elm, attrs) {
         });
 
         $th.on('focus', function () {
-            $fieldBox.removeClass('error');
-            $errTip.removeClass('error').text(foucsTip);
+            $fieldBox.removeClass(err_cla);
+            $errTip.removeClass(err_cla).text(foucsTip);
         });
 
     });
