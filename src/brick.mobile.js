@@ -10,6 +10,7 @@
 // __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
 
 // core架构 必选
+ __inline('core/utils.js')
 __inline('core/config.js')
 __inline('core/eventManager.js')
 __inline('core/controllers.js')

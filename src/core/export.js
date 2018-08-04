@@ -4,20 +4,21 @@
 
 //对外接口
 var brick = root.brick = {
+    utils: utils,
     config: config,
     controllers: controllers,
     services: services,
     directives: directives,
     compile: compile,
-    createRender:createRender,
+    createRender: createRender,
     eventManager: eventManager,
     __tpl: {},
     debug: cc,
-    set: function(k, v){
+    set: function (k, v) {
         return this.config.set(k, v);
     },
-    get: function(k){
-      return this.config.get(k);
+    get: function (k) {
+        return this.config.get(k);
     },
     on: function (e, fn) {
         this.eventManager.on(e, fn);
@@ -34,10 +35,10 @@ var brick = root.brick = {
     getTpl: function (name) {
         return this.__tpl[name];
     },
-    reg: function(name, factory, conf){
-        if(/ctrl$/i.test(name)){
+    reg: function (name, factory, conf) {
+        if (/ctrl$/i.test(name)) {
             controllers.reg(name, factory, conf);
-        }else{
+        } else {
             services.reg(name, factory, conf);
         }
     },
@@ -45,7 +46,9 @@ var brick = root.brick = {
         console.info('brick start');
         this.directives.init();
         this.compile(node || document.body);
-        this.bootstrap = function(){console.info('only bootstrap once.')};
+        this.bootstrap = function () {
+            console.info('only bootstrap once.')
+        };
     }
 };
 
