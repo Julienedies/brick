@@ -113,26 +113,22 @@ directives.reg('ic-form', function ($elm, attrs) {
 
     }
 
-    /* $.fn.icForm = $.fn.icForm || function (call, msg) {
-     $submit.trigger('mousedown');
-     };*/
+     $.fn.icForm = $.fn.icForm || function (call, msg) {
+         this.find('[ic-form-submit]').not(this.find('[ic-form] [ic-form-submit]')).icFormVerify();
+         return this .data('ic-form-fields');
+     };
 
     $.fn.icFormVerify = $.fn.icFormVerify || function () {
-
-        var isSubmit = this.attr('ic-form-submit');
-
-        if (isSubmit) {
+        // 提交按钮调用
+        if (this[0].hasAttribute('ic-form-submit')) {
             this.trigger('ic-form.verify');
             return this.attr('ic-verification') ? fields : false;
         }
-
-        var isField = this.attr('ic-form-field');
-
-        if (isField) {
+        // 表单字段调用
+        if (this[0].hasAttribute('ic-form-field')) {
             this.trigger('change');
             return this.attr('ic-verification');
         }
-
         return false;
     };
 
@@ -258,6 +254,8 @@ directives.reg('ic-form', function ($elm, attrs) {
             $(this).change();
         });
 
+        $elm.data('ic-form-fields', fields);
+        console.info(fields);
         for (var i in fields) {
             if (fields[i] === false) {
                 $submit.removeAttr('ic-verification');

@@ -1,0 +1,20 @@
+.on-ic-popup-show{
+  //height: 100%;
+  //overflow: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+[ic-popup]{
+  display: none;
+  position: fixed;
+  z-index: 10001;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  overflow-y: scroll;
+  background: #fff;
+}
+

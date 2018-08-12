@@ -44,9 +44,10 @@ __inline('directives/enterPress.js')
 __inline('directives/scroll.js')
 __inline('directives/dialog.js')
 __inline('directives/dropdown.js')
-
+__inline('directives/type-ahead.js')
 // mobile
 __inline('directives/show-img.js')
+__inline('directives/collection.js')
 
 //bootstrap
 $(function () {

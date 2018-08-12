@@ -41,9 +41,10 @@
         //console.info('icParseProperty => ', name);
         var match;
         // js直接量  <div ic-tpl-init="{}">  object {}
-        if (match = name.match(/^\s*(([{\[])([^{\[]*)[}\]])\s*$/)) {
+        if (match = name.match(/^\s*(([{\[])(.+)[}\]])\s*$/)) {
+            //console.info(match);
             try {
-                return match[3] ? JSON.stringify(match[1]) : match[2] == '{' ? {} : [];
+                return (match[3] && match[2]) == '{' ? eval('('+match[1]+')') : match[2] == '{' ? {} : [];
             } catch (e) {
                 console.error(e);
             }
@@ -121,9 +122,10 @@
         return this;
     };
 
-    $.fn.icForm = function (call, options) {
+    /*$.fn.icForm = function (call, options) {
         return this.trigger('ic-form.' + call, options);
-    };
+    };*/
+
 
     $.fn.icDialog = function (options, callback) {
 
