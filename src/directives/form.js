@@ -338,7 +338,7 @@ directives.reg('ic-form', function ($elm, attrs) {
     var submitType = (function () {
         //函数调用
         if (/[\w_.]+\(\)\;?$/i.test(action)) {
-            action = $submit.icParseProperty(action.replace(/[();]/g, ''), true);
+            action = $submit.icParseProperty(action.replace(/[();]/g, ''));
             return 1;
         }
         //普通提交

@@ -36,7 +36,7 @@ brick.directives.reg({
 
         $body.on('click', '[ic-popup-target]', function (e) {
                 var name = $(this).attr('ic-popup-target');
-                var $popup = $('[ic-popup-target=?]'.replace('?', name));
+                var $popup = $('[ic-popup=?]'.replace('?', name));
                 on_show($popup);
                 //$body.scrollTop() + $body.height()
             })

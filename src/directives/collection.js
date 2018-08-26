@@ -3,7 +3,7 @@
  * 简单指令合集
  */
 
-__inline('ic-popup.js');
+__inline('popup.js');
 
 
 brick.directives.reg('ic-input-select', {
