@@ -9,6 +9,7 @@
 
 brick.directives.reg('ic-select', function($elm){
 
+var on_change = $.icParseProperty2('ic-select-on-change');
 var cla = $elm.attr('ic-select-cla') || brick.get('ic-select-cla') || 'selected';
 var name = $elm.attr('ic-select');
 var s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
@@ -32,7 +33,9 @@ var callback = type == 'checkbox' ?
         });
         $elm.attr('ic-val', JSON.stringify(values));
         $elm.data('ic-val', values);
-        $elm.trigger('ic-select.change', {name:name, value: values});
+        var msg = {name:name, value: values};
+        $elm.trigger('ic-select.change', msg);
+        on_change && on_change.apply($elm, [msg]);
     }
     :
     function(){
@@ -40,7 +43,9 @@ var callback = type == 'checkbox' ?
         var $th = $(this).addClass(cla);
         var val = $th.attr('ic-val');
         $elm.attr('ic-val', val);
-        $elm.trigger('ic-select.change', {name:name, value: val});
+        var msg = {name:name, value: val};
+        $elm.trigger('ic-select.change', msg);
+        on_change && on_change.apply($elm, [msg]);
     };
 
     $elm.on('click', s_item, callback);
