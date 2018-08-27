@@ -37,7 +37,7 @@
         });
     };
 
-    $.fn.icParseProperty = function (name, isLiteral) {
+    $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         //console.info('icParseProperty => ', name);
         var match;
         // js直接量  <div ic-tpl-init="{}">  object {}
@@ -58,7 +58,7 @@
             return match[1];
         }
 
-        if(isLiteral) return name;  //按直接量解析
+        if(isLiteral) return name;  //按直接量解析, 不通过scope链进行查找
 
         var params = name.split(':');
         name = params.shift();
@@ -101,7 +101,7 @@
 
     };
 
-    $.fn.icParseProperty2 = function (name, isLiteral) {
+    $.fn.icParseProperty2 = $.fn.icPp2 = function (name, isLiteral) {
         name = this.attr(name);
         if (name === undefined || name == '') return name;
         return this.icParseProperty(name, isLiteral);
