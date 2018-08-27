@@ -9,7 +9,7 @@
 
 brick.directives.reg('ic-select', function($elm){
 
-var on_change = $.icParseProperty2('ic-select-on-change');
+var on_change = $elm.icPp2('ic-select-on-change');
 var cla = $elm.attr('ic-select-cla') || brick.get('ic-select-cla') || 'selected';
 var name = $elm.attr('ic-select');
 var s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
