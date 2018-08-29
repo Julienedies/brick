@@ -157,7 +157,7 @@ var controllers = (function () {
             scope._parent = parent && parent._name;
             scope.$elm = $elm;
             ctrl.scope = scope; // 如果有多个控制器实例，则该名下控制器的作用域对象引用的会是最后一个实例化控制器的作用域对象
-            //$elm.data('ic-ctrl-scope', scope);
+            $elm.data('ic-ctrl-scope', scope);  // 用于区别多个同名控制器下的正确继承
 
             depend = services.get(depend) || [];
             depend = depend.constructor !== Array ? [depend] : depend;
