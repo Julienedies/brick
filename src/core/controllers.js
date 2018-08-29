@@ -81,7 +81,7 @@ var controllers = (function () {
             setTimeout(function () {
                 var $tpl_dom = that._render(tplName, model);
                 if($tpl_dom){
-                    brick.compile($tpl_dom);
+                    brick.compile($tpl_dom, true);
                     call && call.apply($tpl_dom, []);
                 }
             }, 30);

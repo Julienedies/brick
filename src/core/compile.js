@@ -1,12 +1,17 @@
-/**
+/*!
  * Created by julien.zhang on 2014/12/9.
  */
 
-function compile(node){
+/**
+ *
+ * @param node  dom or jquery object
+ * @param is_start_form_children  bool 可选,  true 表示直接从子元素开始编译
+ */
+function compile(node, is_start_form_children){
 
     var $elm = $(node);
 
-    __compile(node);
+    !is_start_form_children && __compile(node);
 
     var children = $elm.children();
     var child;
@@ -20,7 +25,7 @@ function compile(node){
 
 function __compile(node){
 
-    node = node[0] || node;  //jquery对象转为dom对象
+    node = node[0] || node;  // jquery对象转为dom对象
     if(node.nodeType != 1) return console.info('compile exit', node);
 
     var $elm = $(node);
