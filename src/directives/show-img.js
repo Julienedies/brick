@@ -23,6 +23,8 @@ $.fn.icShowImg = function (option) {
         var interval = option.interval;
         var order = option.order || 1;
 
+        var cla = 'on-ic-popup-show';
+
         var timer;
         var index = 0;
         var max = urls.length - 1;
@@ -48,7 +50,7 @@ $.fn.icShowImg = function (option) {
             $close.text(index);
             $imgBox.fadeToggle();
             $that.trigger('ic-show-img.show');
-            $(document.body).on('mousewheel', callback);
+            $(document.body).addClass(cla).on('mousewheel', callback);
         };
 
         $that.on('click', item, function (e) {
@@ -60,7 +62,7 @@ $.fn.icShowImg = function (option) {
             clearInterval(timer);
             $imgBox.fadeToggle();
             $that.trigger('ic-show-img.hide');
-            $(document.body).off('mousewheel', callback);
+            $(document.body).removeClass(cla).off('mousewheel', callback);
         });
 
         if (option.start && interval) {
