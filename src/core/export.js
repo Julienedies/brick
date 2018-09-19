@@ -3,7 +3,7 @@
  */
 
 //对外接口
-var brick = root.brick = {
+var brick = window.brick = {
     utils: utils,
     config: config,
     controllers: controllers,
