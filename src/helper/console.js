@@ -1,20 +1,15 @@
 /**
  * Created by j on 18/6/19.
- * @todo 控制console是否输出
- * @example
- * cc('info','log');  // console.log and console.info 调用后不会有输出
- * cc(true, 'info', 'log');  console.log and console.info 调用继续输出
+ * @todo 在brick闭包内重写console,对原生console进行包装, 控制debug输出.
  */
 
 var native_console = window.console;
+var _console = native_console;
 
 var console = {};
 
-const _console = native_console;
-
-const _console_bak = {};
-const _console_ghost = {};
-const _console_methods = [];
+var _console_bak = {};
+var _console_methods = [];
 
 ;
 (function () {
@@ -22,7 +17,6 @@ const _console_methods = [];
         var f = _console[i];
         if (typeof f == 'function') {
             _console_methods.push(i);
-            //_console_bak[i] = f;
             (function (f) {
                 _console_bak[i] = console[i] = function () {
                     var arr = [].slice.call(arguments, 0);
@@ -38,6 +32,9 @@ const _console_methods = [];
  * @todo 管理console的行为,
  * @param bool {Boolean} [可选] console方法调用后是否输出
  * @param methods  {String}  [可选]  console方法名
+ * @example
+ * cc('info','log') or cc(false, 'info', 'log');  // console.log and console.info 调用后不会有输出
+ * cc(true, 'info', 'log');  console.log and console.info 调用继续输出
  */
 function cc(bool, methods) {
     var arr = [].slice.call(arguments);
@@ -59,6 +56,3 @@ function cc(bool, methods) {
         };
     });
 }
-
-window.console.info(console.info);
-console.info('aa', 'bb');
