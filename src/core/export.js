@@ -13,7 +13,7 @@ var brick = window.brick = {
     createRender: createRender,
     eventManager: eventManager,
     __tpl: {},
-    debug: cc,
+    debug: function(){},
     set: function (k, v) {
         return this.config.set(k, v);
     },
