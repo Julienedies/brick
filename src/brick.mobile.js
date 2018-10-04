@@ -10,7 +10,6 @@
 // __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
 
 // core架构 必选
-__inline('helper/console.js')
 
 __inline('core/utils.js')
 __inline('core/config.js')
@@ -53,7 +52,7 @@ __inline('directives/collection.js')
 //bootstrap
 $(function () {
     setTimeout(function () {
-        if(!brick.get('debug')) cc(false, 'log');
+        //if(!brick.get('debug')) cc(false, 'log');
         if(brick.get('bootstrap.auto') === false) return;
         brick.bootstrap(document.body);
     }, 30);
