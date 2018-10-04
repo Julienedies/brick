@@ -5,9 +5,10 @@
 /**
  *
  * @param node  dom or jquery object
- * @param is_start_form_children  bool 可选,  true 表示直接从子元素开始编译;  考虑: ic-tpl指令下, 从ic-tpl属性dom开始编译还是从子元素开始编译好?
+ * @param is_start_form_children  {Bool} 可选,  true 表示直接从子元素开始编译;  考虑: ic-tpl指令下, 从ic-tpl属性dom开始编译还是从子元素开始编译好?
  */
 function compile(node, is_start_form_children){
+
 
     var $elm = $(node);
 
