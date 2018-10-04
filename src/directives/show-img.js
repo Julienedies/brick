@@ -6,7 +6,7 @@ $.fn.icShowImg = function (option) {
 
     return this.each(function(){
 
-        var html = '<div id="ic-show-img-box-wrap" style="position: fixed;width:100%;height:100%;left:0;top:0;z-index: 999;background-color: rgba(0,0,0,0.4);display:none;"><div id="ic-show-img-box"><img style="display:block;width:100%;"></div><div id="ic-show-img-close" style="position:absolute;top:0;right:0;padding:15px 20px;background-color: rgba(0,0,0,0.6);color:#fff;line-height:1;font-size:1.6em;cursor:pointer;">X</div></div>';
+        var html = __inline('../tpl/show-img.html');
 
         var $that = $(this);
         var $imgBox = $('#ic-show-img-box-wrap');
@@ -65,9 +65,9 @@ $.fn.icShowImg = function (option) {
             $(document.body).removeClass(cla).off('mousewheel', callback);
         });
 
-        if (option.start && interval) {
+        if (option.start) {
             show(urls[0]);
-            timer = setInterval(callback, interval * 1000);
+            timer = interval ? setInterval(callback, interval * 1000) : undefined;
         }
 
     });
@@ -75,9 +75,12 @@ $.fn.icShowImg = function (option) {
 
 brick.directives.reg('ic-show-img', function ($elm) {
 
+    console.info('exec ic-show-img', $elm);
+
     var s_box = 'ic-show-img-box';  // img box 选择符
     var s_item = 'ic-show-img-item'; // img item 选择符
-    var s_urls = 'ic-show-img-source';  // scope 数据源 图像url数据
+    var s_urls = 'ic-show-img-sources';  // scope 数据源 图像url数据
+    var s_interval = 'ic-show-img-interval';  // 间隔自动播放
 
     var $imgBox = $( $elm.attr(s_box) );
     var item = $elm.attr(s_item) || brick.get(s_item) || 'img';
@@ -87,6 +90,7 @@ brick.directives.reg('ic-show-img', function ($elm) {
         item: item,
         $imgs: $elm.find(item),
         urls: $elm.icPp2(s_urls),
+        interval: $elm.icPp2(s_interval, true),
         url: $elm.attr('ic-show-img-url') || brick.get('ic-show-img-url') || 'src'
     });
 
