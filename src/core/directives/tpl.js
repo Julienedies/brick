@@ -11,6 +11,8 @@ directives.reg('ic-tpl', {
 
         ($elm || $('[ic-tpl]')).each(function () {
 
+            console.info('exec directive ic-tpl.', this);
+
             var $th = $(this);
             var name = $th.attr('ic-tpl');
             var $parent;
@@ -30,10 +32,11 @@ directives.reg('ic-tpl', {
                 dob && $th.icRender(name, dob);
             }, 300);
 
-            $th.attr('ic-tpl', name);
-            $th.attr('ic-tpl-name', name);
-
             __tpl[name] = createRender(this);
+
+            $th.attr('ic-tpl-name', name);
+            $th.removeAttr('ic-tpl');
+            $th.empty();
 
         });
 
