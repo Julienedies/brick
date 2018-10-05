@@ -2,87 +2,109 @@
  * Created by j on 18/2/16.
  */
 
-$.fn.icShowImg = function (option) {
+var ic_show_img_html = __inline('../tpl/show-img.html');
 
-    return this.each(function(){
+var icShowImg = {
+    show: function (arg) {
+        var urls = this.urls = arg.urls;
+        var src = arg.src;
+        var index = this.index = src ? urls.indexOf(src) : 0;
+        src = src || urls[index];
 
-        var html = __inline('../tpl/show-img.html');
+        icShowImg.$img.attr('src', src);
+        icShowImg.$sn.text(icShowImg.index);
+        icShowImg.$elm.fadeIn();
+        $(document.body).on('mousewheel', icShowImg.on_mousewheel);
+
+        this.timer = null;
+        this.interval = arg.interval || 5;
+        arg.autoplay && icShowImg.autoplay();
+    },
+
+    init: function (options) {
+        if (this.$elm) return icShowImg;
+        var $elm = $('#ic-show-img-box-wrap');
+        $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(ic_show_img_html).appendTo($(document.body));
+        this.$img = this.$elm.find('#ic-show-img-box > img');
+        this.$autoplay = this.$elm.find('#ic-show-img-autoplay');
+        this.$sn = this.$elm.find('#ic-show-img-sn');
+
+        $elm.on('click', '#ic-show-img-close', function (e) {
+            $elm.fadeOut();
+            icShowImg.autoplay(false);
+            $(document.body).off('mousewheel', icShowImg.on_mousewheel);
+        });
+
+        $elm.on('click', '#ic-show-img-autoplay', function (e) {
+            icShowImg.autoplay(!icShowImg.timer);
+        });
+
+        return icShowImg;
+    },
+
+    on_mousewheel: _.debounce(function (e) {
+        //正负值表示滚动方向
+        e = e || {originalEvent: {deltaY: icShowImg.order}};
+        e.originalEvent.deltaY < 0 ? --icShowImg.index : ++icShowImg.index;
+        var max = icShowImg.urls.length - 1;
+        if (icShowImg.index < 0) {
+            icShowImg.index = max;
+        }
+        if (icShowImg.index > max) {
+            icShowImg.index = 0;
+        }
+        icShowImg.$sn.text(icShowImg.index);
+        icShowImg.$img.attr('src', icShowImg.urls[icShowImg.index]);
+        return false;
+    }, 100),
+
+    autoplay: function (is_play) {
+        if(is_play || is_play === undefined){
+            icShowImg.timer = setInterval(icShowImg.on_mousewheel, icShowImg.interval * 1000);
+            icShowImg.$autoplay.text('停止播放');
+        }else{
+            clearInterval(icShowImg.timer);
+            icShowImg.timer = null;
+            icShowImg.$autoplay.text('自动播放');
+        }
+    }
+
+};
+
+
+$.fn.icShowImg = function (options) {
+
+    return this.each(function () {
 
         var $that = $(this);
-        var $imgBox = $('#ic-show-img-box-wrap');
-        $imgBox = option.$imgBox || $imgBox.length ? $imgBox : $(html).appendTo($(document.body));
-        var $show = $imgBox.find('img');
-        var $close = $('#ic-show-img-close');
+        var $imgBox = options.$imgBox;
 
-        var item = option.item || 'img';
-        var $imgs = option.$imgs || $that.find(item);
-        var url = option.url || 'src';
-        var urls = option.urls || $imgs.map(function (i) {
+        var item = options.item || 'img';
+        var $imgs = options.$imgs || $that.find(item);
+        var url = options.url || 'src';
+        var urls = options.urls || $imgs.map(function (i) {
                 return $(this).attr('ic-show-img-item', i).attr(url);
             }).get();
-        var interval = option.interval;
-        var order = option.order || 1;
-
-        var cla = 'on-ic-popup-show';
-
-        var timer;
-        var index = 0;
-        var max = urls.length - 1;
-
-        var callback = _.debounce(function (e) {
-            //正负值表示滚动方向
-            e = e || {originalEvent: {deltaY: order}};
-            var isUp = e.originalEvent.deltaY < 0 ? --index : ++index;
-            if (index < 0) {
-                index = max;
-            }
-            if (index > max) {
-                index = 0;
-            }
-            $close.text(index);
-            $show.attr('src', urls[index]);
-            return false;
-        }, 100);
-
-        var show = function (src) {
-            $show.attr('src', src);
-            index = urls.indexOf(src);
-            $close.text(index);
-            $imgBox.fadeToggle();
-            $that.trigger('ic-show-img.show');
-            $(document.body).addClass(cla).on('mousewheel', callback);
-        };
 
         $that.on('click', item, function (e) {
-            show( $(this).attr(url) );
+            icShowImg.init(options).show({
+                urls: urls,
+                src: $(this).attr(url)
+            });
             return false;
         });
-
-        $imgBox.on('click', '#ic-show-img-close', function (e) {
-            clearInterval(timer);
-            $imgBox.fadeToggle();
-            $that.trigger('ic-show-img.hide');
-            $(document.body).removeClass(cla).off('mousewheel', callback);
-        });
-
-        if (option.start) {
-            show(urls[0]);
-            timer = interval ? setInterval(callback, interval * 1000) : undefined;
-        }
 
     });
 };
 
 brick.directives.reg('ic-show-img', function ($elm) {
 
-    console.info('exec ic-show-img', $elm);
-
     var s_box = 'ic-show-img-box';  // img box 选择符
     var s_item = 'ic-show-img-item'; // img item 选择符
     var s_urls = 'ic-show-img-sources';  // scope 数据源 图像url数据
     var s_interval = 'ic-show-img-interval';  // 间隔自动播放
 
-    var $imgBox = $( $elm.attr(s_box) );
+    var $imgBox = $($elm.attr(s_box));
     var item = $elm.attr(s_item) || brick.get(s_item) || 'img';
 
     $elm.icShowImg({
