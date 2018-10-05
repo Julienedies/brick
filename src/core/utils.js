@@ -5,6 +5,9 @@
 var utils = (function () {
 
     return {
+        cid: function(){
+            return Math.random().toFixed(7).replace('0.', '');
+        },
         /**
          * @todo 恢复被转义的html
          * @param text {string} <必须> html类型字符串
