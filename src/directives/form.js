@@ -223,7 +223,7 @@ directives.reg('ic-form', function ($elm, attrs) {
                     val = $th.val() || '';
 
                 } else {
-                    val = $th.val();
+                    val = /^number$/i.test(type) ? $th.val() * 1 : $th.val();
                 }
 
             } else {
