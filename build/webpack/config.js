@@ -20,7 +20,7 @@ const config = isPro ? pro : dev
 
 const publicPath = config.publicPath
 const projectRoot = path.resolve(__dirname, '../../')
-const outputPath = path.resolve(__dirname, '../../dist', `./${ pkg.version }`)
+const outputPath = path.resolve(__dirname, '../../dist')  //, `./${ pkg.version }`
 const context = path.resolve(__dirname, '../../src')
 
 const nodeSassIncludePaths = [path.resolve(__dirname, '../../../')]
@@ -62,10 +62,10 @@ ${ (new Date).toLocaleString() }`,
         entryOnly: true
     }),
     new MiniCssExtractPlugin({
-        filename: "style/[name].css",
-        chunkFilename: "[name].css"
+        filename: '[name].css',
+        chunkFilename: '[name].css'
     }),
-    new CleanPlugin([`dist/${ pkg.version }`], {
+    new CleanPlugin([`dist`], {
         root: projectRoot
     })
 ]

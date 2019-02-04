@@ -6,28 +6,28 @@ import brick from '../core/export'
 
 export default function ($elm, attrs) {
 
-    var eventAction = brick.get('event.action');
+    let eventAction = brick.get('event.action');
 
-    var th = $elm;
-    var name = th.attr('ic-tabs');
-    var disabled = th.attr('ic-tab-disabled');
-    var tabSelect = th.attr('ic-tab-select');
-    var conSelect = th.attr('ic-tabc-select');
-    var activeTab = th.attr('ic-tab-active');
-    var cla = th.attr('ic-tab-cla') || 'active';
-    var activeCon;
-    var $tabSelect;
+    let th = $elm;
+    let name = th.attr('ic-tabs');
+    let disabled = th.attr('ic-tab-disabled');
+    let tabSelect = th.attr('ic-tab-select');
+    let conSelect = th.attr('ic-tabc-select');
+    let activeTab = th.attr('ic-tab-active');
+    let cla = th.attr('ic-tab-cla') || 'active';
+    let activeCon;
+    let $tabSelect;
 
     if (tabSelect) {
         $tabSelect = th.find(tabSelect).each(function (i) {
-            var th = $(this);
+            let th = $(this);
             th.attr('ic-tab', i);
         });
     } else {
         $tabSelect = $elm.find('[ic-tab]');
     }
 
-    var tabc = $('[ic-tabc=' + name + ']');
+    let tabc = $('[ic-tabc=' + name + ']');
 
     if (tabc) {
         tabc.find(conSelect || '[ic-tab-con]').each(function (i) {
@@ -42,7 +42,7 @@ export default function ($elm, attrs) {
     function call_1 (e) {
         call_2(e, this);
 
-        var con = activeTab.attr('ic-tab');
+        let con = activeTab.attr('ic-tab');
         activeCon && activeCon.hide();
         activeCon = tabc.find('[ic-tab-con=' + con + ']').show();
     }
@@ -62,7 +62,7 @@ export default function ($elm, attrs) {
 
     activeTab.trigger('click');
 
-    //var activeCon = activeTab.addClass('active').attr('ic-tab');
+    //let activeCon = activeTab.addClass('active').attr('ic-tab');
 
     //activeCon = tabc.length && tabc.find('[ic-tab-con]').hide().filter('[ic-tab-con=' + activeCon + ']').show();
 

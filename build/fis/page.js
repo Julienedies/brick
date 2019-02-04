@@ -1,11 +1,11 @@
 /**
  * Created by julien.zhang on 2014/10/10.
- * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
 var p = require('../../package.json');
 var version = p.version;
 
+fis.config.set('project.include', /^\/(?:dist|page)\/.+$/i);
 //处理sass
 fis.config.set('modules.parser.scss', 'sass');
 fis.config.set('modules.parser.sass', 'sass');

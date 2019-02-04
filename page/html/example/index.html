@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="zh">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
-    <meta name="description" content="">
-    <link rel="stylesheet" href="../../css/vendor/normalize.css">
-    <link rel="stylesheet" href="../../css/vendor/main.css">
-    <link rel="stylesheet" href="../../css/common/common.css">
-    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <link rel="import" href="../include/head.html?__inline">
 </head>
 <body>
-
-<div id="wraper">
+<div id="wrapper">
 
     <link rel="import" href="../include/header.html?__inline">
 
@@ -39,16 +30,17 @@
             <li><a href="view.html">ic-view</a> </li>
             <li><a href="infinite-scroll.html">ic-infinite-scroll</a> </li>
         </ul>
-
     </main>
 
     <link rel="import" href="../include/footer.html?__inline">
 
 </div>
 
-<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../js/vendor/plugins.js"></script>
-<script src="../../../brick.js"></script>
+<link rel="import" href="../include/foot.html?__inline">
+<script>
+    brick.reg('mainCtrl', function (scope) {
+        console.log(this===scope, this, scope)
+    })
+</script>
 </body>
 </html>

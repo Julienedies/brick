@@ -1,0 +1,62 @@
+[ic-tabs=a] {
+    border-bottom: solid 1px #D6D6D6;
+}
+
+[ic-tabs=a] span {
+    display: inline-block;
+    padding: 0.5em 2em;
+    margin: 0 3px;
+    border-radius: 0.3em 0.3em 0 0;
+    border: solid 1px #D6D6D6;
+    margin-bottom: -1px;
+}
+
+[ic-tabs=a] span.active {
+    border-bottom: solid 1px #fff;
+}
+
+[ic-tabs=b] {
+    padding: 15px 0;
+}
+
+[ic-tabs=b] .active {
+    color: red;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+[ic-ctrl=tasksCtrl] li {
+    position: relative;
+    list-style: none;;
+    border-bottom: 1px solid #ededed;
+}
+
+[ic-ctrl=tasksCtrl] [type=text] {
+    width: 76%;
+    padding: 0.5em 2%;
+    border: none;
+    background: transparent;
+    min-width: 20em;
+    padding: 0 0.5em;
+    border-radius: .2em;
+    height: 36px;
+    line-height: 36px;
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text] {
+    border: solid 1px transparent;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text]:focus {
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] button {
+    margin-left: 0.5em;
+    position: absolute;
+    top: 6px;
+    right: 0;
+}

@@ -1,16 +1,29 @@
 {
   "name": "brick",
   "version": "0.8.1",
-  "author": "Julienedies",
-  "description": "前端开发框架",
+  "description": "一个借鉴angular开发模式的前端开发框架.",
+  "main": "dist/brick.js",
+  "files": [
+    "package.json",
+    "README.md",
+    "dist/*"
+  ],
+  "keywords": [
+    "angular",
+    "frond",
+    "framework",
+    "js"
+  ],
+  "author": "julienedies",
+  "license": "ISC",
   "repository": "http://github.com/Julienedies/brick.git",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --config ./build/webpack/index.js --watch",
     "pro": "cross-env NODE_ENV=production webpack --config ./build/webpack/index.js",
     "start:dev": "cross-env NODE_ENV=development node build/dev.js",
     "start:pro": "cross-env NODE_ENV=production node build/build.js",
-    "page:dev": "cross-env NODE_ENV=production node build/build.js",
-    "page:pro": "cross-env NODE_ENV=production node build/build.js"
+    "page:dev": "fis server start --type node --port 3001 --root ./ && fis release -r ./page -f ./build/fis/page.dev.js -d local -D -w",
+    "page:pro": "fis release -r ./page -f ./build/fis/page.js -d local -D -w"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -41,7 +54,8 @@
     "webpack-dev-server": "^3.1.14",
     "webpack-hot-middleware": "^2.24.3",
     "webpack-manifest-plugin": "^2.0.4",
-    "webpack-merge": "^4.1.5"
+    "webpack-merge": "^4.1.5",
+    "yog-devtools": "^0.1.1"
   },
   "dependencies": {
     "jquery": "^3.3.1",

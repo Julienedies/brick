@@ -15,13 +15,6 @@ node_modules/
 #其它
 *.log
 *map.json
-server.js
 
-#根目录下fis相关的sh和cmd脚本文件忽略
-/*.sh
-/*.cmd
 
-#临时使用
-fis-llt.cmd
-fis/llt.js
-fis/dev.js
+
