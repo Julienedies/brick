@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/9/17.
  */
 
-var directives = {
+export default  {
 
     _pool: {},
 
@@ -28,8 +28,8 @@ var directives = {
     },
 
     exec: function (name, $elm, attrs) {
-        var _pool = this._pool;
-        var definition = _pool[name];
+        let _pool = this._pool;
+        let definition = _pool[name];
 
         if (typeof definition === 'function') {
             definition.apply(null, [$elm, attrs]);
@@ -42,9 +42,9 @@ var directives = {
     },
 
     init: function () {
-        var _pool = this._pool;
-        for (var i in _pool) {
-            var definition = _pool[i];
+        let _pool = this._pool;
+        for (let i in _pool) {
+            let definition = _pool[i];
             if (definition.selfExec) {
                 definition.fn && definition.fn();
                 if (definition.once) {

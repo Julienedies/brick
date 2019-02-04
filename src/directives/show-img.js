@@ -2,7 +2,10 @@
  * Created by j on 18/2/16.
  */
 
-var ic_show_img_html = __inline('../tpl/show-img.html');
+import $ from 'jquery'
+import brick from '../core/export'
+import directives from '../core/directives.js'
+import ic_show_img_html from '../tpl/show-img.html'
 
 var icShowImg = {
     _show: function(src, index){
@@ -77,7 +80,6 @@ var icShowImg = {
 
 };
 
-
 $.fn.icShowImg = function (options) {
 
     return this.each(function () {
@@ -105,7 +107,7 @@ $.fn.icShowImg = function (options) {
     });
 };
 
-brick.directives.reg('ic-show-img', function ($elm) {
+directives.reg('ic-show-img', function ($elm) {
 
     var s_box = 'ic-show-img-box';  // img box 选择符
     var s_item = 'ic-show-img-item'; // img item 选择符

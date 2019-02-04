@@ -3,7 +3,7 @@
  * data-swf="<<<uri: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
-var p = require('../package.json');
+var p = require('../../package.json');
 var version = p.version;
 
 //处理sass

@@ -3,7 +3,7 @@
  * data-swf="<<<u-r-i: ../../js/flowplayer/flowplayer.swf>>>"
  */
 
-var p = require('../package.json');
+var p = require('../../package.json');
 var version = p.version;
 
 //处理sass
@@ -91,14 +91,12 @@ fis.config.merge({
         local: {
             to: '../dist/' + version
         },
-        cs: {
-            to: '../../chrome-extension-contextMenuUtils/js/vendor/brick/' + version
+        crx_jhandy: {
+            to: '../../crx-jhandy/js/vendor/brick/' + version
         },
-        //hybrid app
         jhandy: {
-            to: '../../jHandy/js/brick/' + version
+            to: '../../jHandy/js/vendor/brick/' + version
         },
-        //car.lulutrip.com
         gushenwei: {
             to: '../../gushenwei.github.io/static/js/vendor/brick/' + version
         }

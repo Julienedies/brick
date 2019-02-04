@@ -1,12 +1,12 @@
 /**
- * Created by j on 18/8/5.
  * 简单指令合集
+ * Created by j on 18/8/5.
  */
 
-__inline('popup.js');
+import $ from 'jquery'
+import directives from '../core/directives.js'
 
-
-brick.directives.reg('ic-input-select', {
+directives.reg('ic-input-select', {
     selfExec: true,
     once: true,
     fn: function () {
@@ -19,7 +19,7 @@ brick.directives.reg('ic-input-select', {
 /**
  * 定义ic-toggle指令;
  */
-brick.directives.reg('ic-toggle', {
+directives.reg('ic-toggle', {
     selfExec: true,
     once: true,
     fn: function () {
@@ -33,7 +33,7 @@ brick.directives.reg('ic-toggle', {
 /**
  * 定义ic-close指令;
  */
-brick.directives.reg('ic-close', {
+directives.reg('ic-close', {
     selfExec: true,
     once: true,
     fn: function () {
@@ -47,7 +47,7 @@ brick.directives.reg('ic-close', {
 /**
  * 定义ic-checkbox指令;
  */
-brick.directives.reg('ic-checkbox', {
+directives.reg('ic-checkbox', {
     selfExec: true,
     once: true,
     fn: function () {
@@ -67,7 +67,7 @@ brick.directives.reg('ic-checkbox', {
 /**
  * 定义ic-dom-clone指令;
  */
-brick.directives.reg('ic-dom-clone', {
+directives.reg('ic-dom-clone', {
     selfExec: true,
     once: true,
     fn: function () {
@@ -81,7 +81,7 @@ brick.directives.reg('ic-dom-clone', {
 /**
  * 定义ic-dom-remove指令;
  */
-brick.directives.reg('ic-dom-remove', {
+directives.reg('ic-dom-remove', {
     selfExec: true,
     once: true,
     fn: function () {

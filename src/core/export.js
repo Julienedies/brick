@@ -2,16 +2,26 @@
  * Created by julien.zhang on 2014/9/15.
  */
 
+import utils from './utils'
+import config from './config'
+import controllers from './controllers'
+import directives from './directives'
+import services from './services'
+import eventManager from './eventManager'
+import createRender from './createRender'
+import compile from './compile'
+
 //对外接口
-var brick = window.brick = {
+const brick = {
     utils: utils,
     config: config,
     controllers: controllers,
     services: services,
     directives: directives,
-    compile: compile,
-    createRender: createRender,
     eventManager: eventManager,
+    createRender: createRender,
+    compile: compile,
+    verbose: false,
     __tpl: {},
     debug: function(){},
     set: function (k, v) {
@@ -53,7 +63,7 @@ var brick = window.brick = {
 };
 
 
-
+export default brick
 
 
 

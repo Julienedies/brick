@@ -1,18 +1,18 @@
 /**
- * Created by julien.zhang on 2014/9/12.
  * 主要用于解析一个dom节点上绑定的tpl指令
+ * Created by julien.zhang on 2014/9/12.
  */
 
-function parser(node) {
+export default function parser(node) {
 
-    if (node.nodeType == 1) {
+    if (node.nodeType === 1) {
 
-        var elm = $(node);
-        var attrs = node.attributes;
+        let elm = $(node);
+        let attrs = node.attributes;
 
-        var directives = [];
+        let directives = [];
 
-        var priority = {
+        let priority = {
             'skip': -100,
             'init': -10,
             'for': 0,
@@ -29,7 +29,7 @@ function parser(node) {
         };
 
 
-        for (var i = 0, attr, name, value, l = attrs.length; i < l; i++) {
+        for (let i = 0, attr, name, value, l = attrs.length; i < l; i++) {
 
             attr = attrs[i];
 
@@ -50,10 +50,11 @@ function parser(node) {
 
 
         //处理每一个指令
+        let attr
         while (attr = directives.shift()) {
 
-            name = attr[0];
-            value = attr[1];
+            let name = attr[0];
+            let value = attr[1];
 
             if (/-skip$/.test(name)) {
                 elm.remove();
@@ -141,9 +142,9 @@ function parser(node) {
 
     }
 
-    if (node.nodeType == 3) {
+    if (node.nodeType === 3) {
 
-        var text = node.nodeValue;
+        let text = node.nodeValue;
 
         node.nodeValue = text.replace(/{{(.+?)}}/g, '<%= $1 %>');
 

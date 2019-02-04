@@ -1,9 +1,11 @@
 /**
+ *  定义输入提示指令
  * Created by julien.zhang on 2014/11/13.
- * 定义输入提示指令
  */
 
-directives.reg('ic-type-ahead', function ($elm, attrs) {
+import brick from '../core/export'
+
+export default function ($elm, attrs) {
 
     var $doc = $('body');
 
@@ -69,9 +71,9 @@ directives.reg('ic-type-ahead', function ($elm, attrs) {
 
     }
 
-//////////////////////////////////
-    //event
-    ////////////////////////////////////
+////////////////////////////////////
+// event
+////////////////////////////////////
 
     $elm.on('focus', function (e) {
         var offset = $elm.offset();
@@ -83,7 +85,7 @@ directives.reg('ic-type-ahead', function ($elm, attrs) {
 
         var val = $elm.val();
         if (!val) return $selectList.hide();
-        if (val == queryStr) return;
+        if (val === queryStr) return;
 
         queryStr = val;
 
@@ -96,7 +98,7 @@ directives.reg('ic-type-ahead', function ($elm, attrs) {
     }).on('keydown', function (e) {
 
         var keyCode = e.keyCode;
-        if (!(keyCode == 38 || keyCode == 40 || keyCode == 13)) {
+        if (!(keyCode === 38 || keyCode === 40 || keyCode === 13)) {
             keydownActive = 0;
             return
         }
@@ -105,19 +107,19 @@ directives.reg('ic-type-ahead', function ($elm, attrs) {
         if (!list.length) return;
         var max = list.length - 1;
 
-        if (e.keyCode == 38) {
+        if (e.keyCode === 38) {
             keydownActive = --keydownActive < 0 ? max : keydownActive;
             list.eq(keydownActive).addClass('active').siblings().removeClass('active');
             return;
         }
 
-        if (e.keyCode == 40) {
+        if (e.keyCode === 40) {
             keydownActive = ++keydownActive > max ? 0 : keydownActive;
             list.eq(keydownActive).addClass('active').siblings().removeClass('active');
             return;
         }
 
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             list.eq(keydownActive).trigger('mousedown');
             $elm.blur();
         }
@@ -135,8 +137,7 @@ directives.reg('ic-type-ahead', function ($elm, attrs) {
         var val = $(this).attr('ic-role-type-item');
         $elm.val(val);
         $elm.trigger('type.complete', item);
-        onTypeComplete && onTypeComplete.apply($elm[0], [e,item])
+        onTypeComplete && onTypeComplete.apply($elm[0], [e, item])
     });
 
-
-});
+}

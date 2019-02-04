@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/15.
  */
 
-directives.add('ic-dropdown', function ($elm, attrs) {
+export default function ($elm, attrs) {
 
 
     var th = $elm;
@@ -11,7 +11,7 @@ directives.add('ic-dropdown', function ($elm, attrs) {
 
     var h = th.height();
 
-    var menu = th.find('[ic-dropdown-menu]').css({position: 'absolute', top: h + 'px', display:'none!important'});
+    var menu = th.find('[ic-dropdown-menu]').css({position: 'absolute', top: h + 'px', display: 'none!important'});
 
     var timer;
     if (menu.size()) {
@@ -50,4 +50,4 @@ directives.add('ic-dropdown', function ($elm, attrs) {
     }
 
 
-});
+}

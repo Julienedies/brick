@@ -2,7 +2,9 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.reg('ic-event', {
+import brick from '../export'
+
+export default {
     selfExec: true,
     once: true,
     fn: function () {
@@ -28,7 +30,7 @@ directives.reg('ic-event', {
         });
 
 
-        function _call(e) {
+        function _call (e) {
             var th = $(this);
             var type = e.type;
             var fn = th.attr('ic-' + type);
@@ -37,4 +39,4 @@ directives.reg('ic-event', {
         }
 
     }
-});
+}

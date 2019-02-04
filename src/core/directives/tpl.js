@@ -1,8 +1,11 @@
 /**
+ * 根据dom模板生成模板函数
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.reg('ic-tpl', {
+import createRender from '../createRender'
+
+export default {
     selfExec: true,
     //once: true,  // 要考虑异步加载进来的模板, 所以不能只允许调用一次
     fn: function ($elm) {
@@ -16,15 +19,15 @@ directives.reg('ic-tpl', {
             var $parent;
 
             // 只处理一次
-            if($th.attr('ic-tpl-name')) return;
+            if ($th.attr('ic-tpl-name')) return;
 
-            if(!name){
+            if (!name) {
                 $parent = $th.closest('[ic-ctrl]');
                 name = $parent.attr('ic-ctrl');
             }
 
             //自动初始化渲染数据对象
-            setTimeout(function(){
+            setTimeout(function () {
                 var dob = $th.icParseProperty2('ic-tpl-init');
                 dob && $th.icRender(name, dob);
             }, 300);
@@ -36,7 +39,5 @@ directives.reg('ic-tpl', {
             $th.empty();
 
         });
-
     }
-
-});
+}

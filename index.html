@@ -5,11 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/print.css" media="print">
-    <link rel="stylesheet" type="text/css" href="public/js/brick/0.7/brick.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="public/css/common/common.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="index/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="index/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="index/stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="../dist/0.8.1/style/brick.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/common/common.css" media="screen">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -134,7 +134,7 @@
 
             <p><a href="https://github.com/Julienedies/brick/wiki">https://github.com/Julienedies/brick/wiki</a></p>
 
-            <h3>example: ToDo&nbsp;&nbsp;<a href="public/example/todo/index.html" target="_blank" class="fz-small">单独页面打开</a>&nbsp;&nbsp;<a href="public/example/index.html" target="_blank">all</a> </h3>
+            <h3>example: ToDo&nbsp;&nbsp;<a href="example/todo/index.html" target="_blank" class="fz-small">单独页面打开</a>&nbsp;&nbsp;<a href="example/index.html" target="_blank">all</a> </h3>
 
             <div ic-ctrl="tasksCtrl">
                 <div>
@@ -333,39 +333,16 @@
 <script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushCss.js"></script>
 <script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
 <script type="text/javascript">
-    SyntaxHighlighter.all();
+    //SyntaxHighlighter.all();
 </script>
 <script src="http://julienedies.github.io/brick/public/js/vendor/underscore-1.6.0.min.js"></script>
 <script src="http://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
 <script src="http://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
-<script src="dist/0.7/brick.js"></script>
+<script src="../dist/0.8.1/brick.js"></script>
 <script>
-    //自定义指令
-    brick.directives.reg('ic-enter-press', function ($elm, attrs) {
-
-        $(document.body).on('focus', '[ic-enter-press]', function(e){
-
-            var $elm = $(this);
-            var call = $elm.attr('ic-enter-press');
-            call = $elm.icParseProperty(call);
-            call = $.proxy(call, this);
-            var fn = function(e){
-                e.which == 13  && call(e);
-            };
-
-            $elm.on('keypress', fn);
-
-            $elm.on('blur', function(e){
-                $elm.off('keypress', fn);
-            });
-
-        });
-
-    }, {selfExec: true, once: true });
 
     // model
     brick.services.reg('tasksModel', function (recordManager) {
-
         var local = window.localStorage && localStorage.getItem('tasksModel');
 
         return new recordManager({key: 'id', eventPrefix: 'tasksModel', broadcast: true}).init(local && JSON.parse(local) || []);
@@ -383,9 +360,9 @@
             scope.render('task-list', model);
         };
 
-        scope.watch('tasksModel.*', render);
+        scope.on('tasksModel.*', render);
 
-        render();
+        //render();
 
         scope.add = function (e) {
             var val = this.value;

@@ -2,8 +2,9 @@
  * Created by julien.zhang on 2014/10/29.
  */
 
+import brick from '../core/export'
 
-directives.reg('ic-form', function ($elm, attrs) {
+export default function ($elm, attrs) {
 
     /**
      * 要验证的字段 ic-form-field
@@ -50,7 +51,7 @@ directives.reg('ic-form', function ($elm, attrs) {
      * @param $elm
      * @returns {}
      */
-    function compileRule(rule, $elm) {
+    function compileRule (rule, $elm) {
 
         var v;
         //替换预设的规则标识符
@@ -71,7 +72,7 @@ directives.reg('ic-form', function ($elm, attrs) {
     }
 
     //校验函数
-    function _verify(val, rules, tips, $field) {
+    function _verify (val, rules, tips, $field) {
 
         if (rules == undefined) return false;
 
@@ -113,10 +114,10 @@ directives.reg('ic-form', function ($elm, attrs) {
 
     }
 
-     $.fn.icForm = $.fn.icForm || function (call, msg) {
-         this.find('[ic-form-submit]').not(this.find('[ic-form] [ic-form-submit]')).icFormVerify();
-         return this .data('ic-form-fields');
-     };
+    $.fn.icForm = $.fn.icForm || function (call, msg) {
+        this.find('[ic-form-submit]').not(this.find('[ic-form] [ic-form-submit]')).icFormVerify();
+        return this.data('ic-form-fields');
+    };
 
     $.fn.icFormVerify = $.fn.icFormVerify || function () {
         // 提交按钮调用
@@ -132,7 +133,7 @@ directives.reg('ic-form', function ($elm, attrs) {
         return false;
     };
 
-    function defaultCall() {
+    function defaultCall () {
     }
 
     var fields = {};
@@ -279,7 +280,7 @@ directives.reg('ic-form', function ($elm, attrs) {
         $submit.trigger(eventAction);
     });
 
-    function toSubmit(e) {
+    function toSubmit (e) {
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;
 
@@ -345,5 +346,5 @@ directives.reg('ic-form', function ($elm, attrs) {
         return 3;
     })();
 
-});
+}
 

@@ -3,7 +3,7 @@
  * 回车键按下监听指令
  */
 
-directives.reg({
+export default {
     name: 'ic-enter-press',
     selfExec: true,
     once: true,
@@ -11,12 +11,12 @@ directives.reg({
 
         $(document.body).on('focus', '[ic-enter-press]', function (e) {
 
-            var $elm = $(this);
-            var call = $elm.attr('ic-enter-press');
+            let $elm = $(this);
+            let call = $elm.attr('ic-enter-press');
             call = $elm.icParseProperty(call);
             call = $.proxy(call, this);
-            var fn = function (e) {
-                e.which == 13 && call(e);
+            let fn = function (e) {
+                e.which === 13 && call(e);
             };
 
             $elm.on('keypress', fn);
@@ -28,4 +28,4 @@ directives.reg({
         });
 
     }
-});
+}

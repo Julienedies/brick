@@ -1,8 +1,9 @@
 /**
  * Created by julien.zhang on 2014/10/20.
  */
+import brick from '../core/export'
 
-directives.reg('ic-pagination', function ($elm, attrs) {
+export default function ($elm, attrs) {
 
     var th = $elm;
     var namespace = th.attr('ic-pagination');
@@ -73,7 +74,7 @@ directives.reg('ic-pagination', function ($elm, attrs) {
     var num = th.find('[ic-role-pagination-num]');
     var html = num[0].outerHTML;
 
-    function createNums() {
+    function createNums () {
 
         var j = Math.floor(step / 2);
         var k;
@@ -124,4 +125,4 @@ directives.reg('ic-pagination', function ($elm, attrs) {
     });
 
 
-});
+}

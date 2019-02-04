@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
-directives.reg('ic-slider', function ($elm, attr) {
+export default function ($elm, attr) {
 
     var th = $elm;
 
@@ -21,7 +21,7 @@ directives.reg('ic-slider', function ($elm, attr) {
     var items = th.find('[ic-role-slider-item]').css(style1);
     var len = items.size();
 
-    var style2 = direction ? {height: len * vh + 'px'} : { width: len * vw + 'px'};
+    var style2 = direction ? {height: len * vh + 'px'} : {width: len * vw + 'px'};
     style2.position = 'absolute';
     var view = th.find('[ic-role-slider-view]').css(style2);
 
@@ -151,5 +151,4 @@ directives.reg('ic-slider', function ($elm, attr) {
         next();
     });
 
-
-});
+}

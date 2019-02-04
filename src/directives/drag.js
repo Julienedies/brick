@@ -2,7 +2,7 @@
  * Created by julien.zhang on 2014/11/5.
  */
 
-directives.add('ic-drag-view', function ($elm, attrs) {
+export default function ($elm, attrs) {
 
     var $document = $(document);
 
@@ -67,7 +67,7 @@ directives.add('ic-drag-view', function ($elm, attrs) {
     });
 
 
-    function mousemove(e) {
+    function mousemove (e) {
 
         var moveX = e.pageX - startX;
         var moveY = e.pageY - startY;
@@ -92,10 +92,10 @@ directives.add('ic-drag-view', function ($elm, attrs) {
         return false;
     }
 
-    function mouseup() {
+    function mouseup () {
         $document.unbind('mousemove', mousemove);
         $document.unbind('mouseup', mouseup);
     }
 
 
-});
+}

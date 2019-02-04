@@ -1,64 +1,74 @@
-/*!
- * https://github.com/julienedies/brick.git
- * https://github.com/Julienedies/brick/wiki
- * {{timestamp}}
- * {{version}}
- */
-;
-(function (window, undefined) {
+// style
+import './css/brick.scss'
 
-// __inline是fis语法，用于嵌入代码片段，经过编译后会替换成对应的js文件内容；
+import $ from 'jquery'
 
-// core架构 必选
-__inline('helper/console.js')
+import brick from './core/export'
+import services from './core/services'
+import directives from './core/directives'
 
-__inline('core/utils.js')
-__inline('core/config.js')
-__inline('core/eventManager.js')
-__inline('core/controllers.js')
-__inline('core/services.js')
-__inline('core/directives.js')
-__inline('core/parser.js')
-__inline('core/createRender.js')
-__inline('core/compile.js')
-__inline('core/export.js')
-
-// core指令 必选
-__inline('core/directives/ctrl.js')
-__inline('core/directives/event.js')
-__inline('core/directives/tpl.js')
+import ctrl from './core/directives/ctrl'
+import event from './core/directives/event'
+import tpl from './core/directives/tpl'
 
 // jQuery扩展 必选
-__inline('$extend/$extension.js')
+import './$extend/$extension.js'
+
+import recordManager from './services/recordManager.js'
+
+import ajax, { ajaxAuto, ajaxEnter } from './directives/ajax.js'
+import tabs from './directives/tabs.js'
+import form from './directives/form.js'
+import select from './directives/select.js'
+import enterPress from './directives/enterPress.js'
+import scroll from './directives/scroll.js'
+import dialog, { prompt } from './directives/dialog.js'
+import dropdown from './directives/dropdown.js'
+import typeAhead from './directives/type-ahead.js'
+import slider from './directives/slider.js'
+import pagination from './directives/pagination.js'
+import drag from './directives/drag.js'
+import popup from './directives/popup.js'
+import './directives/show-img.js'
+import './directives/collection.js'
+
+// core指令 必选
+directives.reg('ic-ctrl', ctrl)
+directives.reg('ic-event', event)
+directives.reg('ic-tpl', tpl)
 
 // 内置services 可选
-__inline('services/recordManager.js')
-__inline('services/transition.js')
-__inline('services/cache.js')
+services.add('recordManager', recordManager)
 
 // 内置directives 可选
-__inline('directives/ajax.js')
-__inline('directives/tabs.js')
-__inline('directives/form.js')
-__inline('directives/select.js')
-__inline('directives/enterPress.js')
-__inline('directives/scroll.js')
-__inline('directives/dialog.js')
-__inline('directives/dropdown.js')
-__inline('directives/type-ahead.js')
-//
-__inline('directives/slider.js')
-__inline('directives/pagination.js')
-__inline('directives/drag.js')
-__inline('directives/collection.js')
+directives.reg('ic-ajax', ajax)
+directives.reg('ic-ajax-auto', ajaxAuto)
+directives.reg('ic-ajax-enter', ajaxEnter)
+directives.reg('ic-tabs', tabs)
+directives.reg('ic-form', form)
+directives.reg('ic-select', select)
+directives.reg('ic-enter-press', enterPress)
+directives.reg('ic-type-ahead', typeAhead)
+directives.reg('ic-scroll', scroll)
+directives.reg('ic-dialog', dialog)
+directives.reg('ic-prompt', prompt)
+directives.add('ic-dropdown', dropdown)
+directives.reg('ic-slider', slider)
+directives.reg('ic-pagination', pagination)
+directives.add('ic-drag-view', drag)
+directives.reg('ic-popup', popup)
+directives.reg('ic-popup', popup)
+
+//import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
 
 // bootstrap
 $(function () {
     setTimeout(function () {
         //if(!brick.get('debug')) cc(false, 'log');
-        if(brick.get('bootstrap.auto') === false) return;
+        if (brick.get('bootstrap.auto') === false) return;
         brick.bootstrap(document.body);
     }, 30);
 });
 
-})(window);
+
+export default brick

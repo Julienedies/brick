@@ -3,7 +3,7 @@
  * require moment.js (https://github.com/moment/moment/)
  *
  */
-
+import brick from '../core/export'
 /**
  * config:
  * ic-date-now     #定义当前日期，通常有server端提供，如果未提供则为浏览器端当前日期

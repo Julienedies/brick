@@ -1,7 +1,7 @@
 /**
- * Created by j on 18/6/19.
  * @todo 在brick闭包内重写console,对原生console进行包装, 控制debug输出.
  * issue: 覆盖原生console, 会导致控制台debug定位不到console输出语句.  无法解决, 不能覆盖!
+ * Created by j on 18/6/19.
  */
 
 var native_console = window.console;
@@ -37,7 +37,7 @@ var _console_methods = [];
  * cc('info','log') or cc(false, 'info', 'log');  // console.log and console.info 调用后不会有输出
  * cc(true, 'info', 'log');  console.log and console.info 调用继续输出
  */
-function cc(bool, methods) {
+export default function cc(bool, methods) {
     var arr = [].slice.call(arguments);
     bool = arr.shift();
     methods = arr;

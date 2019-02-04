@@ -2,6 +2,7 @@
  * Created by Julien on 2015/9/1.
  */
 
+
 /**
  * 获取一个动画类
  * @param animation {Number} 1-67
@@ -469,7 +470,7 @@ brick.getAniMap = function (animation) {
             if(!name) throw 'must to provide name of view.';
             var that = this;
             var currentView = this.current();
-            if(currentView == name) return;
+            if(currentView === name) return;
             var nextViewProp = this.cache(name);
             var currentViewProp = this.cache(currentView);
             var aniId = currentViewProp.aniId;

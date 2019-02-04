@@ -2,7 +2,10 @@
  * Created by Julien on 2015/7/23.
  */
 
-brick.directives.reg('ic-upload', function ($elm, attrs) {
+import $ from 'jquery'
+import directives from '../core/directives.js'
+
+directives.reg('ic-upload', function ($elm, attrs) {
 
     var nameSpace = $elm.attr('ic-upload');
     var uploadUrl = $elm.attr('ic-upload-action');
