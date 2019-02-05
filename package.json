@@ -20,8 +20,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --config ./build/webpack/index.js --watch",
     "pro": "cross-env NODE_ENV=production webpack --config ./build/webpack/index.js",
-    "start:dev": "cross-env NODE_ENV=development node build/dev.js",
-    "start:pro": "cross-env NODE_ENV=production node build/build.js",
     "page:dev": "fis server start --type node --port 3001 --root ./ && fis release -r ./page  -f ./build/fis/page.dev.js -d local -w",
     "page:pro": "fis release -r ./page  -f ./build/fis/page.dev.js -d local -D"
   },
