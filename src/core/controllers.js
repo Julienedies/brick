@@ -89,14 +89,13 @@ extend(_F.prototype, {
         let $tpl_dom; // 有ic-tpl属性的dom元素
         let html;
         // 如果数据模型不是对象类型,则对其包装
-        /*if(typeof model != 'object' || Array.isArray(model)){
-            model = {model : model};
-        }*/
-        $tpl_dom = $elm.filter(selector);  // <div ic-ctrl="a" ic-tpl="a"></div>
+        if (brick.get('render.wrapModel') || Array.isArray(model)) {
+            model = {model: model};
+        }
+        $tpl_dom = $elm.filter(selector);  // case: <div ic-ctrl="a" ic-tpl="a"></div>
         $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);
-        model = brick.get('render.wrapModel') ? {model: model} : model;
         html = tpl_fn(model)
-        $tpl_dom.show(); // 渲染模板后进行编译
+        $tpl_dom.show();
         $tpl_dom.removeAttr('ic-tpl');
         return $tpl_dom.html(html);
     }

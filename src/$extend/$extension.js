@@ -15,10 +15,9 @@ $.fn.icRender = function (tpl, model, callback) {
     let tplFn = brick.getTpl(tpl);
     if (!tplFn) return console.info('not find tpl: ' + tpl);
     // 如果数据模型不是对象类型,则对其包装
-    // if(typeof model != 'object' || Array.isArray(model)){
-    //  model = {model : model};
-    //  }
-    model = brick.get('render.wrapModel') ? {model: model} : model;
+    if (brick.get('render.wrapModel') || Array.isArray(model)) {
+        model = {model: model};
+    }
     let html = tplFn(model);
     return this.each(function () {
         let $th = $(this);
