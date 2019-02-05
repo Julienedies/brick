@@ -38,7 +38,13 @@ npm i
 ```
 ### 开发相关命令:
 ```
+// 类库开发
 npm run dev
-fis release --file fis/dev.js --dest local -D  --clean --watch  
+// 类库部署
+npm run pro
+// 主页项目开发
+npm run page:dev
+// 主页项目部署
+npm run page:pro
 ```
 
