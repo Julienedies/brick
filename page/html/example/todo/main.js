@@ -1,7 +1,5 @@
 localStorage = window.localStorage;
 
-if (!localStorage) alert('浏览器太旧,不支持localStorage.');
-
 // model
 brick.services.reg('tasksModel', function (recordManager) {
 
@@ -21,14 +19,12 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
     var type = 0;
 
     var render = function (e, msg) {
-        var model = type ? type == 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
+        var model = type ? type === 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
         type === 0 && localStorage.setItem('tasksModel', JSON.stringify(model));
         scope.render('task-list', model);
     };
 
-    scope.watch('tasksModel.*', render);
-
-    render();
+    scope.on('tasksModel.*', render);
 
     scope.add = function (e) {
         var val = this.value;
@@ -48,14 +44,13 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
         tasksModel.find(id).set({complete: !!complete, name: name});
     };
 
-    scope.remove = function (e) {
-        tasksModel.find($(this).data('id')).remove();
+    scope.remove = function (e, id) {
+        tasksModel.find(id*1).remove();
     };
 
     scope.clear = function (e) {
         tasksModel.find(true, 'complete').remove();
     };
-
 
     scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function (e, msg) {
         type = msg.activeTab.index() * 1;

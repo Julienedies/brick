@@ -5,12 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="index/stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="index/stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="index/stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="public/index/stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="public/css/common/common.css" media="screen">
     <link rel="stylesheet" type="text/css" href="./dist/brick.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="css/common/common.css" media="screen">
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -134,7 +133,7 @@
 
             <p><a href="https://github.com/Julienedies/brick/wiki">https://github.com/Julienedies/brick/wiki</a></p>
 
-            <h3>example: ToDo&nbsp;&nbsp;<a href="example/todo/index.html" target="_blank" class="fz-small">单独页面打开</a>&nbsp;&nbsp;<a href="public/example/index.html" target="_blank">all</a> </h3>
+            <h3>example: ToDo&nbsp;&nbsp;<a href="public/example/todo/index.html" target="_blank" class="fz-small">单独页面打开</a>&nbsp;&nbsp;<a href="public/example/index.html" target="_blank">all</a> </h3>
 
             <div ic-ctrl="tasksCtrl">
                 <div>
@@ -144,8 +143,7 @@
                     <ul ic-tpl="task-list">
                         <li ic-for="i,v in model" data-id="{{v.id}}">
                             <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
-                            <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" disabled
-                                   ic-enter-press="change"/>
+                            <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled />
                             <button ic-click="remove" data-id="{{v.id}}">X</button>
                             <button ic-click="edit" style="right: 2em;">edit</button>
                         </li>
@@ -159,7 +157,7 @@
                 </div>
             </div>
 
-            <h4 ic-tabs="a" ic-tab-select="span" ic-con-select=">div">
+            <h4 ic-tabs="a" ic-tab-select="span" ic-tabc-select=">div">
                 <span>html</span><span>js</span><span>css</span>
             </h4>
 

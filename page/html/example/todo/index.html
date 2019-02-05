@@ -1,15 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>brick example todo</title>
-    <link rel="stylesheet" type="text/css" href="../../../css/common/common.css">
-    <link rel="stylesheet" type="text/css" href="../../../js/brick/0.7/brick.css" media="screen">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
+    <title>todo example by brick</title>
+    <link rel="import" href="../../include/head.html?__inline">
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -17,72 +11,41 @@
 </div>
 <h3>ToDo</h3>
 
-<link rel="import" href="include/html.html?__inline"/>
+<link rel="import" href="include/todo.html?__inline"/>
 
-<h4 ic-tabs="a" ic-tab-select="span" ic-con-select=">div">
+<h4 ic-tabs="a" ic-tab-select="span" ic-tabc-select=">div">
     <span>html</span><span>js</span><span>css</span>
 </h4>
 
-<div ic-role-tabc="a">
+<div ic-tabc="a">
     <div>
-                <pre class="brush: xml;">
-                        &lt;div ic-ctrl=&quot;tasksCtrl&quot;&gt;
-                            &lt;div&gt;
-                                &lt;input type=&quot;text&quot; placeholder=&quot;What needs to be done?&quot; ic-enter-press=&quot;add&quot;/&gt;
-                            &lt;/div&gt;
-                            &lt;div&gt;
-                                &lt;ul ic-tpl=&quot;task-list&quot;&gt;
-                                    &lt;li ic-for=&quot;i,v in model&quot; data-id=&quot;{{v.id}}&quot;&gt;
-                                        &lt;input type=&quot;checkbox&quot; data-id=&quot;{{v.id}}&quot; ic-checked=&quot;v.complete&quot; ic-change=&quot;change&quot;&gt;
-                                        &lt;input type=&quot;text&quot; value=&quot;{{v.name}}&quot; ic-class=&quot;{{v.complete &amp;&amp; &#39;complete&#39;}}&quot; disabled
-                                               ic-enter-press=&quot;change&quot;/&gt;
-                                        &lt;button ic-click=&quot;remove&quot; data-id=&quot;{{v.id}}&quot;&gt;X&lt;/button&gt;
-                                        &lt;button ic-click=&quot;edit&quot; style=&quot;right: 2em;&quot;&gt;edit&lt;/button&gt;
-                                    &lt;/li&gt;
-                                &lt;/ul&gt;
-                                &lt;div class=&quot;inline hr&quot; ic-tabs=&quot;b&quot; ic-tab-select=&quot;span&quot;&gt;
-                                    &lt;span&gt;All&lt;/span&gt;
-                                    &lt;span&gt;Active&lt;/span&gt;
-                                    &lt;span&gt;Completed&lt;/span&gt;
-                                    &lt;a href=&quot;javascript:void(0)&quot; ic-click=&quot;clear&quot;&gt;Clear completed&lt;/a&gt;
-                                &lt;/div&gt;
-                            &lt;/div&gt;
-                        &lt;/div&gt;
-                </pre>
+        <pre class="brush: xml;" ic-skip>
+<link rel="import" href="include/todo.html?__inline">
+        </pre>
     </div>
     <div>
-                <pre class="brush: jscript;">
+        <pre class="brush: jscript;">
 <link rel="import" href="main.js?__inline"/>
-                </pre>
+        </pre>
     </div>
     <div>
-                <pre class="brush: css;">
+        <pre class="brush: css;">
 <link rel="import" href="style.css?__inline"/>
-                </pre>
+        </pre>
     </div>
 </div>
 
-
-<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shCore.css" rel="stylesheet"
-      type="text/css"/>
-<link href="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/styles/shThemeRDark.css"
-      rel="stylesheet" type="text/css"/>
-
-<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
-<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushJScript.js"></script>
-<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushCss.js"></script>
-<script src="http://julienedies.github.io/assets/js/library/syntaxhighlighter_3.0.83/scripts/shBrushXml.js"></script>
+<link href="../../../js/vendor/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css"/>
+<link href="../../../js/vendor/syntaxhighlighter/styles/shThemeRDark.css" rel="stylesheet" type="text/css"/>
+<script src="../../../js/vendor/syntaxhighlighter/scripts/shCore.js"></script>
+<script src="../../../js/vendor/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script src="../../../js/vendor/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script src="../../../js/vendor/syntaxhighlighter/scripts/shBrushXml.js"></script>
 <script type="text/javascript">
     SyntaxHighlighter.all();
 </script>
-
-</section>
-<script src="../../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../../js/vendor/plugins.js"></script>
-<script src="../../../js/brick/0.7/brick.js"></script>
+<link rel="import" href="../../include/foot.html?__inline">
 <script src="main.js?__inline"></script>
-
 <link rel="import" href="../../include/analytics.html?__inline"/>
 </body>
 </html>

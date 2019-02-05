@@ -6,9 +6,8 @@
         <ul ic-tpl="task-list">
             <li ic-for="i,v in model" data-id="{{v.id}}">
                 <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
-                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" disabled
-                       ic-enter-press="change"/>
-                <button class="btn" ic-click="remove" data-id="{{v.id}}">X</button>
+                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
+                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
                 <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
             </li>
         </ul>
