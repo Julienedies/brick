@@ -4,7 +4,7 @@ https://github.com/Julienedies/brick/wiki
 
 ### 设计与实现
 
-brick是一个轻量级前端开发框架，基于jQuery和underscore。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
+brick是一个轻量级前端开发框架，基于jQuery和lodash(or underscore)。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
 
 其设计及实现主要借鉴并且反映了angular的前端开发思想及解决方案。
 
@@ -26,23 +26,19 @@ brick是一个轻量级前端开发框架，基于jQuery和underscore。主要�
 
 ### 开发环境
 
-brick使用[fis](https://github.com/fex-team/fis)做为项目构建工具。
+brick使用webpack作为类库构建工具;使用[fis](https://github.com/fex-team/fis)做为主页项目构建工具。
 
 ### 环境搭建：
 1.  本机安装nodejs;
-2.  命令行执行以下命令，类Unix系统请将&替换为&&
-```
-npm install -g fis & npm install -g fis-parser-node-sass
-```
-### 开发相关命令:
+2.  命令行执行以下命令
 ```
 git clone https://github.com/Julienedies/brick.git
 cd brick
+npm i
+```
+### 开发相关命令:
+```
+npm run dev
 fis release --file fis/dev.js --dest local -D  --clean --watch  
 ```
-### 以下命令可以在本地预览项目example并查看修改效果
-```
-...
-cd brick
-fis server start --type node --port 3000 --root ./ &  fis release --file fis/dev-page.js --dest local -D --watch
-```
+
