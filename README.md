@@ -1,6 +1,8 @@
 brick
 =====
-https://github.com/Julienedies/brick/wiki
+[wiki](https://github.com/julienedies/brick/wiki)
+
+[todo example](https://julienedies.github.io/brick/public/example/todo/index.html)
 
 ### 设计与实现
 
@@ -26,7 +28,7 @@ brick是一个轻量级前端开发框架，基于jQuery和lodash(or underscore)
 
 ### 开发环境
 
-brick使用webpack作为类库构建工具;使用[fis](https://github.com/fex-team/fis)做为主页项目构建工具。
+brick使用webpack作为类库构建工具; 使用[fis](https://github.com/fex-team/fis)做为主页项目构建工具。
 
 ### 环境搭建：
 1.  本机安装nodejs;
