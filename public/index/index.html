@@ -209,7 +209,7 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
     var render = function (e, msg) {
         var model = type ? type === 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
         type === 0 && localStorage.setItem('tasksModel', JSON.stringify(model));
-        scope.render('task-list', model);
+        scope.render('task-list', {model:model});
     };
 
     scope.on('tasksModel.*', render);
@@ -371,7 +371,7 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
     var render = function (e, msg) {
         var model = type ? type === 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
         type === 0 && localStorage.setItem('tasksModel', JSON.stringify(model));
-        scope.render('task-list', model);
+        scope.render('task-list', {model:model});
     };
 
     scope.on('tasksModel.*', render);
