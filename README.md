@@ -36,7 +36,8 @@ brick使用webpack作为类库构建工具; 使用[fis](https://github.com/fex-t
 ```
 git clone https://github.com/Julienedies/brick.git
 cd brick
-npm i
+npm i fis -g // install global
+npm i 
 ```
 ### 开发相关命令:
 ```
