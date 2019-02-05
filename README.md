@@ -2,6 +2,8 @@ brick
 =====
 [wiki](https://github.com/julienedies/brick/wiki)
 
+[home](https://julienedies.github.io/brick/public/index/index.html)
+
 [todo example](https://julienedies.github.io/brick/public/example/todo/index.html)
 
 ### 设计与实现
