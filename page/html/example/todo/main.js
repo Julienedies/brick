@@ -1,5 +1,3 @@
-localStorage = window.localStorage;
-
 // model
 brick.services.reg('tasksModel', function (recordManager) {
 

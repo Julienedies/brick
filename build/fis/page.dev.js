@@ -33,7 +33,7 @@ fis.config.set('roadmap.ext.sass', 'css');
 //线上部署前domain设为http://julienedies.github.io/brick;
 fis.config.merge({
     roadmap : {
-        //domain : 'http://julienedies.github.io/brick'
+        domain : 'https://julienedies.github.io/brick'
         //domain:''
     }
 });

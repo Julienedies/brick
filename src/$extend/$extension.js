@@ -12,15 +12,15 @@ $.fn.icRender = function (tpl, model, callback) {
         model = tpl;
         tpl = this.attr('ic-tpl') || this.attr('ic-tpl-name');
     }
-    var tplFn = brick.getTpl(tpl);
+    let tplFn = brick.getTpl(tpl);
     if (!tplFn) return console.info('not find tpl: ' + tpl);
     // 如果数据模型不是对象类型,则对其包装
     /*if(typeof model != 'object' || Array.isArray(model)){
      model = {model : model};
      }*/
-    var html = tplFn({model: model});
+    let html = tplFn({model: model});
     return this.each(function () {
-        var $th = $(this);
+        let $th = $(this);
         setTimeout(function () {
             $th.html(html);
             $th.icCompile();
@@ -37,7 +37,7 @@ $.fn.icCompile = function () {
 
 $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
     //console.info('icParseProperty => ', name);
-    var match;
+    let match;
     // js直接量  <div ic-tpl-init="{}">  object {}
     if (match = name.match(/^\s*(([{\[])(.+)[}\]])\s*$/)) {
         //console.info(match);

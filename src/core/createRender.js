@@ -10,7 +10,7 @@ export default function createRender (root) {
     root = root.cloneNode(true);
 
     // 遍历dom节点，解析指令
-    (function x (node) {
+    (function fx (node) {
 
         parser(node);
 
@@ -19,7 +19,7 @@ export default function createRender (root) {
         let i = 0;
         while (child = children.eq(i)[0]) {
             i++;
-            x(child);
+            fx(child);
         }
 
     })(root);

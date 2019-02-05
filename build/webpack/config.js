@@ -6,8 +6,10 @@
 const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const shellPlugin = require('webpack-shell-plugin')
 const CleanPlugin = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 
 const pkg = require('../../package.json')
 
@@ -54,6 +56,10 @@ const plugins = [
         'VERSION': `'V${ pkg.version }'`,
         'TIMESTAMP': JSON.stringify((new Date).toLocaleString())
     }),
+    new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[name].css'
+    }),
     new webpack.BannerPlugin({
         banner: `https://github.com/julienedies/brick.git
 https://github.com/Julienedies/brick/wiki
@@ -61,9 +67,13 @@ V${ pkg.version }
 ${ (new Date).toLocaleString() }`,
         entryOnly: true
     }),
-    new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[name].css'
+    //new shellPlugin({ onBuildExit: [ 'echo "*********Transfering files ... "', 'cp -r dist/* page/js/brick', 'echo "DONE*********"', ] }),
+    new FileManagerPlugin({
+        onEnd: [
+            {
+                copy: [ { source: './dist/*', destination: 'page/js/brick/' }]
+            }
+        ]
     }),
     new CleanPlugin([`dist`], {
         root: projectRoot

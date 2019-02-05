@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/common/common.css" media="screen">
+    <style type="text/css">[ic-tabs=a] {
+    border-bottom: solid 1px #D6D6D6;
+}
+
+[ic-tabs=a] span {
+    display: inline-block;
+    padding: 0.5em 2em;
+    margin: 0 3px;
+    border-radius: 0.3em 0.3em 0 0;
+    border: solid 1px #D6D6D6;
+    margin-bottom: -1px;
+}
+
+[ic-tabs=a] span.active {
+    border-bottom: solid 1px #fff;
+}
+
+[ic-tabs=b] {
+    padding: 15px 0;
+}
+
+[ic-tabs=b] .active {
+    color: red;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+[ic-ctrl=tasksCtrl] li {
+    position: relative;
+    list-style: none;;
+    border-bottom: 1px solid #ededed;
+}
+
+[ic-ctrl=tasksCtrl] [type=text] {
+    width: 76%;
+    padding: 0.5em 2%;
+    border: none;
+    background: transparent;
+    min-width: 20em;
+    padding: 0 0.5em;
+    border-radius: .2em;
+    height: 36px;
+    line-height: 36px;
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text] {
+    border: solid 1px transparent;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text]:focus {
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] button {
+    margin-left: 0.5em;
+    position: absolute;
+    top: 6px;
+    right: 0;
+}
+</style>
+    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Brick by Julienedies</title>
+</head>
+
+<body style="padding:0;">
+<header>
+    <div class="inner">
+        <h1>Brick</h1>
+
+        <h2>一个反映angular前端开发思想的前端开发框架.</h2>
+        <a href="https://github.com/Julienedies/brick" class="button">
+            <small>View project on</small>
+            GitHub</a>
+    </div>
+</header>
+
+<div id="content-wrapper">
+    <div class="inner clearfix">
+        <section id="main-content">
+            <h3>Introduction</h3>
+
+            <p>
+                brick是一个轻量级前端开发框架，基于jQuery和underscore。主要用于提升前端页面开发效率及复杂功能页面js代码的组织性和维护性。
+                其设计及实现主要借鉴并且反映了angular的前端开发思想及解决方案。
+            </p>
+            <br/>
+            <p>
+                其主要思想包含几点：<br>
+            </p>
+            <br/>
+            1. &nbsp;&nbsp; 对代码类型进行划分，隔离。 因为前端开发通常同时涉及html、css、js，通过对代码类型进行划分，以提高代码复用性及维护性。 通常分为以下几种类型的代码：
+            </p>
+            <br/>
+            <p>
+                * &nbsp;&nbsp; ctrl（控制器）类型代码，主要用于衔接dom操作及service调用。
+            </p>
+            <br/>
+            <p>
+                * &nbsp;&nbsp; service（服务）类型代码：主要用于封装纯js操作类型代码，会比较接近于mvc里m的概念。复用程度高。
+            </p>
+            <br/>
+            <p>
+                * &nbsp;&nbsp; directive（指令）类型代码，通常封装操作dom的代码，譬如一个典型的标签页功能。复用程度高。
+            </p>
+            <br/>
+            <p>
+                2. &nbsp;&nbsp; 尽量解耦js行为与css样式。 虽然已经存在众多的UI组件，但是其使用便捷性及移植性并不好。 譬如虽然jQuery提供了jQuery UI，但实际项目开发中，很少有人会直接使用jQuery
+                UI的样式，很多时间精力花费在样式的修改上。考虑到这点，通过指令的形式（自定义html属性）提供基本的js行为，用户可以随意定义模板及样式；
+            </p>
+            <br/>
+            <h3>doc</h3>
+
+            <p><a href="https://github.com/Julienedies/brick/wiki">https://github.com/Julienedies/brick/wiki</a></p>
+
+            <h3>example: ToDo&nbsp;&nbsp;<a href="../../../public/example/todo/index.html" target="_blank" class="fz-small">单独页面打开</a>&nbsp;&nbsp;
+                <a href="../../../public/example/index.html" target="_blank">all</a>
+            </h3>
+
+            <div ic-ctrl="tasksCtrl">
+    <div>
+        <input type="text" placeholder="What needs to be done?" ic-enter-press="add"/>
+    </div>
+    <div>
+        <ul ic-tpl="task-list">
+            <li ic-for="i,v in model" data-id="{{v.id}}">
+                <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
+                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
+                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
+                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+            </li>
+        </ul>
+        <div class="inline hr" ic-tabs="b" ic-tab-select="span">
+            <span>All</span>&nbsp;&nbsp;
+            <span>Active</span>&nbsp;&nbsp;
+            <span>Completed</span>&nbsp;&nbsp;
+            <a href="javascript:void(0)" ic-click="clear">Clear completed</a>
+        </div>
+    </div>
+</div>
+
+            <h4 ic-tabs="a" ic-tab-select="span" ic-tabc-select=">div">
+                <span>html</span><span>js</span><span>css</span>
+            </h4>
+
+            <div ic-tabc="a">
+                <div>
+                <pre class="brush: xml;" ic-skip>
+<div ic-ctrl="tasksCtrl">
+    <div>
+        <input type="text" placeholder="What needs to be done?" ic-enter-press="add"/>
+    </div>
+    <div>
+        <ul ic-tpl="task-list">
+            <li ic-for="i,v in model" data-id="{{v.id}}">
+                <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
+                <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
+                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
+                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+            </li>
+        </ul>
+        <div class="inline hr" ic-tabs="b" ic-tab-select="span">
+            <span>All</span>&nbsp;&nbsp;
+            <span>Active</span>&nbsp;&nbsp;
+            <span>Completed</span>&nbsp;&nbsp;
+            <a href="javascript:void(0)" ic-click="clear">Clear completed</a>
+        </div>
+    </div>
+</div>
+                </pre>
+                </div>
+                <div>
+                <pre class="brush: jscript;">
+ // model
+brick.services.reg('tasksModel', function (recordManager) {
+
+    var local = localStorage.getItem('tasksModel');
+
+    return new recordManager({
+        key: 'id',
+        eventPrefix: 'tasksModel',
+        broadcast: true
+    }).init(local && JSON.parse(local) || []);
+
+}, ['recordManager']);
+
+//controller
+brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+    var type = 0;
+
+    var render = function (e, msg) {
+        var model = type ? type === 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
+        type === 0 && localStorage.setItem('tasksModel', JSON.stringify(model));
+        scope.render('task-list', model);
+    };
+
+    scope.on('tasksModel.*', render);
+
+    scope.add = function (e) {
+        var val = this.value;
+        val && tasksModel.add({name: val, id: +new Date, complete: false});
+        this.value = '';
+    };
+
+    scope.edit = function (e) {
+        $(this).parent().find(':text').prop('disabled', false).focus();
+    };
+
+    scope.change = function (e) {
+        var parent = $(this).parent();
+        var id = parent.data('id');
+        var complete = parent.find(':checkbox').prop('checked');
+        var name = parent.find(':text').attr('disabled', true).val();
+        tasksModel.find(id).set({complete: !!complete, name: name});
+    };
+
+    scope.remove = function (e, id) {
+        tasksModel.find(id*1).remove();
+    };
+
+    scope.clear = function (e) {
+        tasksModel.find(true, 'complete').remove();
+    };
+
+    scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function (e, msg) {
+        type = msg.activeTab.index() * 1;
+        render();
+    });
+
+}, {depend: ['tasksModel']});
+
+                </pre>
+                </div>
+                <div>
+                <pre class="brush: css;">
+[ic-tabs=a] {
+    border-bottom: solid 1px #D6D6D6;
+}
+
+[ic-tabs=a] span {
+    display: inline-block;
+    padding: 0.5em 2em;
+    margin: 0 3px;
+    border-radius: 0.3em 0.3em 0 0;
+    border: solid 1px #D6D6D6;
+    margin-bottom: -1px;
+}
+
+[ic-tabs=a] span.active {
+    border-bottom: solid 1px #fff;
+}
+
+[ic-tabs=b] {
+    padding: 15px 0;
+}
+
+[ic-tabs=b] .active {
+    color: red;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+[ic-ctrl=tasksCtrl] li {
+    position: relative;
+    list-style: none;;
+    border-bottom: 1px solid #ededed;
+}
+
+[ic-ctrl=tasksCtrl] [type=text] {
+    width: 76%;
+    padding: 0.5em 2%;
+    border: none;
+    background: transparent;
+    min-width: 20em;
+    padding: 0 0.5em;
+    border-radius: .2em;
+    height: 36px;
+    line-height: 36px;
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text] {
+    border: solid 1px transparent;
+}
+
+[ic-ctrl=tasksCtrl] li [type=text]:focus {
+    border: solid 1px #ccd1d9;
+}
+
+[ic-ctrl=tasksCtrl] button {
+    margin-left: 0.5em;
+    position: absolute;
+    top: 6px;
+    right: 0;
+}
+
+                </pre>
+                </div>
+            </div>
+
+        </section>
+
+        <aside id="sidebar">
+            <a href="https://github.com/Julienedies/brick/zipball/master" class="button">
+                <small>Download</small>
+                .zip file
+            </a>
+            <a href="https://github.com/Julienedies/brick/tarball/master" class="button">
+                <small>Download</small>
+                .tar.gz file
+            </a>
+
+            <p class="repo-owner"><a href="https://github.com/Julienedies/brick"></a> is maintained by <a
+                    href="https://github.com/Julienedies">Julienedies</a>.</p>
+
+            <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme
+                by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+    </div>
+</div>
+<link href="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css"/>
+<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shCore.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/underscore-1.6.0.min.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
+<script>// model
+brick.services.reg('tasksModel', function (recordManager) {
+
+    var local = localStorage.getItem('tasksModel');
+
+    return new recordManager({
+        key: 'id',
+        eventPrefix: 'tasksModel',
+        broadcast: true
+    }).init(local && JSON.parse(local) || []);
+
+}, ['recordManager']);
+
+//controller
+brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
+
+    var type = 0;
+
+    var render = function (e, msg) {
+        var model = type ? type === 1 ? tasksModel.get(false, 'complete') : tasksModel.get(true, 'complete') : tasksModel.get();
+        type === 0 && localStorage.setItem('tasksModel', JSON.stringify(model));
+        scope.render('task-list', model);
+    };
+
+    scope.on('tasksModel.*', render);
+
+    scope.add = function (e) {
+        var val = this.value;
+        val && tasksModel.add({name: val, id: +new Date, complete: false});
+        this.value = '';
+    };
+
+    scope.edit = function (e) {
+        $(this).parent().find(':text').prop('disabled', false).focus();
+    };
+
+    scope.change = function (e) {
+        var parent = $(this).parent();
+        var id = parent.data('id');
+        var complete = parent.find(':checkbox').prop('checked');
+        var name = parent.find(':text').attr('disabled', true).val();
+        tasksModel.find(id).set({complete: !!complete, name: name});
+    };
+
+    scope.remove = function (e, id) {
+        tasksModel.find(id*1).remove();
+    };
+
+    scope.clear = function (e) {
+        tasksModel.find(true, 'complete').remove();
+    };
+
+    scope.$elm.find('[ic-tabs=b]').on('ic-tabs.change', function (e, msg) {
+        type = msg.activeTab.index() * 1;
+        render();
+    });
+
+}, {depend: ['tasksModel']});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-57525559-1', 'auto');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
