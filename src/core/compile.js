@@ -8,12 +8,15 @@ import directives from './directives.js'
 
 /**
  * 编译dom节点
- * @param node  dom or jquery object
+ * @param node  {dom | jQuery}
  * @param is_start_form_children  {Boolean} 可选,  true 表示直接从子元素开始编译;  考虑: ic-tpl指令下, 从ic-tpl属性dom开始编译还是从子元素开始编译好?
  */
 function compile (node, is_start_form_children) {
 
     let $elm = $(node);
+
+    // 含有ic-skip指令的元素不用编译
+    if($elm[0].hasAttribute('ic-skip')) return console.log('ic-skip:', $elm[0]);
 
     !is_start_form_children && __compile(node);
 
@@ -30,7 +33,7 @@ function compile (node, is_start_form_children) {
 function __compile (node) {
 
     node = node[0] || node;  // jquery对象转为dom对象
-    if (node.nodeType != 1) return console.info('compile exit', node);
+    if (node.nodeType !== 1) return console.info('compile exit', node);
 
     let $elm = $(node);
     let attrs = node.attributes;
@@ -77,6 +80,7 @@ function __compile (node) {
     }
 
 }
+
 
 export default compile
 

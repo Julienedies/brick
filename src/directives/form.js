@@ -74,7 +74,7 @@ export default function ($elm, attrs) {
     //校验函数
     function _verify (val, rules, tips, $field) {
 
-        if (rules == undefined) return false;
+        if (rules === undefined) return false;
 
         tips = tips || 'error';
 

@@ -12,7 +12,7 @@ export default {
 
         var __tpl = brick.__tpl = brick.__tpl || {};
 
-        ($elm || $('[ic-tpl]')).each(function () {
+        ($elm || $('[ic-tpl]').not($('[ic-skip] [ic-tpl]'))).each(function () {
 
             var $th = $(this);
             var name = $th.attr('ic-tpl');
