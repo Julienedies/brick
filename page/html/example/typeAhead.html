@@ -7,17 +7,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-type-ahead指令使用示例</title>
-    <meta name="description" content="">
-    <link rel="stylesheet" href="../../css/vendor/normalize.css">
-    <link rel="stylesheet" href="../../css/vendor/main.css">
-    <link rel="stylesheet" href="../../css/common/common.css">
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="../../css/common/ie-hack.css">
-    <![endif]-->
-    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <link rel="import" href="../include/head.html?__inline">
 </head>
 <body>
-<div id="wraper">
+<div id="wrapper">
 
     <link rel="import" href="../include/header.html?__inline">
 
@@ -34,7 +27,7 @@
                        ic-submit-method="post"/>  <span> 选择： <b role="selected"></b></span>
 
                 <!-- 输入提示列表 -->
-                <div ic-role-list="search" ic-tpl="search">
+                <div ic-role-list="search" ic-tpl="search" id="xxx">
                     <ul class="select-list" ic-init="list=model" ic-if="list">
                         <li ic-for="i,v in list" ic-class="{{i==0?'active':''}}" ic-role-type-item="{{v.code+' '+v.name}}">
                             <a class="inline wp-100 fc-k1" ic-href="#{{v.code}}">
@@ -58,15 +51,12 @@
 
 </div>
 
-
-<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../js/vendor/plugins.js"></script>
-<script src="../../../brick.js"></script>
+<link rel="import" href="../include/foot.html?__inline">
 <script>
+    //brick.set('bootstrap.auto', false)
+
     brick.controllers.reg('mainCtrl', function (scope) {
         var $elm = scope.$elm;
-
         scope.source = [
             {"code": "600153_SH_EQ", "name": "\u5efa\u53d1\u80a1\u4efd"},
             {"code": "DDD_NY_EQ", "name": "3D SYSTEMS"},

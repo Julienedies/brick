@@ -1,10 +1,10 @@
 /**
- * Created by julien on 2015/8/26.
  * require moment.js (https://github.com/moment/moment/)
- *
+ * Created by julien on 2015/8/26.
  */
-import brick from '../core/export'
+
 /**
+ * note: ic-tpl 和 其它指令绑定在相同元素上, 小心避免陷入编译死循环!
  * config:
  * ic-date-now     #定义当前日期，通常有server端提供，如果未提供则为浏览器端当前日期
  * ic-date-default="2015-08-31" #默认选中日期，多个以,或空格分隔
@@ -28,7 +28,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     //var tpl = brick.createRender($elm[0]);
 
     var _d = new Date();
-    var tpl = $elm.attr('ic-tpl');
+    var tpl = $elm.attr('ic-tpl-name');
     var _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
     var _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
     var multiple = $elm.attr('ic-date-multiple');
@@ -168,7 +168,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
         var len = days.length;
 
         var w = moment([year, month, 1]).weekday();
-        if (w == 0) w = 7;
+        if (w === 0) w = 7;
 
         var start = _.indexOf(weekMap, w);
         var _start = start;

@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-dialog指令使用示例</title>
     <meta name="description" content="">
-    <link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-    <link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-    <link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/ie-hack.css">
-    <![endif]-->
-    <script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+<link rel="stylesheet" href="/public/css/vendor/normalize.css">
+<link rel="stylesheet" href="/public/css/vendor/main.css">
+<link rel="stylesheet" href="/public/css/common/common.css">
+<link rel="stylesheet" href="/public/js/brick/brick.css">
+<script src="/public/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
 <div id="wraper">
@@ -51,12 +46,10 @@
 
 </div>
 
-
-
-<script src="https://julienedies.github.io/brick/public/js/vendor/underscore-1.6.0.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
-<script src="../../../brick.js"></script>
+<script src="/public/js/vendor/lodash.js"></script>
+<script src="/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="/public/js/vendor/plugins.js"></script>
+<script src="/public/js/brick/brick.js"></script>
 <script>
     $('[ic-dialog=a]').on('ic-dialog.close',function(e, msg){
         //msg对应关闭方式，1=>confirm  0=>cancel

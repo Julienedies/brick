@@ -57,7 +57,6 @@ directives.reg('ic-slider', slider)
 directives.reg('ic-pagination', pagination)
 directives.add('ic-drag-view', drag)
 directives.reg('ic-popup', popup)
-directives.reg('ic-popup', popup)
 
 //import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
 

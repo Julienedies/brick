@@ -2,6 +2,8 @@
  * Created by julien.zhang on 2014/10/29.
  */
 
+import _ from 'lodash'
+import $ from 'jquery'
 import brick from '../core/export'
 
 export default function ($elm, attrs) {
@@ -71,7 +73,15 @@ export default function ($elm, attrs) {
         return rule;
     }
 
-    //校验函数
+    /**
+     * 校验函数
+     * @param val {String|Number} 要验证的值
+     * @param rules {Function|RegExp}  正则或校验函数
+     * @param tips {String} 验证提示
+     * @param $field {jQuery} 相关的dom元素
+     * @returns {String | Boolean} 返回错误提示或者布尔值, false表示验证无错误, true表示验证有错误
+     * @private
+     */
     function _verify (val, rules, tips, $field) {
 
         if (rules === undefined) return false;

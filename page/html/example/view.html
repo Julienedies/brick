@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="zh">
+<head>
     <meta charset="UTF-8">
     <title>ic-view指令</title>
     <link rel="stylesheet" href="../../css/vendor/effeckt/animations.css">
-    <link rel="stylesheet" href="../../../css/brick.mobile.css">
+    <link rel="import" href="../include/head.html?__inline">
     <style type="text/css">
         body {
             padding: 0;
@@ -72,9 +72,8 @@
     </div>
 
 </div>
-<script src="../../js/vendor/underscore.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../../brick.mobile.js"></script>
+<link rel="import" href="../include/foot.html?__inline">
+<script src="../../js/brick/brick.transition.js"></script>
 <script>
 
     $('[ic-view=2]').on('ic-view.active', function (e, msg) {

@@ -1,4 +1,5 @@
 /**
+ * require Effeckt.css (https://github.com/h5bp/Effeckt.css)
  * Created by Julien on 2015/9/1.
  */
 

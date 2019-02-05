@@ -82,7 +82,7 @@ module.exports = {
             }
         ]
     },
-    optimization: {
+    /*optimization: {
         splitChunks: {
             chunks: 'all',  // async initial all
             minSize: 30,  // 3k  chunk最小30k以上, 才会分离提取
@@ -110,7 +110,7 @@ module.exports = {
                 }
             }
         }
-    },
+    },*/
     plugins: config.plugins
 
 }

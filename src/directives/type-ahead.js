@@ -21,7 +21,7 @@ export default function ($elm, attrs) {
     var h = $elm.outerHeight();
 
     var $selectList = $('[ic-role-list=?]'.replace('?', namespace));
-    var tplf = brick.getTpl($selectList.attr('ic-tpl'));
+    var tplf = brick.getTpl($selectList.attr('ic-tpl-name'));
 
     $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
 
@@ -37,7 +37,7 @@ export default function ($elm, attrs) {
         if (!data) return;
         if (!data.length) return $selectList.hide();
         pool = data;
-        var html = tplf({model: data}); //ie7模板函数会报错，有时间fix;
+        var html = tplf({model: data});
         $selectList.show().html(html);
     };
 

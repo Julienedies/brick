@@ -48,7 +48,7 @@ export default function createRender (root) {
         })
         .replace(/&amp;&amp;/g, '&&');
 
-    brick.verbose && console.log(_tpl);
+    brick.get('debug') && console.log(_tpl);
 
     let tpl_fn
 

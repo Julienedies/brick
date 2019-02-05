@@ -33,11 +33,9 @@ export default {
             }, 300);
 
             __tpl[name] = createRender(this);
-
             $th.attr('ic-tpl-name', name);
             $th.removeAttr('ic-tpl');
             $th.empty();
-
         });
     }
 }

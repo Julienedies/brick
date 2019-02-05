@@ -31,8 +31,8 @@ const devtool = config.devtool
 
 const entry = {
     'brick': './brick.js',
-    //'directives/datepicker': './directives/datepicker.js',
-    //'services/transition': './services/transition.js',
+    'brick.datepicker': './directives/datepicker.js',
+    'brick.transition': './services/transition.js',
 }
 
 const output = {

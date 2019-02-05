@@ -15,23 +15,24 @@ $.fn.icRender = function (tpl, model, callback) {
     let tplFn = brick.getTpl(tpl);
     if (!tplFn) return console.info('not find tpl: ' + tpl);
     // 如果数据模型不是对象类型,则对其包装
-    /*if(typeof model != 'object' || Array.isArray(model)){
-     model = {model : model};
-     }*/
-    let html = tplFn({model: model});
+    // if(typeof model != 'object' || Array.isArray(model)){
+    //  model = {model : model};
+    //  }
+    model = brick.get('render.wrapModel') ? {model: model} : model;
+    let html = tplFn(model);
     return this.each(function () {
         let $th = $(this);
         setTimeout(function () {
             $th.html(html);
-            $th.icCompile();
+            $th.icCompile(true);
             callback && callback.apply(this, [$th.children()]);
         }, 30);
     });
 };
 
-$.fn.icCompile = function () {
+$.fn.icCompile = function (is_start_form_children) {
     return this.each(function (i) {
-        brick.compile(this);
+        brick.compile(this, is_start_form_children);
     });
 };
 
@@ -77,7 +78,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
 
     var v = fx(namespace, name.split('.'));
 
-    v = v || f(window, name.split('.'));
+    v = v || fx(window, name.split('.'));
 
     //console.info('icParseProperty => ' + name + ' => ', v);
 

@@ -76,7 +76,7 @@ extend(_F.prototype, {
         setTimeout(function () {
             let $tpl_dom = that._render(tplName, model);
             if ($tpl_dom) {
-                brick.compile($tpl_dom, true);
+                brick.compile($tpl_dom, true);   // 手动调用brick.compile或者从子元素开始编译; 避免陷入无限循环
                 call && call.apply($tpl_dom, []);
             }
         }, 30);
@@ -94,7 +94,8 @@ extend(_F.prototype, {
         }*/
         $tpl_dom = $elm.filter(selector);  // <div ic-ctrl="a" ic-tpl="a"></div>
         $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);
-        html = tpl_fn({model: model});
+        model = brick.get('render.wrapModel') ? {model: model} : model;
+        html = tpl_fn(model)
         $tpl_dom.show(); // 渲染模板后进行编译
         $tpl_dom.removeAttr('ic-tpl');
         return $tpl_dom.html(html);

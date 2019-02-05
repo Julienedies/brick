@@ -1,27 +1,26 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-form指令使用示例</title>
-    <meta name="description" content="">
-    <link rel="stylesheet" href="../../css/vendor/normalize.css">
-    <link rel="stylesheet" href="../../css/vendor/main.css">
-    <link rel="stylesheet" href="../../css/common/common.css">
-    <link rel="stylesheet" href="../../../css/brick.mobile.css">
-    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <link rel="import" href="../include/head.html?__inline">
     <style>
-        .error{
+        .error {
             background: lightyellow;
-            color:#e57f7f;
+            color: #e57f7f;
         }
     </style>
 </head>
 <body>
-<div id="wraper">
+<div id="wrapper">
 
     <link rel="import" href="../include/header.html?__inline">
 
@@ -39,7 +38,7 @@
                                ic-form-field="id"
                                ic-field-rule="id||phone||email"
                                ic-field-err-tip="请输入有效的用户名/手机号码/电子邮箱."
-                                />
+                        />
 
                         <p class="tip" ic-role-field-err-tip="id">用户名长度大于5</p>
                     </div>
@@ -64,7 +63,7 @@
                                ic-form-field="code"
                                ic-field-rule="code"
                                ic-field-err-tip="占位符显示的是错误的，请输入6位数字."
-                                />
+                        />
 
                         <p class="tip" ic-form-field-err-tip="code">请在占位符显示的数字基础上加1.</p>
                     </div>
@@ -76,7 +75,7 @@
                                ic-form-field="f"
                                ic-field-rule="f"
                                ic-field-err-tip="请输入js."
-                                />
+                        />
                     </div>
 
                     <div class="mt-10">
@@ -112,62 +111,56 @@
 
 </div>
 
-
-
-<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../js/vendor/plugins.js"></script>
-<script src="../../../brick.mobile.js"></script>
+<link rel="import" href="../include/foot.html?__inline">
 <script>
 
     //debug 模式
     brick.set('debug', true);
 
     //自定义关键字验证规则
-    brick.set('ic-form.rule',{
-           code:/^\d{6}$/,
-           f: function(input){
-               if(!input) return '表单字段f不能为空。';
-               if(input === 'js') return true;
-               return '提示：必须输入js';
-           }
+    brick.set('ic-form.rule', {
+        code: /^\d{6}$/,
+        f: function (input) {
+            if (!input) return '表单字段f不能为空。';
+            if (input === 'js') return true;
+            return '提示：必须输入js';
+        }
     });
 
 
+    brick.controllers.reg('loginCtrl', function (scope) {
 
-brick.controllers.reg('loginCtrl', function(scope){
+        scope.$elm.find('[ic-form=login]').on('ic-form.error', function (e) {
+            console.error('表单验证失败，请检查。');
+        });
 
-    scope.$elm.find('[ic-form=login]').on('ic-form.error', function(e){
-         console.error('表单验证失败，请检查。');
-    });
+        scope.$elm.find('[ic-form-field="f"]').on('ic-form-field.error', function (e, msg) {
+            console.info(this, e, msg);
+            alert(msg);
+        });
 
-    scope.$elm.find('[ic-form-field="f"]').on('ic-form-field.error', function(e, msg){
-        console.info(this, e, msg);
-        alert(msg);
-    });
+        scope.action = function (fields) {
+            alert('表单验证通过，执行action();')
+        };
 
-    scope.action = function(fields){
-        alert('表单验证通过，执行action();')
-    };
+        //登录请求发起前
+        scope.before = function (fields) {
+            console.info(fields);
+            alert('发起登录请求前,如果返回false，则中止表单提交。');
+        };
 
-    //登录请求发起前
-    scope.before = function(fields){
-        console.info(fields);
-        alert('发起登录请求前,如果返回false，则中止表单提交。');
-    };
+        //提交完成
+        scope.done = function (data) {
+            alert('提交成功');
+        };
 
-    //提交完成
-    scope.done = function (data) {
-        alert('提交成功');
-    };
+        //提交请求失败
+        scope.failed = function (msg) {
+            alert('请求失败');
+            console.info(arguments);
+        }
 
-    //提交请求失败
-    scope.failed = function(msg){
-        alert('请求失败');
-        console.info(arguments);
-    }
-
-})
+    })
 </script>
 </body>
 </html>

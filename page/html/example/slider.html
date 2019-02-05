@@ -1,20 +1,10 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="zh">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-slider指令使用示例</title>
-    <meta name="description" content="">
-    <link rel="stylesheet" href="../../css/vendor/normalize.css">
-    <link rel="stylesheet" href="../../css/vendor/main.css">
-    <link rel="stylesheet" href="../../css/common/common.css">
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="../../css/common/ie-hack.css">
-    <![endif]-->
-    <script src="../../js/vendor/modernizr-2.6.2.min.js"></script>
+    <link rel="import" href="../include/head.html?__inline">
     <style>
         [ic-role-slider-prev],[ic-role-slider-next]{
             position: absolute;
@@ -95,12 +85,7 @@
 
 </div>
 
-
-
-<script src="../../js/vendor/underscore-1.6.0.min.js"></script>
-<script src="../../js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="../../js/vendor/plugins.js"></script>
-<script src="../../../brick.js"></script>
+<link rel="import" href="../include/foot.html?__inline">
 <script>
     $('[ic-slider]').on('ic-slider.change', function(e, msg){
         console.log(msg);
