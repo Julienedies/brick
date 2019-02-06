@@ -42,6 +42,7 @@ const output = {
     chunkFilename: '[name].js',
     sourceMapFilename: '[file].map',
     libraryTarget: 'umd',
+    globalObject: 'this',
     libraryExport: 'default',
     library: '[name]'
 }
