@@ -83,18 +83,12 @@ ${ (new Date).toLocaleString() }`,
 
 const externals = {
     jquery: {
-        commonjs: '$',
-        commonjs2: '$',
-        amd: '$',
+        commonjs: 'jquery',
+        commonjs2: 'jquery',
+        amd: 'jquery',
         root: '$'
     },
     lodash: {
-        commonjs: 'lodash',
-        commonjs2: 'lodash',
-        amd: 'lodash',
-        root: '_'
-    },
-    underscore: {
         commonjs: 'lodash',
         commonjs2: 'lodash',
         amd: 'lodash',
