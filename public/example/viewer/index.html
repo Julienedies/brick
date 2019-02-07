@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ic-viewer example</title>
+    <meta name="description" content="">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
+<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+    <style>
+        ol li{
+            display: inline-block;
+        }
+        ol li img{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<ol ic-viewer ic-viewer-item="img" ic-viewer-url="src" ic-viewer-interval="10" ic-viewer-on-show="on_show">
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/1.jpg" alt="1">
+    </li>
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/2.jpg" alt="2">
+    </li>
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/3.jpg" alt="3">
+    </li>
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/4.jpg" alt="4">
+    </li>
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/5.jpg" alt="5">
+    </li>
+    <li>
+        <img src="https://julienedies.github.io/brick/public/img//example/viewer/img/6.jpg" alt="6">
+    </li>
+</ol>
+
+<script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
+<script>
+    function on_show(index, src, $info){
+        $info.text(index + ': ' + src)
+    }
+</script>
+</body>
+</html>

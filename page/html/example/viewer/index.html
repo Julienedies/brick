@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ic-viewer example</title>
+    <link rel="import" href="../../include/head.html?__inline">
+    <style>
+        ol li{
+            display: inline-block;
+        }
+        ol li img{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<ol ic-viewer ic-viewer-item="img" ic-viewer-url="src" ic-viewer-interval="10" ic-viewer-on-show="on_show">
+    <li>
+        <img src="img/1.jpg" alt="1">
+    </li>
+    <li>
+        <img src="img/2.jpg" alt="2">
+    </li>
+    <li>
+        <img src="img/3.jpg" alt="3">
+    </li>
+    <li>
+        <img src="img/4.jpg" alt="4">
+    </li>
+    <li>
+        <img src="img/5.jpg" alt="5">
+    </li>
+    <li>
+        <img src="img/6.jpg" alt="6">
+    </li>
+</ol>
+
+<link rel="import" href="../../include/foot.html?__inline">
+<script>
+    function on_show(index, src, $info){
+        $info.text(index + ': ' + src)
+    }
+</script>
+</body>
+</html>

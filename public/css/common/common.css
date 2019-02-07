@@ -2180,4 +2180,6 @@ t    为前缀；
 
 /*@import url('../../../css/brick.css?__inline');*/
 
-
+*{
+    box-sizing: border-box;
+}

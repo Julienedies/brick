@@ -12,4 +12,6 @@
 
 /*@import url('../../../css/brick.css?__inline');*/
 
-
+*{
+    box-sizing: border-box;
+}

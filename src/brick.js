@@ -29,7 +29,7 @@ import slider from './directives/slider.js'
 import pagination from './directives/pagination.js'
 import drag from './directives/drag.js'
 import popup from './directives/popup.js'
-import './directives/show-img.js'
+import './directives/viewer.js'
 import './directives/collection.js'
 
 // core指令 必选
