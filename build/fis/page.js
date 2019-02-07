@@ -50,7 +50,7 @@ fis.config.set('roadmap.path', [
         useHash: true
     },
     {
-        reg: /^\/(?:html|css)\/(.+\.css)$/i,
+        reg: /^\/(?:html|css)\/(.+\.s?css)$/i,
         release: '/css/$1',
         url: '/public/css/$1',
         useSprite: true,

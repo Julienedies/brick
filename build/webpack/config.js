@@ -64,6 +64,7 @@ const plugins = [
     new webpack.BannerPlugin({
         banner: `https://github.com/julienedies/brick.git
 https://github.com/Julienedies/brick/wiki
+license:ISC
 V${ pkg.version }
 ${ (new Date).toLocaleString() }`,
         entryOnly: true
