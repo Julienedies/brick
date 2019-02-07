@@ -6,15 +6,22 @@
     <title>ic-viewer example</title>
     <link rel="import" href="../../include/head.html?__inline">
     <style>
-        ol li{
+        ol li {
             display: inline-block;
         }
-        ol li img{
+
+        ol li img {
             width: 200px;
         }
     </style>
 </head>
 <body>
+<section>
+    <pre>
+    点击图片浏览, 滚轮切换
+</pre>
+</section>
+<br/>
 <ol ic-viewer ic-viewer-item="img" ic-viewer-url="src" ic-viewer-interval="10" ic-viewer-on-show="on_show">
     <li>
         <img src="img/1.jpg" alt="1">
@@ -38,7 +45,7 @@
 
 <link rel="import" href="../../include/foot.html?__inline">
 <script>
-    function on_show(index, src, $info){
+    function on_show (index, src, $info) {
         $info.text(index + ': ' + src)
     }
 </script>

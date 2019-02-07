@@ -13,7 +13,7 @@ export default function ($elm, attrs) {
 
     if (ctrlName) {
         let $parent = $elm.parent().closest('[ic-ctrl]');
-        let parentName = $parent.size() ? $parent.attr('ic-ctrl') : '';
+        let parentName = $parent.length ? $parent.attr('ic-ctrl') : '';
         //controllers.exec(ctrlName, controllers.get(parentName), $elm);  // 在多个同名控制器的情况下,不能正确的按照dom结构进行继承
         controllers.exec(ctrlName, $parent.data('ic-ctrl-scope'), $elm);
     }

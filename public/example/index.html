@@ -4,11 +4,10 @@
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -18,7 +17,7 @@
 </header>
 
     <main ic-ctrl="mainCtrl">
-        <ul>
+        <ul class="content">
             <li><a href="config.html">配置</a> </li>
             <li><a href="ctrl.html">控制器</a> </li>
             <li><a href="directive.html">指令</a> </li>
@@ -51,8 +50,7 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
     brick.reg('mainCtrl', function (scope) {

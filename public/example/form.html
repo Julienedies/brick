@@ -1,22 +1,13 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
+<html lang="zh">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-form指令使用示例</title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
     <style>
         .error {
             background: lightyellow;
@@ -34,50 +25,50 @@
     <main>
         <section ic-ctrl="loginCtrl">
 
-            <form action="#" method="post" target="_top" class="hc form" ic-form="login">
+            <form action="#" method="post" target="_top" class="container is-fluid" ic-form="login">
 
-                <div class="inline hl">
-                    <div ic-form-field-container="id" class="mt-15">
+                <div class="field">
+                    <div ic-form-field-container="id" class="control">
                         <input type="text"
                                name="id"
-                               class="input-text-md"
+                               class="input"
                                placeholder="用户名/手机号码/电子邮箱"
                                ic-form-field="id"
                                ic-field-rule="id||phone||email"
                                ic-field-err-tip="请输入有效的用户名/手机号码/电子邮箱."
                         />
 
-                        <p class="tip" ic-role-field-err-tip="id">用户名长度大于5</p>
+                        <p class="help" ic-role-field-err-tip="id">用户名长度大于5</p>
                     </div>
 
-                    <div class="mt-15">
+                    <div class="field">
                         <input type="password"
                                name="password"
-                               class="input-text-md"
+                               class="input"
                                placeholder="密码"
                                ic-form-field="password"
                                ic-field-rule="password"
                                ic-field-err-tip="请输入正确的密码，密码长度大于5"
                                role="">
 
-                        <p class="tip" ic-form-field-err-tip="password">密码长度大于5</p>
+                        <p class="help" ic-form-field-err-tip="password">密码长度大于5</p>
                     </div>
 
-                    <div class="mt-15">
+                    <div class="field">
                         <input type="text"
-                               class="input-text-md"
+                               class="input"
                                placeholder="请输入5位数字"
                                ic-form-field="code"
                                ic-field-rule="code"
                                ic-field-err-tip="占位符显示的是错误的，请输入6位数字."
                         />
 
-                        <p class="tip" ic-form-field-err-tip="code">请在占位符显示的数字基础上加1.</p>
+                        <p class="help" ic-form-field-err-tip="code">请在占位符显示的数字基础上加1.</p>
                     </div>
 
-                    <div class="mt-15">
+                    <div class="field">
                         <input type="text"
-                               class="input-text-md"
+                               class="input"
                                placeholder="字段f, 请输入js"
                                ic-form-field="f"
                                ic-field-rule="f"
@@ -85,7 +76,7 @@
                         />
                     </div>
 
-                    <div class="mt-10">
+                    <div class="field">
                         <label><input type="checkbox"
                                       name="remember"
                                       value="1"
@@ -94,9 +85,9 @@
                                       checked> 记住我</label>
                     </div>
 
-                    <div class="mt-10">
+                    <div class="field">
                         <button type="button"
-                                class="btn btn-1-1 btn-md-1-1"
+                                class="button"
                                 ic-form-submit="login"
                                 ic-submit-action="http://www.baidu.com"
                                 ic-submit-method="get"
@@ -125,8 +116,7 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
 

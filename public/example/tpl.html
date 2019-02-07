@@ -5,11 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-tpl指令示例</title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
+    <style>
+        .down{
+            color: green;
+        }
+        .up{
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div id="wraper">
@@ -19,21 +26,17 @@
 </header>
 
     <main>
-        <section>
-            <h2>options</h2>
-            <ul>
-                <li>
-                    render.wrapModel
-                </li>
-            </ul>
-        </section>
+        <h3>options</h3>
+        <pre>
+            render.wrapModel
+        </pre>
 
         <section  ic-ctrl="mainCtrl">
             <h2>demo1</h2>
             <div ic-tpl="companies">
-                <table>
-                    <thead class="lg-36">
-                    <tr class="t-12-0-a1">
+                <table class="table">
+                    <thead>
+                    <tr>
                         <th class="hc">公司名称</th>
                         <th class="hc">公司代码</th>
                         <th class="hc">最新股价</th>
@@ -43,7 +46,7 @@
                     </tr>
                     </thead>
 
-                    <tbody class="lg-42">
+                    <tbody>
                     <tr ic-for="i, v in list" ic-for-init="company=v.company">
                         <td class="hc">
                             <a ic-href="/stock/profile/{{company.code}}" target="_blank" ic-bind="company.abbrSzh"></a>
@@ -53,10 +56,10 @@
                         </td>
                         <td class="hc fc-y1" ic-bind="v.closePrice">37.40</td>
 
-                        <td class="hc fc-up" ic-class="hc fc-{{v.changeRatio<0?'down':'up'}}">
+                        <td ic-class="hc {{v.changeRatio<0?'down':'up'}}">
                             <span ic-bind="v.changeRatio.toFixed(2)">+0.01</span>%
                         </td>
-                        <td class="hc fc-up" ic-class="hc fc-{{v.changeRatio7<0?'down':'up'}}">
+                        <td ic-class="hc {{v.changeRatio7<0?'down':'up'}}">
                             <span ic-bind="v.changeRatio7.toFixed(2)">+0.01</span>%
                         </td>
                         <td class="hc" ic-bind="++i">2,349,345M</td>
@@ -86,8 +89,7 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
     brick.set('debug', true)

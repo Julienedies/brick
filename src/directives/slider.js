@@ -19,7 +19,7 @@ export default function ($elm, attr) {
     }
 
     var items = th.find('[ic-role-slider-item]').css(style1);
-    var len = items.size();
+    var len = items.length;
 
     var style2 = direction ? {height: len * vh + 'px'} : {width: len * vw + 'px'};
     style2.position = 'absolute';

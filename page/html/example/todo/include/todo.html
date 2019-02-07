@@ -7,8 +7,8 @@
             <li ic-for="i,v in model" data-id="{{v.id}}">
                 <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
                 <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
-                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
-                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+                <button class="button is-small" ic-click="remove:{{ v.id }}">X</button>
+                <button class="button is-small" ic-click="edit" style="right: 3em;">edit</button>
             </li>
         </ul>
         <div class="inline hr" ic-tabs="b" ic-tab-select="span">

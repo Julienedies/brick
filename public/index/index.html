@@ -77,6 +77,12 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <title>Brick by Julienedies</title>
+    <style>
+        [ic-ctrl="tasksCtrl"] button{
+            background: transparent;
+            border: none;
+        }
+    </style>
 </head>
 
 <body style="padding:0;">
@@ -143,8 +149,8 @@
             <li ic-for="i,v in model" data-id="{{v.id}}">
                 <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
                 <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
-                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
-                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+                <button class="button is-small" ic-click="remove:{{ v.id }}">X</button>
+                <button class="button is-small" ic-click="edit" style="right: 3em;">edit</button>
             </li>
         </ul>
         <div class="inline hr" ic-tabs="b" ic-tab-select="span">
@@ -172,8 +178,8 @@
             <li ic-for="i,v in model" data-id="{{v.id}}">
                 <input type="checkbox" data-id="{{v.id}}" ic-checked="v.complete" ic-change="change">
                 <input type="text" value="{{v.name}}" ic-class="{{v.complete && 'complete'}}" ic-enter-press="change" disabled/>
-                <button class="btn" ic-click="remove:{{ v.id }}">X</button>
-                <button class="btn" ic-click="edit" style="right: 2em;">edit</button>
+                <button class="button is-small" ic-click="remove:{{ v.id }}">X</button>
+                <button class="button is-small" ic-click="edit" style="right: 3em;">edit</button>
             </li>
         </ul>
         <div class="inline hr" ic-tabs="b" ic-tab-select="span">
@@ -347,8 +353,7 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
     SyntaxHighlighter.all();
 </script>
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>// model
 brick.services.reg('tasksModel', function (recordManager) {

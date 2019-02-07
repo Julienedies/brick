@@ -10,8 +10,4 @@
 @import url('include/icons.css?__inline');
 @import url('include/layout.css?__inline');
 
-/*@import url('../../../css/brick.css?__inline');*/
 
-*{
-    box-sizing: border-box;
-}

@@ -1,0 +1,139 @@
+body {
+  padding: 1em;
+  font: 14px/2 "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif !important;
+  font-family: Helvetica Neue, Verdana, Arial, Hiragino Sans GB, WenQuanYi Micro Hei, Heiti SC, STHeiti, Microsoft Yahei, SimSun, sans-serif !important;
+}
+
+table{
+  width:100%;
+  white-space: nowrap;
+}
+
+section{
+  margin-top:20px;
+}
+
+/* 提示框 */
+.tipsBox{
+  position:fixed;
+  top:-300px;
+  left:50%;
+  opacity:0;
+  z-index:10000;
+}
+.tips{
+  position:absolute;
+  padding:1em;
+  background-color: #60B044;
+}
+.tips1{
+  pointer-events: none;
+  position:absolute;
+  padding:0.5em;
+  color: #fff;
+  text-align: center;
+  border-radius: 0.2em;
+  background: #73c000;
+}
+
+/* 分页按钮*/
+.pagination, .pagination-1 {
+  text-align: center;
+  margin: 1em 0;
+  -moz-user-select: none; /*火狐*/
+  -webkit-user-select: none; /*webkit浏览器*/
+  -ms-user-select: none; /*IE10*/
+  -khtml-user-select: none; /*早期浏览器*/
+  user-select: none;
+}
+
+.pagination .num, .pagination .prev, .pagination .next,
+.pagination-1 .num, .pagination-1 .prev, .pagination-1 .next {
+  color: #ff9815;
+  background: #fff;
+  font-size: 1.1em;
+  padding: 0.2em 0.6em;
+  margin: 0 0.2em;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.pagination .num,
+.pagination-1 .num {
+  border: solid 1px transparent;
+}
+
+.pagination-1 .num {
+  font-size: 1em;
+  margin: 0 0 0 -1px;
+  border: solid 1px #ff9815;
+}
+
+.pagination .num:hover, .pagination .num.active,
+.pagination-1 .num:hover, .pagination-1 .num.active {
+  color: #fff;
+  background: #ff9815;
+  border: solid 1px #ff9815;
+}
+
+.pagination .prev, .pagination .next {
+  font-style: normal;
+  font-family: sans-serif;
+  font-size: 1.3em;
+  font-weight: bold;
+  border: solid 1px #ff9815;
+}
+
+.pagination .prev.disabled, .pagination .next.disabled {
+  color: #aeb7c0;
+  border-color: #aeb7c0;
+}
+
+/* 对话框 */
+.dialog{
+  position: absolute;
+  min-width: 320px;
+  max-width: 800px;
+  background: #fff;
+  box-shadow: 0px 2px 4px #666;
+}
+.dialog-s1{
+  background: #fff;
+}
+.dialog-s1 header, .dialog-s1 .header{
+  position: relative;
+  padding:0 20px;
+  background: #1a1c39;
+  color: #fff;
+  line-height: 42px;
+}
+.dialog-s1 header .btn-close, .dialog-s1 .header .btn-close{
+  position: absolute;
+  right:14px;
+  padding: 0px;
+  font-size:20px;
+}
+.dialog-s1 footer, .dialog-s1 .footer{
+  padding: 15px 20px;
+  border-top:solid 1px #e6e9ed;
+}
+
+.dialog-s2{
+  padding: 15px;
+}
+
+.select-list{
+  min-height: 1em;
+  background: #fff;
+  border:solid 1px #cfd0d5;
+  box-shadow:2px 3px 3px rgba(97, 97, 97, 0.45);
+  line-height: 2;
+  padding: 1px;
+}
+.select-list li{
+  padding: 0 15px;
+}
+.select-list li:hover, .select-list a:hover, .select-list li.active, .select-list .active a{
+  color:#fff;
+  background: #ff9915;
+}

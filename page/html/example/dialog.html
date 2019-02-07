@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-dialog指令使用示例</title>
     <link rel="import" href="../include/head.html?__inline">
+    <link rel="stylesheet" href="../../css/vendor/effeckt/animations.css">
 </head>
 <body>
 <div id="wraper">
@@ -13,19 +14,25 @@
 
     <main>
 
-        <button class="btn btn-md" ic-dialog-href="a">点击弹出对话框</button>
-        <div class="dialog hc" ic-dialog="a" style="width:480px;overflow: hidden;">
-            <button class="btn btn-close icon icon-x-black" ic-role-dialog-close>X</button>
-            <br/>
-            <br/>
-            <p>内容</p>
-            <br/>
-            <br/>
-            <div class="p-20-0">
-                <button class="btn btn-1" ic-role-dialog-confirm>确定</button>
-                <button class="btn btn-1" ic-role-dialog-cancel>取消</button>
+        <button class="button is-medium" ic-dialog-href="a">点击弹出对话框</button>
+
+        <div class="modal" ic-dialog="a">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box" style="margin-top:100px;">
+                    <p>内容</p>
+                    <p>内容</p>
+                    <p>内容</p>
+                    <p>内容</p>
+                </div>
             </div>
+            <div style="text-align:center; margin:1em;">
+                <button class="button is-primary" ic-dialog-confirm>确定</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="button" ic-dialog-cancel>取消</button>
+            </div>
+            <button class="modal-close is-large" aria-label="close" ic-dialog-close></button>
         </div>
+
 
     </main>
 
@@ -34,10 +41,11 @@
 </div>
 
 <link rel="import" href="../include/foot.html?__inline">
+<script src="../../js/brick/brick.transition.js"></script>
 <script>
     $('[ic-dialog=a]').on('ic-dialog.close',function(e, msg){
         //msg对应关闭方式，1=>confirm  0=>cancel
-        alert(msg? '确认' : '取消');
+        $.tips(msg? '确认' : '取消');
     });
 </script>
 </body>

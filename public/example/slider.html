@@ -5,21 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-slider指令使用示例</title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
     <style>
         [ic-role-slider-prev],[ic-role-slider-next]{
             position: absolute;
             z-index: 20;
             font-size: 32px;
-            top:30%;
-            background: #000000;
-            opacity: 0.5;
+            top:40%;
+            color: #fff;
+            background: rgba(0,0,0,0.3);
             font-family: sans-serif;
             border-radius: 0;
+            cursor: pointer;
+            padding:0 10px;
         }
         [ic-role-slider-pagination]{
             display: inline-block;
@@ -35,7 +36,7 @@
     </style>
 </head>
 <body>
-<div id="wraper">
+<div id="wrapper">
 
     <header>
 
@@ -47,27 +48,27 @@
             <ul ic-role-slider-view>
                 <li ic-role-slider-item>
                     <a href="#3">
-                        <img src="https://assets.shukugang.com/vcn/img/banner/b_1.jpg"/>
+                        <img src="https://julienedies.github.io/brick/public/img/example/viewer/img/1.jpg"/>
                     </a>
                 </li>
                 <li ic-role-slider-item>
                     <a href="#4">
-                        <img src="https://assets.shukugang.com/vcn/img/banner/b_2.jpg"/>
+                        <img src="https://julienedies.github.io/brick/public/img/example/viewer/img/2.jpg"/>
                     </a>
                 </li>
                 <li ic-role-slider-item>
                     <a href="#2">
-                        <img src="https://assets.shukugang.com/vcn/img/banner/b_3.jpg"/>
+                        <img src="https://julienedies.github.io/brick/public/img/example/viewer/img/3.jpg"/>
                     </a>
                 </li>
                 <li ic-role-slider-item>
                     <a href="#1">
-                        <img src="https://assets.shukugang.com/vcn/img/banner/b_4.jpg"/>
+                        <img src="https://julienedies.github.io/brick/public/img/example/viewer/img/4.jpg"/>
                     </a>
                 </li>
                 <li ic-role-slider-item>
                     <a href="#">
-                        <img src="https://assets.shukugang.com/vcn/img/banner/b_5.jpg"/>
+                        <img src="https://julienedies.github.io/brick/public/img/example/viewer/img/5.jpg"/>
                     </a>
                 </li>
             </ul>
@@ -99,8 +100,7 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
     $('[ic-slider]').on('ic-slider.change', function(e, msg){

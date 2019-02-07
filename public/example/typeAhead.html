@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="zh">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ic-type-ahead指令使用示例</title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -27,7 +22,7 @@
                 <i class="btn icon icon-search"></i>
                 <input type="text"
                        placeholder="公司搜索"
-                       class="input-text"
+                       class="input"
                        ic-type-ahead="search"
                        ic-on-type-complete="search.complete"
                        ic-source="source"
@@ -65,8 +60,7 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
     //brick.set('bootstrap.auto', false)

@@ -5,11 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <meta name="description" content="">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/normalize.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/main.css">
-<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/common.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
 <link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
-<script src="https://julienedies.github.io/brick/public/js/vendor/modernizr-2.6.2.min.js"></script>
+
 </head>
 <body>
 <div id="wrapper">
@@ -19,7 +18,7 @@
 </header>
 
     <main>
-  <pre>
+  <pre class="content">
     ic-ajax 标志该元素绑定ajax请求，此属性是必须项，以下属性皆为可选项；
     ic-ajax-disabled 用于定义ajax行为是否被禁用，true,false两个值可用；
     ic-submit-action 定义ajax请求地址
@@ -38,10 +37,9 @@
     $(this).icAjax({data:{x:1,y:2}})可以用于设置ajax提交数据，在before里使用；
     $(this).icAjax({disabled:true})可以用于是否禁用ajax,true禁用，false启用；
 </pre>
-        <br/>
-        <br/>
         <div>
             <button
+                    class="button"
                     ic-ajax
                     ic-submit-method="post"
                     ic-submit-action="/post"
@@ -49,31 +47,34 @@
                     ic-submit-on-done="done"
                     ic-submit-on-failed="fail"
                     ic-submit-on-always="always"
-                    >ajax demo1</button>
+            >ajax demo1
+            </button>
         </div>
-        <br/>
         <br/>
         <div ic-ctrl="ajaxCtrl">
             <button
+                    class="button"
                     ic-ajax="demo2"
                     ic-submit-method="post"
                     ic-submit-action="/post"
                     ic-submit-before="ajax.before"
                     ic-submit-on-done="ajax.done"
-                    >ajax demo2</button>
+            >ajax demo2
+            </button>
             <div ic-role-loading="demo2">loading...</div>
 
         </div>
         <br/>
-        <br/>
         <button
+                class="button"
                 ic-ajax
                 ic-ajax-disabled="false"
                 ic-submit-method="post"
                 ic-submit-action="/post"
                 ic-submit-before="demo3.before"
                 ic-submit-on-done="demo3.done"
-                >ajax demo3</button>
+        >ajax demo3
+        </button>
     </main>
 
     <footer>
@@ -87,47 +88,47 @@
 </div>
 
 <script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery/jquery-1.10.2.min.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/plugins.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
-    function before(){
+    function before () {
         $.tips('demo1 before')
     }
-    function done(data) {
+
+    function done (data) {
         $.tips('demo1 done');
     }
 
-    function fail(msg) {
+    function fail (msg) {
         $.tips('demo1 failed');
     }
 
-    function always() {
+    function always () {
         $.tips('demo1 always');
     }
 
-    brick.controllers.reg('ajaxCtrl', function(scope){
+    brick.controllers.reg('ajaxCtrl', function (scope) {
         scope.ajax = {
-            done:function(data){
+            done: function (data) {
                 $.tips('demo2 done')
             },
-            before:function(){
-                $(this).icAjax({data:{code:+new Date}});
+            before: function () {
+                $(this).icAjax({data: {code: +new Date}});
                 $.tips('demo2 before')
             }
         }
     });
 
     demo3 = {
-        done:function(data){
+        done: function (data) {
             $.tips('demo3 done');
         },
-        before:function(){
-            if(Math.round(Math.random())) {
-                $(this).icAjax({disabled:true});
+        before: function () {
+            if (Math.round(Math.random())) {
+                $(this).icAjax({disabled: true});
                 $.tips('demo3 可用');
-            }else{
-                $(this).icAjax({disabled:false});
+            } else {
+                $(this).icAjax({disabled: false});
                 $.tips('demo3 不可用');
             }
         }
