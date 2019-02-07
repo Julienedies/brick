@@ -59,7 +59,7 @@ fis.config.set('roadmap.path', [
         useHash: true
     },
     {
-        reg: /^\/(?:html|css|img\/)(.+\.(?:jpg|png|gif))$/i,
+        reg: /^\/(?:html|css|img)\/(.+\.(?:jpg|png|gif))$/i,
         release: '/img/$1',
         url: '/public/img/$1'
     },
