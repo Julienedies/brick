@@ -3,6 +3,7 @@
  */
 
 import $ from 'jquery'
+import _ from 'lodash'
 import brick from '../core/export'
 import directives from '../core/directives.js'
 import viewer_html from '../tpl/viewer.html'

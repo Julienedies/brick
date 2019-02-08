@@ -15,7 +15,7 @@ const conf = {
     ajax: {
         domain: ''
     },
-    isMobile: /iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
+    //isMobile: /iPhone|iPad|iPod|iOS|Android/i.test(navigator.userAgent)
 };
 
 export default {

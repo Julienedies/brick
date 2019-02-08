@@ -61,13 +61,12 @@ directives.reg('ic-popup', popup)
 //import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
 
 // bootstrap
-$(function () {
-    setTimeout(function () {
-        //if(!brick.get('debug')) cc(false, 'log');
-        if (brick.get('bootstrap.auto') === false) return;
-        brick.bootstrap(document.body);
-    }, 30);
-});
+// $(function () {
+//     setTimeout(function () {
+//         if (brick.get('bootstrap.auto') === false) return;
+//         brick.bootstrap(document.body);
+//     }, 30);
+// });
 
 
 export default brick
