@@ -3,6 +3,9 @@
  * Created by julien.zhang on 2014/9/15.
  */
 
+import _ from 'lodash'
+import $ from 'jquery'
+import brick from './export'
 import parser from './parser'
 
 export default function createRender (root) {

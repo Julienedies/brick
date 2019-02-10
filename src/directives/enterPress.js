@@ -3,6 +3,8 @@
  * 回车键按下监听指令
  */
 
+import $ from 'jquery'
+
 export default {
     name: 'ic-enter-press',
     selfExec: true,

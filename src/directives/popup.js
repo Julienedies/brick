@@ -2,6 +2,8 @@
  * Created by j on 18/8/11.
  */
 
+import $ from 'jquery'
+
 export default {
     name: 'ic-popup',
     selfExec: true,

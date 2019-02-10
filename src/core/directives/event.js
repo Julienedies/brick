@@ -1,7 +1,8 @@
 /**
  * Created by julien.zhang on 2014/10/11.
  */
-
+import _ from 'lodash'
+import $ from 'jquery'
 import brick from '../export'
 
 export default {

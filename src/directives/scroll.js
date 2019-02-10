@@ -2,6 +2,8 @@
  * Created by julien on 2015/11/30.
  */
 
+import $ from 'jquery'
+
 export default function ($elm) {
 
     var $th = $elm || $(this);

@@ -2,6 +2,8 @@
  * Created by julien.zhang on 2014/10/11.
  */
 
+import $ from 'jquery'
+
 export default function ($elm, attr) {
 
     var th = $elm;

@@ -2,7 +2,8 @@
  * 根据dom模板生成模板函数
  * Created by julien.zhang on 2014/10/11.
  */
-
+import $ from 'jquery'
+import brick from '../export'
 import createRender from '../createRender'
 
 export default {

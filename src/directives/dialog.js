@@ -2,6 +2,7 @@
  * Created by julien.zhang on 2014/10/29.
  */
 
+import $ from 'jquery'
 import brick from '../core/export'
 
 //ic-dialog

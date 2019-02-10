@@ -3,7 +3,660 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.3
- * 2019-2-8 17:25:27
+ * 2/10/2019, 9:50:47 PM
  */
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports["brick.transition"]=t():e["brick.transition"]=t()}(this,function(){return function(e){var t={};function a(p){if(t[p])return t[p].exports;var o=t[p]={i:p,l:!1,exports:{}};return e[p].call(o.exports,o,o.exports,a),o.l=!0,o.exports}return a.m=e,a.c=t,a.d=function(e,t,p){a.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:p})},a.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},a.t=function(e,t){if(1&t&&(e=a(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var p=Object.create(null);if(a.r(p),Object.defineProperty(p,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)a.d(p,o,function(t){return e[t]}.bind(null,o));return p},a.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return a.d(t,"a",t),t},a.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},a.p="",a(a.s=13)}({13:function(e,t){brick.getAniMap=function(e){e=(e=1*e>67?0:1*e)||Math.round(66*Math.random()+1),console.info("animation id is "+e);var t="",a="";switch(e){case 1:t="pt-page-moveToLeft",a="pt-page-moveFromRight";break;case 2:t="pt-page-moveToRight",a="pt-page-moveFromLeft";break;case 3:t="pt-page-moveToTop",a="pt-page-moveFromBottom";break;case 4:t="pt-page-moveToBottom",a="pt-page-moveFromTop";break;case 5:t="pt-page-fade",a="pt-page-moveFromRight pt-page-ontop";break;case 6:t="pt-page-fade",a="pt-page-moveFromLeft pt-page-ontop";break;case 7:t="pt-page-fade",a="pt-page-moveFromBottom pt-page-ontop";break;case 8:t="pt-page-fade",a="pt-page-moveFromTop pt-page-ontop";break;case 9:t="pt-page-moveToLeftFade",a="pt-page-moveFromRightFade";break;case 10:t="pt-page-moveToRightFade",a="pt-page-moveFromLeftFade";break;case 11:t="pt-page-moveToTopFade",a="pt-page-moveFromBottomFade";break;case 12:t="pt-page-moveToBottomFade",a="pt-page-moveFromTopFade";break;case 13:t="pt-page-moveToLeftEasing pt-page-ontop",a="pt-page-moveFromRight";break;case 14:t="pt-page-moveToRightEasing pt-page-ontop",a="pt-page-moveFromLeft";break;case 15:t="pt-page-moveToTopEasing pt-page-ontop",a="pt-page-moveFromBottom";break;case 16:t="pt-page-moveToBottomEasing pt-page-ontop",a="pt-page-moveFromTop";break;case 17:t="pt-page-scaleDown",a="pt-page-moveFromRight pt-page-ontop";break;case 18:t="pt-page-scaleDown",a="pt-page-moveFromLeft pt-page-ontop";break;case 19:t="pt-page-scaleDown",a="pt-page-moveFromBottom pt-page-ontop";break;case 20:t="pt-page-scaleDown",a="pt-page-moveFromTop pt-page-ontop";break;case 21:t="pt-page-scaleDown",a="pt-page-scaleUpDown pt-page-delay300";break;case 22:t="pt-page-scaleDownUp",a="pt-page-scaleUp pt-page-delay300";break;case 23:t="pt-page-moveToLeft pt-page-ontop",a="pt-page-scaleUp";break;case 24:t="pt-page-moveToRight pt-page-ontop",a="pt-page-scaleUp";break;case 25:t="pt-page-moveToTop pt-page-ontop",a="pt-page-scaleUp";break;case 26:t="pt-page-moveToBottom pt-page-ontop",a="pt-page-scaleUp";break;case 27:t="pt-page-scaleDownCenter",a="pt-page-scaleUpCenter pt-page-delay400";break;case 28:t="pt-page-rotateRightSideFirst",a="pt-page-moveFromRight pt-page-delay200 pt-page-ontop";break;case 29:t="pt-page-rotateLeftSideFirst",a="pt-page-moveFromLeft pt-page-delay200 pt-page-ontop";break;case 30:t="pt-page-rotateTopSideFirst",a="pt-page-moveFromTop pt-page-delay200 pt-page-ontop";break;case 31:t="pt-page-rotateBottomSideFirst",a="pt-page-moveFromBottom pt-page-delay200 pt-page-ontop";break;case 32:t="pt-page-flipOutRight",a="pt-page-flipInLeft pt-page-delay500";break;case 33:t="pt-page-flipOutLeft",a="pt-page-flipInRight pt-page-delay500";break;case 34:t="pt-page-flipOutTop",a="pt-page-flipInBottom pt-page-delay500";break;case 35:t="pt-page-flipOutBottom",a="pt-page-flipInTop pt-page-delay500";break;case 36:t="pt-page-rotateFall pt-page-ontop",a="pt-page-scaleUp";break;case 37:t="pt-page-rotateOutNewspaper",a="pt-page-rotateInNewspaper pt-page-delay500";break;case 38:t="pt-page-rotatePushLeft",a="pt-page-moveFromRight";break;case 39:t="pt-page-rotatePushRight",a="pt-page-moveFromLeft";break;case 40:t="pt-page-rotatePushTop",a="pt-page-moveFromBottom";break;case 41:t="pt-page-rotatePushBottom",a="pt-page-moveFromTop";break;case 42:t="pt-page-rotatePushLeft",a="pt-page-rotatePullRight pt-page-delay180";break;case 43:t="pt-page-rotatePushRight",a="pt-page-rotatePullLeft pt-page-delay180";break;case 44:t="pt-page-rotatePushTop",a="pt-page-rotatePullBottom pt-page-delay180";break;case 45:t="pt-page-rotatePushBottom",a="pt-page-rotatePullTop pt-page-delay180";break;case 46:t="pt-page-rotateFoldLeft",a="pt-page-moveFromRightFade";break;case 47:t="pt-page-rotateFoldRight",a="pt-page-moveFromLeftFade";break;case 48:t="pt-page-rotateFoldTop",a="pt-page-moveFromBottomFade";break;case 49:t="pt-page-rotateFoldBottom",a="pt-page-moveFromTopFade";break;case 50:t="pt-page-moveToRightFade",a="pt-page-rotateUnfoldLeft";break;case 51:t="pt-page-moveToLeftFade",a="pt-page-rotateUnfoldRight";break;case 52:t="pt-page-moveToBottomFade",a="pt-page-rotateUnfoldTop";break;case 53:t="pt-page-moveToTopFade",a="pt-page-rotateUnfoldBottom";break;case 54:t="pt-page-rotateRoomLeftOut pt-page-ontop",a="pt-page-rotateRoomLeftIn";break;case 55:t="pt-page-rotateRoomRightOut pt-page-ontop",a="pt-page-rotateRoomRightIn";break;case 56:t="pt-page-rotateRoomTopOut pt-page-ontop",a="pt-page-rotateRoomTopIn";break;case 57:t="pt-page-rotateRoomBottomOut pt-page-ontop",a="pt-page-rotateRoomBottomIn";break;case 58:t="pt-page-rotateCubeLeftOut pt-page-ontop",a="pt-page-rotateCubeLeftIn";break;case 59:t="pt-page-rotateCubeRightOut pt-page-ontop",a="pt-page-rotateCubeRightIn";break;case 60:t="pt-page-rotateCubeTopOut pt-page-ontop",a="pt-page-rotateCubeTopIn";break;case 61:t="pt-page-rotateCubeBottomOut pt-page-ontop",a="pt-page-rotateCubeBottomIn";break;case 62:t="pt-page-rotateCarouselLeftOut pt-page-ontop",a="pt-page-rotateCarouselLeftIn";break;case 63:t="pt-page-rotateCarouselRightOut pt-page-ontop",a="pt-page-rotateCarouselRightIn";break;case 64:t="pt-page-rotateCarouselTopOut pt-page-ontop",a="pt-page-rotateCarouselTopIn";break;case 65:t="pt-page-rotateCarouselBottomOut pt-page-ontop",a="pt-page-rotateCarouselBottomIn";break;case 66:t="pt-page-rotateSidesOut",a="pt-page-rotateSidesIn pt-page-delay200";break;case 67:t="pt-page-rotateSlideOut",a="pt-page-rotateSlideIn"}return{inClass:a,outClass:t}},function(){$("body");var e="webkitAnimationEnd";function t(e){e.attr("ic-isAnimating",!1),e.addClass("ic-animating"),e.attr("ic-aniEnd",!1),e.removeAttr("ic-aniIn")}function a(t,a){t.removeClass("ic-animating"),t.off(e).attr("ic-aniEnd",!0).trigger("ic-aniEnd"),a&&a.call(t[0])}$.fn.icAniOut=function(p,o,r){var i=[].slice.call(arguments);p=o=r=void 0,i.forEach(function(e){_.isFunction(e)?r=e:_.isObject(e)?o=e:_.isNumber(e)&&(p=e)}),o=$(o);var n=this;n=!(!n[0]||!n[0].hasAttribute)&&n,(o=!(!o[0]||!o[0].hasAttribute)&&o)||p||(p=(p=(p=p||this.attr("ic-aniId"))&&1*p)&&p%2?p+1:p-1);var g=brick.getAniMap(p),c=g.inClass,s=g.outClass;return n&&!n.hasClass("ic-animating")&&(t(n),n.addClass(s).on(e,function(){n.removeClass(s),n.removeAttr("ic-active"),n.removeAttr("ic-aniIn"),n.attr("ic-aniOut",!0),a(n,r),!o||o&&o.attr("ic-aniEnd")})),o&&!o.hasClass("ic-animating")&&(t(o),o.attr("ic-aniId",p),o.attr("ic-active",!0),o.attr("ic-aniIn",!0),o.removeAttr("ic-aniOut").addClass(c).on(e,function(){o.removeClass(c),a(o,r),!n||n&&n.attr("ic-aniEnd")})),this},$.fn.icAniIn=function(e,t,a){var p=[].slice.call(arguments);return e=t=a=void 0,p.forEach(function(p){_.isFunction(p)?a=p:_.isObject(p)?t=p:_.isNumber(p)&&(e=p)}),(t=t||$({})).icAniOut(e,this,a)}}(),function(){function e(e){_.extend(this,e||{}),this.history=[],this.pool={},this.conf={},this.currentView="",this.$current=$({})}var t={cache:function(e,t){var a=this.pool[e]=this.pool[e]||{};return t&&(a.$view=t,a.aniId=1*t.attr("ic-view-ani-id")||brick.get("view.aniId")||13),(t=a.$view)?a:(t=$("[ic-view=?]".replace("?",e)),this.cache(e,t))},current:function(){var e=this.currentView;if(!e){var t=$("[ic-view][ic-active]");e=t.attr("ic-view"),this.currentView=e,this.$current=t,this.cache(e,t)}return e},to:function(e,t){if(!e)throw"must to provide name of view.";var a=this,p=this.current();if(p!==e){var o=this.cache(e),r=this.cache(p),i=r.aniId;i=t?i%2?i+1:i-1:i,o.$view.trigger("ic-view.active",o),r.$view.icAniOut(i,o.$view,function(){!t&&a.history.push(p),a.currentView=e,a.$current=o.$view})}},back:function(){var e=this.history.pop();e&&this.to(e,!0)}};for(var a in t)e.prototype[a]=t[a];var p=brick.view=new e,o=brick.get("event.action");$(document.body).on(o,"[ic-view-to]",function(e){var t=$(this).attr("ic-view-to");p.to(t)}).on("click","[ic-view-back]",function(e){p.back()})}()}}).default});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["brick.transition"] = factory();
+	else
+		root["brick.transition"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./services/transition.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./services/transition.js":
+/*!********************************!*\
+  !*** ./services/transition.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * require Effeckt.css (https://github.com/h5bp/Effeckt.css)
+ * Created by Julien on 2015/9/1.
+ */
+
+/**
+ * 获取一个动画类
+ * @param animation {Number} 1-67
+ * @returns {{inClass: string, outClass: string}}
+ */
+brick.getAniMap = function (animation) {
+  animation = animation * 1 > 67 ? 0 : animation * 1;
+  animation = animation || Math.round(Math.random() * 66 + 1);
+  console.info('animation id is ' + animation);
+  var outClass = '',
+      inClass = '';
+
+  switch (animation) {
+    case 1:
+      outClass = 'pt-page-moveToLeft';
+      inClass = 'pt-page-moveFromRight';
+      break;
+
+    case 2:
+      outClass = 'pt-page-moveToRight';
+      inClass = 'pt-page-moveFromLeft';
+      break;
+
+    case 3:
+      outClass = 'pt-page-moveToTop';
+      inClass = 'pt-page-moveFromBottom';
+      break;
+
+    case 4:
+      outClass = 'pt-page-moveToBottom';
+      inClass = 'pt-page-moveFromTop';
+      break;
+
+    case 5:
+      outClass = 'pt-page-fade';
+      inClass = 'pt-page-moveFromRight pt-page-ontop';
+      break;
+
+    case 6:
+      outClass = 'pt-page-fade';
+      inClass = 'pt-page-moveFromLeft pt-page-ontop';
+      break;
+
+    case 7:
+      outClass = 'pt-page-fade';
+      inClass = 'pt-page-moveFromBottom pt-page-ontop';
+      break;
+
+    case 8:
+      outClass = 'pt-page-fade';
+      inClass = 'pt-page-moveFromTop pt-page-ontop';
+      break;
+
+    case 9:
+      outClass = 'pt-page-moveToLeftFade';
+      inClass = 'pt-page-moveFromRightFade';
+      break;
+
+    case 10:
+      outClass = 'pt-page-moveToRightFade';
+      inClass = 'pt-page-moveFromLeftFade';
+      break;
+
+    case 11:
+      outClass = 'pt-page-moveToTopFade';
+      inClass = 'pt-page-moveFromBottomFade';
+      break;
+
+    case 12:
+      outClass = 'pt-page-moveToBottomFade';
+      inClass = 'pt-page-moveFromTopFade';
+      break;
+
+    case 13:
+      outClass = 'pt-page-moveToLeftEasing pt-page-ontop';
+      inClass = 'pt-page-moveFromRight';
+      break;
+
+    case 14:
+      outClass = 'pt-page-moveToRightEasing pt-page-ontop';
+      inClass = 'pt-page-moveFromLeft';
+      break;
+
+    case 15:
+      outClass = 'pt-page-moveToTopEasing pt-page-ontop';
+      inClass = 'pt-page-moveFromBottom';
+      break;
+
+    case 16:
+      outClass = 'pt-page-moveToBottomEasing pt-page-ontop';
+      inClass = 'pt-page-moveFromTop';
+      break;
+
+    case 17:
+      outClass = 'pt-page-scaleDown';
+      inClass = 'pt-page-moveFromRight pt-page-ontop';
+      break;
+
+    case 18:
+      outClass = 'pt-page-scaleDown';
+      inClass = 'pt-page-moveFromLeft pt-page-ontop';
+      break;
+
+    case 19:
+      outClass = 'pt-page-scaleDown';
+      inClass = 'pt-page-moveFromBottom pt-page-ontop';
+      break;
+
+    case 20:
+      outClass = 'pt-page-scaleDown';
+      inClass = 'pt-page-moveFromTop pt-page-ontop';
+      break;
+
+    case 21:
+      outClass = 'pt-page-scaleDown';
+      inClass = 'pt-page-scaleUpDown pt-page-delay300';
+      break;
+
+    case 22:
+      outClass = 'pt-page-scaleDownUp';
+      inClass = 'pt-page-scaleUp pt-page-delay300';
+      break;
+
+    case 23:
+      outClass = 'pt-page-moveToLeft pt-page-ontop';
+      inClass = 'pt-page-scaleUp';
+      break;
+
+    case 24:
+      outClass = 'pt-page-moveToRight pt-page-ontop';
+      inClass = 'pt-page-scaleUp';
+      break;
+
+    case 25:
+      outClass = 'pt-page-moveToTop pt-page-ontop';
+      inClass = 'pt-page-scaleUp';
+      break;
+
+    case 26:
+      outClass = 'pt-page-moveToBottom pt-page-ontop';
+      inClass = 'pt-page-scaleUp';
+      break;
+
+    case 27:
+      outClass = 'pt-page-scaleDownCenter';
+      inClass = 'pt-page-scaleUpCenter pt-page-delay400';
+      break;
+
+    case 28:
+      outClass = 'pt-page-rotateRightSideFirst';
+      inClass = 'pt-page-moveFromRight pt-page-delay200 pt-page-ontop';
+      break;
+
+    case 29:
+      outClass = 'pt-page-rotateLeftSideFirst';
+      inClass = 'pt-page-moveFromLeft pt-page-delay200 pt-page-ontop';
+      break;
+
+    case 30:
+      outClass = 'pt-page-rotateTopSideFirst';
+      inClass = 'pt-page-moveFromTop pt-page-delay200 pt-page-ontop';
+      break;
+
+    case 31:
+      outClass = 'pt-page-rotateBottomSideFirst';
+      inClass = 'pt-page-moveFromBottom pt-page-delay200 pt-page-ontop';
+      break;
+
+    case 32:
+      outClass = 'pt-page-flipOutRight';
+      inClass = 'pt-page-flipInLeft pt-page-delay500';
+      break;
+
+    case 33:
+      outClass = 'pt-page-flipOutLeft';
+      inClass = 'pt-page-flipInRight pt-page-delay500';
+      break;
+
+    case 34:
+      outClass = 'pt-page-flipOutTop';
+      inClass = 'pt-page-flipInBottom pt-page-delay500';
+      break;
+
+    case 35:
+      outClass = 'pt-page-flipOutBottom';
+      inClass = 'pt-page-flipInTop pt-page-delay500';
+      break;
+
+    case 36:
+      outClass = 'pt-page-rotateFall pt-page-ontop';
+      inClass = 'pt-page-scaleUp';
+      break;
+
+    case 37:
+      outClass = 'pt-page-rotateOutNewspaper';
+      inClass = 'pt-page-rotateInNewspaper pt-page-delay500';
+      break;
+
+    case 38:
+      outClass = 'pt-page-rotatePushLeft';
+      inClass = 'pt-page-moveFromRight';
+      break;
+
+    case 39:
+      outClass = 'pt-page-rotatePushRight';
+      inClass = 'pt-page-moveFromLeft';
+      break;
+
+    case 40:
+      outClass = 'pt-page-rotatePushTop';
+      inClass = 'pt-page-moveFromBottom';
+      break;
+
+    case 41:
+      outClass = 'pt-page-rotatePushBottom';
+      inClass = 'pt-page-moveFromTop';
+      break;
+
+    case 42:
+      outClass = 'pt-page-rotatePushLeft';
+      inClass = 'pt-page-rotatePullRight pt-page-delay180';
+      break;
+
+    case 43:
+      outClass = 'pt-page-rotatePushRight';
+      inClass = 'pt-page-rotatePullLeft pt-page-delay180';
+      break;
+
+    case 44:
+      outClass = 'pt-page-rotatePushTop';
+      inClass = 'pt-page-rotatePullBottom pt-page-delay180';
+      break;
+
+    case 45:
+      outClass = 'pt-page-rotatePushBottom';
+      inClass = 'pt-page-rotatePullTop pt-page-delay180';
+      break;
+
+    case 46:
+      outClass = 'pt-page-rotateFoldLeft';
+      inClass = 'pt-page-moveFromRightFade';
+      break;
+
+    case 47:
+      outClass = 'pt-page-rotateFoldRight';
+      inClass = 'pt-page-moveFromLeftFade';
+      break;
+
+    case 48:
+      outClass = 'pt-page-rotateFoldTop';
+      inClass = 'pt-page-moveFromBottomFade';
+      break;
+
+    case 49:
+      outClass = 'pt-page-rotateFoldBottom';
+      inClass = 'pt-page-moveFromTopFade';
+      break;
+
+    case 50:
+      outClass = 'pt-page-moveToRightFade';
+      inClass = 'pt-page-rotateUnfoldLeft';
+      break;
+
+    case 51:
+      outClass = 'pt-page-moveToLeftFade';
+      inClass = 'pt-page-rotateUnfoldRight';
+      break;
+
+    case 52:
+      outClass = 'pt-page-moveToBottomFade';
+      inClass = 'pt-page-rotateUnfoldTop';
+      break;
+
+    case 53:
+      outClass = 'pt-page-moveToTopFade';
+      inClass = 'pt-page-rotateUnfoldBottom';
+      break;
+
+    case 54:
+      outClass = 'pt-page-rotateRoomLeftOut pt-page-ontop';
+      inClass = 'pt-page-rotateRoomLeftIn';
+      break;
+
+    case 55:
+      outClass = 'pt-page-rotateRoomRightOut pt-page-ontop';
+      inClass = 'pt-page-rotateRoomRightIn';
+      break;
+
+    case 56:
+      outClass = 'pt-page-rotateRoomTopOut pt-page-ontop';
+      inClass = 'pt-page-rotateRoomTopIn';
+      break;
+
+    case 57:
+      outClass = 'pt-page-rotateRoomBottomOut pt-page-ontop';
+      inClass = 'pt-page-rotateRoomBottomIn';
+      break;
+
+    case 58:
+      outClass = 'pt-page-rotateCubeLeftOut pt-page-ontop';
+      inClass = 'pt-page-rotateCubeLeftIn';
+      break;
+
+    case 59:
+      outClass = 'pt-page-rotateCubeRightOut pt-page-ontop';
+      inClass = 'pt-page-rotateCubeRightIn';
+      break;
+
+    case 60:
+      outClass = 'pt-page-rotateCubeTopOut pt-page-ontop';
+      inClass = 'pt-page-rotateCubeTopIn';
+      break;
+
+    case 61:
+      outClass = 'pt-page-rotateCubeBottomOut pt-page-ontop';
+      inClass = 'pt-page-rotateCubeBottomIn';
+      break;
+
+    case 62:
+      outClass = 'pt-page-rotateCarouselLeftOut pt-page-ontop';
+      inClass = 'pt-page-rotateCarouselLeftIn';
+      break;
+
+    case 63:
+      outClass = 'pt-page-rotateCarouselRightOut pt-page-ontop';
+      inClass = 'pt-page-rotateCarouselRightIn';
+      break;
+
+    case 64:
+      outClass = 'pt-page-rotateCarouselTopOut pt-page-ontop';
+      inClass = 'pt-page-rotateCarouselTopIn';
+      break;
+
+    case 65:
+      outClass = 'pt-page-rotateCarouselBottomOut pt-page-ontop';
+      inClass = 'pt-page-rotateCarouselBottomIn';
+      break;
+
+    case 66:
+      outClass = 'pt-page-rotateSidesOut';
+      inClass = 'pt-page-rotateSidesIn pt-page-delay200';
+      break;
+
+    case 67:
+      outClass = 'pt-page-rotateSlideOut';
+      inClass = 'pt-page-rotateSlideIn';
+      break;
+  }
+
+  return {
+    inClass: inClass,
+    outClass: outClass
+  };
+};
+/**
+ * 扩展jquery，添加转场动画支持
+ * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
+ * 一个元素css display:none  不能做css3动画
+ */
+
+
+;
+
+(function () {
+  var $doc = $('body');
+  var animEndEventName = 'webkitAnimationEnd';
+
+  function initStatus($elm) {
+    $elm.attr('ic-isAnimating', false);
+    $elm.addClass('ic-animating');
+    $elm.attr('ic-aniEnd', false);
+    $elm.removeAttr('ic-aniIn');
+  }
+
+  function onEndAnimation($elm, call) {
+    $elm.removeClass('ic-animating');
+    $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
+    call && call.call($elm[0]);
+  } //out
+
+
+  $.fn.icAniOut = function (aniId, $next, call) {
+    var args = [].slice.call(arguments);
+    aniId = $next = call = void 0;
+    args.forEach(function (v) {
+      if (_.isFunction(v)) {
+        call = v;
+      } else if (_.isObject(v)) {
+        $next = v;
+      } else if (_.isNumber(v)) {
+        aniId = v;
+      }
+    });
+    $next = $($next);
+    var $current = this;
+    $current = $current[0] && $current[0].hasAttribute ? $current : false;
+    $next = $next[0] && $next[0].hasAttribute ? $next : false;
+
+    if (!$next) {
+      if (!aniId) {
+        aniId = aniId || this.attr('ic-aniId');
+        aniId = aniId && aniId * 1;
+        aniId = aniId && aniId % 2 ? aniId + 1 : aniId - 1;
+      }
+    }
+
+    var cla = brick.getAniMap(aniId);
+    var inClass = cla.inClass;
+    var outClass = cla.outClass; // $doc.animate({scrollTop: 0}, 150);
+    //$doc.scrollTop(0);
+
+    if ($current && !$current.hasClass('ic-animating')) {
+      initStatus($current);
+      $current.addClass(outClass).on(animEndEventName, function () {
+        $current.removeClass(outClass);
+        $current.removeAttr('ic-active');
+        $current.removeAttr('ic-aniIn');
+        $current.attr('ic-aniOut', true);
+        onEndAnimation($current, call);
+
+        if (!$next || $next && $next.attr('ic-aniEnd')) {//_onEndAnimation($current);
+        }
+      });
+    }
+
+    if ($next && !$next.hasClass('ic-animating')) {
+      initStatus($next);
+      $next.attr('ic-aniId', aniId);
+      $next.attr('ic-active', true);
+      $next.attr('ic-aniIn', true);
+      $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
+        $next.removeClass(inClass);
+        onEndAnimation($next, call);
+
+        if (!$current || $current && $current.attr('ic-aniEnd')) {//_onEndAnimation($next);
+        }
+      });
+    }
+
+    return this;
+  }; //in
+
+
+  $.fn.icAniIn = function (aniId, $next, call) {
+    var args = [].slice.call(arguments);
+    aniId = $next = call = void 0;
+    args.forEach(function (v) {
+      if (_.isFunction(v)) {
+        call = v;
+      } else if (_.isObject(v)) {
+        $next = v;
+      } else if (_.isNumber(v)) {
+        aniId = v;
+      }
+    });
+    $next = $next || $({});
+    return $next.icAniOut(aniId, this, call);
+  };
+})();
+
+;
+
+(function () {
+  function Transition(conf) {
+    _.extend(this, conf || {});
+
+    this.history = [];
+    this.pool = {};
+    this.conf = {};
+    this.currentView = '';
+    this.$current = $({}); //this.current();
+  }
+
+  var proto = {
+    cache: function cache(name, $view) {
+      var viewProp = this.pool[name] = this.pool[name] || {};
+
+      if ($view) {
+        viewProp.$view = $view;
+        viewProp.aniId = $view.attr('ic-view-ani-id') * 1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
+      }
+
+      $view = viewProp.$view;
+
+      if (!$view) {
+        $view = $('[ic-view=?]'.replace('?', name));
+        return this.cache(name, $view);
+      }
+
+      return viewProp;
+    },
+    current: function current() {
+      var currentView = this.currentView;
+
+      if (!currentView) {
+        var $view = $('[ic-view][ic-active]');
+        currentView = $view.attr('ic-view');
+        this.currentView = currentView;
+        this.$current = $view;
+        this.cache(currentView, $view);
+      }
+
+      return currentView;
+    },
+    to: function to(name, reverse) {
+      if (!name) throw 'must to provide name of view.';
+      var that = this;
+      var currentView = this.current();
+      if (currentView === name) return;
+      var nextViewProp = this.cache(name);
+      var currentViewProp = this.cache(currentView);
+      var aniId = currentViewProp.aniId;
+      aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
+      nextViewProp.$view.trigger('ic-view.active', nextViewProp);
+      currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function () {
+        !reverse && that.history.push(currentView);
+        that.currentView = name;
+        that.$current = nextViewProp.$view;
+      });
+    },
+    back: function back() {
+      var prev = this.history.pop();
+      prev && this.to(prev, true);
+    }
+  };
+
+  for (var i in proto) {
+    Transition.prototype[i] = proto[i];
+  }
+
+  var transition = brick.view = new Transition();
+  var eventAction = brick.get('event.action');
+  $(document.body).on(eventAction, '[ic-view-to]', function (e) {
+    var name = $(this).attr('ic-view-to');
+    transition.to(name);
+  }).on('click', '[ic-view-back]', function (e) {
+    transition.back();
+  });
+})();
+
+/***/ })
+
+/******/ })["default"];
+});
 //# sourceMappingURL=brick.transition.js.map

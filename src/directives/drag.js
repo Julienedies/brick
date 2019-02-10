@@ -2,6 +2,7 @@
  * Created by julien.zhang on 2014/11/5.
  */
 
+import $ from 'jquery'
 export default function ($elm, attrs) {
 
     var $document = $(document);

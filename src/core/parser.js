@@ -3,6 +3,8 @@
  * Created by julien.zhang on 2014/9/12.
  */
 
+import $ from 'jquery'
+
 export default function parser(node) {
 
     if (node.nodeType === 1) {

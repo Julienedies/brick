@@ -2,6 +2,7 @@
  * Created by julien.zhang on 2014/10/31.
  */
 
+import $ from 'jquery'
 import brick from '../core/export'
 
 export default {
