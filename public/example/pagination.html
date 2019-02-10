@@ -220,6 +220,11 @@
 <script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
 <script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
 <script>
+    setTimeout( function(){
+        brick.bootstrap();
+    }, 30)
+</script>
+<script>
     brick.controllers.reg('demo-1', function(scope){
         var $show = this.$elm.find('#show');
         $('[ic-pagination="a"]').on('ic-pagination.change', function (e, param) {

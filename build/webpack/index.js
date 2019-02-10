@@ -7,8 +7,6 @@ console.log(process.env.NODE_ENV)
 
 const config = require('./config')
 
-console.log(333333, config.devtool)
-
 module.exports = {
     mode: config.mode,  // 会设置打包文件环境下的 process.env.NODE_ENV
     devtool: config.devtool,
