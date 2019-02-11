@@ -14,7 +14,7 @@ export default function ($elm, attrs) {
     var menu = th.find('[ic-dropdown-menu]').css({position: 'absolute', top: h + 'px', display: 'none!important'});
 
     var timer;
-    if (menu.size()) {
+    if (menu.length) {
         th.hover(function (e) {
             timer = setTimeout(function () {
                 menu.show(300);
@@ -27,7 +27,7 @@ export default function ($elm, attrs) {
 
     var con = th.find('[ic-dropdown-con]').css({position: 'absolute', overflow: 'hidden'});
 
-    if (con.size()) {
+    if (con.length) {
 
         var ch = con.height();
 

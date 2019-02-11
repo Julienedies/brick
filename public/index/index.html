@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/index/stylesheets/print.css" media="print">
-    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/css/common/common.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/public/css/index/stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/public/css/index/stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/public/css/index/stylesheets/print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="/public/css/common/common.css" media="screen">
     <style type="text/css">[ic-tabs=a] {
     border-bottom: solid 1px #D6D6D6;
 }
@@ -72,7 +72,7 @@
     right: 0;
 }
 </style>
-    <link rel="stylesheet" type="text/css" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
+    <link rel="stylesheet" type="text/css" href="/public/js/brick/brick.css">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -195,7 +195,9 @@
                 <div>
                 <pre class="brush: jscript;">
  // model
-brick.services.reg('tasksModel', function (recordManager) {
+brick.services.reg('tasksModel', function () {
+
+    var recordManager = brick.services.get('recordManager')
 
     var local = localStorage.getItem('tasksModel');
 
@@ -205,11 +207,12 @@ brick.services.reg('tasksModel', function (recordManager) {
         broadcast: true
     }).init(local && JSON.parse(local) || []);
 
-}, ['recordManager']);
+});
 
 //controller
-brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
-
+brick.reg('tasksCtrl', function (scope) {
+    scope = this;
+    var tasksModel = brick.services.get('tasksModel')
     var type = 0;
 
     var render = function (e, msg) {
@@ -251,7 +254,7 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
         render();
     });
 
-}, {depend: ['tasksModel']});
+});
 
                 </pre>
                 </div>
@@ -344,24 +347,26 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
         </aside>
     </div>
 </div>
-<link href="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css"/>
-<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shCore.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushJScript.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushCss.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<link href="/public/js/vendor/syntaxhighlighter/styles/shCore.css" rel="stylesheet" type="text/css"/>
+<script src="/public/js/vendor/syntaxhighlighter/scripts/shCore.js"></script>
+<script src="/public/js/vendor/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script src="/public/js/vendor/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script src="/public/js/vendor/syntaxhighlighter/scripts/shBrushXml.js"></script>
 <script type="text/javascript">
     SyntaxHighlighter.all();
 </script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
-<script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
+<script src="/public/js/vendor/lodash.js"></script>
+<script src="/public/js/vendor/jquery.js"></script>
+<script src="/public/js/brick/brick.js"></script>
 <script>
     setTimeout( function(){
         brick.bootstrap();
     }, 30)
 </script>
 <script>// model
-brick.services.reg('tasksModel', function (recordManager) {
+brick.services.reg('tasksModel', function () {
+
+    var recordManager = brick.services.get('recordManager')
 
     var local = localStorage.getItem('tasksModel');
 
@@ -371,11 +376,12 @@ brick.services.reg('tasksModel', function (recordManager) {
         broadcast: true
     }).init(local && JSON.parse(local) || []);
 
-}, ['recordManager']);
+});
 
 //controller
-brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
-
+brick.reg('tasksCtrl', function (scope) {
+    scope = this;
+    var tasksModel = brick.services.get('tasksModel')
     var type = 0;
 
     var render = function (e, msg) {
@@ -417,7 +423,7 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
         render();
     });
 
-}, {depend: ['tasksModel']});
+});
 </script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

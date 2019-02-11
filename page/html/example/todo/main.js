@@ -1,5 +1,7 @@
 // model
-brick.services.reg('tasksModel', function (recordManager) {
+brick.services.reg('tasksModel', function () {
+
+    var recordManager = brick.services.get('recordManager')
 
     var local = localStorage.getItem('tasksModel');
 
@@ -9,11 +11,12 @@ brick.services.reg('tasksModel', function (recordManager) {
         broadcast: true
     }).init(local && JSON.parse(local) || []);
 
-}, ['recordManager']);
+});
 
 //controller
-brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
-
+brick.reg('tasksCtrl', function (scope) {
+    scope = this;
+    var tasksModel = brick.services.get('tasksModel')
     var type = 0;
 
     var render = function (e, msg) {
@@ -55,4 +58,4 @@ brick.controllers.reg('tasksCtrl', function (scope, tasksModel) {
         render();
     });
 
-}, {depend: ['tasksModel']});
+});

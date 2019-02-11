@@ -28,6 +28,18 @@ brick是一个轻量级前端开发框架，基于jQuery和lodash(or underscore)
 譬如虽然jQuery提供了jQuery UI，但实际项目开发中，很少有人会直接使用jQuery UI的样式，很多时间精力花费在样式的修改上。
 考虑到这点，通过指令的形式（自定义html属性）提供基本的js行为，用户可以随意定义模板及样式；
 
+### 使用
+##### 传统web页面
+```
+<link href="dist/brick.css">
+<script src="dist/brick.js"></script>
+```
+##### electron环境
+```
+npm i @julienedies/brick
+let brick = require('@julienedies/brick')
+brick.bootstrap()
+```
 ### 开发环境
 
 brick使用webpack作为类库构建工具; 使用[fis](https://github.com/fex-team/fis)做为主页项目构建工具。

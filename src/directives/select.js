@@ -18,7 +18,7 @@ export default function ($elm) {
     var type = $elm.attr('ic-select-type') || 'radio';
     var $items = $elm.find(s_item);
 
-    if (!$items.size()) {
+    if (!$items.length) {
         $items = $elm.find('>*').each(function () {
             $(this).attr('ic-select-item', +new Date);
         });

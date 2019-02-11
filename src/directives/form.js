@@ -304,7 +304,7 @@ export default function ($elm, attrs) {
         var data = before.apply($submit[0], [fields]);
         if (data === false) return;
 
-        if ($loading.size()) {
+        if ($loading.length) {
             $submit.hide();
             $loading.show();
         } else {

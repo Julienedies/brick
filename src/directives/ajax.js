@@ -42,7 +42,7 @@ export default {
             var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
             var $loading = $('[ic-role-loading=?]'.replace('?', name || +(new Date)));
-            $loading.size() ? $loading.show() && $elm.hide() : $elm.setLoading();
+            $loading.length ? $loading.show() && $elm.hide() : $elm.setLoading();
 
             $elm.attr('ic-ajax-disabled', true);
 
