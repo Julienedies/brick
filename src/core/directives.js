@@ -30,7 +30,6 @@ export default  {
     exec: function (name, $elm, attrs) {
         let _pool = this._pool;
         let definition = _pool[name];
-        console.log('exec:', name)
         if (typeof definition === 'function') {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {

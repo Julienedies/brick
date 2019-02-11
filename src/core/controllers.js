@@ -159,7 +159,6 @@ export default {
         depend = depend.constructor !== Array ? [depend] : depend;
         depend.unshift(scope);
 
-        console.log('exec controller factory: ', name);
         ctrl.fn.apply(scope, depend);  // 注入scope和依赖,执行factory
 
         //ctrl.exec = (ctrl.exec || 0) + 1;
