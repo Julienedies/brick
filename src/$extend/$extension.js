@@ -9,7 +9,7 @@ import brick from '../core/export'
 !$.fn && ($.fn = {})
 
 $.fn.icRender = function (tpl, model, callback) {
-    if (typeof tpl == 'object') {
+    if (typeof tpl === 'object') {
         callback = model;
         model = tpl;
         tpl = this.attr('ic-tpl') || this.attr('ic-tpl-name');

@@ -119,11 +119,11 @@ if (isPro) {  // 产品环境
 
         plugins.push(new webpack.HotModuleReplacementPlugin())*/
 
-    devServer = {
+/*    devServer = {
         publicPath: publicPath,
         contentBase: outputPath,
         hot: true
-    }
+    }*/
 
 }
 

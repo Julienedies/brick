@@ -12,6 +12,8 @@
  *                              }
  *                              );
  */
+
+import $ from 'jquery'
 import eventManager from '../core/eventManager'
 
 function RecordManager (conf) {
