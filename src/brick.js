@@ -18,6 +18,7 @@ import recordManager from './services/recordManager.js'
 
 import ajax, { ajaxAuto, ajaxEnter } from './directives/ajax.js'
 import tabs from './directives/tabs.js'
+import tabs2 from './directives/tabs2.js'
 import form from './directives/form.js'
 import select from './directives/select.js'
 import enterPress from './directives/enterPress.js'
@@ -45,6 +46,7 @@ directives.reg('ic-ajax', ajax)
 directives.reg('ic-ajax-auto', ajaxAuto)
 directives.reg('ic-ajax-enter', ajaxEnter)
 directives.reg('ic-tabs', tabs)
+directives.reg('ic-tabs2', tabs2)
 directives.reg('ic-form', form)
 directives.reg('ic-select', select)
 directives.reg('ic-enter-press', enterPress)

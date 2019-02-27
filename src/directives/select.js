@@ -7,6 +7,7 @@
  * [ic-select-type] 定义select类型,多选or单选 checkbox : radio 默认 radio
  */
 
+import $ from 'jquery'
 import brick from '../core/export'
 
 export default function ($elm) {
