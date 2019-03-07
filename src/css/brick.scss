@@ -1,9 +1,8 @@
-
 @import "directives/ic-viewer.scss";
 @import "directives/ic-view-2.scss";
 @import "directives/ic-popup.scss";
 @import 'directives/dropdown.scss';
-/* */
+
 [ic-upload] [type=file] {
     position: absolute;
     opacity: 0;
@@ -41,7 +40,7 @@
     overflow: hidden;
 }
 
-[ic-role-drag-handle] {
+[ic-drag-handle] {
     cursor: move;
 }
 
@@ -62,8 +61,6 @@
 [ic-tab-con] {
     display: none;
 }
-
-
 
 /*输入提示列表*/
 [ic-role-list] {
@@ -96,7 +93,6 @@
     -webkit-box-align:center;
     -webkit-align-items: center;
     align-items: center;
-
 }
 
 [ic-toggle-target]{

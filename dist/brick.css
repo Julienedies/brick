@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.7
- * 2/27/2019, 8:17:11 PM
+ * 3/7/2019, 3:33:23 PM
  */
 @charset "UTF-8";
 [ic-viewer] [ic-viewer-item] {
@@ -137,7 +137,6 @@ for animating
 [ic-dropdown-con] {
   overflow: hidden; }
 
-/* */
 [ic-upload] [type=file] {
   position: absolute;
   opacity: 0; }
@@ -168,7 +167,7 @@ for animating
   position: relative;
   overflow: hidden; }
 
-[ic-role-drag-handle] {
+[ic-drag-handle] {
   cursor: move; }
 
 [ic-role-loading] {

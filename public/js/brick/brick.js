@@ -2,8 +2,8 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.8.6
- * 2/21/2019, 11:54:14 AM
+ * V0.8.7
+ * 3/7/2019, 3:33:23 PM
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -487,19 +487,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_recordManager_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./services/recordManager.js */ "./services/recordManager.js");
 /* harmony import */ var _directives_ajax_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./directives/ajax.js */ "./directives/ajax.js");
 /* harmony import */ var _directives_tabs_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./directives/tabs.js */ "./directives/tabs.js");
-/* harmony import */ var _directives_form_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./directives/form.js */ "./directives/form.js");
-/* harmony import */ var _directives_select_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./directives/select.js */ "./directives/select.js");
-/* harmony import */ var _directives_enterPress_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./directives/enterPress.js */ "./directives/enterPress.js");
-/* harmony import */ var _directives_scroll_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./directives/scroll.js */ "./directives/scroll.js");
-/* harmony import */ var _directives_dialog_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./directives/dialog.js */ "./directives/dialog.js");
-/* harmony import */ var _directives_dropdown_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./directives/dropdown.js */ "./directives/dropdown.js");
-/* harmony import */ var _directives_type_ahead_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./directives/type-ahead.js */ "./directives/type-ahead.js");
-/* harmony import */ var _directives_slider_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./directives/slider.js */ "./directives/slider.js");
-/* harmony import */ var _directives_pagination_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./directives/pagination.js */ "./directives/pagination.js");
-/* harmony import */ var _directives_drag_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./directives/drag.js */ "./directives/drag.js");
-/* harmony import */ var _directives_popup_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./directives/popup.js */ "./directives/popup.js");
-/* harmony import */ var _directives_viewer_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./directives/viewer.js */ "./directives/viewer.js");
-/* harmony import */ var _directives_collection_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./directives/collection.js */ "./directives/collection.js");
+/* harmony import */ var _directives_tabs2_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./directives/tabs2.js */ "./directives/tabs2.js");
+/* harmony import */ var _directives_form_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./directives/form.js */ "./directives/form.js");
+/* harmony import */ var _directives_select_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./directives/select.js */ "./directives/select.js");
+/* harmony import */ var _directives_enterPress_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./directives/enterPress.js */ "./directives/enterPress.js");
+/* harmony import */ var _directives_scroll_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./directives/scroll.js */ "./directives/scroll.js");
+/* harmony import */ var _directives_dialog_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./directives/dialog.js */ "./directives/dialog.js");
+/* harmony import */ var _directives_dropdown_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./directives/dropdown.js */ "./directives/dropdown.js");
+/* harmony import */ var _directives_type_ahead_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./directives/type-ahead.js */ "./directives/type-ahead.js");
+/* harmony import */ var _directives_slider_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./directives/slider.js */ "./directives/slider.js");
+/* harmony import */ var _directives_pagination_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./directives/pagination.js */ "./directives/pagination.js");
+/* harmony import */ var _directives_drag_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./directives/drag.js */ "./directives/drag.js");
+/* harmony import */ var _directives_popup_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./directives/popup.js */ "./directives/popup.js");
+/* harmony import */ var _directives_viewer_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./directives/viewer.js */ "./directives/viewer.js");
+/* harmony import */ var _directives_collection_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./directives/collection.js */ "./directives/collection.js");
 // style
 
 
@@ -509,6 +510,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
  // jQuery扩展 必选
+
 
 
 
@@ -538,18 +540,19 @@ _core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-ajax', _directi
 _core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-ajax-auto', _directives_ajax_js__WEBPACK_IMPORTED_MODULE_10__["ajaxAuto"]);
 _core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-ajax-enter', _directives_ajax_js__WEBPACK_IMPORTED_MODULE_10__["ajaxEnter"]);
 _core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-tabs', _directives_tabs_js__WEBPACK_IMPORTED_MODULE_11__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-form', _directives_form_js__WEBPACK_IMPORTED_MODULE_12__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-select', _directives_select_js__WEBPACK_IMPORTED_MODULE_13__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-enter-press', _directives_enterPress_js__WEBPACK_IMPORTED_MODULE_14__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-type-ahead', _directives_type_ahead_js__WEBPACK_IMPORTED_MODULE_18__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-scroll', _directives_scroll_js__WEBPACK_IMPORTED_MODULE_15__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-dialog', _directives_dialog_js__WEBPACK_IMPORTED_MODULE_16__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-prompt', _directives_dialog_js__WEBPACK_IMPORTED_MODULE_16__["prompt"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].add('ic-dropdown', _directives_dropdown_js__WEBPACK_IMPORTED_MODULE_17__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-slider', _directives_slider_js__WEBPACK_IMPORTED_MODULE_19__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-pagination', _directives_pagination_js__WEBPACK_IMPORTED_MODULE_20__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].add('ic-drag-view', _directives_drag_js__WEBPACK_IMPORTED_MODULE_21__["default"]);
-_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-popup', _directives_popup_js__WEBPACK_IMPORTED_MODULE_22__["default"]); //import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-tabs2', _directives_tabs2_js__WEBPACK_IMPORTED_MODULE_12__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-form', _directives_form_js__WEBPACK_IMPORTED_MODULE_13__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-select', _directives_select_js__WEBPACK_IMPORTED_MODULE_14__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-enter-press', _directives_enterPress_js__WEBPACK_IMPORTED_MODULE_15__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-type-ahead', _directives_type_ahead_js__WEBPACK_IMPORTED_MODULE_19__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-scroll', _directives_scroll_js__WEBPACK_IMPORTED_MODULE_16__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-dialog', _directives_dialog_js__WEBPACK_IMPORTED_MODULE_17__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-prompt', _directives_dialog_js__WEBPACK_IMPORTED_MODULE_17__["prompt"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].add('ic-dropdown', _directives_dropdown_js__WEBPACK_IMPORTED_MODULE_18__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-slider', _directives_slider_js__WEBPACK_IMPORTED_MODULE_20__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-pagination', _directives_pagination_js__WEBPACK_IMPORTED_MODULE_21__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].add('ic-drag-view', _directives_drag_js__WEBPACK_IMPORTED_MODULE_22__["default"]);
+_core_directives__WEBPACK_IMPORTED_MODULE_4__["default"].reg('ic-popup', _directives_popup_js__WEBPACK_IMPORTED_MODULE_23__["default"]); //import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
 // bootstrap
 // $(function () {
 //     setTimeout(function () {
@@ -2042,12 +2045,12 @@ __webpack_require__.r(__webpack_exports__);
       y = 0;
   var vw, vh;
   var w, h;
-  $document.on('click', '[ic-role-drag-key]', function (e) {
+  $document.on('click', '[ic-drag-key]', function (e) {
     var th = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this);
-    var drag = th.attr('ic-role-drag-key');
+    var drag = th.attr('ic-drag-key');
     var d = th.attr('ic-drag-direction');
     var m = 140;
-    $elm = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[ic-role-drag-handle=?]'.replace('?', drag)).css({
+    $elm = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[ic-drag-handle=?]'.replace('?', drag)).css({
       position: 'relative'
     });
     w = $elm.width();
@@ -2076,7 +2079,7 @@ __webpack_require__.r(__webpack_exports__);
       }, 500);
     }
   });
-  $document.on('mousedown', '[ic-role-drag-handle]', function (e) {
+  $document.on('mousedown', '[ic-drag-handle]', function (e) {
     e.preventDefault();
     startX = e.pageX;
     startY = e.pageY;
@@ -2090,12 +2093,12 @@ __webpack_require__.r(__webpack_exports__);
     y = position.top;
     w = $elm.width();
     h = $elm.height();
-    $document.on('mousemove', mousemove);
-    $document.on('mouseup', mouseup);
+    $document.on('mousemove', onMouseMove);
+    $document.on('mouseup', onMouseUp);
     return false;
   });
 
-  function mousemove(e) {
+  function onMouseMove(e) {
     var moveX = e.pageX - startX;
     var moveY = e.pageY - startY;
     startX = e.pageX;
@@ -2113,9 +2116,9 @@ __webpack_require__.r(__webpack_exports__);
     return false;
   }
 
-  function mouseup() {
-    $document.unbind('mousemove', mousemove);
-    $document.unbind('mouseup', mouseup);
+  function onMouseUp() {
+    $document.off('mousemove', onMouseMove);
+    $document.off('mouseup', onMouseUp);
   }
 });
 
@@ -2399,8 +2402,7 @@ __webpack_require__.r(__webpack_exports__);
     rules = compileRule(rules, $elm);
     $th.on('change', function (e) {
       var val = $th.val();
-      var tip;
-      console.log(this, val, errTips);
+      var tip; //console.log(this, val, errTips);
 
       if (tip = _verify(val, rules, errTips, $th)) {
         //验证失败
@@ -2472,7 +2474,6 @@ __webpack_require__.r(__webpack_exports__);
       jquery__WEBPACK_IMPORTED_MODULE_1___default()(this).change();
     });
     $elm.data('ic-form-fields', fields);
-    console.info(fields);
 
     for (var i in fields) {
       if (fields[i] === false) {
@@ -2806,7 +2807,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _core_export__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/export */ "./core/export.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _core_export__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/export */ "./core/export.js");
 /**
  * Created by j on 18/7/18.
  * ic-select  实现checkbox or radio 类似的功能
@@ -2816,9 +2819,10 @@ __webpack_require__.r(__webpack_exports__);
  * [ic-select-type] 定义select类型,多选or单选 checkbox : radio 默认 radio
  */
 
+
 /* harmony default export */ __webpack_exports__["default"] = (function ($elm) {
   var on_change = $elm.icPp2('ic-select-on-change');
-  var cla = $elm.attr('ic-select-cla') || _core_export__WEBPACK_IMPORTED_MODULE_0__["default"].get('ic-select-cla') || 'selected';
+  var cla = $elm.attr('ic-select-cla') || _core_export__WEBPACK_IMPORTED_MODULE_1__["default"].get('ic-select-cla') || 'selected';
   var name = $elm.attr('ic-select');
   var s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
   var type = $elm.attr('ic-select-type') || 'radio';
@@ -2826,16 +2830,16 @@ __webpack_require__.r(__webpack_exports__);
 
   if (!$items.length) {
     $items = $elm.find('>*').each(function () {
-      $(this).attr('ic-select-item', +new Date());
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('ic-select-item', +new Date());
     });
   }
 
   var $selected = $items.filter('[selected]');
   var callback = type === 'checkbox' ? function () {
-    $(this).toggleClass(cla);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).toggleClass(cla);
     var values = [];
     $items.filter('.' + cla).each(function () {
-      values.push($(this).attr('ic-val'));
+      values.push(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('ic-val'));
     });
     $elm.attr('ic-val', JSON.stringify(values));
     $elm.data('ic-val', values);
@@ -2847,7 +2851,7 @@ __webpack_require__.r(__webpack_exports__);
     on_change && on_change.apply($elm, [msg]);
   } : function () {
     $items.removeClass(cla);
-    var $th = $(this).addClass(cla);
+    var $th = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass(cla);
     var val = $th.attr('ic-val');
     $elm.attr('ic-val', val);
     var msg = {
@@ -3095,6 +3099,57 @@ __webpack_require__.r(__webpack_exports__);
 
   activeTab.trigger('click'); //let activeCon = activeTab.addClass('active').attr('ic-tab');
   //activeCon = tabc.length && tabc.find('[ic-tab-con]').hide().filter('[ic-tab-con=' + activeCon + ']').show();
+});
+
+/***/ }),
+
+/***/ "./directives/tabs2.js":
+/*!*****************************!*\
+  !*** ./directives/tabs2.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "jquery");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _core_export__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/export */ "./core/export.js");
+/**
+ * Created by Julien on 2016/1/12.
+ */
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function ($elm, attrs) {
+  var th = $elm;
+  var name = th.attr('ic-tabs2');
+  var disabled = th.attr('ic-tab-disabled');
+  var tabSelect = th.attr('ic-tab-$');
+  var conSelect = th.attr('ic-tabc-$');
+  var activeTab = th.attr('ic-tab-active');
+  var $tabSelect;
+  var cla = 'active';
+  var s_tab = '[ic-tab]';
+
+  if (tabSelect) {
+    th.find(tabSelect).each(function (i) {
+      var th = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this);
+      th.attr('ic-tab', i);
+    });
+  }
+
+  $elm.on('click', s_tab, function (e) {
+    if (this.hasAttribute('ic-tab-disabled')) return;
+    var $th = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this);
+    if ($th.hasClass(cla)) return;
+    var $siblings = $th.siblings().removeClass(cla);
+    $th.addClass(cla);
+    $elm.trigger('ic-tabs.change', {
+      target: this,
+      val: $th.attr('ic-tab-val'),
+      index: $th.index()
+    });
+  });
 });
 
 /***/ }),

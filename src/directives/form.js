@@ -176,10 +176,10 @@ export default function ($elm, attrs) {
 
         $th.on('change', function (e) {
 
-            var val = $th.val();
-            var tip;
+            let val = $th.val();
+            let tip;
 
-            console.log(this, val, errTips);
+            //console.log(this, val, errTips);
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
@@ -266,8 +266,7 @@ export default function ($elm, attrs) {
         });
 
         $elm.data('ic-form-fields', fields);
-        console.info(fields);
-        for (var i in fields) {
+        for (let i in fields) {
             if (fields[i] === false) {
                 $submit.removeAttr('ic-verification');
                 return false;

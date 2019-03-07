@@ -3,26 +3,28 @@
  */
 
 import $ from 'jquery'
+
+
 export default function ($elm, attrs) {
 
-    var $document = $(document);
+    let $document = $(document);
 
-    var startX = 0, startY = 0, x = 0, y = 0;
-    var vw, vh;
-    var w, h;
+    let startX = 0, startY = 0, x = 0, y = 0;
+    let vw, vh;
+    let w, h;
 
-    $document.on('click', '[ic-role-drag-key]', function (e) {
+    $document.on('click', '[ic-drag-key]', function (e) {
 
-        var th = $(this);
-        var drag = th.attr('ic-role-drag-key');
-        var d = th.attr('ic-drag-direction');
-        var m = 140;
-        $elm = $('[ic-role-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
+        let th = $(this);
+        let drag = th.attr('ic-drag-key');
+        let d = th.attr('ic-drag-direction');
+        let m = 140;
+        $elm = $('[ic-drag-handle=?]'.replace('?', drag)).css({position: 'relative'});
         w = $elm.width();
         h = $elm.height();
         vw = $elm.closest('[ic-drag-view]').css({position: 'relative'}).width();
         vh = $elm.closest('[ic-drag-view]').width();
-        var position = $elm.position();
+        let position = $elm.position();
         x = position.left;
         y = position.top;
 
@@ -41,7 +43,7 @@ export default function ($elm, attrs) {
     });
 
 
-    $document.on('mousedown', '[ic-role-drag-handle]', function (e) {
+    $document.on('mousedown', '[ic-drag-handle]', function (e) {
 
         e.preventDefault();
 
@@ -53,25 +55,24 @@ export default function ($elm, attrs) {
         vw = $elm.closest('[ic-drag-view]').width();
         vh = $elm.closest('[ic-drag-view]').height();
 
-        var position = $elm.position();
+        let position = $elm.position();
         x = position.left;
         y = position.top;
 
         w = $elm.width();
         h = $elm.height();
 
-        $document.on('mousemove', mousemove);
-        $document.on('mouseup', mouseup);
+        $document.on('mousemove', onMouseMove);
+        $document.on('mouseup', onMouseUp);
 
         return false;
-
     });
 
 
-    function mousemove (e) {
+    function onMouseMove (e) {
 
-        var moveX = e.pageX - startX;
-        var moveY = e.pageY - startY;
+        let moveX = e.pageX - startX;
+        let moveY = e.pageY - startY;
 
         startX = e.pageX;
         startY = e.pageY;
@@ -93,10 +94,9 @@ export default function ($elm, attrs) {
         return false;
     }
 
-    function mouseup () {
-        $document.unbind('mousemove', mousemove);
-        $document.unbind('mouseup', mouseup);
+    function onMouseUp () {
+        $document.off('mousemove', onMouseMove);
+        $document.off('mouseup', onMouseUp);
     }
-
 
 }
