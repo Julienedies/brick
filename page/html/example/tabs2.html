@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ic-tabs2</title>
+    <link rel="import" href="../include/head.html?__inline">
+</head>
+<body>
+<div id="wrapper">
+
+    <link rel="import" href="../include/header.html?__inline">
+
+    <main>
+        <pre>
+            options:
+        </pre>
+
+        <section>
+            <h3 class="tabs is-medium is-boxed" ic-tabs="a" ic-tab-$="li" ic-tabc-$=">div" ic-tab-cla="is-active">
+                <ul>
+                    <li><a>标签1</a></li>
+                    <li><a>标签2</a></li>
+                    <li><a>标签3</a></li>
+                </ul>
+            </h3>
+            <div class="box" ic-tabc="a">
+                <div ic-tab-con>1</div>
+                <div ic-tab-con>2</div>
+                <div ic-tab-con>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <link rel="import" href="../include/footer.html?__inline">
+
+</div>
+
+<link rel="import" href="../include/foot.html?__inline">
+<script>
+    //事件处理
+    $('[ic-tabs=a]').on('ic-tabs.change', function(e, msg){
+        console.log('ic-tabs.change');
+    });
+</script>
+<link rel="import" href="../include/other.html?__inline">
+</body>
+</html>
