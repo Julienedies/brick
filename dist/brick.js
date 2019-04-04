@@ -2,8 +2,8 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.8.7
- * 3/7/2019, 3:33:23 PM
+ * V0.8.8
+ * 3/31/2019, 11:40:12 AM
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -135,10 +135,12 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icRender = function (tpl, model
   var tplFn = _core_export__WEBPACK_IMPORTED_MODULE_1__["default"].getTpl(tpl);
   if (!tplFn) return console.info('not find tpl: ' + tpl); // 如果数据模型不是对象类型,则对其包装
 
-  if (_core_export__WEBPACK_IMPORTED_MODULE_1__["default"].get('render.wrapModel') || Array.isArray(model)) {
-    model = {
-      model: model
-    };
+  if (!model.model) {
+    if (_core_export__WEBPACK_IMPORTED_MODULE_1__["default"].get('render.wrapModel') || Array.isArray(model)) {
+      model = {
+        model: model
+      };
+    }
   }
 
   var html = tplFn(model);
@@ -159,13 +161,15 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icCompile = function (is_start_
 };
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icParseProperty = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icPp = function (name, isLiteral) {
-  //console.info('icParseProperty => ', name);
+  console.info('icParseProperty name is ', name);
   var match; // js直接量  <div ic-tpl-init="{}">  object {}
 
-  if (match = name.match(/^\s*(([{\[])(.+)[}\]])\s*$/)) {
-    //console.info(match);
+  if (match = name.match(/^\s*(([{\[])(.*)[}\]])\s*$/)) {
+    console.info(match);
+
     try {
-      return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
+      //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
+      return eval("(".concat(match[1], ")"));
     } catch (e) {
       console.error(e);
     }
@@ -831,10 +835,12 @@ extend(_F.prototype, {
 
     var html; // 如果数据模型不是对象类型,则对其包装
 
-    if (_core_export__WEBPACK_IMPORTED_MODULE_0__["default"].get('render.wrapModel') || Array.isArray(model)) {
-      model = {
-        model: model
-      };
+    if (!model.model) {
+      if (_core_export__WEBPACK_IMPORTED_MODULE_0__["default"].get('render.wrapModel') || Array.isArray(model)) {
+        model = {
+          model: model
+        };
+      }
     }
 
     $tpl_dom = $elm.filter(selector); // case: <div ic-ctrl="a" ic-tpl="a"></div>
@@ -1111,6 +1117,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'event',
   selfExec: true,
   once: true,
   fn: function fn() {
@@ -1126,16 +1133,21 @@ __webpack_require__.r(__webpack_exports__);
 
     lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(events, function (event, i, list) {
       var target = targets[i];
-      if (event == 'click') event = eventAction;
+      if (event === 'click') event = eventAction;
       $doc.on(event, target, _call);
     });
 
     function _call(e) {
       var th = jquery__WEBPACK_IMPORTED_MODULE_1___default()(this);
       var type = e.type;
-      var fn = th.attr('ic-' + type);
-      fn = th.icParseProperty(fn);
-      return fn.apply(this, [e]);
+      var val = th.attr('ic-' + type);
+      var fn = th.icParseProperty(val);
+
+      if (fn) {
+        return fn.apply(this, [e]);
+      } else {
+        console.error("".concat(val, " is undefined."));
+      }
     }
   }
 });
@@ -1183,7 +1195,10 @@ __webpack_require__.r(__webpack_exports__);
 
       setTimeout(function () {
         var dob = $th.icParseProperty2('ic-tpl-init');
-        dob && $th.icRender(name, dob);
+        console.info('ic-tpl-init', dob);
+        dob && $th.icRender(name, {
+          model: dob
+        });
       }, 300);
       __tpl[name] = Object(_createRender__WEBPACK_IMPORTED_MODULE_2__["default"])(this);
       $th.attr('ic-tpl-name', name);
@@ -1495,7 +1510,7 @@ function parser(node) {
       }
 
       if (/-init$/.test(_name)) {
-        elm.before('\r\n<% var ' + _value.replace(/;(?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
+        elm.before('\r\n<% var ' + _value.replace(/[;](?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
         elm.removeAttr(_name);
         continue;
       }
@@ -2716,41 +2731,47 @@ __webpack_require__.r(__webpack_exports__);
   selfExec: true,
   once: true,
   fn: function fn() {
-    var on_show_cla = 'on-ic-popup-show';
+    var cla = 'active';
+    var onShowCla = 'on-ic-popup-show';
     var $body = jquery__WEBPACK_IMPORTED_MODULE_0___default()(document.body);
-
-    function on_show($popup) {
-      $popup.on('scroll', on_scroll);
-      $popup.show();
-      $popup.scrollTop(0);
-      $body.addClass(on_show_cla);
-    }
-
-    function on_hide($popup) {
-      $popup.off('scroll', on_scroll);
-      $popup.hide();
-      $popup[0].scrollTop = 0;
-      $body.removeClass(on_show_cla);
-    }
-
-    function on_scroll(e) {
-      e.stopPropagation();
-    } // jquery接口
-
+    var count = 0; // jquery接口
 
     jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icPopup = jquery__WEBPACK_IMPORTED_MODULE_0___default.a.fn.icPopup || function (opt) {
-      opt ? on_show(this) : on_hide(this);
+      opt ? show(this) : hide(this);
     };
 
     $body.on('click', '[ic-popup-target]', function (e) {
       var name = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('ic-popup-target');
       var $popup = jquery__WEBPACK_IMPORTED_MODULE_0___default()('[ic-popup=?]'.replace('?', name));
-      on_show($popup); //$body.scrollTop() + $body.height()
+      show($popup);
     }).on('click', '[ic-popup-close]', function (e) {
       var name = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('ic-popup-close');
       var $popup = name ? jquery__WEBPACK_IMPORTED_MODULE_0___default()('[ic-popup=?]'.replace('?', name)) : jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).closest('[ic-popup]');
-      on_hide($popup);
+      hide($popup);
     });
+
+    function show($popup) {
+      $popup.on('scroll', onScroll);
+      $popup.addClass(cla);
+      $popup.scrollTop(0);
+      count += 1;
+      $body.addClass(onShowCla);
+    }
+
+    function hide($popup) {
+      $popup.off('scroll', onScroll);
+      $popup.removeClass(cla);
+      $popup[0].scrollTop = 0;
+      count -= 1;
+
+      if (count < 1) {
+        $body.removeClass(onShowCla);
+      }
+    }
+
+    function onScroll(e) {
+      e.stopPropagation();
+    }
   }
 });
 

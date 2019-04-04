@@ -64,7 +64,7 @@ export default function parser(node) {
             }
 
             if (/-init$/.test(name)) {
-                elm.before('\r\n<% var ' + value.replace(/;(?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
+                elm.before('\r\n<% var ' + value.replace(/[;](?=\s*[_\w]+\s*=)/g, ';var ') + ' %>\r\n');
                 elm.removeAttr(name);
                 continue;
             }

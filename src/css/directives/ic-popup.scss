@@ -7,14 +7,22 @@
 }
 
 [ic-popup]{
-  display: none;
+  display: block!important;
   position: fixed;
-  z-index: 10001;
   top:0;
   bottom:0;
-  left:0;
+  left:100%;
   right:0;
+  z-index: 10001;
+  pointer-events: none;
   overflow-y: scroll;
   background: #fff;
+  opacity:0;
+  transition: all 0.5s;
+  &.active{
+    left: 0;
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 

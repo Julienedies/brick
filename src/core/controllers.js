@@ -89,8 +89,10 @@ extend(_F.prototype, {
         let $tpl_dom; // 有ic-tpl属性的dom元素
         let html;
         // 如果数据模型不是对象类型,则对其包装
-        if (brick.get('render.wrapModel') || Array.isArray(model)) {
-            model = {model: model};
+        if(!model.model){
+            if (brick.get('render.wrapModel') || Array.isArray(model)) {
+                model = {model: model};
+            }
         }
         $tpl_dom = $elm.filter(selector);  // case: <div ic-ctrl="a" ic-tpl="a"></div>
         $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);

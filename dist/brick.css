@@ -2,8 +2,8 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.8.7
- * 3/7/2019, 3:33:23 PM
+ * V0.8.8
+ * 3/31/2019, 11:40:12 AM
  */
 @charset "UTF-8";
 [ic-viewer] [ic-viewer-item] {
@@ -116,15 +116,22 @@ for animating
   display: none; }
 
 [ic-popup] {
-  display: none;
+  display: block !important;
   position: fixed;
-  z-index: 10001;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 100%;
   right: 0;
+  z-index: 10001;
+  pointer-events: none;
   overflow-y: scroll;
-  background: #fff; }
+  background: #fff;
+  opacity: 0;
+  transition: all 0.5s; }
+  [ic-popup].active {
+    left: 0;
+    opacity: 1;
+    pointer-events: auto; }
 
 [ic-dropdown] {
   position: relative; }

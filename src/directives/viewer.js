@@ -6,7 +6,7 @@ import $ from 'jquery'
 import _ from 'lodash'
 import brick from '../core/export'
 import directives from '../core/directives.js'
-import viewer_html from '../tpl/viewer.html'
+import viewerTpl from '../tpl/viewer.html'
 
 const icViewer = {
     _show: function(src, index){
@@ -34,7 +34,7 @@ const icViewer = {
         this.on_show = options.on_show || function(){};
         if (this.$elm) return icViewer;
         var $elm = $('#ic-viewer-box-wrap');
-        $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewer_html).appendTo($(document.body));
+        $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
         this.$img = this.$elm.find('#ic-viewer-box > img');
         this.$info = this.$elm.find('#ic-viewer-info');
         this.$autoplay = this.$elm.find('#ic-viewer-autoplay');

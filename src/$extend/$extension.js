@@ -17,9 +17,12 @@ $.fn.icRender = function (tpl, model, callback) {
     let tplFn = brick.getTpl(tpl);
     if (!tplFn) return console.info('not find tpl: ' + tpl);
     // 如果数据模型不是对象类型,则对其包装
-    if (brick.get('render.wrapModel') || Array.isArray(model)) {
-        model = {model: model};
+    if(!model.model){
+        if (brick.get('render.wrapModel') || Array.isArray(model)) {
+            model = {model: model};
+        }
     }
+
     let html = tplFn(model);
     return this.each(function () {
         let $th = $(this);
@@ -38,13 +41,14 @@ $.fn.icCompile = function (is_start_form_children) {
 };
 
 $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
-    //console.info('icParseProperty => ', name);
+    console.info('icParseProperty name is ', name);
     let match;
     // js直接量  <div ic-tpl-init="{}">  object {}
-    if (match = name.match(/^\s*(([{\[])(.+)[}\]])\s*$/)) {
-        //console.info(match);
+    if (match = name.match(/^\s*(([{\[])(.*)[}\]])\s*$/)) {
+        console.info(match);
         try {
-            return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
+            //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
+            return eval(`(${match[1]})`);
         } catch (e) {
             console.error(e);
         }

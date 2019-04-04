@@ -10,42 +10,49 @@ export default {
     once: true,
     fn: function () {
 
-        var on_show_cla = 'on-ic-popup-show';
-        var $body = $(document.body);
-
-        function on_show ($popup) {
-            $popup.on('scroll', on_scroll);
-            $popup.show();
-            $popup.scrollTop(0);
-            $body.addClass(on_show_cla);
-        }
-
-        function on_hide ($popup) {
-            $popup.off('scroll', on_scroll);
-            $popup.hide();
-            $popup[0].scrollTop = 0;
-            $body.removeClass(on_show_cla);
-        }
-
-        function on_scroll (e) {
-            e.stopPropagation();
-        }
+        let cla = 'active'
+        let onShowCla = 'on-ic-popup-show';
+        let $body = $(document.body);
+        let count = 0;
 
         // jquery接口
         $.fn.icPopup = $.fn.icPopup || function (opt) {
-            opt ? on_show(this) : on_hide(this);
+            opt ? show(this) : hide(this);
         };
 
-        $body.on('click', '[ic-popup-target]', function (e) {
-            var name = $(this).attr('ic-popup-target');
-            var $popup = $('[ic-popup=?]'.replace('?', name));
-            on_show($popup);
-            //$body.scrollTop() + $body.height()
-        })
+        $body
+            .on('click', '[ic-popup-target]', function (e) {
+                let name = $(this).attr('ic-popup-target');
+                let $popup = $('[ic-popup=?]'.replace('?', name));
+                show($popup);
+            })
             .on('click', '[ic-popup-close]', function (e) {
-                var name = $(this).attr('ic-popup-close');
-                var $popup = name ? $('[ic-popup=?]'.replace('?', name)) : $(this).closest('[ic-popup]');
-                on_hide($popup);
+                let name = $(this).attr('ic-popup-close');
+                let $popup = name ? $('[ic-popup=?]'.replace('?', name)) : $(this).closest('[ic-popup]');
+                hide($popup);
             });
+
+        function show ($popup) {
+            $popup.on('scroll', onScroll);
+            $popup.addClass(cla)
+            $popup.scrollTop(0);
+            count += 1;
+            $body.addClass(onShowCla);
+        }
+
+        function hide ($popup) {
+            $popup.off('scroll', onScroll);
+            $popup.removeClass(cla)
+            $popup[0].scrollTop = 0;
+            count -= 1;
+            if(count < 1){
+                $body.removeClass(onShowCla);
+            }
+        }
+
+        function onScroll (e) {
+            e.stopPropagation();
+        }
+
     }
 }
