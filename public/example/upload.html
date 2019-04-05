@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>upload</title>
+    <meta name="description" content="">
+<link rel="stylesheet" href="/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="/public/css/common/index.css">
+<link rel="stylesheet" href="/public/js/brick/brick.css">
+
+</head>
+<body>
+<div class="column">
+    <div ic-ctrl="uploadCtrl">
+        <div ic-upload="img[]" ic-upload-action="http://localhost:3300/upload" ic-upload-before="before" ic-upload-done="done">
+            <!-- field -->
+            <div class="field">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="img[]" multiple>
+                    <span class="file-cta">
+                          <span class="file-label">
+                            选择上传文件…
+                          </span>
+                    </span>
+                </label>
+                <div class="control">
+                    <div class="box" placeholder="files name" ic-upload-preview></div>
+                </div>
+                <p class="help">This is a help text</p>
+            </div>
+            <!-- field -->
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" x-ic-upload-confirm>Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-text">Cancel</button>
+                </div>
+            </div>
+            <!-- end -->
+        </div>
+    </div>
+</div>
+<script src="/public/js/vendor/lodash.js"></script>
+<script src="/public/js/vendor/jquery.js"></script>
+<script src="/public/js/brick/brick.js"></script>
+<script>
+    setTimeout( function(){
+        brick.bootstrap();
+    }, 30)
+</script>
+<script>
+    brick.reg('uploadCtrl', function (scope) {
+
+
+    })
+</script>
+</body>
+</html>

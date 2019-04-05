@@ -4,6 +4,6 @@
 
 module.exports = {
     mode: 'development',
-    devtool: '#cheap-module-source-map',  // 开发时推荐: cheap-module-eval-source-map
+    devtool: 'cheap-module-eval-source-map',  // 开发时推荐: cheap-module-eval-source-map
     publicPath: '',
 }

@@ -16,11 +16,11 @@ export default function ($elm, attrs) {
      * ic-submit-disabled
      */
 
-    var debug = brick.get('debug');
-    var eventAction = brick.get('event.action');
-    var customRule = brick.get('ic-form.rule');
+    let debug = brick.get('debug');
+    let eventAction = brick.get('event.action');
+    let customRule = brick.get('ic-form.rule');
 
-    var presetRule = {
+    let presetRule = {
         id: /[\w_]{4,18}/,
         required: /.+/img,
         phone: /^\d[\d-]{5,16}$/,
@@ -34,7 +34,7 @@ export default function ($elm, attrs) {
         _.extend(presetRule, customRule);
     }
 
-    var keys = _.keys(presetRule);
+    let keys = _.keys(presetRule);
 
     keys.sort(function (a, b) {
         return b.length - a.length;
@@ -55,9 +55,9 @@ export default function ($elm, attrs) {
      */
     function compileRule (rule, $elm) {
 
-        var v;
+        let v;
         //替换预设的规则标识符
-        for (var i in keys) {
+        for (let i in keys) {
             i = keys[i];
             v = presetRule[i];
             rule = rule.replace(new RegExp(i + '(?![^|&])', 'g'), function (m) {
@@ -88,21 +88,21 @@ export default function ($elm, attrs) {
 
         tips = tips || 'error';
 
-        var fns = {};
+        let fns = {};
 
         rules = rules.replace(/(?:^|\|\||\&\&)(\w+?)\(\)(?=(?:\|\||\&\&|$))/g, function (m, $1) {
-            var fn = presetRule[$1] || $field.icParseProperty($1);
+            let fn = presetRule[$1] || $field.icParseProperty($1);
             fns[$1] = fn;
             return m.replace($1, 'fns.' + $1).replace('()', '("?")');
         });
 
-        var _script = rules.replace(/\.\w+\("\?"\)/g, function (m) {
+        let _script = rules.replace(/\.\w+\("\?"\)/g, function (m) {
             return m.replace('?', val);
         });
 
         debug && console.info(_script);
 
-        var result;
+        let result;
 
         try {
             result = eval(_script);
@@ -146,31 +146,31 @@ export default function ($elm, attrs) {
     function defaultCall () {
     }
 
-    var fields = {};
+    let fields = {};
 
     // 执行指令
-    var namespace = $elm.attr('ic-form');
-    var $fields = $elm.find('[ic-form-field]').not($elm.find('[ic-form] [ic-form-field]'));
-    var $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
-    var $loading = $elm.find('[ic-role-loading]');
+    let namespace = $elm.attr('ic-form');
+    let $fields = $elm.find('[ic-form-field]').not($elm.find('[ic-form] [ic-form-field]'));
+    let $submit = $elm.find('[ic-form-submit]').not($elm.find('[ic-form] [ic-form-submit]'));
+    let $loading = $elm.find('[ic-role-loading]');
 
-    var err_cla = brick.get('cla.error') || 'error';
+    let err_cla = brick.get('cla.error') || 'error';
 
     // 对每个字段dom绑定事件监听
     $fields.each(function (i) {
 
-        var $th = $(this);
-        var name = $th.attr('ic-form-field');
-        var submitName = $th.attr('name') || name;
-        var rules = $th.attr('ic-field-rule');
+        let $th = $(this);
+        let name = $th.attr('ic-form-field');
+        let submitName = $th.attr('name') || name;
+        let rules = $th.attr('ic-field-rule');
 
         if (!rules) return;
         //if ($th.attr('type') === 'hidden') return;
 
-        var errTips = $th.attr('ic-field-err-tip');
-        var $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
-        var $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
-        var foucsTip = $errTip.text();
+        let errTips = $th.attr('ic-field-err-tip');
+        let $fieldBox = $elm.find('[ic-form-field-container="?"]'.replace('?', name));
+        let $errTip = $elm.find('[ic-form-field-err-tip="?"]'.replace('?', name));
+        let foucsTip = $errTip.text();
 
         rules = compileRule(rules, $elm);
 
@@ -219,12 +219,12 @@ export default function ($elm, attrs) {
         // 没有验证规则的字段
         $fields.filter(':not("[ic-field-rule]")').each(function (i) {
 
-            var $th = $(this);
-            var tag = this.tagName;
-            var type = $th.attr('type');
-            var name = $th.attr('ic-form-field');
-            var submitName = $th.attr('name') || name;
-            var val;
+            let $th = $(this);
+            let tag = this.tagName;
+            let type = $th.attr('type');
+            let name = $th.attr('ic-form-field');
+            let submitName = $th.attr('name') || name;
+            let val;
 
             if (/^input|select|textarea$/img.test(tag)) {
 
@@ -244,7 +244,7 @@ export default function ($elm, attrs) {
 
             fields[submitName] = val;
 
-            /*var prev = fields[submitName];true
+            /*let prev = fields[submitName];true
             if (prev) {
                 prev =  ? prev : [prev];
                 prev.push(val);
@@ -300,7 +300,7 @@ export default function ($elm, attrs) {
             return action.apply($submit[0], [fields]);
         }
 
-        var data = before.apply($submit[0], [fields]);
+        let data = before.apply($submit[0], [fields]);
         if (data === false) return;
 
         if ($loading.length) {
@@ -335,17 +335,17 @@ export default function ($elm, attrs) {
     }
 
     //提交
-    var domain = brick.get('ajax.domain') || '';
-    var method = $submit.attr('ic-submit-method') || 'post';
-    var action = $submit.attr('ic-submit-action');
-    var before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
-    var failed = $submit.icParseProperty2('ic-submit-on-fail') || defaultCall;
-    var done = $submit.icParseProperty2('ic-submit-on-done') || defaultCall;
-    var always = $submit.icParseProperty2('ic-submit-on-always') || defaultCall;
+    let domain = brick.get('ajax.domain') || '';
+    let method = $submit.attr('ic-submit-method') || 'post';
+    let action = $submit.attr('ic-submit-action');
+    let before = $submit.icParseProperty2('ic-submit-before') || defaultCall;
+    let failed = $submit.icParseProperty2('ic-submit-on-fail') || defaultCall;
+    let done = $submit.icParseProperty2('ic-submit-on-done') || defaultCall;
+    let always = $submit.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-    var dataType = $submit.attr('ic-submit-data-type') || 'json';
+    let dataType = $submit.attr('ic-submit-data-type') || 'json';
 
-    var submitType = (function () {
+    let submitType = (function () {
         //函数调用
         if (/[\w_.]+\(\)\;?$/i.test(action)) {
             action = $submit.icParseProperty(action.replace(/[();]/g, ''));

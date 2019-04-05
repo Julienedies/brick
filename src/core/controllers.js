@@ -33,6 +33,10 @@ extend(_F.prototype, {
     get: function (key) {
         return this[key];
     },
+    // window.confirm 包装
+    confirm(msg){
+        return window.confirm(msg)
+    },
     /**
      * 用于触发事件
      * @param e {String} 事件名

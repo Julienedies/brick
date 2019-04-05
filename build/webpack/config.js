@@ -74,6 +74,9 @@ ${ (new Date).toLocaleString() }`,
         onEnd: [
             {
                 copy: [ { source: './dist/*', destination: 'page/js/brick/' }]
+            },
+            {
+                copy: [ { source: './dist/*', destination: '../shandy/node_modules/@julienedies/brick/dist/' }]
             }
         ]
     }),

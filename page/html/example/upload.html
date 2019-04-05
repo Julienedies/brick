@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>upload</title>
+    <link rel="import" href="../include/head.html?__inline">
+</head>
+<body>
+<div class="column">
+    <div ic-ctrl="uploadCtrl">
+        <div ic-upload="img" ic-upload-action="https://graph.baidu.com/upload" ic-upload-before="before" ic-upload-on-done="done">
+            <!-- field -->
+            <div class="field">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="img" multiple>
+                    <span class="file-cta">
+                          <span class="file-label">
+                            选择上传文件…
+                          </span>
+                    </span>
+                </label>
+                <div class="control">
+                    <div class="box" placeholder="files name" id="preview"></div>
+                </div>
+                <p class="help">This is a help text</p>
+            </div>
+            <!-- field -->
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" x-ic-upload-confirm>Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-text">Cancel</button>
+                </div>
+            </div>
+            <!-- end -->
+        </div>
+    </div>
+</div>
+<link rel="import" href="../include/foot.html?__inline">
+<script>
+    brick.reg('uploadCtrl', function (scope) {
+
+        scope.before = function(formData) {
+            console.log(formData)
+        }
+
+        scope.done = function (data) {
+            console.log(data)
+            $('#preview').text(data)
+        }
+
+    })
+</script>
+</body>
+</html>

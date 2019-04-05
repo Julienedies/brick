@@ -59,21 +59,21 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
     if (match = name.match(/^\s(\d+)\s*$/)) {
         return match[1];
     }
+    // 按直接量解析, 不通过scope链进行查找
+    if (isLiteral) return name;  
 
-    if (isLiteral) return name;  //按直接量解析, 不通过scope链进行查找
-
-    var params = name.split(':');
+    let params = name.split(':');
     name = params.shift();
 
     // 从控制器scope里获取或者全局window
-    var $ctrl = this.closest('[ic-ctrl]');
-    var ctrl = $ctrl.attr('ic-ctrl');
-    //var namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : {};
-    var namespace = ctrl ? brick.controllers.get(ctrl) : {};
+    let $ctrl = this.closest('[ic-ctrl]');
+    let ctrl = $ctrl.attr('ic-ctrl');
+    //let namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : {};
+    let namespace = ctrl ? brick.controllers.get(ctrl) : {};
 
     function fx (root, chain) {
-        var k = chain.shift();
-        var v = root && root[k];
+        let k = chain.shift();
+        let v = root && root[k];
         if (v === undefined) return;
         if (chain.length) {
             return fx(v, chain);
@@ -81,21 +81,24 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         return v;
     }
 
-    var v = fx(namespace, name.split('.'));
+    let v = fx(namespace, name.split('.'));
 
     v = v || fx(window, name.split('.'));
 
-    //console.info('icParseProperty => ' + name + ' => ', v);
-
+    // 如果有参数, 譬如: 'confirm:确认删除', 返回一个包装函数
     if (typeof v == 'function' && params.length) {
-        return function () {
-            var that = this;
-            var args = [].slice.call(arguments);
-            var p;
+        return function (arg) {
+            let that = this;
+            let args = [].slice.call(arguments);
+            let p;
             while (p = params.shift()) {
                 args.push(p);
             }
-            return v.apply(that, args);   //window.confirm通过apply方式调用会出错,暂时不处理
+            // 如果arg is undefined, 则args[0] === undefined, 需要删除args[0]
+            arg === undefined && args.shift()
+            // window.confirm通过apply方式调用会出错,暂时不处理
+            // confirm问题通过在scope原型上添加confirm对window.confirm进行包装处理
+            return v.apply(that, args);
         };
     }
 
@@ -110,7 +113,7 @@ $.fn.icParseProperty2 = $.fn.icPp2 = function (name, isLiteral) {
 };
 
 $.fn.icTabs = function (options) {
-    var active = options.active;
+    let active = options.active;
     active && this.attr('ic-tab-active', active);
     return this;
 };
@@ -137,8 +140,8 @@ $.fn.icDialog = function (options, callback) {
         return this;
     }
 
-    var that = this;
-    var tpl = that.attr('ic-tpl-name');
+    let that = this;
+    let tpl = that.attr('ic-tpl-name');
 
     callback && this.one('ic-dialog.close', callback);
 
@@ -166,7 +169,7 @@ $.fn.icDialog = function (options, callback) {
 };
 
 $.icDialog = function (msg, callback) {
-    var options = _.isObject(msg) ? _.extend({desc: '', title: ''}, msg) : {desc: msg, title: ''};
+    let options = _.isObject(msg) ? _.extend({desc: '', title: ''}, msg) : {desc: msg, title: ''};
     $('[ic-dialog]:first').icDialog(options, callback);
 };
 
@@ -177,8 +180,8 @@ $.fn.icPrompt = function (options) {
         return this;
     }
 
-    var that = this;
-    var tpl = that.attr('ic-tpl-name');
+    let that = this;
+    let tpl = that.attr('ic-tpl-name');
 
     clearTimeout(that.data('ic-prompt-timer'));
 
@@ -199,7 +202,7 @@ $.fn.icPrompt = function (options) {
         that.icAniIn(21, function () {
             that.trigger('ic-prompt.show');
 
-            var timer = setTimeout(function () {
+            let timer = setTimeout(function () {
                 that.icAniOut();
             }, 2400);
 
@@ -213,7 +216,7 @@ $.fn.icPrompt = function (options) {
 };
 
 $.icPrompt = function (msg) {
-    var options = _.isObject(msg) ? msg : {desc: msg};
+    let options = _.isObject(msg) ? msg : {desc: msg};
     $('[ic-prompt]:first').icPrompt(options);
 };
 
@@ -230,7 +233,7 @@ $.fn.icEnterPress = function (call) {
 
         call = $.proxy(call, this);
 
-        var fn = function (e) {
+        let fn = function (e) {
 
             if (e.which == 13) {
                 //console.info('ic-enter-press emit.');
@@ -251,10 +254,10 @@ $.fn.icEnterPress = function (call) {
 
 //定时器
 $.fn.icTimer = function () {
-    var th = this;
-    var count = th.attr('ic-timer-count') * 1;
+    let th = this;
+    let count = th.attr('ic-timer-count') * 1;
 
-    var timer = setInterval(function () {
+    let timer = setInterval(function () {
         if (count--) {
             th.text(count);
         } else {
@@ -267,15 +270,15 @@ $.fn.icTimer = function () {
 };
 
 // 操作提示
-var tipSize = 0;
+let tipSize = 0;
 $.fn.tips = function (parent) {
     ++tipSize;
-    var $parent = $(parent || 'body');
-    var w = $parent.innerWidth() * 0.4 + 'px';
-    var h;
-    var top;
-    var left;
-    var wraper = $('<div class="tipsBox"></div>');
+    let $parent = $(parent || 'body');
+    let w = $parent.innerWidth() * 0.4 + 'px';
+    let h;
+    let top;
+    let left;
+    let wraper = $('<div class="tipsBox"></div>');
 
     this.addClass('tips1').css({
         'width': w
@@ -319,23 +322,23 @@ $.tips = function (massge) {
 //设置loading
 (function ($) {
 
-    var loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
+    let loading = '<span ic-loader role="_loading_"><svg width="16" height="16" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M 150,0 a 150,150 0 0,1 106.066,256.066 l -35.355,-35.355 a -100,-100 0 0,0 -70.711,-170.711 z" fill="#3d7fe6"><animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 150 150" to="360 150 150" begin="0s" dur="1s" fill="freeze" repeatCount="indefinite" /></path></svg></span>';
 
     $.fn.icSetLoading = $.fn.setLoading = function (option) {
 
-        var _loading = option && option.loading;
+        let _loading = option && option.loading;
 
         this.icClearLoading();
 
         return this.each(function () {
             //this.parent().css({position:'relative'});
-            var $th = $(this);
-            var w = $th.outerWidth();
-            var h = $th.outerHeight();
-            var offset = $th.offset();
-            var top = offset.top;
-            var left = offset.left;
-            var $loading = $(_loading || loading).css({
+            let $th = $(this);
+            let w = $th.outerWidth();
+            let h = $th.outerHeight();
+            let offset = $th.offset();
+            let top = offset.top;
+            let left = offset.left;
+            let $loading = $(_loading || loading).css({
                 width: w,
                 height: h,
                 position: 'absolute',
@@ -359,8 +362,8 @@ $.tips = function (massge) {
 $.fn.icClearLoading = $.fn.clearLoading = function () {
 
     return this.each(function () {
-        var $th = $(this);
-        var $loading = $th.data('_ic-role-loading');
+        let $th = $(this);
+        let $loading = $th.data('_ic-role-loading');
         $loading && $loading.remove();
         $th.removeData('_ic-role-loading');
         $th.css({opacity: '1'});

@@ -38,16 +38,17 @@ export default function createRender (root) {
             //$3 = $3.replace(/^(?:"|')|(?:"|')$/g,'');
             return ' <% if(?3){ %> ?2 <% } %> '.replace('?3', $3).replace('?2', $1 + $2);
         })
-        //实现ic-has-[prop]指令   处理两种情况=>  1: ic-has-checked  2: ic-has-tab-checked
+        // 实现ic-has-[prop]指令   处理两种情况=>  1: ic-has-checked  2: ic-has-tab-checked
         .replace(/\bic-has-([-_\w]+)\s*=\s*(["])((?:[^"]|\\["])+)\2/img, function (m, $1, $2, $3) {
             //$1 => 属性名   $3 => 表达式值
             console.log($1);
             console.log($3);
-            $1 = /^checked|disabled|selected|enabled$/.test($1) ? $1 : 'ic-' + $1; //处理两种情况=>  1: ic-has-checked  2: ic-has-tab-checked
+            // 处理两种情况=>  1: ic-has-checked  2: ic-has-tab-checked
+            // 第二次修正:  统一处理ic-has-checked, ic-has-tab-checked两种情况; 使用ic-has-ic-tab-checked替换, 不再额外添加ic前缀
+            // $1 = /^checked|disabled|selected|enabled$/.test($1) ? $1 : 'ic-' + $1;
             return ' <% if(?3){ %> ?1 <% } %> '
                 .replace('?3', $3)
                 .replace('?1', $1);
-            //.replace('?1',$1 + '=' + ('"<%= ? %>"'.replace('?', $3)));
         })
         .replace(/&amp;&amp;/g, '&&');
 

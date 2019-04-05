@@ -12,8 +12,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --config ./build/webpack/index.js --watch",
     "pro": "cross-env NODE_ENV=production webpack --config ./build/webpack/index.js",
-    "page:dev": "fis server start --type node --port 3001 --root ./ && fis release -r ./page  -f ./build/fis/page.js -d local -w",
-    "page:pro": "fis release -r ./page  -f ./build/fis/page.js -d local -D"
+    "dev:page": "fis server start --type node --port 3001 --root ./ && fis release -r ./page  -f ./build/fis/page.js -d local -w",
+    "pro:page": "fis release -r ./page  -f ./build/fis/page.js -d local -D"
   },
   "keywords": [
     "angular",

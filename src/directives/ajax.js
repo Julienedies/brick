@@ -6,42 +6,43 @@ import $ from 'jquery'
 import brick from '../core/export'
 
 export default {
+    name: 'ic-ajax',
     selfExec: true,
     once: true,
     fn: function () {
 
-        var eventAction = brick.get('event.action');
+        let eventAction = brick.get('event.action');
 
         function call (e) {
 
-            var that = this;
+            let that = this;
 
             if (this.hasAttribute('ic-ajax-disabled')) return;
 
-            var $elm = $(this);
-            var name = $elm.attr('ic-ajax');
+            let $elm = $(this);
+            let name = $elm.attr('ic-ajax');
 
-            var defaultCall = function () {
+            let defaultCall = function () {
                 //console.log(arguments)
             };
 
-            var before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
+            let before = $elm.icParseProperty2('ic-submit-before') || defaultCall;
 
-            var data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
-            var _data = before.call(that, data);
+            let data = $elm.data('ic-submit-data') || $elm.attr('ic-submit-data');
+            let _data = before.call(that, data);
             if (_data === false) return;
             data = _data || data;
 
-            var domain = brick.get('ajax.domain') || '';
-            var url = domain + $elm.attr('ic-submit-action');
-            var dataType = $elm.attr('ic-submit-data-type') || 'json';
-            var method = $elm.attr('ic-submit-method') || 'post';
+            let domain = brick.get('ajax.domain') || '';
+            let url = domain + $elm.attr('ic-submit-action');
+            let dataType = $elm.attr('ic-submit-data-type') || 'json';
+            let method = $elm.attr('ic-submit-method') || 'post';
 
-            var failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
-            var done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
-            var always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
+            let failed = $elm.icParseProperty2('ic-submit-on-fail') || defaultCall;
+            let done = $elm.icParseProperty2('ic-submit-on-done') || defaultCall;
+            let always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
-            var $loading = $('[ic-role-loading=?]'.replace('?', name || +(new Date)));
+            let $loading = $('[ic-role-loading=?]'.replace('?', name || +(new Date)));
             $loading.length ? $loading.show() && $elm.hide() : $elm.setLoading();
 
             $elm.attr('ic-ajax-disabled', true);
@@ -67,7 +68,7 @@ export default {
             });
         }
 
-        var $doc = $(document.body);
+        let $doc = $(document.body);
         $doc.on(eventAction, '[ic-ajax]:not([ic-ajax-enter])', call);
         $doc.on('ic-ajax', '[ic-ajax]', call);
 

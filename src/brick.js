@@ -30,6 +30,7 @@ import slider from './directives/slider.js'
 import pagination from './directives/pagination.js'
 import drag from './directives/drag.js'
 import popup from './directives/popup.js'
+import upload from './directives/upload.js'
 import './directives/viewer.js'
 import './directives/collection.js'
 
@@ -59,7 +60,7 @@ directives.reg('ic-slider', slider)
 directives.reg('ic-pagination', pagination)
 directives.add('ic-drag-view', drag)
 directives.reg('ic-popup', popup)
-
+directives.reg('ic-upload', upload)
 //import(/* webpackChunkName: "directives/datepicker" */'./directives/datepicker.js')
 
 // bootstrap

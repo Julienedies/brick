@@ -2,7 +2,8 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>brick指令定义示例</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ic-tabs2</title>
     <meta name="description" content="">
 <link rel="stylesheet" href="/public/css/vendor/bulma.css">
 <link rel="stylesheet" href="/public/css/common/index.css">
@@ -10,18 +11,36 @@
 
 </head>
 <body>
+<div id="wrapper">
 
-    <div id="page-wraper">
-
-        <header>
+    <header>
 
 </header>
 
-        <main>
+    <main>
+        <pre>
+            options:
+        </pre>
 
-        </main>
+        <section>
+            <h3 class="tabs is-medium is-boxed" ic-tabs="a" ic-tab-$="li" ic-tabc-$=">div" ic-tab-cla="is-active">
+                <ul>
+                    <li><a>标签1</a></li>
+                    <li><a>标签2</a></li>
+                    <li><a>标签3</a></li>
+                </ul>
+            </h3>
+            <div class="box" ic-tabc="a">
+                <div ic-tab-con>1</div>
+                <div ic-tab-con>2</div>
+                <div ic-tab-con>
+                </div>
+            </div>
+        </section>
 
-        <footer>
+    </main>
+
+    <footer>
 
 </footer>
 
@@ -29,9 +48,9 @@
 
 
 
-    </div>
+</div>
 
-    <script src="/public/js/vendor/lodash.js"></script>
+<script src="/public/js/vendor/lodash.js"></script>
 <script src="/public/js/vendor/jquery.js"></script>
 <script src="/public/js/brick/brick.js"></script>
 <script>
@@ -40,9 +59,11 @@
     }, 30)
 </script>
 <script>
-
+    //事件处理
+    $('[ic-tabs=a]').on('ic-tabs.change', function(e, msg){
+        console.log('ic-tabs.change');
+    });
 </script>
-
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
