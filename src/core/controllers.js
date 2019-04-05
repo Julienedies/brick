@@ -145,7 +145,7 @@ export default {
     exec: function (name, parent, $elm) {
 
         let ctrl = _ctrls[name];
-        if (!ctrl) throw new Error('not find controller ' + name);
+        if (!ctrl) return console.info('not find controller ' + name);
 
         let conf = ctrl.conf;
         let scope;

@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.9
- * 4/5/2019, 12:04:50 AM
+ * 4/5/2019, 8:09:54 AM
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -899,7 +899,7 @@ function f(name, o) {
    */
   exec: function exec(name, parent, $elm) {
     var ctrl = _ctrls[name];
-    if (!ctrl) throw new Error('not find controller ' + name);
+    if (!ctrl) return console.info('not find controller ' + name);
     var conf = ctrl.conf;
     var scope;
     var depend = ctrl.depend;
