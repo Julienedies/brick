@@ -1,14 +1,16 @@
 [ic-viewer] [ic-viewer-item]{
   cursor:pointer;
 }
-
+[ic-viewer-box-wrap]{
+  z-index: 20000;
+}
 #ic-viewer-box-wrap {
   position: fixed;
   width: 100%;
   height: 100%;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 20000;
   background-color: rgba(0, 0, 0, 0.4);
   display: none;
   #ic-viewer-box {

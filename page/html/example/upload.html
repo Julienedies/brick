@@ -9,7 +9,7 @@
 <body>
 <div class="column">
     <div ic-ctrl="uploadCtrl">
-        <div ic-upload="img" ic-upload-action="https://graph.baidu.com/upload" ic-upload-before="before" ic-upload-on-done="done">
+        <div ic-upload="img" ic-upload-action="http://localhost:3300/upload" ic-upload-before="before" ic-upload-on-done="done">
             <!-- field -->
             <div class="field">
                 <label class="file-label">
@@ -48,7 +48,7 @@
 
         scope.done = function (data) {
             console.log(data)
-            $('#preview').text(data)
+            $('#preview').text(JSON.stringify(data, null, '\t'))
         }
 
     })

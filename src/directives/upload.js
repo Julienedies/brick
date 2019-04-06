@@ -21,7 +21,7 @@ import $ from 'jquery'
 export default {
     name: 'ic-upload',
     fn: function ($elm, attrs) {
-        console.log('exec ic-upload;')
+        // console.log('exec ic-upload;')
 
         let nameSpace = $elm.attr('ic-upload');
 
@@ -60,6 +60,7 @@ export default {
             let data = new FormData();
             // 为FormData对象添加数据
             $.each($file[0].files, function (i, file) {
+                //console.info('file =>', file)
                 data.append(i, file);
             });
 

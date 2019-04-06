@@ -41,7 +41,7 @@ $.fn.icCompile = function (is_start_form_children) {
 };
 
 $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
-    console.info('icParseProperty name is ', name);
+    // console.info('icParseProperty name is ', name);
     let match;
     // js直接量  <div ic-tpl-init="{}">  object {}
     if (match = name.match(/^\s*(([{\[])(.*)[}\]])\s*$/)) {

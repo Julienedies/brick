@@ -13,11 +13,11 @@
 <body>
 <div class="column">
     <div ic-ctrl="uploadCtrl">
-        <div ic-upload="img[]" ic-upload-action="http://localhost:3300/upload" ic-upload-before="before" ic-upload-done="done">
+        <div ic-upload="img" ic-upload-action="http://localhost:3300/upload" ic-upload-before="before" ic-upload-on-done="done">
             <!-- field -->
             <div class="field">
                 <label class="file-label">
-                    <input class="file-input" type="file" name="img[]" multiple>
+                    <input class="file-input" type="file" name="img" multiple>
                     <span class="file-cta">
                           <span class="file-label">
                             选择上传文件…
@@ -25,7 +25,7 @@
                     </span>
                 </label>
                 <div class="control">
-                    <div class="box" placeholder="files name" ic-upload-preview></div>
+                    <div class="box" placeholder="files name" id="preview"></div>
                 </div>
                 <p class="help">This is a help text</p>
             </div>
@@ -53,6 +53,14 @@
 <script>
     brick.reg('uploadCtrl', function (scope) {
 
+        scope.before = function(formData) {
+            console.log(formData)
+        }
+
+        scope.done = function (data) {
+            console.log(data)
+            $('#preview').text(JSON.stringify(data, null, '\t'))
+        }
 
     })
 </script>

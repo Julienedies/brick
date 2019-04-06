@@ -3,11 +3,14 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.9
- * 4/5/2019, 2:38:08 PM
+ * 2019-4-6 11:46:25
  */
 @charset "UTF-8";
 [ic-viewer] [ic-viewer-item] {
   cursor: pointer; }
+
+[ic-viewer-box-wrap] {
+  z-index: 20000; }
 
 #ic-viewer-box-wrap {
   position: fixed;
@@ -15,7 +18,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  z-index: 999;
+  z-index: 20000;
   background-color: rgba(0, 0, 0, 0.4);
   display: none; }
   #ic-viewer-box-wrap #ic-viewer-box {
@@ -122,7 +125,7 @@ for animating
   bottom: 0;
   left: 100%;
   right: 0;
-  z-index: 10001;
+  z-index: 10000;
   pointer-events: none;
   overflow-y: scroll;
   background: #fff;
@@ -144,10 +147,6 @@ for animating
 [ic-dropdown-con] {
   overflow: hidden; }
 
-[ic-upload] [type=file] {
-  position: absolute;
-  opacity: 0; }
-
 [ic-accordion] [ic-accordion-con] {
   display: none; }
 
@@ -158,11 +157,6 @@ for animating
 [ic-accordion] [ic-accordion-item][ic-accordion-active] [ic-accordion-title],
 [ic-accordion] [ic-accordion-item]:nth-child(1) [ic-accordion-title] {
   display: none; }
-
-[ic-upload][type=file] {
-  width: 0;
-  height: 0;
-  visibility: hidden; }
 
 [ic-tpl] {
   display: none; }
@@ -184,7 +178,7 @@ for animating
   position: relative;
   overflow: hidden; }
 
-[ic-role-slider-pagination], [ic-select-item], [ic-tab] {
+[ic-click], [ic-role-slider-pagination], [ic-select-item], [ic-tab] {
   cursor: pointer; }
 
 [ic-tab-con] {

@@ -30,7 +30,7 @@ export default {
             //自动初始化渲染数据对象
             setTimeout(function () {
                 let dob = $th.icParseProperty2('ic-tpl-init');
-                console.info('ic-tpl-init', dob)
+                // console.info('ic-tpl-init', dob)
                 dob && $th.icRender(name, {model: dob});
             }, 300);
 

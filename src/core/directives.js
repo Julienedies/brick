@@ -2,21 +2,26 @@
  * Created by julien.zhang on 2014/9/17.
  */
 
-export default  {
+export default {
 
     _pool: {},
 
     add: function (name, definition, conf) {
         this.reg(name, definition, conf);
     },
-
+    /**
+     *
+     * @param name {String|Object}
+     * @param definition
+     * @param conf
+     */
     reg: function (name, definition, conf) {
-        if(typeof name == 'object'){
+        if (typeof name == 'object') {
             conf = name;
             name = conf.name;
-        }else if(typeof definition == 'object') {
+        } else if (typeof definition == 'object') {
             conf = definition;
-        }else{
+        } else {
             conf = conf || {};
             conf.fn = definition;
         }
