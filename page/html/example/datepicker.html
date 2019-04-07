@@ -17,7 +17,7 @@
             color: #fff;
         }
 
-        .selected {
+        .selected, td[ic-date-enabled]:hover {
             background: blue;
             color: #fff;
         }
@@ -28,6 +28,16 @@
 
         [ic-date-picker] td {
             border: solid 1px #ccc;
+            
+        }
+        [ic-date-enabled]{
+            cursor: pointer;
+        }
+        [ic-date-prev-m],[ic-date-next-m]{
+            cursor: pointer;
+            padding: 0 10px;
+            color: blue;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -76,8 +86,16 @@
             </td>
         </tr>
         </tbody>
-
     </table>
+</div>
+
+<div style="margin-top:20px;">
+    <div class="box">
+    <pre>
+        奇数日期不可选;
+        偶数日期可选;
+    </pre>
+    </div>
 </div>
 
 <script src="../../js/vendor/moment.js"></script>

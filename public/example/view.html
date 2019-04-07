@@ -39,6 +39,14 @@
         a {
             color: #fff;
             display: block;
+            padding: 5px 20px;
+            text-decoration: underline;
+        }
+        a:hover{
+            color:#fff;
+        }
+        h6{
+            padding:5px 20px;
         }
     </style>
 </head>
@@ -46,31 +54,31 @@
 <div ic-view-stage>
 
     <div ic-view="0" ic-view-ani-id="77" ic-active>
-        视图0
+        <h6 >视图0</h6>
         <a href="javascript:;" ic-view-to="1">to view 1</a>
         <a href="javascript:;" ic-click="to3a">js切换视图</a>
     </div>
 
     <div ic-view="1">
-        视图1
+        <h6 >视图1</h6>
         <a href="javascript:;" ic-view-to="2">to view 2</a>
         <a href="javascript:;" ic-view-back>back</a>
     </div>
 
     <div ic-view="2">
-        视图2
+        <h6 >视图2</h6>
         <a href="javascript:;" ic-view-to="3">to view 3</a>
         <a href="javascript:;" ic-view-back>back</a>
     </div>
 
     <div ic-view="3">
-        视图3
+        <h6 >视图3</h6>
         <a href="javascript:;" ic-view-to="0">to view 0</a>
         <a href="javascript:;" ic-view-back>back</a>
     </div>
 
     <div ic-view="aaa">
-        视图3a
+        <h6 >视图3a</h6>
         <a href="javascript:;" ic-click="back">js back</a>
         <img src="http://b.zol-img.com.cn/desk/bizhi/image/7/1680x1050/1447900306473.jpg">
     </div>

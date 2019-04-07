@@ -1,8 +1,12 @@
 /**
  * require Effeckt.css (https://github.com/h5bp/Effeckt.css)
+ * brick.get('view.aniId')
  * Created by Julien on 2015/9/1.
  */
 
+import _ from 'lodash'
+import $ from 'jquery'
+import brick from '@julienedies/brick'
 
 /**
  * 获取一个动画类
@@ -11,12 +15,13 @@
  */
 brick.getAniMap = function (animation) {
 
-    animation = animation*1 > 67 ? 0 : animation*1;
+    animation = animation * 1 > 67 ? 0 : animation * 1;
     animation = animation || Math.round(Math.random() * 66 + 1);
 
-    console.info('animation id is ' + animation);
+    // console.info('animation id is ' + animation);
 
-    var outClass = '', inClass = '';
+    let outClass = '';
+    let inClass = '';
 
     switch (animation) {
 
@@ -294,6 +299,20 @@ brick.getAniMap = function (animation) {
     return {inClass: inClass, outClass: outClass};
 };
 
+
+/**
+ * 该指令的主要作用是表示ic-view开启
+ */
+brick.directives.reg('ic-view', {
+    name: 'ic-view',
+    //once: true,
+    fn: function ($elm) {
+        $('html, body').addClass('ic-view-flag')
+    }
+})
+
+
+
 /**
  * 扩展jquery，添加转场动画支持
  * example: $('#view1').icAniOut($('#view2')); //#view1 in，#view2 out.
@@ -302,28 +321,28 @@ brick.getAniMap = function (animation) {
 ;
 (function () {
 
-    var $doc = $('body');
-    var animEndEventName = 'webkitAnimationEnd';
+    let $doc = $('body');
+    let animEndEventName = 'webkitAnimationEnd';
 
-    function initStatus($elm) {
+    function initStatus ($elm) {
         $elm.attr('ic-isAnimating', false);
         $elm.addClass('ic-animating');
         $elm.attr('ic-aniEnd', false);
         $elm.removeAttr('ic-aniIn');
     }
 
-    function onEndAnimation($elm, call) {
+    function onEndAnimation ($elm, call, isInOrOut) {
         $elm.removeClass('ic-animating');
         $elm.off(animEndEventName).attr('ic-aniEnd', true).trigger('ic-aniEnd');
-        call && call.call($elm[0]);
+        call && call.call($elm[0], isInOrOut);
     }
 
     //out
     $.fn.icAniOut = function (aniId, $next, call) {
 
-        var args = [].slice.call(arguments);
+        let args = [].slice.call(arguments);
 
-        aniId = $next = call = void(0);
+        aniId = $next = call = void (0);
 
         args.forEach(function (v) {
             if (_.isFunction(v)) {
@@ -337,14 +356,14 @@ brick.getAniMap = function (animation) {
 
         $next = $($next);
 
-        var $current = this;
+        let $current = this;
 
         $current = $current[0] && $current[0].hasAttribute ? $current : false;
         $next = $next[0] && $next[0].hasAttribute ? $next : false;
 
-        if(!$next){
+        if (!$next) {
 
-            if(!aniId){
+            if (!aniId) {
                 aniId = aniId || this.attr('ic-aniId');
                 aniId = aniId && aniId * 1;
                 aniId = aniId && aniId % 2 ? aniId + 1 : aniId - 1;
@@ -352,9 +371,9 @@ brick.getAniMap = function (animation) {
 
         }
 
-        var cla = brick.getAniMap(aniId);
-        var inClass = cla.inClass;
-        var outClass = cla.outClass;
+        let cla = brick.getAniMap(aniId);
+        let inClass = cla.inClass;
+        let outClass = cla.outClass;
 
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
@@ -369,7 +388,7 @@ brick.getAniMap = function (animation) {
                 $current.removeAttr('ic-active');
                 $current.removeAttr('ic-aniIn');
                 $current.attr('ic-aniOut', true);
-                onEndAnimation($current, call);
+                onEndAnimation($current, call, false);
 
                 if (!$next || $next && $next.attr('ic-aniEnd')) {
                     //_onEndAnimation($current);
@@ -390,7 +409,7 @@ brick.getAniMap = function (animation) {
             $next.removeAttr('ic-aniOut').addClass(inClass).on(animEndEventName, function () {
 
                 $next.removeClass(inClass);
-                onEndAnimation($next, call);
+                onEndAnimation($next, call, true);
 
                 if (!$current || $current && $current.attr('ic-aniEnd')) {
                     //_onEndAnimation($next);
@@ -407,9 +426,9 @@ brick.getAniMap = function (animation) {
     //in
     $.fn.icAniIn = function (aniId, $next, call) {
 
-        var args = [].slice.call(arguments);
+        let args = [].slice.call(arguments);
 
-        aniId = $next = call = void(0);
+        aniId = $next = call = void (0);
 
         args.forEach(function (v) {
             if (_.isFunction(v)) {
@@ -432,7 +451,7 @@ brick.getAniMap = function (animation) {
 ;
 (function () {
 
-    function Transition(conf) {
+    function Transition (conf) {
         _.extend(this, conf || {});
         this.history = [];
         this.pool = {};
@@ -442,12 +461,12 @@ brick.getAniMap = function (animation) {
         //this.current();
     }
 
-    var proto = {
+    let proto = {
         cache: function (name, $view) {
-            var viewProp = this.pool[name] = this.pool[name] || {};
+            let viewProp = this.pool[name] = this.pool[name] || {};
             if ($view) {
                 viewProp.$view = $view;
-                viewProp.aniId = $view.attr('ic-view-ani-id')*1 || brick.get('view.aniId') || 13 || Math.round(Math.random() * 66 + 1);
+                viewProp.aniId = $view.attr('ic-view-ani-id') * 1 || brick.get('view.aniId') || Math.round(Math.random() * 66 + 1);
             }
             $view = viewProp.$view;
             if (!$view) {
@@ -457,9 +476,9 @@ brick.getAniMap = function (animation) {
             return viewProp;
         },
         current: function () {
-            var currentView = this.currentView;
+            let currentView = this.currentView;
             if (!currentView) {
-                var $view = $('[ic-view][ic-active]');
+                let $view = $('[ic-view][ic-active]');
                 currentView = $view.attr('ic-view');
                 this.currentView = currentView;
                 this.$current = $view;
@@ -468,40 +487,47 @@ brick.getAniMap = function (animation) {
             return currentView;
         },
         to: function (name, reverse) {
-            if(!name) throw 'must to provide name of view.';
-            var that = this;
-            var currentView = this.current();
-            if(currentView === name) return;
-            var nextViewProp = this.cache(name);
-            var currentViewProp = this.cache(currentView);
-            var aniId = currentViewProp.aniId;
+            if (!name) throw 'must to provide name of view.';
+            let that = this;
+            let currentView = this.current();
+            if (currentView === name) return;
+            let nextViewProp = this.cache(name);
+            let currentViewProp = this.cache(currentView);
+            let aniId = currentViewProp.aniId;
+
             aniId = reverse ? aniId % 2 ? aniId + 1 : aniId - 1 : aniId;
-            nextViewProp.$view.trigger('ic-view.active', nextViewProp);
-            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function(){
-                !reverse && that.history.push(currentView);
-                that.currentView = name;
-                that.$current = nextViewProp.$view;
+
+            currentViewProp.$view.icAniOut(aniId, nextViewProp.$view, function (isInOrOut) {
+                // 回调会执行两次, in 一次; out 一次; isInOrOut 为true表示in callback, 为false 表示out callback
+                if(isInOrOut) {
+                    nextViewProp.$view.trigger('ic-view.active', nextViewProp);
+                    !reverse && that.history.push(currentView);
+                    that.currentView = name;
+                    that.$current = nextViewProp.$view;
+                }
             });
         },
         back: function () {
-            var prev = this.history.pop();
+            let prev = this.history.pop();
             prev && this.to(prev, true);
         }
     };
 
-    for (var i in proto) {
+    for (let i in proto) {
         Transition.prototype[i] = proto[i];
     }
 
 
-    var transition = brick.view = new Transition;
-    var eventAction = brick.get('event.action');
+    let transition = brick.view = new Transition;
+    let eventAction = brick.get('event.action');
 
-    $(document.body).on(eventAction, '[ic-view-to]', function (e) {
-        var name = $(this).attr('ic-view-to');
-        transition.to(name);
-    }).on('click', '[ic-view-back]', function (e) {
-        transition.back();
-    });
+    $(document.body)
+        .on(eventAction, '[ic-view-to]', function (e) {
+            let name = $(this).attr('ic-view-to');
+            transition.to(name);
+        })
+        .on('click', '[ic-view-back]', function (e) {
+            transition.back();
+        });
 
 })();

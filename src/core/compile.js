@@ -16,7 +16,7 @@ function compile (node, is_start_form_children) {
     let $elm = $(node);
 
     // 含有ic-skip指令的元素不用编译
-    if($elm[0].hasAttribute('ic-skip')) return console.log('ic-skip:', node);
+    if ($elm[0].hasAttribute('ic-skip')) return console.log('ic-skip:', node);
 
     !is_start_form_children && __compile(node);
 

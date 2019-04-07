@@ -97,7 +97,19 @@ const externals = {
         commonjs2: 'lodash',
         amd: 'lodash',
         root: '_'
-    }
+    },
+    moment: {
+        commonjs: 'moment',
+        commonjs2: 'moment',
+        amd: 'moment',
+        root: 'moment'
+    },
+    '@julienedies/brick': {
+        commonjs: '@julienedies/brick',
+        commonjs2: '@julienedies/brick',
+        amd: 'brick',
+        root: 'brick'
+    },
 }
 
 let devServer = {}

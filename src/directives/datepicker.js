@@ -21,43 +21,49 @@
  * ic-date 2012-08-27,格式由 ic-date-format 定义
  * ic-date-status over:过去  today:今天  coming:未来
  *
-
  */
+
+import _ from 'lodash'
+import $ from 'jquery'
+import moment from 'moment'
+import brick from '@julienedies/brick'
+
+
 brick.directives.reg('ic-date-picker', function ($elm) {
 
-    //var tpl = brick.createRender($elm[0]);
+    //let tpl = brick.createRender($elm[0]);
 
-    var _d = new Date();
-    var tpl = $elm.attr('ic-tpl-name');
-    var _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
-    var _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
-    var multiple = $elm.attr('ic-date-multiple');
-    var weekStart = $elm.attr('ic-date-week-start') || 1;
-    var enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
-    var disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
-    var onRender = $elm.icParseProperty2('ic-date-on-render');
+    let _d = new Date();
+    let tpl = $elm.attr('ic-tpl-name');
+    let _date = $elm.attr('ic-date-now') || _d.getFullYear() + '-' + (_d.getMonth() + 1) + '-' + _d.getDate();
+    let _format = $elm.attr('ic-date-format') || 'YYYY-MM-DD';
+    let multiple = $elm.attr('ic-date-multiple');
+    let weekStart = $elm.attr('ic-date-week-start') || 1;
+    let enabled = $elm.attr('ic-date-enabled') ? '[ic-date-enabled]' : '';
+    let disabled = $elm.attr('ic-date-disabled') ? ':not([ic-date-disabled])' : '';
+    let onRender = $elm.icParseProperty2('ic-date-on-render');
 
-    var START = _date;
-    var now = moment(_date, _format);
-    var cla = 'selected';
-    var weekMap = (function (weekStart) {
-        var week = _.range(1, 8);
-        var index = _.indexOf(week, weekStart * 1);
-        var split = week.splice(index);
+    let START = _date;
+    let now = moment(_date, _format);
+    let cla = 'selected';
+    let weekMap = (function (weekStart) {
+        let week = _.range(1, 8);
+        let index = _.indexOf(week, weekStart * 1);
+        let split = week.splice(index);
         split.unshift(0, 0);
         week.splice.apply(week, split);
         return week;
     })(weekStart);
 
-    var selectedDateArr = (function () {
-        var d = $elm.attr('ic-date-default');
+    let selectedDateArr = (function () {
+        let d = $elm.attr('ic-date-default');
         d = d && d.trim() && d.split(/(?:\s*,\s*)|(?:\s+)/img);
         return d || [];
     })();
 
     //更新html
     function render(date, flag) {
-        var dateModel = model(date);
+        let dateModel = model(date);
         if (onRender && !flag) {
             onRender(dateModel);
         } else {
@@ -96,12 +102,12 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     });
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    var old_date;
+    let old_date;
 
-    var eventAction = brick.get('event.action') || 'click';
+    let eventAction = brick.get('event.action') || 'click';
 
     $elm.on(eventAction, '[ic-date-prev-m]:not([disabled]), [ic-date-next-m]:not([disabled])', function (e) {
-        var call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
+        let call = this.hasAttribute('ic-date-prev-m') ? 'subtract' : 'add';
         old_date = _date;
         _date = moment(_date, _format)[call](1, 'months').format(_format);
         console.info(_date);
@@ -109,7 +115,7 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     });
 
     $elm.on(eventAction, '[ic-date]' + enabled, multiple ? function (e) {
-        var bindDate = this.getAttribute('ic-date');
+        let bindDate = this.getAttribute('ic-date');
         if (this.classList.contains(cla)) {
             this.classList.remove(cla);
             selectedDateArr = _.without(selectedDateArr, bindDate);
@@ -137,9 +143,9 @@ brick.directives.reg('ic-date-picker', function ($elm) {
 
     //计算一个月的天数
     function _countDays(current) {
-        var year = current.year();
-        var month = current.month();
-        var days = _.range(1, current.daysInMonth() + 1);
+        let year = current.year();
+        let month = current.month();
+        let days = _.range(1, current.daysInMonth() + 1);
         return days.map(function (day) {
             return moment([year, month, day]).format(_format);
         });
@@ -148,57 +154,57 @@ brick.directives.reg('ic-date-picker', function ($elm) {
     //时间数据模型
     function model(date) {
 
-        var current = date ? moment(date, _format) : moment();
-        var prev = date ? moment(date, _format) : moment();
+        let current = date ? moment(date, _format) : moment();
+        let prev = date ? moment(date, _format) : moment();
         prev.subtract(1, 'months');
-        var next = date ? moment(date, _format) : moment();
+        let next = date ? moment(date, _format) : moment();
         next.add(1, 'months');
 
         console.log(next.format(_format));
 
-        var year = current.year();
-        var month = current.month();
+        let year = current.year();
+        let month = current.month();
 
-        //var days = _.range(1, current.daysInMonth() + 1);
-        var calendar = [];
-        var days = _countDays(current);
-        var prevDays = _countDays(prev);
-        var nextDays = _countDays(next);
+        //let days = _.range(1, current.daysInMonth() + 1);
+        let calendar = [];
+        let days = _countDays(current);
+        let prevDays = _countDays(prev);
+        let nextDays = _countDays(next);
 
-        var len = days.length;
+        let len = days.length;
 
-        var w = moment([year, month, 1]).weekday();
+        let w = moment([year, month, 1]).weekday();
         if (w === 0) w = 7;
 
-        var start = _.indexOf(weekMap, w);
-        var _start = start;
+        let start = _.indexOf(weekMap, w);
+        let _start = start;
         console.log(weekMap, w, start);
         while (_start > 0) {
             days.unshift(prevDays.pop());
             _start--;
         }
 
-        var end = Math.ceil(days.length / 7) * 7 - days.length;
-        //var end = 42 - days.length;
+        let end = Math.ceil(days.length / 7) * 7 - days.length;
+        //let end = 42 - days.length;
         while (end > 0) {
             days.push(nextDays.shift());
             end--;
         }
 
         days = days.map(function (v, i) {
-            var m = moment(v, _format);
-            var diff = m.diff(now, 'days');
-            var status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
-            var position = i < start ? 'prev' : i > (len + start - 1) ? 'next' : 'current';
-            var isSelected = _.indexOf(selectedDateArr, v) > -1;
-            var n = v.replace(/^\d\d\d\d-\d\d-0?/i, '');
-            var day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom: {}};
+            let m = moment(v, _format);
+            let diff = m.diff(now, 'days');
+            let status = diff < 0 ? 'over' : diff > 0 ? 'coming' : 'today';
+            let position = i < start ? 'prev' : i > (len + start - 1) ? 'next' : 'current';
+            let isSelected = _.indexOf(selectedDateArr, v) > -1;
+            let n = v.replace(/^\d\d\d\d-\d\d-0?/i, '');
+            let day = {n: n, date: v, status: status, diff: diff, selected: isSelected, position: position, custom: {}};
             calendar.push(day);
             return day;
         });
 
-        var weeks = [];
-        var week = days.splice(0, 7);
+        let weeks = [];
+        let week = days.splice(0, 7);
         while (week.length) {
             weeks.push(week);
             week = days.splice(0, 7);

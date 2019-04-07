@@ -25,6 +25,7 @@ export default {
             conf = conf || {};
             conf.fn = definition;
         }
+
         this._pool[name] = conf;
     },
 
