@@ -305,7 +305,7 @@ brick.getAniMap = function (animation) {
  */
 brick.directives.reg('ic-view', {
     name: 'ic-view',
-    //once: true,
+    once: true,
     fn: function ($elm) {
         $('html, body').addClass('ic-view-flag')
     }
@@ -378,10 +378,10 @@ brick.directives.reg('ic-view', {
         // $doc.animate({scrollTop: 0}, 150);
         //$doc.scrollTop(0);
 
+        // out
         if ($current && !$current.hasClass('ic-animating')) {
 
             initStatus($current);
-
             $current.addClass(outClass).on(animEndEventName, function () {
 
                 $current.removeClass(outClass);
@@ -399,10 +399,10 @@ brick.directives.reg('ic-view', {
         }
 
 
+        // ini
         if ($next && !$next.hasClass('ic-animating')) {
 
             initStatus($next);
-
             $next.attr('ic-aniId', aniId);
             $next.attr('ic-active', true);
             $next.attr('ic-aniIn', true);

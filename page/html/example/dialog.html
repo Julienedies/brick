@@ -8,45 +8,78 @@
     <link rel="stylesheet" href="../../css/vendor/effeckt/animations.css">
 </head>
 <body>
-<div id="wraper">
+<div id="wrapper">
 
     <link rel="import" href="../include/header.html?__inline">
 
-    <main>
+    <div ic-ctrl="mainCtrl">
 
-        <button class="button is-medium" ic-dialog-href="a">点击弹出对话框</button>
-
-        <div class="modal" ic-dialog="a">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-                <div class="box" style="margin-top:100px;">
-                    <p>内容</p>
-                    <p>内容</p>
-                    <p>内容</p>
-                    <p>内容</p>
-                </div>
-            </div>
-            <div style="text-align:center; margin:1em;">
-                <button class="button is-primary" ic-dialog-confirm>确定</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="button" ic-dialog-cancel>取消</button>
-            </div>
-            <button class="modal-close is-large" aria-label="close" ic-dialog-close></button>
+        <div class="box">
+            <button class="button is-medium" ic-dialog-href="a">点击弹出对话框(指令方式)</button>
+            <button class="button is-medium" ic-click="showDialog">显示dialog(js方式)</button>
         </div>
 
+        <div ic-dialog="a">
+            <div class="box">
+                <header class="title is-3">
+                    {{ title }}
+                </header>
+                <div class="content">
+                    <p>固定内容</p>
+                    <p>{{ desc }}</p>
+                    <p>{{ abc }}</p>
+                </div>
+                <div class="buttons">
+                    <button class="button is-primary" ic-dialog-confirm>确定</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="button" ic-dialog-cancel>取消</button>
+                    <button class="button" ic-dialog-close>关闭</button>
+                </div>
+            </div>
+        </div>
 
-    </main>
+        <div id="dialog" ic-dialog="b" ic-tpl="dialog">
+            <div class="box">
+                <header class="title is-3">
+                    {{ title }}
+                </header>
+                <div class="content">
+                    <p>固定内容</p>
+                    <p>{{ desc }}</p>
+                    <p>{{ abc }}</p>
+                </div>
+                <div class="buttons">
+                    <button class="button is-primary" ic-dialog-confirm>确定</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="button" ic-dialog-cancel>取消</button>
+                    <button class="button" ic-dialog-close>关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <link rel="import" href="../include/footer.html?__inline">
+</div>
+
+<link rel="import" href="../include/footer.html?__inline">
 
 </div>
 
 <link rel="import" href="../include/foot.html?__inline">
 <script src="../../js/brick/brick.transition.js"></script>
 <script>
-    $('[ic-dialog=a]').on('ic-dialog.close',function(e, msg){
+    $('[ic-dialog=a]').on('ic-dialog.close', function (e, msg) {
         //msg对应关闭方式，1=>confirm  0=>cancel
-        $.tips(msg? '确认' : '取消');
+        $.tips(msg ? '确认' : '取消');
     });
+
+
+    brick.reg('mainCtrl', function (scope) {
+        console.log('scope === this', scope === this)
+
+        this.showDialog = function (e) {
+            $('#dialog').icDialog({title: '自定义标题', desc: '随意定义内容', abc: 'abcdefg'})
+        }
+
+    })
+
 </script>
 </body>
 </html>

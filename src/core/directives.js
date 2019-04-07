@@ -41,7 +41,7 @@ export default {
         } else if (definition.fn) {
             definition.fn.apply(null, [$elm, attrs]);
             if (definition.once) {
-                delete _pool[i];
+                delete _pool[name];
             }
         }
     },
