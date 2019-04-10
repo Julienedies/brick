@@ -3,6 +3,7 @@
  * ic-select-cla  选中项的添加的样式类,默认 selected
  * [ic-select][ic-select-item]  定义子项选择符 jQuery选择符
  * [ic-select-item] 定义子项
+ * [selected] 默认选中项
  * [ic-select-type] 定义select类型,多选or单选 checkbox : radio 默认 radio
  * [ic-select-input] 关联的input, 会被赋值
  * Created by j on 18/7/18.
@@ -30,26 +31,38 @@ export default function ($elm) {
     }
 
     let $selected = $items.filter('[selected]');
+    if (!$selected.length) {
+        $selected = $items.filter('.' + cla);
+    }
 
     let callback
     if (type === 'checkbox') {
-        // 设一个默认值
-        $elm.data('ic-val', []);
 
-        callback = function () {
-            $(this).toggleClass(cla);
+        let setVal = () => {
             let values = [];
             $items.filter('.' + cla).each(function () {
                 let val = $(this).attr('ic-val')
-                values.push(val);
+                val && values.push(val);
             });
-            //$elm.attr('ic-val', JSON.stringify(values));
             $elm.data('ic-val', values);
+            return values;
+        }
+
+        // 初始设值
+        setVal();
+
+        callback = function () {
+            $(this).toggleClass(cla);
+            let values = setVal();
             let msg = {name: name, value: values};
             $elm.trigger('ic-select.change', msg);
             on_change && on_change.apply($elm, [msg]);
         }
     } else {
+
+        // 设初始值
+        $elm.attr('ic-val', $selected.attr('ic-val') || '');
+
         callback = function () {
             $items.removeClass(cla);
             let $th = $(this).addClass(cla);

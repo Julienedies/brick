@@ -124,6 +124,8 @@ export default function ($elm, attrs) {
 
     }
 
+    // 可以通过 dom [ic-form] 调用
+    // 也可以通过 dom [ic-form-submit]  调用
     $.fn.icForm = $.fn.icForm || function (call, msg) {
         this.find('[ic-form-submit]').not(this.find('[ic-form] [ic-form-submit]')).icFormVerify();
         return this.data('ic-form-fields');
