@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>ic-select指令使用示例</title>
+    <link rel="import" href="../include/head.html?__inline">
+</head>
+<body>
+<div id="wrapper">
+
+    <link rel="import" href="../include/header.html?__inline">
+
+    <main class="column is-10 is-offset-1" ic-ctrl="mainCtrl">
+        <section class="level">
+
+            <div class="level-left">
+                <h3 class="title is-5">A</h3>
+                <ul class="tags" ic-select="a" ic-select-item=">li" ic-select-on-change="onChange">
+                    <li class="tag" ic-val="射雕英雄传">射雕英雄传</li>
+                    <li class="tag" ic-val="神雕侠侣" selected>神雕侠侣</li>
+                    <li class="tag" ic-val="倚天屠龙记">倚天屠龙记</li>
+                    <li class="tag" ic-val="天龙八部">天龙八部</li>
+                    <li class="tag" ic-val="素心剑">素心剑</li>
+                </ul>
+            </div>
+
+            <div class="level-right">
+                <h3 class="title is-5">B</h3>
+                <ul class="tags" ic-select="b" ic-select-type="checkbox" ic-select-cla="is-danger">
+                    <li class="tag" ic-val="射雕英雄传">射雕英雄传</li>
+                    <li class="tag" ic-val="神雕侠侣">神雕侠侣</li>
+                    <li class="tag" ic-val="倚天屠龙记">倚天屠龙记</li>
+                    <li class="tag" ic-val="天龙八部">天龙八部</li>
+                    <li class="tag" ic-val="雪山飞狐">雪山飞狐</li>
+                </ul>
+            </div>
+
+        </section>
+
+        <div id="output" class="box"></div>
+
+    </main>
+
+    <link rel="import" href="../include/footer.html?__inline">
+
+</div>
+
+<link rel="import" href="../include/foot.html?__inline">
+<script>
+    brick.set('ic-select-cla', 'is-warning')
+
+    brick.reg('mainCtrl', function (scope) {
+
+        let $output = $('#output')
+
+        scope.$elm.find('[ic-select]').on('ic-select.change', function (e, msg) {
+            $output.text(JSON.stringify(msg, null, '\t'))
+        })
+
+        scope.onChange = function () {
+            console.info('on change:', [].slice.call(arguments, 0))
+        }
+    });
+</script>
+</body>
+</html>
