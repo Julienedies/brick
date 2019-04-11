@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.91
- * 4/10/2019, 8:08:25 PM
+ * 4/10/2019, 11:58:07 PM
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')

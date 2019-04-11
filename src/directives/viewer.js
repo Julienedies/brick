@@ -12,7 +12,7 @@ const icViewer = {
     _show: function (src, index) {
         icViewer.$img.attr('src', src);
         icViewer.$sn.text(index);
-        icViewer.on_show(index, src, icViewer.$info);
+        icViewer.onShow(index, src, icViewer.$info);
     },
     show: function (arg) {
         let urls = this.urls = arg.urls;
@@ -31,8 +31,10 @@ const icViewer = {
     },
 
     init: function (options) {
-        this.on_show = options.on_show || function () {
-        };
+        let fx = () => {};
+        this.onShow = options.onShow || fx;
+        this.onOpen = options.onOpen || fx;
+        this.onClose = options.onClose || fx;
         if (this.$elm) return icViewer;
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
@@ -41,10 +43,15 @@ const icViewer = {
         this.$autoplay = this.$elm.find('#ic-viewer-autoplay');
         this.$sn = this.$elm.find('#ic-viewer-sn');
 
+        // icViewer open event callback
+        this.onOpen();
         $elm.on('click', '#ic-viewer-close', function (e) {
             $elm.fadeOut();
             icViewer.autoplay(false);
+            // icViewer close event callback
+            icViewer.onClose();
             $(document.body).off('mousewheel', icViewer.on_mousewheel);
+
         });
 
         $elm.on('click', '#ic-viewer-autoplay', function (e) {
@@ -110,7 +117,6 @@ $.fn.icViewer = function (options) {
         }).get();
 
         $that.on('click', item, function (e) {
-            console.log(444, urls, this)
             icViewer.init(options).show({
                 urls: urls,
                 src: $(this).attr(url)
@@ -140,7 +146,9 @@ function fn($elm) {
         item: item,
         $imgs: $elm.find(item),
         urls: $elm.icPp2(s_urls),
-        on_show: $elm.icPp2(s_on_show),
+        onShow: $elm.icPp2(s_on_show),
+        onOpen: $elm.icPp2('ic-viewer-on-open'),
+        onClose: $elm.icPp2('ic-viewer-on-close'),
         interval: $elm.icPp2(s_interval, true),
         url: $elm.attr('ic-viewer-url') || brick.get('ic-viewer-url') || 'src'
     });
