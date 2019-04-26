@@ -23,7 +23,7 @@ const icViewer = {
         icViewer._show(src, index);
         icViewer.$elm.fadeIn();
 
-        $(document.body).on('mousewheel', icViewer.on_mousewheel);
+        icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
 
         this.timer = null;
         this.interval = arg.interval || 5;
@@ -35,7 +35,16 @@ const icViewer = {
         this.onShow = options.onShow || fx;
         this.onOpen = options.onOpen || fx;
         this.onClose = options.onClose || fx;
+
+        this.onPopupShowCla = 'on-ic-popup-show';
+        this.$body = $(document.body);
+        this.$body.addClass(this.onPopupShowCla);
+        // icViewer open event callback
+        this.onOpen();
+
+        // 只初始化一次
         if (this.$elm) return icViewer;
+
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
         this.$img = this.$elm.find('#ic-viewer-box > img');
@@ -43,11 +52,10 @@ const icViewer = {
         this.$autoplay = this.$elm.find('#ic-viewer-autoplay');
         this.$sn = this.$elm.find('#ic-viewer-sn');
 
-        // icViewer open event callback
-        this.onOpen();
         $elm.on('click', '#ic-viewer-close', function (e) {
             $elm.fadeOut();
             icViewer.autoplay(false);
+            icViewer.$body.removeClass(icViewer.onPopupShowCla)
             // icViewer close event callback
             icViewer.onClose();
             $(document.body).off('mousewheel', icViewer.on_mousewheel);
