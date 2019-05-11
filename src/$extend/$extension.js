@@ -3,6 +3,7 @@
  * Created by julien.zhang on 2014/10/30.
  */
 
+import _ from 'lodash'
 import $ from 'jquery'
 import brick from '../core/export'
 
@@ -17,7 +18,7 @@ $.fn.icRender = function (tpl, model, callback) {
     let tplFn = brick.getTpl(tpl);
     if (!tplFn) return console.info('not find tpl: ' + tpl);
     // 如果数据模型不是对象类型,则对其包装
-    if(!model.model){
+    if (!model.model) {
         if (brick.get('render.wrapModel') || Array.isArray(model)) {
             model = {model: model};
         }
@@ -48,7 +49,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         console.info(match);
         try {
             //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
-            return eval(`(${match[1]})`);
+            return eval(`(${ match[1] })`);
         } catch (e) {
             console.error(e);
         }
@@ -60,7 +61,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         return match[1];
     }
     // 按直接量解析, 不通过scope链进行查找
-    if (isLiteral) return name;  
+    if (isLiteral) return name;
 
     let params = name.split(':');
     name = params.shift();
@@ -152,14 +153,14 @@ $.fn.icDialog = function (options, callback) {
         }
 
         if (!options) {
-            that.icAniOut(21);
+            that.fadeOut();
         }
 
         if (tpl && _.isObject(options)) {
             that.icRender(tpl, options.vm || options);
         }
 
-        that.icAniIn(21, function () {
+        that.fadeIn(function () {
             that.trigger('ic-dialog.show');
         });
 
@@ -192,23 +193,25 @@ $.fn.icPrompt = function (options) {
         }
 
         if (!options) {
-            that.icAniOut();
+            that.fadeOut();
         }
 
         if (tpl && _.isObject(options)) {
             that.icRender(tpl, options.vm || options);
         }
 
-        that.icAniIn(21, function () {
+        let cb = function () {
             that.trigger('ic-prompt.show');
 
             let timer = setTimeout(function () {
-                that.icAniOut();
+                that.fadeOut();
             }, 2400);
 
             that.data('ic-prompt-timer', timer);
 
-        });
+        };
+
+        that.fadeIn(cb);
 
     }, 30);
 

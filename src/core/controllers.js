@@ -86,7 +86,7 @@ extend(_F.prototype, {
         }, 30);
     },
     _render: function (tplName, model) {
-        console.log('render => ', tplName, model);
+        // console.log('render => ', tplName, model);
         let $elm = this.$elm;
         let tpl_fn = brick.getTpl(tplName);  //模板函数
         let selector = '[ic-tpl=?],[ic-tpl-name=?]'.replace(/[?]/img, tplName);
