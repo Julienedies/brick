@@ -36,7 +36,8 @@ export default {
         function show ($popup) {
             $(document).on('scroll', onScroll);
             $popup.on('scroll', onScroll);
-            $popup.addClass(cla)
+            $popup.addClass(cla);
+            $popup.trigger('ic-popup.show');
             $popup.scrollTop(0);
             count += 1;
             $body.addClass(onShowCla);
@@ -45,7 +46,8 @@ export default {
         function hide ($popup) {
             $(document).off('scroll', onScroll);
             $popup.off('scroll', onScroll);
-            $popup.removeClass(cla)
+            $popup.removeClass(cla);
+            $popup.trigger('ic-popup.hide');
             $popup[0].scrollTop = 0;
             count -= 1;
             if (count < 1) {
