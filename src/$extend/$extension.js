@@ -281,13 +281,13 @@ $.fn.tips = function (parent) {
     let h;
     let top;
     let left;
-    let wraper = $('<div class="tipsBox"></div>');
+    let $wrapper = $('<div style="position:fixed;width:100%;height:100%;"></div>');
 
     this.addClass('tips1').css({
         'width': w
     });
-    this.appendTo(wraper);
-    wraper.appendTo($parent);
+    this.appendTo($wrapper);
+    $wrapper.appendTo($parent);
 
     w = this.width();
     h = this.height();
@@ -298,7 +298,7 @@ $.fn.tips = function (parent) {
         'left': left
     });
 
-    wraper.animate({
+    $wrapper.animate({
         top: 0,
         'opacity': '1'
     }, 500, function () {
@@ -306,12 +306,12 @@ $.fn.tips = function (parent) {
     });
 
     setTimeout(function () {
-        wraper.animate({
+        $wrapper.animate({
             'top': -300,
             'opacity': '0'
         }, 500, function () {
             --tipSize;
-            wraper.remove();
+            $wrapper.remove();
         });
     }, 2000 * tipSize);
 
@@ -321,6 +321,7 @@ $.fn.tips = function (parent) {
 $.tips = function (massge) {
     $('<div>' + massge + '</div>').tips();
 };
+
 
 //设置loading
 (function ($) {
@@ -372,4 +373,45 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
         $th.css({opacity: '1'});
     });
 
+};
+
+
+$.fn.icMessage = $.fn.icMsg = function () {
+    let msgBoxHtml = `<div id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:100001; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
+
+    let $msgWrapper = $(`#ic-message-wrapper`);
+    $msgWrapper = $msgWrapper.length ? $msgWrapper : $(msgBoxHtml).appendTo(document.body);
+
+    let $that = this;
+
+    let style = {
+        transition: 'all 0.5s',
+        'transform': 'translateY(-900px)',
+        'margin-top': '20px'
+    };
+    $that.css(style);
+
+    $that.appendTo($msgWrapper);
+
+    setTimeout( () => {
+
+        $that.css({
+            'transform': 'translateY(0)'
+        });
+
+        setTimeout(() => {
+            $that.css(style);
+            setTimeout(() => {
+                $that.remove();
+            }, 1000);
+        }, 1000 * 3);
+
+    }, 25);
+
+};
+
+$.icMessage = $.icMsg = function (message) {
+    console.log(message)
+    $(`<div id="ic-message-box" style="background: #fff; border:solid 1px #1279D4; color:#1279D4; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px;">
+${ message }</div>`).icMessage();
 };

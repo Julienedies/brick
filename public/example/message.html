@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>$.fn.icMessage</title>
+    <meta name="description" content="">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/vendor/bulma.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/js/brick/brick.css">
+<link rel="stylesheet" href="https://julienedies.github.io/brick/public/css/common/index.css">
+
+</head>
+<body>
+<div class="column is-10 is-offset-1" ic-ctrl="mainCtrl">
+    <button class="button is-primary" ic-click="message">点我弹出消息提示</button>
+</div>
+
+
+<script src="https://julienedies.github.io/brick/public/js/vendor/lodash.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/vendor/jquery.js"></script>
+<script src="https://julienedies.github.io/brick/public/js/brick/brick.js"></script>
+<script>
+    setTimeout( function(){
+        brick.bootstrap();
+    }, 30)
+</script>
+<script>
+    brick.reg('mainCtrl', function () {
+        this.message = function(e) {
+            $.icMessage('消息' + (new Date()));
+        }
+    });
+</script>
+</body>
+</html>

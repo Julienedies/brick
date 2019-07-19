@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>$.fn.icMessage</title>
+    <link rel="import" href="../include/head.html?__inline">
+</head>
+<body>
+<div class="column is-10 is-offset-1" ic-ctrl="mainCtrl">
+    <button class="button is-primary" ic-click="message">点我弹出消息提示</button>
+</div>
+
+
+<link rel="import" href="../include/foot.html?__inline">
+<script>
+    brick.reg('mainCtrl', function () {
+        this.message = function(e) {
+            $.icMessage('消息' + (new Date()));
+        }
+    });
+</script>
+</body>
+</html>
