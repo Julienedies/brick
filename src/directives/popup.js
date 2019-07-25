@@ -56,7 +56,6 @@ export default {
         }
 
         function onScroll (e) {
-            console.log('on scroll', e)
             e.stopPropagation();
             e.preventDefault();
             return false;

@@ -404,14 +404,13 @@ $.fn.icMessage = $.fn.icMsg = function () {
             setTimeout(() => {
                 $that.remove();
             }, 1000);
-        }, 1000 * 3);
+        }, 1000 * 4);
 
     }, 25);
 
 };
 
 $.icMessage = $.icMsg = function (message) {
-    console.log(message)
-    $(`<div id="ic-message-box" style="background: #fff; border:solid 1px #1279D4; color:#1279D4; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px;">
-${ message }</div>`).icMessage();
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px;">
+    ${ message }</div>`).icMessage();
 };
