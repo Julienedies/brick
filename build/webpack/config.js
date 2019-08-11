@@ -62,12 +62,12 @@ const plugins = [
         chunkFilename: '[name].css'
     }),
     new webpack.BannerPlugin({
+        entryOnly: true
         banner: `https://github.com/julienedies/brick.git
 https://github.com/Julienedies/brick/wiki
 license:ISC
 V${ pkg.version }
 ${ (new Date).toLocaleString() }`,
-        entryOnly: true
     }),
     //new shellPlugin({ onBuildExit: [ 'echo "*********Transfering files ... "', 'cp -r dist/* page/js/brick', 'echo "DONE*********"', ] }),
     new FileManagerPlugin({
