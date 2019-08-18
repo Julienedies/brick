@@ -62,7 +62,7 @@ const plugins = [
         chunkFilename: '[name].css'
     }),
     new webpack.BannerPlugin({
-        entryOnly: true
+        entryOnly: true,
         banner: `https://github.com/julienedies/brick.git
 https://github.com/Julienedies/brick/wiki
 license:ISC
@@ -77,6 +77,9 @@ ${ (new Date).toLocaleString() }`,
             },
             {
                 copy: [ { source: './dist/*', destination: '../shandy/node_modules/@julienedies/brick/dist/' }]
+            },
+            {
+                copy: [ { source: './dist/*', destination: '../crx-jhandy/node_modules/@julienedies/brick/dist/' }]
             }
         ]
     }),
