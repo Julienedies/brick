@@ -34,7 +34,7 @@ extend(_F.prototype, {
         return this[key];
     },
     // window.confirm 包装
-    confirm(msg){
+    confirm (msg) {
         return window.confirm(msg)
     },
     /**
@@ -93,7 +93,7 @@ extend(_F.prototype, {
         let $tpl_dom; // 有ic-tpl属性的dom元素
         let html;
         // 如果数据模型不是对象类型,则对其包装
-        if(!model.model){
+        if (!model.model) {
             if (brick.get('render.wrapModel') || Array.isArray(model)) {
                 model = {model: model};
             }
@@ -108,14 +108,15 @@ extend(_F.prototype, {
 
 });
 
-// scope对象
-function F (name) {
-    this._name = name;
-}
-
-function f (name, o) {
-    F.prototype = new _F();  // 继承scope原型对象
-    extend(F.prototype, o);  // 继承parent scope
+function f (name, parent) {
+    // scope对象
+    function F (name) {
+        this._name = name;
+    }
+    // 继承scope原型对象; 如果有parent scope，直接继承parent scope; 或者继承自 new _F();
+    // fix:取消 extend(F.prototype, o) 这种拷贝parent scope的继承方式，不能获取parent scope的动态变化;
+    F.prototype = parent ? parent : new _F();
+    //extend(F.prototype, o);  // 继承parent scope; 取消拷贝继承;
     return new F(name);
 }
 
