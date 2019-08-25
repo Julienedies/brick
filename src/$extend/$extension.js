@@ -411,6 +411,6 @@ $.fn.icMessage = $.fn.icMsg = function () {
 };
 
 $.icMessage = $.icMsg = function (message) {
-    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px;">
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;">
     ${ message }</div>`).icMessage();
 };
