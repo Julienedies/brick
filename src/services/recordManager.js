@@ -1,10 +1,11 @@
 /**
  * Created by Julien on 2014/8/13.
  * 记录管理器
- * var recordManager = brick.services.get('recordManager');
- * var serv = recordManager(
+ * let recordManager = brick.services.get('recordManager');
+ * let serv = recordManager(
  *                              {
  *                                  scope:scope,
+ *                                  not
  *                                  broadcast:true, //是否广播事件
  *                                  eventPrefix:'holdModel', //广播事件前缀
  *                                  key:'hold.id',  //记录id
@@ -20,7 +21,7 @@ function RecordManager (conf) {
 
     if (conf && conf.constructor === Object) {
 
-        for (var i in conf) {
+        for (let i in conf) {
             this[i] = conf[i];
         }
 
@@ -46,11 +47,11 @@ const proto = {
 
         if (typeof data !== 'object') throw 'must be Array or Object on init';
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        for (var i in data) {
+        for (let i in data) {
 
-            var record = data[i];
+            let record = data[i];
 
             this.beforeSave(record, i);
 
@@ -79,13 +80,13 @@ const proto = {
      */
     get: function (value, query) {
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        var r = [];
+        let r = [];
 
         if (value === void (0)) {
 
-            for (var i in pool) {
+            for (let i in pool) {
 
                 r.push($.extend(true, {}, pool[i]));
 
@@ -99,9 +100,9 @@ const proto = {
             value = value[query];
         }
 
-        for (var j in pool) {
+        for (let j in pool) {
 
-            var record = pool[j];
+            let record = pool[j];
 
             if (value === this._queryKeyValue(record, query)) {
 
@@ -126,21 +127,21 @@ const proto = {
      */
     set: function (data, query) {
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        var find = this._find || [];
+        let find = this._find || [];
 
-        var result = [];
+        let result = [];
 
-        for (var i in find) {
+        for (let i in find) {
 
-            var record = find[i];
+            let record = find[i];
 
             if (query && this._queryKeyValue(record, query) === this._queryKeyValue(data, query)) continue;
 
-            var id = this._queryKeyValue(record);
+            let id = this._queryKeyValue(record);
 
-            var index = this._getIndex(id);
+            let index = this._getIndex(id);
 
             record = pool[index];
 
@@ -162,9 +163,9 @@ const proto = {
      */
     add: function (record) {
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        var id = this._queryKeyValue(record);
+        let id = this._queryKeyValue(record);
 
         this.beforeSave(record);
 
@@ -183,12 +184,12 @@ const proto = {
      * new recoredManager().init([{x:1,y:2},{x:1,y:5}]).find(1,'x').prev();
      */
     prev: function () {
-        var pool = this._pool;
-        var find = this._find || [];
-        for (var i in find) {
-            var record = find[i];
-            var id = this._queryKeyValue(record);
-            var index = this._getIndex(id);
+        let pool = this._pool;
+        let find = this._find || [];
+        for (let i in find) {
+            let record = find[i];
+            let id = this._queryKeyValue(record);
+            let index = this._getIndex(id);
 
             if (pool.splice) {
                 pool.splice(index, 1);
@@ -209,15 +210,15 @@ const proto = {
      */
     remove: function () {
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        var find = this._find || [];
+        let find = this._find || [];
 
-        for (var i in find) {
+        for (let i in find) {
 
-            var record = find[i];
-            var id = this._queryKeyValue(record);
-            var index = this._getIndex(id);
+            let record = find[i];
+            let id = this._queryKeyValue(record);
+            let index = this._getIndex(id);
 
             (pool.splice && index !== undefined) ? pool.splice(index, 1) : delete pool[id];
 
@@ -284,10 +285,10 @@ const proto = {
     },
     fire: function (e, msg) {
 
-        var scope = this.scope;
-        var broadcast = this.broadcast;
-        var pool = this.get();
-        var prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
+        let scope = this.scope;
+        let broadcast = this.broadcast;
+        let pool = this.get();
+        let prefix = this.eventPrefix ? this.eventPrefix + '.' : '';
 
         msg = $.extend({pool: pool}, msg || {});
 
@@ -313,12 +314,12 @@ const proto = {
 
     _get: function (record, k) {
 
-        var chain = (k || this.key).split('.');
+        let chain = (k || this.key).split('.');
 
-        var value = (function fx (chain, record) {
+        let value = (function fx (chain, record) {
 
-            var k = chain.shift();
-            var v = record[k];
+            let k = chain.shift();
+            let v = record[k];
 
             if (chain.length) {
                 return fx(chain, v);
@@ -334,11 +335,11 @@ const proto = {
 
     _getIndex: function (record, query) {
 
-        var pool = this._pool;
+        let pool = this._pool;
 
-        var v = typeof record === 'object' ? this._queryKeyValue(record, query) : record;
+        let v = typeof record === 'object' ? this._queryKeyValue(record, query) : record;
 
-        for (var i in pool) {
+        for (let i in pool) {
 
             if (this._queryKeyValue(pool[i], query) === v) return i;
 
@@ -352,7 +353,7 @@ const proto = {
 
 };
 
-for (var i in proto) {
+for (let i in proto) {
 
     RecordManager.prototype[i] = proto[i];
 

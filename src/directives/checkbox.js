@@ -19,10 +19,10 @@ directives.reg({
             return map[call] && map[call].apply(this, [param]);
         };
 
-        var map = {
+        let map = {
             val: function () {
-                var name = this.attr('ic-checkbox');
-                var arr = [];
+                let name = this.attr('ic-checkbox');
+                let arr = [];
                 this.sibling().filter('[ic-checkbox=?]'.replace('?', name)).each(function (i) {
                     arr.push(this['ic-checkbox-val']);
                 });

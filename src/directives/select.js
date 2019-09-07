@@ -64,9 +64,16 @@ export default function ($elm) {
         $elm.attr('ic-val', $selected.attr('ic-val') || '');
 
         callback = function () {
-            $items.removeClass(cla);
-            let $th = $(this).addClass(cla);
-            let val = $th.attr('ic-val');
+            let $th = $(this);
+            let isHas = $th.hasClass(cla);
+            let val = '';
+            if(isHas){
+                $th.removeClass(cla);
+            }else{
+                $items.removeClass(cla);
+                $th.addClass(cla);
+                val = $th.attr('ic-val');
+            }
             let msg = {name: name, value: val};
             // 为关联的input赋值
             $input.val(val);
