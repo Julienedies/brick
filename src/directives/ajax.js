@@ -66,6 +66,8 @@ export default {
                 $elm.removeData('ic-submit-data');
                 $elm.removeAttr('ic-ajax-disabled');
             });
+
+            return false;
         }
 
         let $doc = $(document.body);

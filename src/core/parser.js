@@ -27,7 +27,8 @@ export default function parser(node) {
             'else': 100,
             'bind': 1000,
             'if-end': 10000,
-            'for-end': 10000
+            'for-end': 10000,
+            'nest': 10001
         };
 
 
@@ -96,7 +97,6 @@ export default function parser(node) {
                 continue;
             }
 
-
             if (/-else-if$/.test(name)) {
                 elm.before('<% } else if(' + (value === '' ? void(0) : value) + '){ %>\r\n');
                 elm.removeAttr(name);
@@ -109,7 +109,6 @@ export default function parser(node) {
                 elm.removeAttr(name);
                 continue;
             }
-
 
             if (/-if-start$/.test(name)) {
                 elm.before('<% if(' + (value === '' ? void(0) : value) + '){ %>\r\n');

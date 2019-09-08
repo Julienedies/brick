@@ -19,7 +19,7 @@ export default function ($elm) {
     let cla = $elm.attr('ic-select-cla') || brick.get('ic-select-cla') || 'selected';
     let s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
     let type = $elm.attr('ic-select-type') || 'radio';
-    let on_change = $elm.icPp2('ic-select-on-change');
+    let onChange = $elm.icPp2('ic-select-on-change');
     let $input = $(`input[ic-select-input="${ name }"]`);
     let $items = $elm.find(s_item);
 
@@ -56,7 +56,7 @@ export default function ($elm) {
             let values = setVal();
             let msg = {name: name, value: values};
             $elm.trigger('ic-select.change', msg);
-            on_change && on_change.apply($elm, [msg]);
+            onChange && onChange.apply($elm, [msg]);
         }
     } else {
 
@@ -79,7 +79,7 @@ export default function ($elm) {
             $input.val(val);
             $elm.attr('ic-val', val);
             $elm.trigger('ic-select.change', msg);
-            on_change && on_change.apply($elm, [msg]);
+            onChange && onChange.apply($elm, [msg]);
         }
     }
 
