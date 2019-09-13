@@ -377,7 +377,7 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
 
 
 $.fn.icMessage = $.fn.icMsg = function () {
-    let msgBoxHtml = `<div id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:100001; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
+    let msgBoxHtml = `<div id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:3000; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
 
     let $msgWrapper = $(`#ic-message-wrapper`);
     $msgWrapper = $msgWrapper.length ? $msgWrapper : $(msgBoxHtml).appendTo(document.body);
@@ -411,6 +411,5 @@ $.fn.icMessage = $.fn.icMsg = function () {
 };
 
 $.icMessage = $.icMsg = function (message) {
-    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;">
-    ${ message }</div>`).icMessage();
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${ message }</div>` ).icMessage();
 };

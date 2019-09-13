@@ -3,6 +3,14 @@
 @import "directives/ic-popup.scss";
 @import 'directives/dropdown.scss';
 
+.on-ic-popup-show, .on-ic-viewer-show {
+  //height: 100%;
+  //overflow: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 [ic-accordion] [ic-accordion-con] {
   display: none;
 }

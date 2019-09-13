@@ -54,7 +54,7 @@ export default function createRender (root) {
 
     brick.get('debug') && console.log(_tpl);
 
-    let tpl_fn
+    let tpl_fn;
 
     try {
         tpl_fn = _.template(_tpl);

@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.8.96
- * 9/8/2019, 12:55:01 AM
+ * 9/13/2019, 10:35:57 AM
  */
 @charset "UTF-8";
 [ic-viewer] [ic-viewer-item] {
@@ -18,7 +18,7 @@
   height: 100%;
   left: 0;
   top: 0;
-  z-index: 20000;
+  z-index: 1000;
   background-color: rgba(0, 0, 0, 0.4);
   display: none; }
   #ic-viewer-box-wrap #ic-viewer-box {
@@ -113,9 +113,6 @@ for animating
 [ic-view-to] {
   cursor: pointer; }
 
-.on-ic-popup-show::-webkit-scrollbar {
-  display: none; }
-
 [ic-popup] {
   display: block !important;
   position: fixed;
@@ -123,7 +120,7 @@ for animating
   bottom: 0;
   left: 100%;
   right: 0;
-  z-index: 10000;
+  z-index: 2000;
   pointer-events: none;
   overflow-y: scroll;
   background: #fff;
@@ -147,6 +144,9 @@ for animating
 
 [ic-dropdown-con] {
   overflow: hidden; }
+
+.on-ic-popup-show::-webkit-scrollbar, .on-ic-viewer-show::-webkit-scrollbar {
+  display: none; }
 
 [ic-accordion] [ic-accordion-con] {
   display: none; }

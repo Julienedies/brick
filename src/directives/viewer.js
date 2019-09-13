@@ -36,7 +36,7 @@ const icViewer = {
         this.onOpen = options.onOpen || fx;
         this.onClose = options.onClose || fx;
 
-        this.onPopupShowCla = 'on-ic-popup-show';
+        this.onPopupShowCla = 'on-ic-viewer-show';
         this.$body = $(document.body);
         this.$body.addClass(this.onPopupShowCla);
         // icViewer open event callback
