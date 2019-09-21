@@ -377,7 +377,7 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
 
 
 $.fn.icMessage = $.fn.icMsg = function () {
-    let msgBoxHtml = `<div id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:3000; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
+    let msgBoxHtml = `<div ic-msg-popup="1" id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:3000; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
 
     let $msgWrapper = $(`#ic-message-wrapper`);
     $msgWrapper = $msgWrapper.length ? $msgWrapper : $(msgBoxHtml).appendTo(document.body);

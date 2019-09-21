@@ -61,14 +61,6 @@ const plugins = [
         filename: '[name].css',
         chunkFilename: '[name].css'
     }),
-    new webpack.BannerPlugin({
-        entryOnly: true,
-        banner: `https://github.com/julienedies/brick.git
-https://github.com/Julienedies/brick/wiki
-license:ISC
-V${ pkg.version }
-${ (new Date).toLocaleString() }`,
-    }),
     //new shellPlugin({ onBuildExit: [ 'echo "*********Transfering files ... "', 'cp -r dist/* page/js/brick', 'echo "DONE*********"', ] }),
     new FileManagerPlugin({
         onEnd: [
@@ -85,8 +77,17 @@ ${ (new Date).toLocaleString() }`,
     }),
     new CleanPlugin([`dist`], {
         root: projectRoot
-    })
-]
+    }),
+    new webpack.BannerPlugin({
+        entryOnly: true,
+        banner: `https://github.com/julienedies/brick.git
+https://github.com/Julienedies/brick/wiki
+license:ISC
+V${ pkg.version }
+${ (new Date).toLocaleString() }
+`,
+    }),
+];
 
 const externals = {
     jquery: {
@@ -113,7 +114,7 @@ const externals = {
         amd: 'brick',
         root: 'brick'
     },
-}
+};
 
 let devServer = {}
 let cssLoader = {

@@ -19,12 +19,16 @@ export default {
         $c.html(text);
         return $c.text();
     },
+    getQuery: function (str) {
+        return this.get_query(str);
+    },
     /**
      * @todo 封装location.search为一个对象，如果不存在，返回undefined
-     * @param str {string}  [可选]  location.search 格式字符串,
-     * @returns {*}
+     * @param str {string}  [可选]  location.search 格式字符串 或者是要查询的key
+     * @returns {Object|String|undefined}
      * @example brick.utils.get_query('a=1&b=2');  // {a:1, b:2}
      */
+
     get_query: function (str) {
         let result;
         let k;
