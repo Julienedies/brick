@@ -111,8 +111,25 @@ const proto = {
             }
         }
 
+        if(r.length === 1 && (query === this.key || (value && query === undefined))){
+            return r[0];
+        }
+
         return r;
 
+    },
+    /**
+     * 包装this.get(); 如果返回的数组只有单个对象，去掉数组，直接返回对象
+     * @param value
+     * @param query
+     * @returns {*}
+     */
+    get2: function (value, query) {
+        let result = this.get(value, query);
+        if(result.length === 1){
+            return result[0];
+        }
+        return result;
     },
 
     /**
