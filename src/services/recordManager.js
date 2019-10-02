@@ -82,41 +82,48 @@ const proto = {
 
         let pool = this._pool;
 
-        let r = [];
+        let result = [];
 
-        if (value === void (0)) {
+        let isFilterCb = typeof value === 'function';
 
+        //
+        if (isFilterCb) {
             for (let i in pool) {
-
-                r.push($.extend(true, {}, pool[i]));
-
+                let record = pool[i];
+                if (value(record, i)) {
+                    result.push($.extend(true, {}, record));
+                }
             }
-
-            return r;
+            return result;
         }
 
+        //
+        if (value === void (0)) {
+            for (let i in pool) {
+                result.push($.extend(true, {}, pool[i]));
+            }
+            return result;
+        }
+
+        //
         if (typeof value === 'object') {
             query = this.key;
             value = value[query];
         }
 
         for (let j in pool) {
-
             let record = pool[j];
-
             if (value === this._queryKeyValue(record, query)) {
-
-                r.push($.extend(true, {}, record));
-
+                result.push($.extend(true, {}, record));
             }
         }
 
-        if(r.length === 1 && (query === this.key || (value && query === undefined))){
-            return r[0];
+
+        if (result.length === 1 && !isFilterCb && (query === this.key || (value && query === undefined))) {
+            return result[0];
         }
 
-        return r;
-
+        return result;
     },
     /**
      * 包装this.get(); 如果返回的数组只有单个对象，去掉数组，直接返回对象
@@ -126,7 +133,7 @@ const proto = {
      */
     get2: function (value, query) {
         let result = this.get(value, query);
-        if(result.length === 1){
+        if (result.length === 1) {
             return result[0];
         }
         return result;
@@ -297,7 +304,7 @@ const proto = {
     end: function () {
         this._find = void (0);
     },
-    emit(e, msg){
+    emit (e, msg) {
         this.fire(e, msg)
     },
     fire: function (e, msg) {
