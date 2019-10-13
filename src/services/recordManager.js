@@ -283,11 +283,9 @@ const proto = {
      * new recoredManager().init([{x:1,y:2},{x:1,y:{z:7}}]).find(7,'y.z')  // result this._find == [{x:1,y:{z:7}}];
      */
     find: function (value, key) {
-
-        this._find = this.get(value, key);
-
+        let result = this.get(value, key);
+        this._find = Array.isArray(result) ? result : [result];
         return this;
-
     },
 
     /**
