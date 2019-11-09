@@ -266,7 +266,7 @@ const proto = {
 
         this.end();
 
-        this.fire('clear');
+        this.emit('clear');
 
         return this;
 
@@ -325,7 +325,6 @@ const proto = {
      * @param index
      */
     beforeSave: function (record, index) {
-
 
     },
 

@@ -66,7 +66,7 @@ export default function ($elm) {
         callback = function () {
             let $th = $(this);
             let isHas = $th.hasClass(cla);
-            let val = '';
+            let val;
             if(isHas){
                 $th.removeClass(cla);
             }else{
