@@ -13,13 +13,15 @@ export default {
 
         let __tpl = brick.__tpl = brick.__tpl || {};
 
-        ($elm || $('[ic-tpl]').not($('[ic-skip] [ic-tpl]'))).each(function () {
-
+        function cb() {
             let $th = $(this);
             let name = $th.attr('ic-tpl');
             let $parent;
 
-            // 只处理一次
+            // 处理嵌套ic-tpl
+            $th.find('[ic-tpl]').not($('[ic-skip] [ic-tpl]')).each(cb);
+
+            // 只处理一次, ic-tpl-name 属性表示模板已经处理过了
             if ($th.attr('ic-tpl-name')) return;
 
             if (!name) {
@@ -38,6 +40,9 @@ export default {
             $th.attr('ic-tpl-name', name);
             $th.removeAttr('ic-tpl');
             $th.empty();
-        });
+        }
+
+        ($elm || $('[ic-tpl]').not($('[ic-skip] [ic-tpl]'))).each(cb);
+
     }
 }

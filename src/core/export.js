@@ -13,6 +13,7 @@ import compile from './compile'
 
 //对外接口
 const brick = {
+    version: VERSION,
     utils: utils,
     config: config,
     controllers: controllers,
@@ -53,7 +54,7 @@ const brick = {
         }
     },
     bootstrap: function (node) {
-        console.info('brick start');
+        console.info('brick start at', VERSION);
         this.directives.init();
         this.compile(node || document.body);
         this.bootstrap = function () {
