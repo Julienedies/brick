@@ -52,9 +52,10 @@ export default function ($elm) {
         setVal();
 
         callback = function () {
-            $(this).toggleClass(cla);
+            let $th = $(this);
+            let change = $th.toggleClass(cla).attr('ic-val');
             let values = setVal();
-            let msg = {name: name, value: values};
+            let msg = {name: name, value: values, change, selected: $th.hasClass(cla)};
             $elm.trigger('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
         }
@@ -67,14 +68,18 @@ export default function ($elm) {
             let $th = $(this);
             let isHas = $th.hasClass(cla);
             let val;
-            if(isHas){
+            let selected; //
+            let change = $th.attr('ic-val');
+            if (isHas) {
                 $th.removeClass(cla);
-            }else{
+                selected = false;
+            } else {
                 $items.removeClass(cla);
                 $th.addClass(cla);
-                val = $th.attr('ic-val');
+                val = change;
+                selected = true;
             }
-            let msg = {name: name, value: val};
+            let msg = {name: name, value: val, change, selected};
             // 为关联的input赋值
             $input.val(val);
             $elm.attr('ic-val', val);

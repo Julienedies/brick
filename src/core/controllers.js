@@ -89,6 +89,9 @@ extend(_F.prototype, {
         // console.log('render => ', tplName, model);
         let $elm = this.$elm;
         let tpl_fn = brick.getTpl(tplName);  //模板函数
+
+        if (typeof tpl_fn !== 'function') return console.error('not find render function =>', tplName);
+
         let selector = '[ic-tpl=?],[ic-tpl-name=?]'.replace(/[?]/img, tplName);
         let $tpl_dom; // 有ic-tpl属性的dom元素
         let html;
@@ -100,7 +103,7 @@ extend(_F.prototype, {
         }
         $tpl_dom = $elm.filter(selector);  // case: <div ic-ctrl="a" ic-tpl="a"></div>
         $tpl_dom = $tpl_dom.length ? $tpl_dom : $elm.find(selector);
-        html = tpl_fn(model)
+        html = tpl_fn(model);
         $tpl_dom.show();
         $tpl_dom.removeAttr('ic-tpl');
         return $tpl_dom.html(html);
@@ -113,6 +116,7 @@ function f (name, parent) {
     function F (name) {
         this._name = name;
     }
+
     // 继承scope原型对象; 如果有parent scope，直接继承parent scope; 或者继承自 new _F();
     // fix:取消 extend(F.prototype, o) 这种拷贝parent scope的继承方式，不能获取parent scope的动态变化;
     F.prototype = parent ? parent : new _F();
