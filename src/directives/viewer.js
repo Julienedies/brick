@@ -11,7 +11,7 @@ import viewerTpl from '../tpl/viewer.html'
 const icViewer = {
     _show: function (src, index) {
         icViewer.$img.attr('src', src);
-        icViewer.$sn.text(index);
+        icViewer.$sn.text(index + ' / ' + this.urls.length);
         icViewer.onShow(index, src, icViewer.$info);
     },
     show: function (arg) {
