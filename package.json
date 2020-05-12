@@ -1,6 +1,6 @@
 {
   "name": "@julienedies/brick",
-  "version": "0.9.02",
+  "version": "0.9.3",
   "description": "一个借鉴angular开发模式的简洁前端开发框架,帮助组织复杂页面的前端代码.",
   "main": "dist/brick.js",
   "files": [
