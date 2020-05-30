@@ -26,11 +26,19 @@ const icViewer = {
         icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
 
         this.timer = null;
-        this.interval = arg.interval || this.interval;
+        //this.interval = arg.interval || this.interval;
         arg.autoplay && icViewer.autoplay();
     },
 
     init: function (options) {
+        this.onPopupShowCla = 'on-ic-viewer-show';
+        this.$body && this.$body.addClass(this.onPopupShowCla);
+        // icViewer open event callback
+        this.onOpen && this.onOpen();
+
+        // 只初始化一次
+        if (this.$elm) return icViewer;
+
         let fx = () => {};
         this.onShow = options.onShow || fx;
         this.onOpen = options.onOpen || fx;
@@ -38,14 +46,7 @@ const icViewer = {
 
         this.interval = options.interval;
 
-        this.onPopupShowCla = 'on-ic-viewer-show';
         this.$body = $(document.body);
-        this.$body.addClass(this.onPopupShowCla);
-        // icViewer open event callback
-        this.onOpen();
-
-        // 只初始化一次
-        if (this.$elm) return icViewer;
 
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
@@ -61,7 +62,6 @@ const icViewer = {
             // icViewer close event callback
             icViewer.onClose();
             $(document.body).off('mousewheel', icViewer.on_mousewheel);
-
         });
 
         $elm.on('click', '#ic-viewer-autoplay', function (e) {
@@ -69,6 +69,14 @@ const icViewer = {
         });
 
         return icViewer;
+    },
+
+    set: function (key, val) {
+        if(typeof key === 'object'){
+            Object.assign(this, key);
+        }else{
+            this[key] = val;
+        }
     },
 
     on_mousewheel: _.debounce(function (e) {
@@ -115,6 +123,7 @@ $.fn.icViewer = function (options) {
             return $(this).attr('ic-viewer-item', i).attr(url);
         }).get();
 
+        // 触发入口; 每次都会icViewer.init; options 由于闭包的关系，会一直保持最初的参数;
         $that.on('click', item, function (e) {
             icViewer.init(options).show({
                 urls: urls,
@@ -154,6 +163,8 @@ function fn($elm) {
 
 }
 
+
+brick.icViewer = icViewer;
 
 directives.reg('ic-viewer', fn);
 
