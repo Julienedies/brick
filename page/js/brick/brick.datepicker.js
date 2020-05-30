@@ -2,8 +2,8 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.9.2
- * 5/4/2020, 5:18:57 PM
+ * V0.9.3
+ * 5/30/2020, 2:50:14 PM
  * 
  */
 (function webpackUniversalModuleDefinition(root, factory) {

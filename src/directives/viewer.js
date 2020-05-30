@@ -26,7 +26,7 @@ const icViewer = {
         icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
 
         this.timer = null;
-        this.interval = arg.interval || 5;
+        this.interval = arg.interval || this.interval;
         arg.autoplay && icViewer.autoplay();
     },
 
@@ -35,6 +35,8 @@ const icViewer = {
         this.onShow = options.onShow || fx;
         this.onOpen = options.onOpen || fx;
         this.onClose = options.onClose || fx;
+
+        this.interval = options.interval;
 
         this.onPopupShowCla = 'on-ic-viewer-show';
         this.$body = $(document.body);
@@ -55,7 +57,7 @@ const icViewer = {
         $elm.on('click', '#ic-viewer-close', function (e) {
             $elm.fadeOut();
             icViewer.autoplay(false);
-            icViewer.$body.removeClass(icViewer.onPopupShowCla)
+            icViewer.$body.removeClass(icViewer.onPopupShowCla);
             // icViewer close event callback
             icViewer.onClose();
             $(document.body).off('mousewheel', icViewer.on_mousewheel);
@@ -86,6 +88,7 @@ const icViewer = {
 
     autoplay: function (is_play) {
         if (is_play || is_play === undefined) {
+            console.log('icViewer.interval', icViewer.interval);
             icViewer.timer = setInterval(icViewer.on_mousewheel, icViewer.interval * 1000);
             icViewer.$autoplay.text('停止播放');
         } else {
@@ -96,18 +99,6 @@ const icViewer = {
     }
 
 };
-
-
-brick.directives.reg({
-    name: 'ic-view-img',
-    selfExec: true,
-    once: true,
-    fn ($elm) {
-        $(document.body).on('click', '[ic-img]', function (e) {
-            let $box = $(this).closest('[ic-view-img]')
-        })
-    }
-})
 
 
 $.fn.icViewer = function (options) {
@@ -157,7 +148,7 @@ function fn($elm) {
         onShow: $elm.icPp2(s_on_show),
         onOpen: $elm.icPp2('ic-viewer-on-open'),
         onClose: $elm.icPp2('ic-viewer-on-close'),
-        interval: $elm.icPp2(s_interval, true),
+        interval: $elm.icPp2(s_interval, true) || brick.get('ic-viewer-interval') || 10,
         url: $elm.attr('ic-viewer-url') || brick.get('ic-viewer-url') || 'src'
     });
 
