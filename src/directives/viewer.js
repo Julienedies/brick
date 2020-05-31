@@ -31,14 +31,6 @@ const icViewer = {
     },
 
     init: function (options) {
-        this.onPopupShowCla = 'on-ic-viewer-show';
-        this.$body && this.$body.addClass(this.onPopupShowCla);
-        // icViewer open event callback
-        this.onOpen && this.onOpen();
-
-        // 只初始化一次
-        if (this.$elm) return icViewer;
-
         let fx = () => {};
         this.onShow = options.onShow || fx;
         this.onOpen = options.onOpen || fx;
@@ -47,6 +39,13 @@ const icViewer = {
         this.interval = options.interval;
 
         this.$body = $(document.body);
+        this.onPopupShowCla = 'on-ic-viewer-show';
+        this.$body.addClass(this.onPopupShowCla);
+        // icViewer open event callback
+        this.onOpen();
+
+        // 只初始化一次
+        if (this.$elm) return icViewer;
 
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
