@@ -35,13 +35,13 @@ export default function ($elm) {
         $selected = $items.filter('.' + cla);
     }
 
-    let callback
+    let callback;
     if (type === 'checkbox') {
 
         let setVal = () => {
             let values = [];
             $items.filter('.' + cla).each(function () {
-                let val = $(this).attr('ic-val')
+                let val = $(this).attr('ic-val');
                 val && values.push(val);
             });
             $elm.data('ic-val', values);
@@ -67,7 +67,7 @@ export default function ($elm) {
         callback = function () {
             let $th = $(this);
             let isHas = $th.hasClass(cla);
-            let val;
+            let val = '';
             let selected; //
             let change = $th.attr('ic-val');
             if (isHas) {
@@ -83,6 +83,11 @@ export default function ($elm) {
             // 为关联的input赋值
             $input.val(val);
             $elm.attr('ic-val', val);
+/*            if(typeof val === 'undefined'){
+                $elm.removeAttr('ic-val');
+            }else{
+                $elm.attr('ic-val', val);
+            }*/
             $elm.trigger('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
         }
