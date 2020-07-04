@@ -31,6 +31,21 @@ export default {
         let callback = event._callback = event._callback || [];
 
         callback.push(handle);
+        return handle;
+    },
+
+    /**
+     *  绑定只执行一次的事件处理回调
+     * @param e
+     * @param f
+     * @param context
+     */
+    one: function (e, f, context) {
+        e = e.split(/[,\s]+/g);
+        for (let i in e) {
+            let handle = this._bind(e[i], f, context);
+            handle.onlyOne = true;
+        }
     },
 
     /**
@@ -125,7 +140,7 @@ export default {
 
         if (callback) {
 
-            for (let i = 0, len = callback.length; i < len; i++) {
+            for (let i = callback.length - 1; i >= 0; i--) {
 
                 handle = callback[i];
                 context = handle.context || {};
@@ -136,6 +151,10 @@ export default {
                         {eventName: e, source: that},
                         msg
                     ]);
+                }
+
+                if (handle.onlyOne === true) {
+                    callback.splice(i, 1);
                 }
 
             }

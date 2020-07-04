@@ -35,6 +35,10 @@ const brick = {
         this.eventManager.on(e, fn);
         return this;
     },
+    one: function (e, fn) {
+        this.eventManager.one(e, fn);
+        return this;
+    },
     off: function (e, fn) {
         this.eventManager.off(e, fn);
         return this;

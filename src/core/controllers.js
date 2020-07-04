@@ -55,6 +55,10 @@ extend(_F.prototype, {
         let that = this;
         eventManager.on(e, f, that);
     },
+    one: function (e, f) {
+        let that = this;
+        eventManager.one(e, f, that);
+    },
     /**
      * 取消事件监听
      * @param e {String}   事件名
