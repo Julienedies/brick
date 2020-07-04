@@ -58,11 +58,11 @@ const brick = {
         }
     },
     bootstrap: function (node) {
-        console.info('brick start at', VERSION);
+        console.info('brick start at', VERSION, TIMESTAMP);
         this.directives.init();
         this.compile(node || document.body);
         this.bootstrap = function () {
-            console.info('only bootstrap once.')
+            console.info('only bootstrap once.');
         };
     }
 };

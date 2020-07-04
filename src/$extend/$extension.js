@@ -46,7 +46,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
     let match;
     // js直接量  <div ic-tpl-init="{}">  object {}
     if (match = name.match(/^\s*(([{\[])(.*)[}\]])\s*$/)) {
-        console.info(match);
+        //console.info(match);
         try {
             //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
             return eval(`(${match[1]})`);
@@ -238,7 +238,7 @@ $.fn.icEnterPress = function (call) {
 
         let fn = function (e) {
 
-            if (e.which == 13) {
+            if (e.which === 13) {
                 //console.info('ic-enter-press emit.');
                 call(e);
             }
@@ -376,7 +376,7 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
 };
 
 
-$.fn.icMessage = $.fn.icMsg = function () {
+$.fn.icMessage = $.fn.icMsg = function (config) {
     let msgBoxHtml = `<div ic-msg-popup="1" id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:3000; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
 
     let $msgWrapper = $(`#ic-message-wrapper`);
@@ -404,13 +404,15 @@ $.fn.icMessage = $.fn.icMsg = function () {
             setTimeout(() => {
                 $that.remove();
             }, 1000);
-        }, 1000 * 4);
+        }, 1000 * (config.duration || 4));
 
     }, 25);
 
 };
 
-$.icMessage = $.icMsg = function (message) {
+$.icMessage = $.icMsg = function (message, conf) {
+    conf = conf || {};
+    conf = typeof conf === 'number' ? {duration: conf} : conf;
     if (typeof message === 'object') {
         try {
             message = JSON.stringify(message);
@@ -418,5 +420,5 @@ $.icMessage = $.icMsg = function (message) {
             message = message.toString();
         }
     }
-    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${message}</div>`).icMessage();
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${message}</div>`).icMessage(conf);
 };
