@@ -49,7 +49,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         console.info(match);
         try {
             //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
-            return eval(`(${ match[1] })`);
+            return eval(`(${match[1]})`);
         } catch (e) {
             console.error(e);
         }
@@ -72,7 +72,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
     //let namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : {};
     let namespace = ctrl ? brick.controllers.get(ctrl) : {};
 
-    function fx (root, chain) {
+    function fx(root, chain) {
         let k = chain.shift();
         let v = root && root[k];
         if (v === undefined) return;
@@ -393,7 +393,7 @@ $.fn.icMessage = $.fn.icMsg = function () {
 
     $that.appendTo($msgWrapper);
 
-    setTimeout( () => {
+    setTimeout(() => {
 
         $that.css({
             'transform': 'translateY(0)'
@@ -411,5 +411,12 @@ $.fn.icMessage = $.fn.icMsg = function () {
 };
 
 $.icMessage = $.icMsg = function (message) {
-    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${ message }</div>` ).icMessage();
+    if (typeof message === 'object') {
+        try {
+            message = JSON.stringify(message);
+        } catch (e) {
+            message = message.toString();
+        }
+    }
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${message}</div>`).icMessage();
 };
