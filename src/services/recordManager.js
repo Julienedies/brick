@@ -66,6 +66,17 @@ const proto = {
     },
 
     /**
+     * 遍历, 会直接修改记录管理器里的数据
+     * @param cb {Function} 遍历回调函数
+     */
+    each: function (cb) {
+        this._pool.forEach((item, index) => {
+            cb(item, index);
+        });
+        return this;
+    },
+
+    /**
      * 获取查询结果
      * @param value  {*}            要查询的key值
      * @param query  {String}       要查询的key
