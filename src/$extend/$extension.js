@@ -49,7 +49,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
         //console.info(match);
         try {
             //return (match[3] && match[2]) == '{' ? eval('(' + match[1] + ')') : match[2] == '{' ? {} : [];
-            return eval(`(${match[1]})`);
+            return eval(`(${ match[1] })`);
         } catch (e) {
             console.error(e);
         }
@@ -72,7 +72,7 @@ $.fn.icParseProperty = $.fn.icPp = function (name, isLiteral) {
     //let namespace = ctrl ? $ctrl.data('ic-ctrl-scope') : {};
     let namespace = ctrl ? brick.controllers.get(ctrl) : {};
 
-    function fx(root, chain) {
+    function fx (root, chain) {
         let k = chain.shift();
         let v = root && root[k];
         if (v === undefined) return;
@@ -348,7 +348,7 @@ $.tips = function (massge) {
                 position: 'absolute',
                 top: top,
                 left: left,
-                'z-index': 1999
+                'z-index': 19999
             }).appendTo('body');
 
             //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
@@ -375,6 +375,20 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
 
 };
 
+$.icSetLoading = function () {
+    let id = 'ic-global-loading';
+    let $globalLoading = $('#' + id);
+    if (!$globalLoading.length) {
+        $globalLoading = $(`<div id="${ id }" style="position: fixed;top:0;left:0;bottom:0;right:0;background:rgba(0,0,0,0.2);z-index: 10000;"></div>`).appendTo('body');
+    }
+    $globalLoading.show().icSetLoading();
+};
+
+$.icClearLoading = function () {
+    let id = 'ic-global-loading';
+    let $globalLoading = $('#' + id);
+    $globalLoading.hide().icClearLoading();
+};
 
 $.fn.icMessage = $.fn.icMsg = function (config) {
     let msgBoxHtml = `<div ic-msg-popup="1" id="ic-message-wrapper" style="position: fixed;top:0;bottom:0;left:0;right:0;z-index:3000; display: flex; flex-flow: column; align-items: center;pointer-events: none; padding-top:40px;"></div>`;
@@ -420,5 +434,5 @@ $.icMessage = $.icMsg = function (message, conf) {
             message = message.toString();
         }
     }
-    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${message}</div>`).icMessage(conf);
+    $(`<div id="ic-message-box" style="background: rgb(117,190,35); color:#fff; width:40%; padding:10px; border-radius:6px;box-shadow: rgba(0,0,0,0.2) 6px 6px 6px; white-space: pre-wrap;"> ${ message }</div>`).icMessage(conf);
 };
