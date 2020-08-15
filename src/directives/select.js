@@ -98,6 +98,10 @@ export default function ($elm) {
 
     $elm.on('click', s_item, callback);
 
-    !isAuto && $selected.click();
+    if(!isAuto ){
+        $selected.click();
+    }else{
+        $selected.addClass(cla);
+    }
 
 }
