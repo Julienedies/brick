@@ -91,7 +91,7 @@ export default function ($elm) {
                 $elm.attr('ic-val', val);
             }*/
             $elm.trigger('ic-select.change', msg);
-            console.log('ic-select.change', msg);
+            // console.log('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
         }
     }

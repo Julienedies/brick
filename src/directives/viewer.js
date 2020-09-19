@@ -9,10 +9,10 @@ import directives from '../core/directives.js'
 import viewerTpl from '../tpl/viewer.html'
 
 const icViewer = {
-    _show: function (src, index) {
+    _show: function (src, index, isFirstShow) {
         icViewer.$img.attr('src', src);
         icViewer.$sn.text(index + ' / ' + this.urls.length);
-        icViewer.onShow(index, src, icViewer.$info);
+        icViewer.onShow(index, src, icViewer.$info, isFirstShow);
     },
     show: function (arg) {
         let urls = this.urls = arg.urls;
@@ -20,7 +20,7 @@ const icViewer = {
         let index = this.index = src ? urls.indexOf(src) : 0;
         src = src || urls[index];
 
-        icViewer._show(src, index);
+        icViewer._show(src, index, true);
         icViewer.$elm.fadeIn();
 
         icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
@@ -31,7 +31,8 @@ const icViewer = {
     },
 
     init: function (options) {
-        let fx = () => {};
+        let fx = () => {
+        };
         this.onShow = options.onShow || fx;
         this.onOpen = options.onOpen || fx;
         this.onClose = options.onClose || fx;
@@ -53,6 +54,11 @@ const icViewer = {
         this.$info = this.$elm.find('#ic-viewer-info');
         this.$autoplay = this.$elm.find('#ic-viewer-autoplay');
         this.$sn = this.$elm.find('#ic-viewer-sn');
+        this.$interval = this.$elm.find('#ic-viewer-interval').val(this.interval).on('change', function (e) {
+            let val = $(this).val();
+            val && icViewer.set('interval', val * 1);
+            //console.log(val);
+        });
 
         $elm.on('click', '#ic-viewer-close', function (e) {
             $elm.fadeOut();
@@ -71,9 +77,9 @@ const icViewer = {
     },
 
     set: function (key, val) {
-        if(typeof key === 'object'){
+        if (typeof key === 'object') {
             Object.assign(this, key);
-        }else{
+        } else {
             this[key] = val;
         }
     },
@@ -135,8 +141,7 @@ $.fn.icViewer = function (options) {
 };
 
 
-
-function fn($elm) {
+function fn ($elm) {
     //console.info('ic-viewer exec;')
 
     let s_box = 'ic-viewer-box';  // img box 选择符

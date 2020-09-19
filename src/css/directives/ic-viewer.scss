@@ -11,7 +11,7 @@
   left: 0;
   top: 0;
   z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.2);
   display: none;
   #ic-viewer-box {
     width:100%;
@@ -23,21 +23,21 @@
   }
   #ic-viewer-info{
     position:absolute;
-    bottom:3em;
+    bottom:0;
     left:0;
     right:0;
     text-align:center;
     color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.4);
   }
   #ic-viewer-handle {
     position: absolute;
-    bottom: 0;
+    bottom: 2em;
     left: 0;
     right: 0;
-    padding: 10px 10px;
+    padding: 5px 5px;
     color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.4);
     line-height: 1.2;
     font-size: 1.6em;
     text-align:center;

@@ -4,17 +4,25 @@
 
 import $ from 'jquery'
 
+
+// 用于多个弹出层数量统计
+let count = 0;
+
 export default {
     name: 'ic-popup',
     selfExec: true,
     once: true,
     fn: function () {
 
-        let cla = 'active'
-        let onShowCla = 'on-ic-popup-show';
+        const cla = 'active'
+        const onShowCla = 'on-ic-popup-show';
         let $body = $(document.body);
-        // 用于多个弹出层
-        let count = 0;
+
+/*        const popupCountStr = 'ic-popup-count';
+        let popupCount = $body.data(popupCountStr);
+        if(popupCount === undefined) {
+            $body.data(popupCountStr, 0);
+        }*/
 
         // jquery接口
         $.fn.icPopup = $.fn.icPopup || function (opt) {
@@ -41,6 +49,7 @@ export default {
             $popup.scrollTop(0);
             count += 1;
             $body.addClass(onShowCla);
+            //console.log(999,count);
         }
 
         function hide ($popup) {
@@ -50,6 +59,7 @@ export default {
             $popup.trigger('ic-popup.hide');
             $popup[0].scrollTop = 0;
             count -= 1;
+            //console.log(999,count);
             if (count < 1) {
                 $body.removeClass(onShowCla);
             }
