@@ -57,8 +57,9 @@ export default function ($elm) {
             let change = $th.toggleClass(cla).attr('ic-val');
             let values = setVal();
             let msg = {name: name, value: values, change, selected: $th.hasClass(cla)};
+
+           //console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
-            console.log('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
         }
     } else {
@@ -90,8 +91,9 @@ export default function ($elm) {
             }else{
                 $elm.attr('ic-val', val);
             }*/
-            $elm.trigger('ic-select.change', msg);
+
             // console.log('ic-select.change', msg);
+            $elm.trigger('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
         }
     }

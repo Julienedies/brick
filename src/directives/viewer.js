@@ -37,8 +37,6 @@ const icViewer = {
         this.onOpen = options.onOpen || fx;
         this.onClose = options.onClose || fx;
 
-        this.interval = options.interval;
-
         this.$body = $(document.body);
         this.onPopupShowCla = 'on-ic-viewer-show';
         this.$body.addClass(this.onPopupShowCla);
@@ -47,6 +45,8 @@ const icViewer = {
 
         // 只初始化一次
         if (this.$elm) return icViewer;
+
+        this.interval = options.interval;
 
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
