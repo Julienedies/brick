@@ -8,37 +8,36 @@ import brick from '../core/export'
 
 export default function ($elm, attrs) {
 
-    var $doc = $('body');
+    let $doc = $('body');
 
-    var namespace = $elm.attr('ic-type-ahead');
-    var onTypeComplete = $elm.attr('ic-on-type-complete');
-    onTypeComplete = $elm.icParseProperty(onTypeComplete);
-    var source = $elm.attr('ic-source-ajax');
+    let namespace = $elm.attr('ic-type-ahead');
+    let onTypeComplete = $elm.icPp2('ic-on-type-done');
+    let source = $elm.attr('ic-source-ajax');
 
-    var offset = $elm.offset();
-    var left = offset.left;
-    var top = offset.top;
-    var w = $elm.outerWidth();
-    var h = $elm.outerHeight();
+    let offset = $elm.offset();
+    let left = offset.left;
+    let top = offset.top;
+    let w = $elm.outerWidth();
+    let h = $elm.outerHeight();
 
-    var $selectList = $('[ic-role-list=?]'.replace('?', namespace));
-    var tplf = brick.getTpl($selectList.attr('ic-tpl-name'));
+    let $selectList = $('[ic-type-list=?]'.replace('?', namespace));
+    let tplf = brick.getTpl($selectList.attr('ic-tpl-name'));
 
     $selectList.appendTo($doc).css({top: top + h, left: left, 'min-width': w});
 
-    var _pool;
-    var pool;
-    var ajax;
-    var queryStr;
-    var query;
-    var keydownActive = 0;
-    var keydownList;
+    let _pool;
+    let pool;
+    let ajax;
+    let queryStr;
+    let query;
+    let keydownActive = 0;
+    let keydownList;
 
-    var done = function (data) {
+    let done = function (data) {
         if (!data) return;
         if (!data.length) return $selectList.hide();
         pool = data;
-        var html = tplf({model: data});
+        let html = tplf({model: data});
         $selectList.show().html(html);
     };
 
@@ -46,19 +45,19 @@ export default function ($elm, attrs) {
         query = function (queryStr) {
             ajax = $.ajax({
                 dataType: 'json',
-                type: 'post',
+                type: 'get',
                 url: source,
-                data: {query: queryStr}
+                data: {key: queryStr}
             }).done(done);
         }
     } else {
         source = $elm.attr('ic-source');
         _pool = $elm.icParseProperty(source);
         query = function (queryStr) {
-            var reg = new RegExp(queryStr, 'img');
-            var result = _.filter(_pool, function (item, i, list) {
+            let reg = new RegExp(queryStr, 'img');
+            let result = _.filter(_pool, function (item, i, list) {
                 if (_.isObject(item)) {
-                    var result = _.filter(item, function (item) {
+                    let result = _.filter(item, function (item) {
                         return reg.test(item);
                     });
                     return result.length;
@@ -77,14 +76,14 @@ export default function ($elm, attrs) {
 ////////////////////////////////////
 
     $elm.on('focus', function (e) {
-        var offset = $elm.offset();
-        var left = offset.left;
-        var top = offset.top;
+        let offset = $elm.offset();
+        let left = offset.left;
+        let top = offset.top;
         $selectList.css({top: top + h + 1, left: left});
 
     }).on('keyup', function (e) {
 
-        var val = $elm.val();
+        let val = $elm.val();
         if (!val) return $selectList.hide();
         if (val === queryStr) return;
 
@@ -98,15 +97,15 @@ export default function ($elm, attrs) {
 
     }).on('keydown', function (e) {
 
-        var keyCode = e.keyCode;
+        let keyCode = e.keyCode;
         if (!(keyCode === 38 || keyCode === 40 || keyCode === 13)) {
             keydownActive = 0;
             return
         }
 
-        var list = $selectList.find('[ic-role-type-item]');
+        let list = $selectList.find('[ic-type-item]');
         if (!list.length) return;
-        var max = list.length - 1;
+        let max = list.length - 1;
 
         if (e.keyCode === 38) {
             keydownActive = --keydownActive < 0 ? max : keydownActive;
@@ -132,10 +131,10 @@ export default function ($elm, attrs) {
     });
 
 
-    $selectList.on('mousedown', '[ic-role-type-item]', function (e) {
-        var index = $(this).index();
-        var item = pool[index];
-        var val = $(this).attr('ic-role-type-item');
+    $selectList.on('mousedown', '[ic-type-item]', function (e) {
+        let index = $(this).index();
+        let item = pool[index];
+        let val = $(this).attr('ic-type-item');
         $elm.val(val);
         $elm.trigger('type.complete', item);
         onTypeComplete && onTypeComplete.apply($elm[0], [e, item])

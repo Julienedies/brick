@@ -7,27 +7,27 @@ import brick from '../core/export'
 
 export default function ($elm, attrs) {
 
-    var th = $elm;
-    var namespace = th.attr('ic-pagination');
-    var rows = $elm.attr('ic-pagination-rows') * 1 || 10;
-    var onChangeCall = th.attr('ic-pagination-on-change');
-    var total = $elm.attr('ic-pagination-total') * 1;
-    var step = $elm.attr('ic-pagination-step') * 1 || 10;
-    var current = $elm.attr('ic-pagination-current') || 1;
-    var ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
-    var placeholder = /\{\{\}\}/g;
-    var $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
-    var tplf;
+    let th = $elm;
+    let namespace = th.attr('ic-pagination');
+    let rows = $elm.attr('ic-pagination-rows') * 1 || 10;
+    let onChangeCall = th.attr('ic-pagination-on-change');
+    let total = $elm.attr('ic-pagination-total') * 1;
+    let step = $elm.attr('ic-pagination-step') * 1 || 10;
+    let current = $elm.attr('ic-pagination-current') || 1;
+    let ellipsis = $elm.find('[ic-role-pagination-ellipsis]')[0].outerHTML;
+    let placeholder = /\{\{\}\}/g;
+    let $tpl = $elm.prev('[ic-tpl=?]'.replace('?', namespace));
+    let tplf;
 
-    var pool;
-    var onchange;
-    var source = $elm.attr('ic-source-ajax');
+    let pool;
+    let onchange;
+    let source = $elm.attr('ic-source-ajax');
 
     if (source) {
         /*$.ajax({
          url:source
          }).done(function(data){
-         var html = brick._tplfs[namespace]({model:data});
+         let html = brick._tplfs[namespace]({model:data});
          $tpl.html(html);
          });*/
     } else {
@@ -37,15 +37,15 @@ export default function ($elm, attrs) {
             total = Math.ceil(pool.length / rows);
             onchange = function (page) {
                 --page;
-                var start = page * rows - 1 < 0 ? 0 : page * rows;
-                var end = start + rows;
-                var _list = pool.slice(start, end);
-                var list = [];
-                var item;
+                let start = page * rows - 1 < 0 ? 0 : page * rows;
+                let end = start + rows;
+                let _list = pool.slice(start, end);
+                let list = [];
+                let item;
                 for (; item = _list.shift(); start++) {
                     list[start] = item;
                 }
-                var html = brick.getTpl(namespace)({model: list});
+                let html = brick.getTpl(namespace)({model: list});
                 $tpl.html(html).show();
             };
         } else {
@@ -54,8 +54,8 @@ export default function ($elm, attrs) {
                 total = Math.ceil(pool.length / rows);
                 onchange = function (page) {
                     --page;
-                    var start = page * rows - 1 < 0 ? 0 : page * rows;
-                    var end = start + rows;
+                    let start = page * rows - 1 < 0 ? 0 : page * rows;
+                    let end = start + rows;
                     pool.hide();
                     pool.slice(start, end).show();
                 };
@@ -63,28 +63,28 @@ export default function ($elm, attrs) {
         }
     }
 
-    var prev = th.find('[ic-role-pagination-prev]').on('click', function (e) {
+    let prev = th.find('[ic-role-pagination-prev]').on('click', function (e) {
         if (current < 2) return;
         --current;
         createNums();
     });
-    var next = th.find('[ic-role-pagination-next]').on('click', function (e) {
+    let next = th.find('[ic-role-pagination-next]').on('click', function (e) {
         if (current >= total) return;
         ++current;
         createNums();
     });
-    var num = th.find('[ic-role-pagination-num]');
-    var html = num[0].outerHTML;
+    let num = th.find('[ic-role-pagination-num]');
+    let html = num[0].outerHTML;
 
     function createNums () {
 
-        var j = Math.floor(step / 2);
-        var k;
-        var r = [];
+        let j = Math.floor(step / 2);
+        let k;
+        let r = [];
 
         j = current - j;
 
-        var i = j = j < 1 ? 1 : j;
+        let i = j = j < 1 ? 1 : j;
         k = j + step - 1;
         k = k >= total ? total : k;
         i = j = k + step >= total ? k - step < 1 ? 1 : k - step : i;
@@ -103,8 +103,8 @@ export default function ($elm, attrs) {
             r.push(html.replace(placeholder, total));
         }
 
-        current == 1 ? prev.addClass('disabled') : prev.removeClass('disabled');
-        current == total ? next.addClass('disabled') : next.removeClass('disabled');
+        current === 1 ? prev.addClass('disabled') : prev.removeClass('disabled');
+        current === total ? next.addClass('disabled') : next.removeClass('disabled');
         prev.siblings().not(next).remove();
 
         $(r.join('')).insertAfter(prev).filter('[ic-role-pagination-num=' + current + ']').addClass('active');
@@ -119,8 +119,8 @@ export default function ($elm, attrs) {
 
     th.on('click', '[ic-role-pagination-num]', function (e) {
 
-        var num = $(this).attr('ic-role-pagination-num') * 1;
-        if (current == num) return;
+        let num = $(this).attr('ic-role-pagination-num') * 1;
+        if (current === num) return;
         current = num * 1;
         createNums();
 

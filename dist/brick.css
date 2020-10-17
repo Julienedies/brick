@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.9.32
- * 10/6/2020, 1:29:44 PM
+ * 10/17/2020, 12:37:02 PM
  * 
  */
 @charset "UTF-8";
@@ -184,10 +184,19 @@ for animating
   display: none; }
 
 /*输入提示列表*/
-[ic-role-list] {
+[ic-type-list] {
   display: none;
   position: absolute;
-  z-index: 100; }
+  z-index: 100000;
+  height: 140px;
+  overflow-y: scroll;
+  background: #fff;
+  box-shadow: 5px 5px 7px #cecece, -5px -1px 7px #cecece; }
+  [ic-type-list] [ic-type-item] {
+    padding: 2px 5px; }
+    [ic-type-list] [ic-type-item]:hover {
+      color: #fff !important;
+      background: blue; }
 
 /* 对话框 */
 [ic-dialog], [ic-prompt] {

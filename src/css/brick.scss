@@ -57,10 +57,23 @@
 }
 
 /*输入提示列表*/
-[ic-role-list] {
+[ic-type-list] {
   display: none;
   position: absolute;
-  z-index: 100;
+  z-index: 100000;
+  height: 140px;
+  overflow-y: scroll;
+  background: #fff;
+  box-shadow: 5px 5px 7px #cecece, -5px -1px 7px #cecece;
+
+  [ic-type-item] {
+    padding: 2px 5px;
+    &:hover {
+      color: #fff!important;
+      background: blue;
+
+    }
+  }
 }
 
 /* 对话框 */
@@ -70,19 +83,19 @@
   z-index: -2;
 }
 
-[ic-dialog]{
+[ic-dialog] {
   position: fixed;
-  top:0;
+  top: 0;
   bottom: 0;
-  right:0;
-  left:0;
-  background: rgba(0,0,0,0.7);
+  right: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-[ic-dialog][ic-aniIn]{
+[ic-dialog][ic-aniIn] {
 }
 
 [ic-dialog][ic-active], [ic-prompt][ic-active] {
