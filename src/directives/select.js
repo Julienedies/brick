@@ -23,6 +23,14 @@ export default function ($elm) {
     let onChange = $elm.icPp2('ic-select-on-change');
     let $input = $(`input[ic-select-input="${ name }"]`);
     let $items = $elm.find(s_item);
+    
+    let time = 0;  // 记录change触发次数
+    
+    function count () {
+        setTimeout(() => {
+            time += 1;
+        }, 30);
+    }
 
     // 如果没有item, 根据selector添加item
     if (!$items.length) {
@@ -56,11 +64,12 @@ export default function ($elm) {
             let $th = $(this);
             let change = $th.toggleClass(cla).attr('ic-val');
             let values = setVal();
-            let msg = {name: name, value: values, change, selected: $th.hasClass(cla)};
+            let msg = {name: name, value: values, change, selected: $th.hasClass(cla), time};
 
            //console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
+            count();
         }
     } else {
 
@@ -82,7 +91,7 @@ export default function ($elm) {
                 val = change;
                 selected = true;
             }
-            let msg = {name: name, value: val, change, selected};
+            let msg = {name: name, value: val, change, selected, time};
             // 为关联的input赋值
             $input.val(val);
             $elm.attr('ic-val', val);
@@ -95,6 +104,7 @@ export default function ($elm) {
             // console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
             onChange && onChange.apply($elm, [msg]);
+            count();
         }
     }
 
@@ -102,6 +112,7 @@ export default function ($elm) {
 
     if(!isAuto ){
         $selected.click();
+        count();
     }else{
         $selected.addClass(cla);
     }
