@@ -131,6 +131,11 @@ export default function ($elm, attrs) {
         return this.data('ic-form-fields');
     };
 
+    $.fn.icFormSubmit = $.fn.icFormSubmit || function() {
+        this.find('[ic-form-submit]').not(this.find('[ic-form] [ic-form-submit]')).trigger(eventAction);
+        //toSubmit();
+    };
+
     $.fn.icFormVerify = $.fn.icFormVerify || function () {
         // 提交按钮调用
         if (this[0].hasAttribute('ic-form-submit')) {
