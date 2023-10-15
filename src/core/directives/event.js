@@ -14,7 +14,7 @@ export default {
 
         let eventAction = brick.get('event.action');
 
-        let events = brick.get('ic-event.extend') || 'click,change,dblclick';
+        let events = brick.get('ic-event.extend') || 'click,change,dblclick,focus,hover';
 
         let targets = events.replace(/(?:^|,)(\w+?)(?=(?:,|$))/g, function (m, $1) {
             let s = '[ic-?]'.replace('?', $1);

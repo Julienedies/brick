@@ -59,6 +59,11 @@ const icViewer = {
             val && icViewer.set('interval', val * 1);
             //console.log(val);
         });
+        this.$go = this.$elm.find('#ic-viewer-go').on('change', function (e) {
+            let val = $(this).val();
+            icViewer.index = val * 1;
+            icViewer._go();
+        });
 
         $elm.on('click', '#ic-viewer-close', function (e) {
             $elm.fadeOut();
@@ -84,10 +89,7 @@ const icViewer = {
         }
     },
 
-    on_mousewheel: _.debounce(function (e) {
-        //正负值表示滚动方向
-        e = e || {originalEvent: {deltaY: icViewer.order}};
-        e.originalEvent.deltaY < 0 ? --icViewer.index : ++icViewer.index;
+    _go: function () {
         let max = icViewer.urls.length - 1;
         if (icViewer.index < 0) {
             icViewer.index = max;
@@ -96,6 +98,13 @@ const icViewer = {
             icViewer.index = 0;
         }
         icViewer._show(icViewer.urls[icViewer.index], icViewer.index);
+    },
+
+    on_mousewheel: _.debounce(function (e) {
+        //正负值表示滚动方向
+        e = e || {originalEvent: {deltaY: icViewer.order}};
+        e.originalEvent.deltaY < 0 ? --icViewer.index : ++icViewer.index;
+        icViewer._go();
         return false;
     }, 100),
 
