@@ -9,26 +9,7 @@ import directives from '../core/directives.js'
 import viewerTpl from '../tpl/viewer.html'
 
 const icViewer = {
-    _show: function (src, index, isFirstShow) {
-        icViewer.$img.attr('src', src);
-        icViewer.$sn.text(index + ' / ' + this.urls.length);
-        icViewer.onShow(index, src, icViewer.$info, isFirstShow);
-    },
-    show: function (arg) {
-        let urls = this.urls = arg.urls;
-        let src = arg.src;
-        let index = this.index = src ? urls.indexOf(src) : 0;
-        src = src || urls[index];
 
-        icViewer._show(src, index, true);
-        icViewer.$elm.fadeIn();
-
-        icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
-
-        this.timer = null;
-        //this.interval = arg.interval || this.interval;
-        arg.autoplay && icViewer.autoplay();
-    },
 
     init: function (options) {
         let fx = () => {
@@ -50,7 +31,9 @@ const icViewer = {
 
         let $elm = $('#ic-viewer-box-wrap');
         $elm = this.$elm = options.$imgBox || $elm.length ? $elm : $(viewerTpl).appendTo($(document.body));
-        this.$img = this.$elm.find('#ic-viewer-box > img');
+        this.$img = this.$elm.find('#ic-viewer-box > img').on('dblclick', function (e) {
+            icViewer.close(e);
+        });
         this.$info = this.$elm.find('#ic-viewer-info');
         this.$autoplay = this.$elm.find('#ic-viewer-autoplay');
         this.$sn = this.$elm.find('#ic-viewer-sn');
@@ -66,12 +49,7 @@ const icViewer = {
         });
 
         $elm.on('click', '#ic-viewer-close', function (e) {
-            $elm.fadeOut();
-            icViewer.autoplay(false);
-            icViewer.$body.removeClass(icViewer.onPopupShowCla);
-            // icViewer close event callback
-            icViewer.onClose();
-            $(document.body).off('mousewheel', icViewer.on_mousewheel);
+            icViewer.close(e);
         });
 
         $elm.on('click', '#ic-viewer-autoplay', function (e) {
@@ -79,6 +57,36 @@ const icViewer = {
         });
 
         return icViewer;
+    },
+
+    show: function (arg) {
+        let urls = this.urls = arg.urls;
+        let src = arg.src;
+        let index = this.index = src ? urls.indexOf(src) : 0;
+        src = src || urls[index];
+
+        icViewer._show(src, index, true);
+        icViewer.$elm.fadeIn();
+
+        icViewer.$body.on('mousewheel', icViewer.on_mousewheel);
+
+        this.timer = null;
+        //this.interval = arg.interval || this.interval;
+        arg.autoplay && icViewer.autoplay();
+    },
+    _show: function (src, index, isFirstShow) {
+        icViewer.$img.attr('src', src);
+        icViewer.$sn.text(index + ' / ' + this.urls.length);
+        icViewer.onShow(index, src, icViewer.$info, isFirstShow);
+    },
+
+    close: function (e) {
+        icViewer.$elm.fadeOut();
+        icViewer.autoplay(false);
+        icViewer.$body.removeClass(icViewer.onPopupShowCla);
+        // icViewer close event callback
+        icViewer.onClose();
+        icViewer.$body.off('mousewheel', icViewer.on_mousewheel);
     },
 
     set: function (key, val) {
@@ -102,6 +110,7 @@ const icViewer = {
 
     on_mousewheel: _.debounce(function (e) {
         //正负值表示滚动方向
+        console.log('on_mousewheel');
         e = e || {originalEvent: {deltaY: icViewer.order}};
         e.originalEvent.deltaY < 0 ? --icViewer.index : ++icViewer.index;
         icViewer._go();

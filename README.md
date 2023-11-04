@@ -60,8 +60,8 @@ npm run dev
 // 类库部署
 npm run pro
 // 主页项目开发
-npm run page:dev
+npm run dev:page
 // 主页项目部署
-npm run page:pro
+npm run pro:page
 ```
 
