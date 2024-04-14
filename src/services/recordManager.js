@@ -131,13 +131,13 @@ const proto = {
 
 
         if (result.length === 1 && !isFilterCb && (query === this.key || (value && query === undefined))) {
-            return result[0];
+            return $.extend(true, {}, result[0]);
         }
 
         return result;
     },
     /**
-     * 包装this.get(); 如果返回的数组只有单个对象，去掉数组，直接返回对象
+     * 包装this.get(); 如果返回的数组只有单个对象，去掉数组，直接返回对象的copy
      * @param value
      * @param query
      * @returns {*}
@@ -145,7 +145,8 @@ const proto = {
     get2: function (value, query) {
         let result = this.get(value, query);
         if (result.length === 1) {
-            return result[0];
+            let obj = result[0];
+            return JSON.parse(JSON.stringify(obj));
         }
         return result;
     },
