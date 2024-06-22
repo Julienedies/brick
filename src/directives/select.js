@@ -68,6 +68,7 @@ export default function ($elm) {
 
            //console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
+            $elm.trigger('change', msg);
             onChange && onChange.apply($elm, [msg]);
             count();
         }
@@ -103,6 +104,7 @@ export default function ($elm) {
 
             // console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
+            $elm.trigger('change', msg);
             onChange && onChange.apply($elm, [msg]);
             count();
         }

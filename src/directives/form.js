@@ -105,7 +105,9 @@ export default function ($elm, attrs) {
         let result;
 
         try {
-            result = eval(_script);
+            //result = eval(_script);
+            // 尝试处理换行导致的语法错误
+            result = eval(_script.replace(/\n/g, '\\n'));
             //如果result是一个字符串，表示一个错误提示
             if (typeof result === 'string') {
                 return result;
@@ -186,7 +188,7 @@ export default function ($elm, attrs) {
             let val = $th.val();
             let tip;
 
-            //console.log(this, val, errTips);
+           console.info('ic-form-field change =>', this, val);
 
             if (tip = _verify(val, rules, errTips, $th)) {
                 //验证失败
@@ -296,6 +298,7 @@ export default function ($elm, attrs) {
         $submit.trigger(eventAction);
     });
 
+    // 提交数据
     function toSubmit (e) {
 
         if ($submit[0].hasAttribute('ic-submit-disabled')) return;

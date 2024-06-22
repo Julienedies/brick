@@ -19,8 +19,11 @@ const icViewer = {
         this.onClose = options.onClose || fx;
 
         this.$body = $(document.body);
+        this._oldTop = window.scrollY; // 默认滚动条位置，用于恢复到默认位置，需要在添加onPopupShowCla之前获取
+        console.log(this._oldTop);
         this.onPopupShowCla = 'on-ic-viewer-show';
         this.$body.addClass(this.onPopupShowCla);
+
         // icViewer open event callback
         this.onOpen();
 
@@ -87,6 +90,8 @@ const icViewer = {
         // icViewer close event callback
         icViewer.onClose();
         icViewer.$body.off('mousewheel', icViewer.on_mousewheel);
+        console.log(icViewer._oldTop);
+        window.scrollTo(0, icViewer._oldTop);
     },
 
     set: function (key, val) {
@@ -114,6 +119,8 @@ const icViewer = {
         e = e || {originalEvent: {deltaY: icViewer.order}};
         e.originalEvent.deltaY < 0 ? --icViewer.index : ++icViewer.index;
         icViewer._go();
+        e.preventDefault();
+        e.stopPropagation();
         return false;
     }, 100),
 

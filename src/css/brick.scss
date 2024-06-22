@@ -6,6 +6,7 @@
 .on-ic-popup-show, .on-ic-viewer-show {
   //height: 100%;
   //overflow: hidden;
+  position: fixed;
   &::-webkit-scrollbar {
     display: none;
   }
