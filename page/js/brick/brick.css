@@ -2,8 +2,8 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.9.45
- * 6/22/2024, 2:30:37 PM
+ * V0.9.47
+ * 7/1/2024, 9:32:21 PM
  * 
  */
 @charset "UTF-8";
@@ -147,8 +147,13 @@ for animating
 [ic-dropdown-con] {
   overflow: hidden; }
 
+.on-ic-popup-show::-webkit-scrollbar, .on-ic-viewer-show::-webkit-scrollbar {
+  display: none; }
+
 .on-ic-popup-show, .on-ic-viewer-show {
-  position: fixed; }
+  position: fixed;
+  width: 100%;
+  height: 100%; }
   .on-ic-popup-show::-webkit-scrollbar, .on-ic-viewer-show::-webkit-scrollbar {
     display: none; }
 
@@ -252,5 +257,3 @@ iOS 上，屏幕是触碰的，所以页面元素默认会有 touch 一类事件
 [ic-click], [ic-role-slider-pagination], [ic-select-item], [ic-tab], [ic-view-to], [ic-view-back], [ic-ajax]:not(input[type=text]), [ic-form-submit], [ic-dialog-cancel], [ic-dialog-confirm], [ic-dialog-close], [ic-prompt-close], [ic-date-next-m], [ic-date-prev-m], [ic-click], [ic-clone], [ic-input-add], [ic-input-lessen] {
   cursor: pointer; }
 
-
-/*# sourceMappingURL=brick.css.map*/

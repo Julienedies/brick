@@ -6,7 +6,17 @@
 .on-ic-popup-show, .on-ic-viewer-show {
   //height: 100%;
   //overflow: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.on-ic-popup-show, .on-ic-viewer-show {
+  //height: 100%;
+  //overflow: hidden;
   position: fixed;
+  width:100%;
+  height: 100%;
   &::-webkit-scrollbar {
     display: none;
   }
