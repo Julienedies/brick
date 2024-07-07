@@ -3,7 +3,7 @@
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
  * V0.9.47
- * 7/1/2024, 9:32:21 PM
+ * 7/7/2024, 5:31:17 PM
  * 
  */
 @charset "UTF-8";
@@ -156,6 +156,9 @@ for animating
   height: 100%; }
   .on-ic-popup-show::-webkit-scrollbar, .on-ic-viewer-show::-webkit-scrollbar {
     display: none; }
+
+.on-ic-loading {
+  opacity: 0.5 !important; }
 
 [ic-accordion] [ic-accordion-con] {
   display: none; }

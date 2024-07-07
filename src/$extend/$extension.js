@@ -352,8 +352,8 @@ $.tips = function (massge) {
             }).appendTo('body');
 
             //$loading.find('svg').css({'margin-top':($th.height()-16)/2});
-
-            $th.css({opacity: '0.5'});
+            //$th.css({opacity: '0.5'});
+            $th.addClass('on-ic-loading');
 
             $th.data('_ic-role-loading', $loading);
         });
@@ -370,7 +370,8 @@ $.fn.icClearLoading = $.fn.clearLoading = function () {
         let $loading = $th.data('_ic-role-loading');
         $loading && $loading.remove();
         $th.removeData('_ic-role-loading');
-        $th.css({opacity: '1'});
+        //$th.css({opacity: '1'});
+        $th.removeClass('on-ic-loading');
     });
 
 };

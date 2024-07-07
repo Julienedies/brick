@@ -43,7 +43,13 @@ export default {
             let always = $elm.icParseProperty2('ic-submit-on-always') || defaultCall;
 
             let $loading = $('[ic-role-loading=?]'.replace('?', name || +(new Date)));
-            $loading.length ? $loading.show() && $elm.hide() : $elm.setLoading();
+            let isLoading = $loading.length;
+
+            if (isLoading) {
+                $loading.show() && $elm.hide();
+            } else {
+                $elm.setLoading();
+            }
 
             $elm.attr('ic-ajax-disabled', true);
 
@@ -53,15 +59,20 @@ export default {
                 dataType: dataType,
                 data: data
             }).done(function (data) {
-                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    //$elm.clearLoading() && $loading.hide() && $elm.show();
                     done.apply(that, [data]);
                 }
             ).fail(function (msg) {
-                    $elm.clearLoading() && $loading.hide() && $elm.show();
+                    //$elm.clearLoading() && $loading.hide() && $elm.show();
                     failed.apply(that, [msg]);
                 }
             ).always(function () {
-                $elm.clearLoading() && $loading.hide() && $elm.show();
+                if (isLoading) {
+                    $loading.hide();
+                    $elm.show();
+                } else {
+                    $elm.clearLoading();
+                }
                 always.apply(that);
                 $elm.removeData('ic-submit-data');
                 $elm.removeAttr('ic-ajax-disabled');
