@@ -23,9 +23,9 @@ export default function ($elm) {
     let onChange = $elm.icPp2('ic-select-on-change');
     let $input = $(`input[ic-select-input="${ name }"]`);
     let $items = $elm.find(s_item);
-    
+
     let time = 0;  // 记录change触发次数
-    
+
     function count () {
         setTimeout(() => {
             time += 1;
@@ -39,12 +39,12 @@ export default function ($elm) {
         });
     }
 
-    let $selected = $items.filter('[selected]');
+    let $selected = $items.filter('[selected]').addClass(cla);
     if (!$selected.length) {
         $selected = $items.filter('.' + cla);
     }
 
-    let callback;
+    let callback;  // 设置 radio 或 checkbox 不同类型下的点击回调函数
     if (type === 'checkbox') {
 
         let setVal = () => {
@@ -66,7 +66,7 @@ export default function ($elm) {
             let values = setVal();
             let msg = {name: name, value: values, change, selected: $th.hasClass(cla), time};
 
-           //console.log('ic-select.change', msg);
+            //console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
             $elm.trigger('change', msg);
             onChange && onChange.apply($elm, [msg]);
@@ -96,11 +96,11 @@ export default function ($elm) {
             // 为关联的input赋值
             $input.val(val);
             $elm.attr('ic-val', val);
-/*            if(typeof val === 'undefined'){
-                $elm.removeAttr('ic-val');
-            }else{
-                $elm.attr('ic-val', val);
-            }*/
+            /*            if(typeof val === 'undefined'){
+                            $elm.removeAttr('ic-val');
+                        }else{
+                            $elm.attr('ic-val', val);
+                        }*/
 
             // console.log('ic-select.change', msg);
             $elm.trigger('ic-select.change', msg);
@@ -112,10 +112,13 @@ export default function ($elm) {
 
     $elm.on('click', s_item, callback);
 
-    if(!isAuto ){
-        $selected.click();
+    // 默认都会在tpl渲染后执行指令解析时，执行一次点击，这次点击会添加cla，
+    if (!isAuto) {
+        $selected.not('.' + cla).click();
         count();
-    }else{
+    } else {
+
+        // 这段代码其实已经没有用了，已经在前面添加了cla
         $selected.addClass(cla);
     }
 

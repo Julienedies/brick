@@ -53,7 +53,7 @@ export default function parser(node) {
 
 
         //处理每一个指令
-        let attr
+        let attr;
         while (attr = directives.shift()) {
 
             let name = attr[0];
