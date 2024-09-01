@@ -36,6 +36,7 @@ export default {
     exec: function (name, $elm, attrs) {
         let _pool = this._pool;
         let definition = _pool[name];
+
         if (typeof definition === 'function') {
             definition.apply(null, [$elm, attrs]);
         } else if (definition.fn) {
@@ -46,6 +47,7 @@ export default {
         }
     },
 
+    // 用于执行有selfExec选项的指令
     init: function () {
         let _pool = this._pool;
         for (let i in _pool) {
