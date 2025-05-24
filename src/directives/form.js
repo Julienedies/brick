@@ -241,6 +241,7 @@ export default function ($elm, attrs) {
 
                     $th = $('[name=*]:checked'.replace('*', submitName));
                     val = $th.val() || '';
+                    console.log('brick form debug => ', $th, val);
 
                 } else {
                     val = /^number$/i.test(type) ? $th.val() * 1 : $th.val();
