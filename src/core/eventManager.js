@@ -13,6 +13,7 @@ export default {
      * @param context {Object} 调用watch方法的scope
      */
     on: function (e, f, context) {
+        //console.log(e, f, context);
         e = e.split(/[,\s]+/g);
         for (let i in e) {
             this._bind(e[i], f, context);

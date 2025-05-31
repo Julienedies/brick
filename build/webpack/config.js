@@ -54,37 +54,42 @@ const resolve = {
 
 const plugins = [
     new webpack.DefinePlugin({
-        'VERSION': `'V${ pkg.version }'`,
+        'VERSION': `'V${pkg.version}'`,
         'TIMESTAMP': JSON.stringify((new Date).toLocaleString())
     }),
     new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[name].css'
     }),
-    //new shellPlugin({ onBuildExit: [ 'echo "*********Transfering files ... "', 'cp -r dist/* page/js/brick', 'echo "DONE*********"', ] }),
     new FileManagerPlugin({
-        onEnd: [
-            {
-                copy: [ { source: './dist/*', destination: 'page/js/brick/' }]
-            },
-            {
-                copy: [ { source: './dist/*', destination: '../shandy/node_modules/@julienedies/brick/dist/' }]
-            },
-            {
-                copy: [ { source: './dist/*', destination: '../crx-jhandy/node_modules/@julienedies/brick/dist/' }]
+        events: {
+            onEnd: {
+                copy: [
+                    { source: path.resolve(__dirname,'../../dist/*'), destination: path.resolve(__dirname, '../../page/js/brick/') },
+                    {
+                        source: path.resolve(__dirname,'../../dist/*'), destination: path.resolve(__dirname, '../../../shandy/node_modules/@julienedies/brick/dist/'),
+                        onStart: () => console.log('开始复制到 shandy/node_modules...'),
+                        onEnd: () => console.log('完成复制到 shandy/node_modules...'),
+                        onError: (err) => console.error('复制失败:', err),
+                        options: {
+                            overwrite: true,
+                        },
+                    },
+                    { source: path.resolve(__dirname,'../../dist/*'), destination: path.resolve(__dirname, '../../../crx-jhandy/node_modules/@julienedies/brick/dist/') }
+                ]
             }
-        ]
+        }
     }),
-    new CleanPlugin([`dist`], {
-        root: projectRoot
-    }),
+    // new CleanPlugin([`dist`], {
+    //     root: projectRoot
+    // }),
     new webpack.BannerPlugin({
         entryOnly: true,
         banner: `https://github.com/julienedies/brick.git
 https://github.com/Julienedies/brick/wiki
 license:ISC
-V${ pkg.version }
-${ (new Date).toLocaleString() }
+V${pkg.version}
+${(new Date).toLocaleString()}
 `,
     }),
 ];
@@ -138,11 +143,11 @@ if (isPro) {  // 产品环境
 
         plugins.push(new webpack.HotModuleReplacementPlugin())*/
 
-/*    devServer = {
-        publicPath: publicPath,
-        contentBase: outputPath,
-        hot: true
-    }*/
+    /*    devServer = {
+            publicPath: publicPath,
+            contentBase: outputPath,
+            hot: true
+        }*/
 
 }
 

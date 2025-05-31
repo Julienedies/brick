@@ -47,9 +47,9 @@ module.exports = {
                 ]
             },
             {
-                test: /tpl\/.+\.html$/,
+                test: /[\\/]tpl[\\/].+\.html$/,
                 exclude: /node_modules/,
-                use: {loader: 'html-loader'}
+                use: [{ loader: 'html-loader' }]
             },
             {
                 test: /\.(png|jpg|gif)$/,
