@@ -45,7 +45,7 @@
     "filemanager-webpack-plugin": "^8.0.0",
     "fis": "^1.10.5",
     "html-loader": "^4.2.0",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.6.3",
     "install": "^0.12.2",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
