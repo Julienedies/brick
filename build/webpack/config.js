@@ -59,7 +59,8 @@ const plugins = [
     }),
     new MiniCssExtractPlugin({
         filename: '[name].css',
-        chunkFilename: '[name].css'
+        chunkFilename: '[name].css',
+        sourceMap: false, // 关键：关闭插件的内联 sourceMap
     }),
     new FileManagerPlugin({
         events: {

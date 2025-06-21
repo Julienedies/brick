@@ -5,6 +5,8 @@
  * [ic-select-item] 定义子项
  * [selected] 默认选中项
  * [ic-select-type] 定义select类型,多选or单选 checkbox : radio 默认 radio
+ * [ic-select-auto] 是否自动触发首次change事件, 默认自动触发, 通常使用这个选项取消自动触发 ic-select-auto="false"
+ * [ic-select-order] 定义是否保持选项添加顺序，默认false; 通常使用 ic-select-order="true"
  * [ic-select-input] 关联的input, 会被赋值
  * Created by j on 18/7/18.
  */
@@ -20,13 +22,15 @@ export default function ($elm) {
     let s_item = $elm.attr('ic-select-item') || '[ic-select-item]';
     let type = $elm.attr('ic-select-type') || 'radio';
     let isAuto = $elm.attr('ic-select-auto');  // 是否自动触发首次change事件, 默认自动触发
+    let isOrder =$elm.attr('ic-select-order');
     let onChange = $elm.icPp2('ic-select-on-change');
-    let $input = $(`input[ic-select-input="${ name }"]`);
+    let $input = $(`input[ic-select-input="${name}"]`);
     let $items = $elm.find(s_item);
 
     let time = 0;  // 记录change触发次数
+    let checkBoxValues = [];
 
-    function count () {
+    function count() {
         setTimeout(() => {
             time += 1;
         }, 30);
@@ -47,26 +51,47 @@ export default function ($elm) {
     let callback;  // 设置 radio 或 checkbox 不同类型下的点击回调函数
     if (type === 'checkbox') {
 
-        let setVal = () => {
+        let setVal1 = () => {
             let values = [];
             $items.filter('.' + cla).each(function () {
                 let val = $(this).attr('ic-val');
                 val && values.push(val);
             });
+            checkBoxValues = values;
             $elm.data('ic-val', values);
             return values;
         }
 
+        let setVal2 = (selected, val) => {
+            // 如果选中一个选项 或者 删除一个选项
+            if (selected) {
+                checkBoxValues.push(val);
+            } else {
+                let index = checkBoxValues.indexOf(val);
+                if (index !== -1) {
+                    checkBoxValues.splice(index, 1);
+                }
+            }
+            $elm.data('ic-val', checkBoxValues);
+            return checkBoxValues;
+        };
+
+        let setVal = isOrder ? setVal2 : setVal1;
+
         // 初始设值
-        setVal();
+        setVal1();
 
         callback = function () {
             let $th = $(this);
             let change = $th.toggleClass(cla).attr('ic-val');
-            let values = setVal();
-            let msg = {name: name, value: values, change, selected: $th.hasClass(cla), time};
+            let selected = $th.hasClass(cla);
 
-            //console.log('ic-select.change', msg);
+            let values = setVal(selected, change);
+            //let values = setVal();
+            let msg = { name: name, value: values, change, selected, time };
+
+            console.log('ic-select.change', msg, checkBoxValues);
+
             $elm.trigger('ic-select.change', msg);
             $elm.trigger('change', msg);
             onChange && onChange.apply($elm, [msg]);
@@ -92,7 +117,7 @@ export default function ($elm) {
                 val = change;
                 selected = true;
             }
-            let msg = {name: name, value: val, change, selected, time};
+            let msg = { name: name, value: val, change, selected, time };
             // 为关联的input赋值
             $input.val(val);
             $elm.attr('ic-val', val);

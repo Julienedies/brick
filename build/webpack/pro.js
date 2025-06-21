@@ -4,6 +4,6 @@
 
 module.exports = {
     mode: 'production',
-    devtool: 'source-map',
+    devtool: "source-map",             // 生产环境（生成独立 .map 文件）
     publicPath: ''
 }

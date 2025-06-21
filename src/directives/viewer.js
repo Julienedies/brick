@@ -115,7 +115,7 @@ const icViewer = {
 
     on_mousewheel: _.debounce(function (e) {
         //正负值表示滚动方向
-        console.log('on_mousewheel');
+        //console.log('on_mousewheel');
         e = e || {originalEvent: {deltaY: icViewer.order}};
         e.originalEvent.deltaY < 0 ? --icViewer.index : ++icViewer.index;
         icViewer._go();
