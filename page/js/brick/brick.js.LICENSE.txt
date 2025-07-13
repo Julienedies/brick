@@ -2,7 +2,7 @@
  * https://github.com/julienedies/brick.git
  * https://github.com/Julienedies/brick/wiki
  * license:ISC
- * V0.9.51
- * 2025/6/21下午4:47:08
+ * V0.9.52
+ * 2025/7/13下午5:05:29
  *
  */
