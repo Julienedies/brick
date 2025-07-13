@@ -76,6 +76,7 @@ const plugins = [
                             overwrite: true,
                         },
                     },
+                    { source: path.resolve(__dirname,'../../dist/*'), destination: path.resolve(__dirname, '../../../shandy-win-webpack5/node_modules/@julienedies/brick/dist/') },
                     { source: path.resolve(__dirname,'../../dist/*'), destination: path.resolve(__dirname, '../../../crx-jhandy/node_modules/@julienedies/brick/dist/') }
                 ]
             }

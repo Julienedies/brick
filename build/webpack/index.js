@@ -16,6 +16,7 @@ module.exports = {
     resolve: config.resolve,
     externals: config.externals,
     devServer: config.devServer,
+    plugins: config.plugins,
     module: {
         rules: [
             /*{
@@ -111,6 +112,6 @@ module.exports = {
             }
         }
     },*/
-    plugins: config.plugins
+
 
 }
